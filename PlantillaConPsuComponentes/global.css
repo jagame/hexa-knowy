@@ -1,0 +1,16 @@
+body {
+    background: gray;
+    margin: 30px
+}
+
+.card-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 100px;
+}
+
+h1 {
+    text-align: center;
+    font-size: xxx-large;
+}
