@@ -6,16 +6,20 @@
         <div class="kn-dropdown __dropdown">
             <input id="navbar-profile-dropdown" type="checkbox">
 
-            <label for="navbar-profile-dropdown"> <span>Username</span>
+            <label class="__profile" for="navbar-profile-dropdown"> <span>Username</span>
+                <img alt="" class="avatar" src="https://placehold.co/50x50"/>
+            </label>
+
+            <label class="__profile-menu" for="navbar-profile-dropdown"> <span>Username</span>
                 <img alt="" class="avatar" src="https://placehold.co/50x50"/>
             </label>
 
             <nav class="__menu">
-                <button class="__menu-item">Editar Perfil</button>
-                <button class="__menu-item">Membresia</button>
+                <a class="__menu-item">Editar Perfil</a>
+                <a class="__menu-item">Membresia</a>
                 <div>
-                    <button class="__menu-item">Home</button>
-                    <button class="__menu-item">Logout</button>
+                    <a class="__menu-item">Home</a>
+                    <a class="__menu-item">Logout</a>
                 </div>
             </nav>
         </div>
@@ -30,12 +34,18 @@
 
 <style>
     #knowy-navbar {
+        position: fixed;
+        z-index: 90;
         display: grid;
         width: 100%;
         height: 100px;
-        background: green;
         grid-template-columns: 1fr;
         grid-template-rows: 65% 35%;
+    }
+
+    /* Knowy navbar style */
+    #knowy-navbar {
+        background: green;
     }
 
     /* Links */
@@ -45,9 +55,14 @@
         flex-direction: row;
         flex-wrap: nowrap;
         justify-content: center;
+
+        gap: 1rem;
+    }
+
+    /* Links Style */
+    #knowy-navbar > .__links {
         border-top: 1px solid gray;
         background: green;
-        gap: 1rem;
 
         > a {
             text-decoration: none;
@@ -73,83 +88,112 @@
             justify-self: center;
             object-fit: contain;
         }
-
-        /* Dropdown menu (kn-dropdown) */
-
-        > .kn-dropdown {
-            position: relative;
-            display: inline-block;
-
-            > input {
-                display: none;
-            }
-
-            > label {
-                cursor: pointer;
-                user-select: none;
-            }
-
-            > .__menu {
-                position: absolute;
-                z-index: 100;
-                right: 0;
-                display: none;
-            }
-        }
     }
 
     /* Custom dropdown */
     #knowy-navbar > .__profile-container > .__dropdown {
+        position: relative;
+        display: inline-block;
+
+        > input {
+            display: none;
+        }
+
         > label {
             display: flex;
             align-items: center;
             justify-content: flex-end;
             height: 100%;
-            padding: 0 10px;
+            padding: 10px;
             cursor: pointer;
-            color: white;
+            user-select: none;
             gap: 0.5rem;
         }
 
         > label > img {
             height: 100%;
             max-height: 100%;
-            border: 2px solid white;
             border-radius: 50%;
             aspect-ratio: 1;
             object-fit: cover;
+        }
+
+        > .__profile-menu {
+            display: none;
         }
 
         > .__menu {
             position: absolute;
             z-index: 100;
             right: 0;
-            display: none;
+            display: flex;
+            visibility: hidden;
             flex-direction: column;
             width: 30vw;
-            border: 1px solid gray;
-            background: white;
+            transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
+            opacity: 0;
         }
 
         > .__menu div {
             display: flex;
             flex-direction: row;
             width: 100%;
+            margin-top: auto;
 
             > .__menu-item {
                 flex: 1;
             }
         }
 
-        /* Hover styles!!!!!!!!!!!!!!!!!! DELETE OR CHANGE */
+        > input:checked ~ .__menu {
+            visibility: visible;
+            transition: opacity 0.3s ease-in-out;
+            opacity: 1;
+        }
+    }
+
+    /* Dropdown Style */
+    #knowy-navbar > .__profile-container > .__dropdown {
 
         &:hover {
             text-decoration: underline;
             text-decoration-color: white;
         }
 
-        > input:checked ~ .__menu {
-            display: flex;
+        > label {
+            color: white;
+        }
+
+        > label > img {
+            border: 2px solid white;
+        }
+
+        > .__menu {
+            border: 1px solid gray;
+            border-bottom-right-radius: 10px;
+            border-bottom-left-radius: 10px;
+            background: white;
+
+            & .__menu-item {
+                cursor: pointer;
+                text-align: center;
+                text-decoration: none;
+            }
+
+            > .__menu-item:hover {
+                text-decoration: underline;
+                background: darkgray;
+            }
+
+            > div {
+                border-bottom-right-radius: 10px;
+                border-bottom-left-radius: 10px;
+                background: red;
+            }
+
+            > div > .__menu-item:hover {
+                text-decoration: underline;
+            }
         }
     }
 
@@ -177,26 +221,32 @@
             z-index: 100;
             grid-column: 2;
 
-            > input:checked ~ .__menu {
-                display: flex;
-            }
 
             > input:checked + label {
-                display: flex;
-                flex-direction: column-reverse;
-                width: 100vw;
-                max-width: 400px;
-                height: auto;
-                padding-top: 0.5rem;
-                background: red;
+                display: none;
             }
 
-            > input:checked + label img {
-                height: 100px;
+            --knowy-navbar-dropdown-label-height: 180px;
+
+            > .__profile-menu {
+                display: flex;
+                position: fixed;
+                top: 0;
+                right: 0;
+                flex-direction: column-reverse;
+                width: 70vw;
+                max-width: 500px;
+                height: var(--knowy-navbar-dropdown-label-height);
+                padding-top: 0.5rem;
+                transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
+                opacity: 0;
+            }
+
+            > .__profile-menu img {
                 margin-top: 1.25rem;
             }
 
-            > input:checked + label::after {
+            > .__profile-menu::after {
                 font-size: 18px;
                 position: fixed;
                 align-self: start;
@@ -205,10 +255,67 @@
                 color: black;
             }
 
+            > input:checked ~ .__profile-menu {
+                transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
+                opacity: 1;
+            }
+
             > .__menu {
+                top: var(--knowy-navbar-dropdown-label-height);
                 right: 0;
-                width: 100vw;
-                max-width: 400px;
+                width: 70vw;
+                max-width: 500px;
+                height: calc(100vh - var(--knowy-navbar-dropdown-label-height));
+            }
+
+            > input:checked ~ .__menu {
+                display: flex;
+            }
+        }
+
+        #knowy-navbar > .__profile-container > .__dropdown {
+            > input:checked ~ .__profile-menu {
+                border-top-left-radius: 10px;
+            }
+
+            > .__menu {
+                border-bottom-left-radius: 10px;
+
+                & .__menu-item {
+                    cursor: pointer;
+                    text-align: center;
+                    text-decoration: none;
+                }
+
+                > div {
+                    border-bottom-right-radius: 0;
+                    border-bottom-left-radius: 10px;
+                }
+            }
+        }
+
+        /* Dropdown style */
+        #knowy-navbar > .__profile-container > .__dropdown {
+            &:hover {
+                text-decoration: underline;
+                text-decoration-color: white;
+            }
+
+            > .__profile-menu {
+                background: red;
+            }
+
+            > .__menu-item:hover {
+                text-decoration: underline;
+                background: darkgray;
+            }
+
+            > div {
+                background: red;
+            }
+
+            > div > .__menu-item:hover {
+                text-decoration: underline;
             }
         }
     }
