@@ -36,177 +36,179 @@
         background: green;
         grid-template-columns: 1fr;
         grid-template-rows: 65% 35%;
+    }
 
-        /* Navigation links */
+    /* Links */
+    #knowy-navbar > .__links {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        border-top: 1px solid gray;
+        background: green;
+        gap: 1rem;
 
-        > .__links {
-            display: flex;
-            align-items: center;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            justify-content: center;
-            border-top: 1px solid gray;
-            background: green;
-            gap: 1rem;
-
-            > a {
-                text-decoration: none;
-                color: white;
-
-                &:hover {
-                    text-decoration: underline;
-                }
-            }
+        > a {
+            text-decoration: none;
+            color: white;
         }
 
-        /* Container profile and logo */
+        > a:hover {
+            text-decoration: underline;
+        }
+    }
 
-        > .__profile-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            grid-template-rows: 100%;
+    /* Profile container */
+    #knowy-navbar > .__profile-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 100%;
 
-            > .__logo {
-                align-self: center;
-                height: 100%;
-                padding: 4px 10px;
-                grid-column: 2;
-                justify-self: center;
-                object-fit: contain;
-            }
-
-            /* Navigation menu dropdown */
-
-            > .kn-dropdown {
-                position: relative;
-                display: inline-block;
-
-                > input {
-                    display: none;
-                }
-
-                > label {
-                    cursor: pointer;
-                    user-select: none;
-                }
-
-                > .__menu {
-                    position: absolute;
-                    z-index: 100;
-                    right: 0;
-                    display: none;
-                }
-            }
-
-            > .__dropdown {
-
-                > label {
-                    display: flex;
-                    align-items: center;
-                    justify-content: flex-end;
-                    height: 100%;
-                    padding: 0 10px;
-                    cursor: pointer;
-                    color: white;
-                    gap: 0.5rem;
-
-                    > img {
-                        height: 100%;
-                        max-height: 100%;
-                        border: 2px solid white;
-                        border-radius: 50%;
-                        aspect-ratio: 1;
-                        object-fit: cover;
-                    }
-                }
-
-                > .__menu {
-                    position: absolute;
-                    z-index: 100;
-                    right: 0;
-                    display: none;
-                    flex-direction: column;
-                    width: 30vw;
-                    border: 1px solid gray;
-                    background: white;
-
-                    > div {
-                        display: flex;
-                        flex-direction: row;
-
-                        > .__menu-item {
-                            flex-grow: 1;
-                        }
-                    }
-                }
-
-                &:hover {
-                    text-decoration: underline;
-                    text-decoration-color: white;
-                }
-
-                /* Show dropdown if input checked */
-
-                > input:checked ~ .__menu {
-                    display: flex;
-                }
-            }
+        > .__logo {
+            align-self: center;
+            height: 100%;
+            padding: 4px 10px;
+            grid-column: 2;
+            justify-self: center;
+            object-fit: contain;
         }
 
-        @media (max-width: 768px) {
-            height: 80px;
-            grid-template-rows: 100%;
+        /* Dropdown menu (kn-dropdown) */
 
-            & .__links {
+        > .kn-dropdown {
+            position: relative;
+            display: inline-block;
+
+            > input {
                 display: none;
             }
 
-            & .__profile-container {
-                grid-template-columns: 1fr 1fr;
+            > label {
+                cursor: pointer;
+                user-select: none;
+            }
 
-                > .__logo {
-                    justify-self: start;
-                    grid-column: 1;
-                }
+            > .__menu {
+                position: absolute;
+                z-index: 100;
+                right: 0;
+                display: none;
+            }
+        }
+    }
 
-                > .__dropdown {
-                    z-index: 100;
-                    grid-column: 2;
+    /* Custom dropdown */
+    #knowy-navbar > .__profile-container > .__dropdown {
+        > label {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100%;
+            padding: 0 10px;
+            cursor: pointer;
+            color: white;
+            gap: 0.5rem;
+        }
 
-                    > input:checked ~ .__menu {
-                        display: flex;
-                    }
+        > label > img {
+            height: 100%;
+            max-height: 100%;
+            border: 2px solid white;
+            border-radius: 50%;
+            aspect-ratio: 1;
+            object-fit: cover;
+        }
 
-                    > input:checked + label {
-                        display: flex;
-                        flex-direction: column-reverse;
-                        width: 100vw;
-                        max-width: 400px;
-                        height: auto;
-                        padding-top: 0.5rem;
-                        background: red;
+        > .__menu {
+            position: absolute;
+            z-index: 100;
+            right: 0;
+            display: none;
+            flex-direction: column;
+            width: 30vw;
+            border: 1px solid gray;
+            background: white;
+        }
 
-                        > img {
-                            height: 100px;
-                            margin-top: 1.25rem;
-                        }
+        > .__menu div {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
 
-                        &::after {
-                            font-size: 18px;
-                            position: fixed;
-                            align-self: start;
-                            content: "✖"; /* o también "×" (multiplicación) */
-                            cursor: pointer;
-                            color: black;
-                        }
-                    }
+            > .__menu-item {
+                flex: 1;
+            }
+        }
 
-                    > .__menu {
-                        right: 0;
-                        width: 100vw;
-                        max-width: 400px;
-                    }
-                }
+        /* Hover styles!!!!!!!!!!!!!!!!!! DELETE OR CHANGE */
+
+        &:hover {
+            text-decoration: underline;
+            text-decoration-color: white;
+        }
+
+        > input:checked ~ .__menu {
+            display: flex;
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        #knowy-navbar {
+            height: 80px;
+            grid-template-rows: 100%;
+        }
+
+        #knowy-navbar > .__links {
+            display: none;
+        }
+
+        #knowy-navbar > .__profile-container {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        #knowy-navbar > .__profile-container > .__logo {
+            justify-self: start;
+            grid-column: 1;
+        }
+
+        #knowy-navbar > .__profile-container > .__dropdown {
+            z-index: 100;
+            grid-column: 2;
+
+            > input:checked ~ .__menu {
+                display: flex;
+            }
+
+            > input:checked + label {
+                display: flex;
+                flex-direction: column-reverse;
+                width: 100vw;
+                max-width: 400px;
+                height: auto;
+                padding-top: 0.5rem;
+                background: red;
+            }
+
+            > input:checked + label img {
+                height: 100px;
+                margin-top: 1.25rem;
+            }
+
+            > input:checked + label::after {
+                font-size: 18px;
+                position: fixed;
+                align-self: start;
+                content: "✖";
+                cursor: pointer;
+                color: black;
+            }
+
+            > .__menu {
+                right: 0;
+                width: 100vw;
+                max-width: 400px;
             }
         }
     }
