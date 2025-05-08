@@ -1,0 +1,97 @@
+<!-- News section -->
+<div>
+    <div class="section-header-card">
+        <h2>Últimas Novedades</h2>
+    </div>
+
+    <div class="news-card">
+        <div class="news-item">
+            <div class="news-date">15 de abril, 2025</div>
+            <div class="news-title">Nuevo curso de React avanzado disponible</div>
+            <p>Hemos lanzado un nuevo curso de React que cubre los últimos hooks, patrones y mejores prácticas.</p>
+        </div>
+
+        <div class="news-item">
+            <div class="news-date">10 de abril, 2025</div>
+            <div class="news-title">Actualización de la plataforma</div>
+            <p>Hemos mejorado la interfaz de usuario y añadido nuevas funcionalidades para hacer tu experiencia de aprendizaje más fluida.</p>
+        </div>
+
+        <div class="news-item">
+            <div class="news-date">2 de abril, 2025</div>
+            <div class="news-title">Colaboración con empresas tecnológicas</div>
+            <p>Nos hemos asociado con importantes empresas del sector para ofrecer oportunidades laborales a nuestros estudiantes destacados.</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Section Header Card */
+    .section-header-card {
+        background-color: var(--primary-green);
+        color: white;
+        border-radius: var(--card-radius);
+        padding: clamp(10px, 1.5vw, 15px);
+        text-align: center;
+        box-shadow: var(--card-shadow);
+        grid-column: 1 / -1;
+        margin-bottom: clamp(5px, 1vw, 10px);
+        width: 100%;
+    }
+
+    .section-header-card h2 {
+        margin: 0;
+        font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+    }
+    /*End of the Section Header Card*/
+    .news-card {
+        background-color: white;
+        border-radius: var(--card-radius);
+        padding: clamp(15px, 2vw, 20px);
+        box-shadow: var(--card-shadow);
+        width:100%;
+        transition:box-shadow var(--transition-speed),
+    }
+
+    .news-card:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .news-card h2 {
+        color: var(--primary-green);
+        margin-bottom: clamp(15px, 2vw, 20px);
+        text-align: center;
+        font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+    }
+
+    .news-item {
+        border-bottom: 1px solid #ccc;
+        padding: clamp(10px, 1.5vw, 15px) 0;
+        transition: background-color var(--transition-speed);
+    }
+
+    .news-item:hover {
+        background-color: #f9f9f9;
+    }
+
+    .news-item:last-child {
+        border-bottom: none;
+    }
+
+    .news-date {
+        color: #666;
+        font-size: clamp(0.8rem, 1.1vw, 0.9rem);
+    }
+
+    .news-title {
+        font-weight: bold;
+        margin: 5px 0;
+        font-size: clamp(1rem, 1.5vw, 1.2rem);
+        color: var(--primary-green);
+    }
+
+    .news-item p{
+        font-size: clamp(0.9rem, 1.2vw, 1rem);
+        line-height: 1.5;
+    }
+</style>
