@@ -1,0 +1,262 @@
+/* Base styles */
+@Font-face {
+    font-family: 'virgilio';
+    src: url("fonts/Virgil.woff2") format("woff2");
+}
+
+:root {
+    --primary-green: #4CAF50;
+    --light-green: #A7E9AF;
+    --dark-green: #2E7D32;
+    --bg-gray: #e0e0e0;
+    --dark-bg: #121212;
+    --text-dark: #333;
+    --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --card-radius: 12px;
+    --transition-speed: 0.3s;
+}
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html{
+    font-size:16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--bg-gray);
+    margin: 0;
+    padding: 0;
+    font-family: 'virgilio', sans-serif;
+    line-height: 1.5;
+    color: var(--text-dark);
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h6{
+    margin-bottom:0.5rem;
+    line-height: 1.2;
+}
+
+h1 {
+    text-align: center;
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: #333;
+    margin: 20px 0;
+    display: none; /* Hide the title according to the images */
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Styles for the KNOWY main card */
+.knowy-card {
+    background-color: var(--bg-gray);
+    overflow: hidden;
+    margin: clamp(15px, 3vw, 30px) auto;
+}
+
+.knowy-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: clamp(15px, 3vw, 30px);
+    gap: 20px;
+}
+
+.text-content {
+    flex: 1;
+    padding-right: clamp(10px, 2vw, 20px);
+}
+
+.logo-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.logo-text {
+    color: var(--primary-green);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: bold;
+    margin-bottom: clamp(10px, 2vw, 20px);
+    text-align: center;
+}
+
+.brain-logo {
+    width: clamp(150px, 30vw, 250px);
+    height: clamp(150px, 30vw, 250px);
+    margin: 0 auto;
+}
+
+.brain-logo img { /*Convendría quitarla porque ya existe img100%*/
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.tagline {
+    font-size: clamp(1.2rem, 3vw, 2rem);
+    font-weight: bold;
+    margin-bottom: clamp(15px, 3vw, 30px);
+    color: #333;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(8px, 1.5vw, 15px);
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.btn-login {
+    background-color: var(--primary-green);
+    color: white;
+    text-align: center;
+    padding: clamp(10px, 2vw, 15px);
+    border-radius: 10px;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    transition: background-color var(--transition-speed);
+}
+
+.btn-login:hover {
+    background-color: var(--dark-green);
+    color: white;
+}
+
+.btn-register {
+    background-color: transparent;
+    color: #333;
+    text-align: center;
+    padding: clamp(10px, 2vw, 15px);
+    border-radius: 10px;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    border: 2px solid var(--primary-green);
+    transition: background-color var(--transition-speed);
+}
+
+.btn-register:hover {
+    background-color: #d0d0d0;
+}
+
+.languages-footer {
+    background-color: var(--primary-green);
+    color: white;
+    padding: clamp(10px, 1.5vw, 15px) 0;
+    text-align: center;
+    white-space: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--light-green) var(--primary-green);
+}
+
+.languages-footer::-webkit-scrollbar {
+    height: 6px;
+}
+
+.languages-footer::-webkit-scrollbar-track {
+    background: var(--primary-green);
+}
+
+.languages-footer::-webkit-scrollbar-thumb {
+    background-color: var(--light-green);
+    border-radius: 20px;
+}
+
+.languages-footer span {
+    display: inline-block;
+    margin: 0 clamp(10px, 2vw, 20px);
+    font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+    transition: color var(--transition-speed);
+    cursor: pointer;
+}
+
+.languages-footer span:hover{
+    color: var(--light-green);
+}
+/*End of styles for Knowy Card*/
+
+/* Styles for contentBox cards (functionalitiesCard, newsCard)*/
+.card-container {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(15px, 3vw, 30px);
+    margin: clamp(25px, 5vw, 50px) auto;
+    max-width: 1200px;
+    padding: 0 clamp(8px, 1.5vw, 15px);
+    width: 100%;
+}
+
+/*End of styles for contentBox cards (functionalities, newsCard)*/
+
+/*Styles of footer.html*/
+
+/*End of styles of footer.html*/
+
+
+/*Responsive Media Queries*/
+/* Extra Small Devices (phones, 576px and down) */
+@media (max-width: 576px) {
+    .knowy-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .text-content {
+        padding-right: 0;
+        width: 100%;
+    }
+
+    .logo-content {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .brain-logo {
+        width: 150px;
+        height: 150px;
+    }
+
+    .languages-footer {
+        padding: 10px 0;
+    }
+
+    .languages-footer span {
+        margin: 0 10px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Small Devices (landscape phones, 576px to 767px) */
+@media (min-width: 577px) and (max-width: 767px) {
+    .knowy-content {
+        flex-direction: column;
+    }
+
+    .text-content {
+        padding-right: 0;
+        text-align: center;
+        margin-top: 1rem;
+    }
+}
+
+/* Medium Devices (tablets, 768px to 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .knowy-content {
+        flex-direction: row;
+    }
+}
