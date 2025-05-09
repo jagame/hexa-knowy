@@ -1,0 +1,12 @@
+<!-- templates/components/example-card-component.html -->
+<div class="card card-component"
+	 th:fragment="example-card-component(img, title, text, buttonText, buttonLink)">
+	<img th:src="${img}" class="card-img-top" alt="...">
+	<div class="card-body">
+		<h5 class="card-title" th:text="${title}">Card title</h5>
+		<p class="card-text" th:text="${text}">Some quick example text to build on the card title and make up the bulk
+			of the card's
+			content.</p>
+		<a th:href="${buttonLink}" class="btn btn-primary" th:text="${buttonText}">Go somewhere</a>
+	</div>
+</div>
