@@ -1,5 +1,5 @@
 body {
-    background: gray;
+    background: red;
     margin: 30px
 }
 
@@ -14,7 +14,3 @@ h1 {
     text-align: center;
     font-size: xxx-large;
 }
-
- .card-component {
-	 width: 18rem;
- }
