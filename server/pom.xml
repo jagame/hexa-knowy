@@ -28,6 +28,8 @@
     </scm>
     <properties>
         <java.version>21</java.version>
+        <sass.source.in>src/main/resources/static/styles</sass.source.in>
+        <sass.source.out>generated-resources/main/static/styles</sass.source.out>
     </properties>
     <dependencies>
         <dependency>
@@ -113,7 +115,7 @@
                     <sassVersion>1.87.0</sassVersion>
                     <args>
                         <arg>
-                            ${project.basedir}/src/main/resources/static/styles:${project.build.directory}/generated-resources/main/static/styles
+                            ${project.basedir}/${sass.source.in}:${project.build.directory}/${sass.source.out}
                         </arg>
                     </args>
                 </configuration>
