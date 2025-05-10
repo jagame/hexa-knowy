@@ -115,7 +115,6 @@
                         <arg>
                             ${project.basedir}/src/main/resources/static/styles:${project.build.directory}/generated-resources/main/static/styles
                         </arg>
-                        <arg>--no-source-map</arg>
                     </args>
                 </configuration>
                 <executions>
@@ -131,15 +130,13 @@
         </plugins>
 
         <resources>
-            <!--   Default Resource  -->
-            <resource>
-                <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>*.scss</exclude>
-                    <exclude>*.sass</exclude>
-                </excludes>
-            </resource>
-            <!--   Generated Resource  -->
+<!--            <resource>-->
+<!--                <directory>src/main/resources</directory>-->
+<!--                <excludes>-->
+<!--                    <exclude>*.scss</exclude>-->
+<!--                    <exclude>*.sass</exclude>-->
+<!--                </excludes>-->
+<!--            </resource>-->
             <resource>
                 <directory>${project.build.directory}/generated-resources/main</directory>
             </resource>
