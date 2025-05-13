@@ -10,4 +10,9 @@ public class PresentationController {
 	public String viewLandingPage() {
 		return "pages/example";
 	}
+
+	@GetMapping("/changePassword")
+	public String viewPasswordNewPassword() { return "pages/password-change"; }
 }
+
+
