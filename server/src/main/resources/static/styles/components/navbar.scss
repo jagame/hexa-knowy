@@ -1,9 +1,13 @@
+$navbar-height: 100px;
+$dropdown-label-height: 180px;
+
 #knowy-navbar {
-	position: fixed;
+	position: sticky;
 	z-index: 90;
+	top: 0;
 	display: grid;
 	width: 100%;
-	height: 100px;
+	height: $navbar-height;
 	grid-template-columns: 1fr;
 	grid-template-rows: 65% 35%;
 }
@@ -78,13 +82,13 @@
 	}
 
 	> .__profile-menu {
-		display: none;
 		top: 0;
 		right: 0;
+		display: none;
 		flex-direction: column-reverse;
 		width: 70vw;
 		max-width: 500px;
-		height: var(--knowy-navbar-dropdown-label-height);
+		height: $dropdown-label-height;
 		padding-top: 0.5rem;
 		transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
 		opacity: 0;
@@ -195,11 +199,11 @@
 			display: none;
 		}
 
-		--knowy-navbar-dropdown-label-height: 180px;
+		$dropdown-label-height: 180px;
 
 		> .__profile-menu {
-			display: flex;
 			position: fixed;
+			display: flex;
 		}
 
 		> .__profile-menu img {
@@ -221,11 +225,11 @@
 		}
 
 		> .__menu {
-			top: var(--knowy-navbar-dropdown-label-height);
+			top: $dropdown-label-height;
 			right: 0;
 			width: 70vw;
 			max-width: 500px;
-			height: calc(100vh - var(--knowy-navbar-dropdown-label-height));
+			height: calc(100vh - $dropdown-label-height);
 		}
 
 		> input:checked ~ .__menu {

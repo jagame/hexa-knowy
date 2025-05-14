@@ -18,13 +18,11 @@
 			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
 	<!-- Knowy -->
-	<link rel="stylesheet" th:href="@{/styles/global.css}">
-	<link rel="stylesheet" th:href="@{/styles/components/navbar.css}">
-
+	<link rel="stylesheet" th:href="@{/styles/layouts/navbar-layout.css}">
 </head>
 <body>
 
-<header th:replace="components/navbar :: knowy-navbar('Sara', 'https://placehold.co/50x50')">
+<header th:replace="~{components/navbar :: knowy-navbar('Sara', 'https://placehold.co/50x50')}">
 </header>
 
 <main layout:fragment="main-content">
