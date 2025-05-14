@@ -1,0 +1,23 @@
+{
+  "name": "knowy-pages-alpha",
+  "version": "1.0.0",
+  "description": "Voy a subir una carpeta que va contener los siguientes archivos:\r - `global.css` este archivo servirá para el estilo general de todas las páginas, no os preocupeis mucho por este de momento que ya lo haremos acorde para todos.\r - `index.html` este archivo contiene implementación con BootStrap 5 por lo tanto podeis usar los componentes de este. Además, he añadido un script JS que nos va a permitir añadir componentes como el archivo `card.html`.\r ¿Que? ¿Como funciona?\r Este Script no lo toques ni modifiques, lo unico que hace es pillar un archivo que tengas en esa carpeta `PlantillaConPsuComponentes` (puedes dividir en mas carpetas si lo necesitas pero antes entiende lo que es una ruta relativa o pregúntame) y lo inserta dentro del `index.html` este archivo puede cambiar de nombre asique no te rayes. Poco más. Cualquier duda preguntame.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Knowy-Learn/knowy-pages-alpha.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Knowy-Learn/knowy-pages-alpha/issues"
+  },
+  "homepage": "https://github.com/Knowy-Learn/knowy-pages-alpha#readme",
+  "devDependencies": {
+    "sass": "^1.88.0"
+  }
+}

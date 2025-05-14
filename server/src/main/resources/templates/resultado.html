@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Registro Exitoso</title>
+</head>
+<body>
+<h1>Registro exitoso</h1>
+<p>Bienvenido, <span th:text="${user.username}">usuario</span>!</p>
+<p>Contraseña <span th:text="${user.password}"></span>!</p>
+<p>Email <span th:text="${user.email}"></span>!</p>
+</body>
+</html>
