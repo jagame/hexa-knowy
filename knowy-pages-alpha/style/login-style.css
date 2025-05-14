@@ -13,6 +13,16 @@ img {
     z-index: 10;
     margin-bottom: -350px;
     padding: -50px 0;
+	opacity: 0;
+	transform: translateY(20px);
+	animation: fadeUp 1s forwards;
+}
+
+@keyframes fadeUp {
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 body {
@@ -37,6 +47,9 @@ body {
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
     border: 2px solid #8CD790;
     margin-top: 150px;
+	opacity: 0;
+	transform: translateY(20px);
+	animation: fadeUp 1s forwards;
     
 }
 
