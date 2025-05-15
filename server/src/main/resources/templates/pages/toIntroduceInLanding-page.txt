@@ -1,0 +1,35 @@
+<!-- Functionalities Section -->
+<div class="card-container">
+	<div class="section-header-card">
+		<h2>Funcionalidades</h2>
+	</div>
+	<div th:replace="components/functionalities-card-component :: functionalities-card-component('/images/learning.webp',
+	'Aprendizaje Personalizado',
+	'Aprende a tu propio ritmo con lecciones adaptadas a tu nivel de conocimiento y estilo de aprendizaje')">
+	</div>
+
+	<div th:replace="components/functionalities-card-component :: functionalities-card-component('/images/exercisesPractices.webp',
+	'Ejercicios Prácticos',
+	'Refuerza tus conocimientos con ejercicios interactivos y proyectos reales que te ayudarán a dominar la programación.')">
+	</div>
+
+	<div th:replace="components/functionalities-card-component :: functionalities-card-component('/images/ActiveCommunity.webp',
+	'Comunidad Activa',
+	'Conecta con otros estudiantes, comparte conocimientos y resuelve dudas en nuestra comunidad de aprendizaje.')">
+	</div>
+
+	<div th:replace="components/functionalities-card-component :: functionalities-card-component('/images/accessMultiplatform.webp',
+	'Acceso Multiplataforma',
+	'Accede a tus cursos desde cualquier dispositivo, en cualquier momento y lugar.')">
+	</div>
+
+	<div th:replace="components/functionalities-card-component :: functionalities-card-component('/images/tracking.webp',
+	'Seguimiento de Progreso',
+	'Visualiza tu avance y recibe recomendaciones personalizadas para mejorar tu aprendizaje.')">
+	</div>
+
+	<div th:replace="components/functionalities-card-component :: functionalities-card-component('/images/certification.webp',
+	'Certificaciones',
+	'Obtén certificados reconocidos que validen tus habilidades y conocimientos en programación.')">
+	</div>
+</div>
