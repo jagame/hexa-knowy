@@ -1,0 +1,8 @@
+<!-- templates/components/functionalities-card-component.html -->
+<article class="feature-card" th:fragment="functionalities-card-component(img, title, text)">
+	<div class="feature-icon">
+		<img th:src="${img}" th:alt="${title + ' icon'}" loading="lazy">
+	</div>
+	<h3 th:text="${title}"></h3>
+	<p th:text="${text}"></p>
+</article>

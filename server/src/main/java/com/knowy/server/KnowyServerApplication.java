@@ -10,3 +10,4 @@ public class KnowyServerApplication {
 		SpringApplication.run(KnowyServerApplication.class, args);
 	}
 }
+

@@ -1,7 +1,8 @@
 /* Base styles */
-@Font-face {
+@font-face {
     font-family: 'virgilio';
-    src: url("../../server/src/main/resources/static/fonts/Virgil.woff2") format("woff2");
+    src: url("../fonts/Virgil.woff2") format("woff2");
+	font-display: swap;
 }
 
 :root {
@@ -26,7 +27,7 @@ html{
     scroll-behavior: smooth;
 }
 
-body {
+.landing-page-content {
     background: var(--bg-gray);
     margin: 0;
     padding: 0;
@@ -46,7 +47,6 @@ h1 {
     font-size: clamp(2rem, 5vw, 3rem);
     color: #333;
     margin: 20px 0;
-    display: none; /* Hide the title according to the images */
 }
 
 img {
@@ -56,9 +56,9 @@ img {
 
 /* Styles for the KNOWY main card */
 .knowy-card {
-    background-color: var(--bg-gray);
+    background-color: var(--bg-gray) !important;
     overflow: hidden;
-    margin: clamp(15px, 3vw, 30px) auto;
+    margin-bottom: clamp(15px, 3vw, 30px);
 }
 
 .knowy-content {
@@ -94,7 +94,7 @@ img {
     margin: 0 auto;
 }
 
-.brain-logo img { /*Convendría quitarla porque ya existe img100%*/
+.brain-logo img {
     width: 100%;
     height: 100%;
     object-fit: contain;
@@ -188,7 +188,6 @@ img {
 .languages-footer span:hover{
     color: var(--light-green);
 }
-/*End of styles for Knowy Card*/
 
 /* Styles for contentBox cards (functionalitiesCard, newsCard)*/
 .card-container {
@@ -201,11 +200,188 @@ img {
     width: 100%;
 }
 
-/*End of styles for contentBox cards (functionalities, newsCard)*/
+/*Grid for functionalities*/
+.functionalities-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr); /*Discuss with team*/
+	gap: clamp(15px, 3vw, 30px);
+}
 
-/*Styles of footer.html*/
+/* Section Header Card */
+.section-header-card {
+	background-color: var(--primary-green);
+	color: white;
+	border-radius: var(--card-radius);
+	padding: clamp(10px, 1.5vw, 15px);
+	text-align: center;
+	box-shadow: var(--card-shadow);
+	grid-column: 1 / -1;
+	margin-bottom: clamp(5px, 1vw, 10px);
+	width: 100%;
+}
 
-/*End of styles of footer.html*/
+.section-header-card h2 {
+	margin: 0;
+	font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+}
+/*End of the Section Header Card*/
+.feature-card {
+	background-color: white;
+	border-radius: 12px;
+	padding: clamp(15px, 2vw, 20px);
+	margin-bottom:30px;
+	box-shadow: var(--card-shadow);
+	transition: transform var(--transition-speed),
+	background-color var(--transition-speed),
+	box-shadow var(--transition-speed);
+	text-align:center;
+	width: 100%;
+}
+
+.feature-card:hover {
+	transform: translateY(-5px);
+	background-color: var(--light-green);
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.feature-card h3 {
+	color: var(--primary-green);
+	text-align: center;
+	margin-bottom: clamp(10px, 1.5vw, 15px);
+	font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+}
+
+.feature-card p {
+	color: var(--text-dark);
+	font-size: clamp(0.9rem, 1.2vw, 1rem);
+	line-height: 1.5;
+}
+
+.feature-icon {
+	width: clamp(3rem, 5vw, 4rem);
+	font-size: clamp(2rem, 3vw, 2.5rem);
+	color: var(--primary-green);
+	margin: 0 auto clamp(10px, 1.5vw, 15px) auto;
+	justify-self: center;
+	align-items: center;
+}
+.feature-icon img{
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	transition: transform var(--transition-speed);
+}
+.feature-card:hover .feature-icon img {
+	transform: scale(1.1);
+}
+
+/*News section*/
+.news-card {
+	background-color: white;
+	border-radius: var(--card-radius);
+	padding: clamp(15px, 2vw, 20px);
+	box-shadow: var(--card-shadow);
+	width:100%;
+	transition:box-shadow var(--transition-speed);
+}
+
+.news-card:hover {
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.news-card h2 {
+	color: var(--primary-green);
+	margin-bottom: clamp(15px, 2vw, 20px);
+	text-align: center;
+	font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+}
+
+.news-item {
+	border-bottom: 1px solid #ccc;
+	padding: clamp(10px, 1.5vw, 15px) 0;
+	transition: background-color var(--transition-speed);
+}
+
+.news-item:hover {
+	background-color: #f9f9f9;
+}
+
+.news-item:last-child {
+	border-bottom: none;
+}
+
+.news-date {
+	color: #666;
+	font-size: clamp(0.8rem, 1.1vw, 0.9rem);
+}
+
+.news-title {
+	font-weight: bold;
+	margin: 5px 0;
+	font-size: clamp(1rem, 1.5vw, 1.2rem);
+	color: var(--primary-green);
+}
+
+.news-item p{
+	font-size: clamp(0.9rem, 1.2vw, 1rem);
+	line-height: 1.5;
+}
+
+/*Footer styles*/
+.footer{
+	padding: 0 clamp(15px, 3vw, 30px);
+	margin: 0 auto;
+	width: 100%;
+}
+.footer a{
+	color: var(--primary-green);
+	transition:color var(--transition-speed);
+	padding: clamp(8px, 1.5vw, 15px) 0;
+}
+
+.footer a:hover{
+	color: var(--dark-green);
+}
+/* Global styles for social media icons */
+
+/* Base style for all icons */
+.footer .bi {
+	display: inline-block;
+	vertical-align: -0.125em;
+	transition: transform 0.2s ease;
+}
+
+/* Colours for specific icons */
+.bi-instagram {
+	color: #e1306c; /* Instagram colour */
+	transition: color 0.3s ease;
+}
+
+.bi-facebook {
+	color: #1877f2; /* Facebook colour */
+	transition: color 0.3s ease;
+}
+
+.bi-twitter-x{
+	color: #000000; /* Colour of X*/
+	transition: color 0.3s ease;
+}
+
+/* Hover effects */
+a:hover .bi-instagram {
+	color: #c13584;
+	transform: scale(1.1);
+}
+
+a:hover .bi-facebook {
+	color: #0d65d9;
+	transform: scale(1.1);
+}
+
+a:hover .bi-twitter-x{
+	color: #333333;
+	transform: scale(1.1);
+}
 
 
 /*Responsive Media Queries*/
@@ -242,7 +418,7 @@ img {
 }
 
 /* Small Devices (landscape phones, 576px to 767px) */
-@media (min-width: 577px) and (max-width: 767px) {
+@media (max-width: 767px) {
     .knowy-content {
         flex-direction: column;
     }
@@ -252,11 +428,16 @@ img {
         text-align: center;
         margin-top: 1rem;
     }
+	.functionalities-grid {
+		grid-template-columns: repeat(1, 1fr);
+	}
+
 }
 
 /* Medium Devices (tablets, 768px to 991px) */
 @media (min-width: 768px) and (max-width: 991px) {
-    .knowy-content {
-        flex-direction: row;
-    }
+
+	.functionalities-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
 }
