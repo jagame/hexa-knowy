@@ -1,13 +1,41 @@
 package com.knowy.server.controller;
 
+import com.knowy.server.dto.NewsDto;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class PresentationController {
 
 	@GetMapping("/")
-	public String viewLandingPage() {
+	public String viewLandingPage(ModelMap interfazPantalla) {
+
+		List<NewsDto> newsList = new ArrayList<>();
+		// Create and add three items to the list
+		NewsDto news1 = new NewsDto();
+		news1.setTitle("Nuevo curso de React avanzado disponible");
+		news1.setDate("15 de abril, 2025");
+		news1.setText("Hemos lanzado un nuevo curso de React que cubre los últimos hooks, patrones y mejores prácticas");
+		newsList.add(news1);
+
+		NewsDto news2 = new NewsDto();
+		news2.setTitle("Actualización de la plataforma");
+		news2.setDate("10 de abril, 2025");
+		news2.setText("Hemos mejorado la interfaz de usuario y añadido nuevas funcionalidades para hacer tu experiencia de aprendizaje más fluida.");
+		newsList.add(news2);
+
+		NewsDto news3 = new NewsDto();
+		news3.setTitle("Colaboración con empresas tecnológicas");
+		news3.setDate("2 de abril, 2025");
+		news3.setText("Nos hemos asociado con importantes empresas del sector para ofrecer oportunidades laborales a nuestros estudiantes destacados.");
+		newsList.add(news3);
+
+		//And I send the list to the screen
+		interfazPantalla.addAttribute("newsList", newsList);
 		return "pages/landing-page";
 	}
 }
