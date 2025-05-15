@@ -8,6 +8,6 @@ public class PresentationController {
 
 	@GetMapping("/")
 	public String viewLandingPage() {
-		return "pages/example";
+		return "pages/landing-page";
 	}
 }
