@@ -1,7 +1,7 @@
 /* Base styles */
 @Font-face {
     font-family: 'virgilio';
-    src: url("../../server/src/main/resources/static/fonts/Virgil.woff2") format("woff2");
+    src: url("../resources/fonts/Virgil.woff2") format("woff2");
 }
 
 :root {
