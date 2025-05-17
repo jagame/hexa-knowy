@@ -1,3 +1,5 @@
+@use "../global-vars" as *;
+
 $navbar-height: 12vh;
 $dropdown-label-height: 180px;
 
@@ -14,11 +16,13 @@ $dropdown-label-height: 180px;
 
 /* Knowy navbar style */
 #knowy-navbar {
-	background: green;
+	background: $primary;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Links */
 #knowy-navbar > .__links {
+	font-weight: bold;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -27,11 +31,12 @@ $dropdown-label-height: 180px;
 
 /* Links Style */
 #knowy-navbar > .__links {
-	border-top: 1px solid gray;
+	border-top: 1px solid $neutral-500;
+	background: $primary;
 
 	> a {
 		text-decoration: none;
-		color: white;
+		color: $neutral-100;
 	}
 
 	> a:hover {
@@ -64,6 +69,7 @@ $dropdown-label-height: 180px;
 	}
 
 	> label {
+		font-weight: bold;
 		display: flex;
 		align-items: center;
 		justify-content: flex-end;
@@ -107,7 +113,7 @@ $dropdown-label-height: 180px;
 		opacity: 0;
 	}
 
-	> .__menu div {
+	> .__menu > div {
 		display: flex;
 		flex-direction: row;
 		width: 100%;
@@ -130,42 +136,65 @@ $dropdown-label-height: 180px;
 
 	&:hover {
 		text-decoration: underline;
-		text-decoration-color: white;
+		text-decoration-color: $neutral-100;
 	}
 
 	> label {
-		color: white;
+		color: $neutral-100;
+	}
+
+	> label > span {
+		padding-bottom: 0.5rem;
 	}
 
 	> label > img {
-		border: 2px solid white;
+		border: 2px solid $neutral-100;
 	}
 
 	> .__menu {
-		border: 1px solid gray;
+		border: 1px solid $neutral-500;
 		border-bottom-right-radius: 10px;
 		border-bottom-left-radius: 10px;
-		background: white;
+		background: $neutral-100;
 
 		& .__menu-item {
+			font-size: large;
+			font-weight: 600;
 			cursor: pointer;
 			text-align: center;
 			text-decoration: none;
+			color: $primary
 		}
 
 		> .__menu-item:hover {
 			text-decoration: underline;
-			background: darkgray;
+			color: $primary;
+			background: $neutral-500;
 		}
 
 		> div {
+			display: flex;
 			border-bottom-right-radius: 10px;
 			border-bottom-left-radius: 10px;
-			background: red;
+			background: $primary;
+		}
+
+		> div > .__menu-item {
+			font-weight: bold;
+			text-decoration: none;
+			color: $neutral-100;
 		}
 
 		> div > .__menu-item:hover {
-			text-decoration: underline;
+			background: $primary-dark;
+		}
+
+		> div > .__menu-item-home {
+			border-bottom-left-radius: 10px;
+		}
+
+		> div > .__menu-item-logout {
+			border-bottom-right-radius: 10px;
 		}
 	}
 }
@@ -204,6 +233,7 @@ $dropdown-label-height: 180px;
 		> .__profile-menu {
 			position: fixed;
 			display: flex;
+			box-shadow: -8px 0 12px rgba(0, 0, 0, 0.2);
 		}
 
 		> .__profile-menu img {
@@ -216,7 +246,7 @@ $dropdown-label-height: 180px;
 			align-self: start;
 			content: "✖";
 			cursor: pointer;
-			color: black;
+			color: $neutral-900;
 		}
 
 		> input:checked ~ .__profile-menu {
@@ -241,8 +271,10 @@ $dropdown-label-height: 180px;
 
 		> .__menu {
 			border-bottom-left-radius: 10px;
+			box-shadow: -8px 0 10px rgba(0, 0, 0, 0.2);
 
 			& .__menu-item {
+				padding: 1rem 0;
 				cursor: pointer;
 				text-align: center;
 				text-decoration: none;
@@ -259,11 +291,11 @@ $dropdown-label-height: 180px;
 	#knowy-navbar > .__profile-container > .__dropdown {
 		&:hover {
 			text-decoration: underline;
-			text-decoration-color: white;
+			text-decoration-color: $neutral-100;
 		}
 
 		> .__profile-menu {
-			background: red;
+			background: $primary;
 		}
 
 		> .__menu-item:hover {
@@ -272,7 +304,7 @@ $dropdown-label-height: 180px;
 		}
 
 		> div {
-			background: red;
+			background: $primary;
 		}
 
 		> div > .__menu-item:hover {
