@@ -30,7 +30,7 @@
 			<div class="logo-content">
 				<h2 class="logo-text">KNOWY</h2>
 				<div class="brain-logo">
-					<img src="/images/logoWoutText.png" alt="KNOWY Brain Logo" loading="lazy">
+					<img class="img-content" src="/images/logoWoutText.png" alt="KNOWY Brain Logo" loading="lazy">
 				</div>
 			</div>
 			<div class="text-content">
@@ -55,37 +55,37 @@
 	<!-- Functionalities Section -->
 	<section class="card-container">
 		<header class="section-header-card">
-			<h2>Funcionalidades</h2>
+			<h2 class="section-header-title">Funcionalidades</h2>
 		</header>
 		<div class="functionalities-grid">
-			<article th:replace="components/functionalities-card-component :: functionalities-card-component('/images/learning.webp',
+			<article th:replace="~{components/functionalities-card-component :: functionalities-card-component('/images/learning.webp',
 			'Aprendizaje Personalizado',
-			'Aprende a tu propio ritmo con lecciones adaptadas a tu nivel de conocimiento y estilo de aprendizaje')">
+			'Aprende a tu propio ritmo con lecciones adaptadas a tu nivel de conocimiento y estilo de aprendizaje')}">
 			</article>
 
-			<article th:replace="components/functionalities-card-component :: functionalities-card-component('/images/exercisesPractices.webp',
+			<article th:replace="~{components/functionalities-card-component :: functionalities-card-component('/images/exercisesPractices.webp',
 			'Ejercicios Prácticos',
-			'Refuerza tus conocimientos con ejercicios interactivos y proyectos reales que te ayudarán a dominar la programación.')">
+			'Refuerza tus conocimientos con ejercicios interactivos y proyectos reales que te ayudarán a dominar la programación.')}">
 			</article>
 
-			<article th:replace="components/functionalities-card-component :: functionalities-card-component('/images/ActiveCommunity.webp',
+			<article th:replace="~{components/functionalities-card-component :: functionalities-card-component('/images/ActiveCommunity.webp',
 			'Comunidad Activa',
-			'Conecta con otros estudiantes, comparte conocimientos y resuelve dudas en nuestra comunidad de aprendizaje.')">
+			'Conecta con otros estudiantes, comparte conocimientos y resuelve dudas en nuestra comunidad de aprendizaje.')}">
 			</article>
 
-			<article th:replace="components/functionalities-card-component :: functionalities-card-component('/images/accessMultiplatform.webp',
+			<article th:replace="~{components/functionalities-card-component :: functionalities-card-component('/images/accessMultiplatform.webp',
 			'Acceso Multiplataforma',
-			'Accede a tus cursos desde cualquier dispositivo, en cualquier momento y lugar.')">
+			'Accede a tus cursos desde cualquier dispositivo, en cualquier momento y lugar.')}">
 			</article>
 
-			<article th:replace="components/functionalities-card-component :: functionalities-card-component('/images/tracking.webp',
+			<article th:replace="~{components/functionalities-card-component :: functionalities-card-component('/images/tracking.webp',
 			'Seguimiento de Progreso',
-			'Visualiza tu avance y recibe recomendaciones personalizadas para mejorar tu aprendizaje.')">
+			'Visualiza tu avance y recibe recomendaciones personalizadas para mejorar tu aprendizaje.')}">
 			</article>
 
-			<article th:replace="components/functionalities-card-component :: functionalities-card-component('/images/certification.webp',
+			<article th:replace="~{components/functionalities-card-component :: functionalities-card-component('/images/certification.webp',
 			'Certificaciones',
-			'Obtén certificados reconocidos que validen tus habilidades y conocimientos en programación.')">
+			'Obtén certificados reconocidos que validen tus habilidades y conocimientos en programación.')}">
 			</article>
 		</div>
 	</section>
@@ -108,41 +108,8 @@
 	</section>
 
 	<!-- Footer section -->
-	<footer class="footer">
-		<div class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top border-3 border-success">
-			<div class="col-md-4 d-flex align-items-center">
-				<a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1" aria-label="KNOWY Home">
+	<div th:replace="~{components/footer-card-component :: footer}"></div>
 
-					<img src="/images/logoWoutText.png" alt="KNOWY LOGO" width="30px">
-				</a>
-				<span class="mb-3 mb-md-0 text-body-secondary">© 2025 KNOWY, Inc</span>
-			</div>
-
-			<div class="col-md-4 d-flex justify-content-center">
-				<a href="/" class="text-body-secondary text-decoration-none me-3">
-					Términos y Condiciones
-				</a>
-			</div>
-
-			<ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-				<li class="ms-3">
-					<a class="text-body-secondary" href="#" aria-label="Instagram">
-						<i class="bi bi-instagram" style="font-size: 24px;"></i>
-					</a>
-				</li>
-				<li class="ms-3">
-					<a class="text-body-secondary" href="#" aria-label="Facebook">
-						<i class="bi bi-facebook" style="font-size: 24px;"></i>
-					</a>
-				</li>
-				<li class="ms-3">
-					<a class="text-body-secondary" href="#" aria-label="X">
-						<i class="bi bi-twitter-x" style="font-size: 24px;"></i>
-					</a>
-				</li>
-			</ul>
-		</div>
-	</footer>
 </body>
 </html>
 

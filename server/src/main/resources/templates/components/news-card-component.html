@@ -2,7 +2,7 @@
 <article class="news-item" th:fragment="news-card-component(date, title, text)">
 	<time class="news-date" th:text="${date}"></time>
 	<h3 class="news-title" th:text="${title}"></h3>
-	<p th:text="${text}"></p>
+	<p class="news-description" th:text="${text}"></p>
 </article>
 
 

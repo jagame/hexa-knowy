@@ -12,7 +12,7 @@ import java.util.List;
 public class PresentationController {
 
 	@GetMapping("/")
-	public String viewLandingPage(ModelMap interfazPantalla) {
+	public String viewLandingPage(ModelMap interfaceScreen) {
 
 		List<NewsDto> newsList = new ArrayList<>();
 		// Create and add three items to the list (simulation of what a DB would look like)
@@ -35,7 +35,7 @@ public class PresentationController {
 		newsList.add(news3);
 
 		//And I send the list to the screen
-		interfazPantalla.addAttribute("newsList", newsList);
+		interfaceScreen.addAttribute("newsList", newsList);
 		return "pages/landing-page";
 	}
 }
