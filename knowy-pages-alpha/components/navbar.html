@@ -99,14 +99,14 @@
             align-items: center;
             justify-content: flex-end;
             height: 100%;
-            padding: 10px;
+            padding: 0 10px;
             cursor: pointer;
             user-select: none;
             gap: 0.5rem;
         }
 
         > label > img {
-            height: 100%;
+            height: 90%;
             border-radius: 50%;
             aspect-ratio: 1;
             object-fit: cover;
@@ -114,6 +114,16 @@
 
         > .__profile-menu {
             display: none;
+			top: 0;
+			right: 0;
+			flex-direction: column-reverse;
+			width: 70vw;
+			max-width: 500px;
+			height: var(--knowy-navbar-dropdown-label-height);
+			padding-top: 0.5rem;
+			transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
+			opacity: 0;
+			border-top-left-radius: 10px;
         }
 
         > .__menu {
@@ -225,15 +235,6 @@
             > .__profile-menu {
                 display: flex;
                 position: fixed;
-                top: 0;
-                right: 0;
-                flex-direction: column-reverse;
-                width: 70vw;
-                max-width: 500px;
-                height: var(--knowy-navbar-dropdown-label-height);
-                padding-top: 0.5rem;
-                transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
-                opacity: 0;
             }
 
             > .__profile-menu img {
@@ -268,9 +269,6 @@
         }
 
         #knowy-navbar > .__profile-container > .__dropdown {
-            > input:checked ~ .__profile-menu {
-                border-top-left-radius: 10px;
-            }
 
             > .__menu {
                 border-bottom-left-radius: 10px;
