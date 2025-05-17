@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es"
-	  layout:decorate="~{/layouts/navbar-layout}"
+	  layout:decorate="~{/layouts/user-postlogin-layout}"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -12,25 +12,25 @@
 	<h1>Simple Example</h1>
 	<section class="card-container">
 		<div
-			th:replace="components/example-card-component :: example-card-component('https://placehold.co/600x400',
+			th:replace="~{components/example-card-component :: example-card-component('https://placehold.co/600x400',
 			'Mi Título 1',
 			'Contenido de prueba',
 			'Ver más',
-			'#')">
+			'#')}">
 		</div>
 		<div
-			th:replace="components/example-card-component :: example-card-component('https://placehold.co/600x400',
+			th:replace="~{components/example-card-component :: example-card-component('https://placehold.co/600x400',
 			'Mi Título 2',
 			'Contenido de prueba',
 			'Ver más',
-			'#')">
+			'#')}">
 		</div>
 		<div
-			th:replace="components/example-card-component :: example-card-component('https://placehold.co/600x400',
+			th:replace="~{components/example-card-component :: example-card-component('https://placehold.co/600x400',
 			'Mi Título 3',
 			'Contenido de prueba',
 			'Ver más',
-			'#')">
+			'#')}">
 		</div>
 	</section>
 </main>

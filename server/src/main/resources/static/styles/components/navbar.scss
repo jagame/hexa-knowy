@@ -156,6 +156,7 @@ $dropdown-label-height: 180px;
 		border-bottom-right-radius: 10px;
 		border-bottom-left-radius: 10px;
 		background: $neutral-100;
+		box-shadow: 8px 0 12px rgba(0, 0, 0, 0.1), 0 8px 12px rgba(0, 0, 0, 0.1);
 
 		& .__menu-item {
 			font-size: large;
