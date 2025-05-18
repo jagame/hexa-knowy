@@ -11,8 +11,13 @@ public class PresentationController {
 		return "pages/example";
 	}
 
-	@GetMapping("/changePassword")
-	public String viewPasswordNewPassword() { return "pages/password-change"; }
+	@GetMapping("/password-change/email")
+	public String passwordChangeEmail() {
+		return "pages/password-change-email";
+	}
+
+	@GetMapping("/password-change")
+	public String passwordChange() {
+		return "pages/password-change";
+	}
 }
-
-
