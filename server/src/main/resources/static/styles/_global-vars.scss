@@ -7,7 +7,16 @@ $neutral-300: #b0e0e0;
 $neutral-500: #e0e0e0;
 $neutral-700: #333333;
 $neutral-900: #121212;
+$neutral-1100: #333;
+
 
 // Tipografía
 $base-font-size: 16px;
 $line-height-base: 1.5;
+
+//Shadows
+$card-shadow:  0 4px 8px rgba(0, 0, 0, 0.1);
+$card-radius: 12px;
+
+//Animations
+$transition-speed: 0.3s;

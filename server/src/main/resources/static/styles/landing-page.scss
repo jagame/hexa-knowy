@@ -1,52 +1,18 @@
-/* Base styles */
-@font-face {
-    font-family: 'virgilio';
-    src: url("../fonts/Virgil.woff2") format("woff2");
-	font-display: swap;
-}
+@use '_global-vars' as *;
 
-:root {
-    --primary-green: #4CAF50;
-    --light-green: #A7E9AF;
-    --dark-green: #2E7D32;
-    --bg-gray: #e0e0e0;
-    --dark-bg: #121212;
-    --text-dark: #333;
-    --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    --card-radius: 12px;
-    --transition-speed: 0.3s;
-}
 *{
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-html{
-    font-size:16px;
-    scroll-behavior: smooth;
-}
-
 .landing-page-content {
-    background: var(--bg-gray);
+    background: $neutral-500;
     margin: 0;
     padding: 0;
-    font-family: 'virgilio', sans-serif;
     line-height: 1.5;
-    color: var(--text-dark);
+    color: $neutral-1100;
     overflow-x: hidden;
-}
-
-h1, h2, h3, h4, h6{
-    margin-bottom:0.5rem;
-    line-height: 1.2;
-}
-
-h1 {
-    text-align: center;
-    font-size: clamp(2rem, 5vw, 3rem);
-    color: #333;
-    margin: 20px 0;
 }
 
 .img-content {
@@ -56,7 +22,7 @@ h1 {
 
 /* Styles for the KNOWY main card */
 .knowy-card {
-    background-color: var(--bg-gray) !important;
+    background-color: $neutral-500 !important;
     overflow: hidden;
     margin-bottom: clamp(15px, 3vw, 30px);
 }
@@ -81,7 +47,7 @@ h1 {
     align-items: center;
 }
 .logo-text {
-    color: var(--primary-green);
+    color: $primary;
     font-size: clamp(2rem, 4vw, 3rem);
     font-weight: bold;
     margin-bottom: clamp(10px, 2vw, 20px);
@@ -117,7 +83,7 @@ h1 {
 }
 
 .btn-login {
-    background-color: var(--primary-green);
+    background-color: $primary;
     color: white;
     text-align: center;
     padding: clamp(10px, 2vw, 15px);
@@ -126,11 +92,11 @@ h1 {
     text-decoration: none;
     font-weight: bold;
     display: block;
-    transition: background-color var(--transition-speed);
+    transition: background-color $transition-speed;
 }
 
 .btn-login:hover {
-    background-color: var(--dark-green);
+    background-color: $primary-dark;
     color: white;
 }
 
@@ -144,8 +110,8 @@ h1 {
     text-decoration: none;
     font-weight: bold;
     display: block;
-    border: 2px solid var(--primary-green);
-    transition: background-color var(--transition-speed);
+    border: 2px solid $primary;
+    transition: background-color $transition-speed;
 }
 
 .btn-register:hover {
@@ -153,7 +119,7 @@ h1 {
 }
 
 .languages-footer {
-    background-color: var(--primary-green);
+    background-color: $primary;
     color: white;
     padding: clamp(10px, 1.5vw, 15px) 0;
     text-align: center;
@@ -161,7 +127,7 @@ h1 {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
-    scrollbar-color: var(--light-green) var(--primary-green);
+    scrollbar-color: $primary-light $primary;
 }
 
 .languages-footer::-webkit-scrollbar {
@@ -169,11 +135,11 @@ h1 {
 }
 
 .languages-footer::-webkit-scrollbar-track {
-    background: var(--primary-green);
+    background: $primary;
 }
 
 .languages-footer::-webkit-scrollbar-thumb {
-    background-color: var(--light-green);
+    background-color: $primary-light;
     border-radius: 20px;
 }
 
@@ -181,12 +147,12 @@ h1 {
     display: inline-block;
     margin: 0 clamp(10px, 2vw, 20px);
     font-size: clamp(0.9rem, 1.5vw, 1.2rem);
-    transition: color var(--transition-speed);
+    transition: color $transition-speed;
     cursor: pointer;
 }
 
 .languages-footer > span:hover{
-    color: var(--light-green);
+    color: $primary-light;
 }
 
 /* Styles for contentBox cards (functionalitiesCard, newsCard)*/
@@ -209,12 +175,12 @@ h1 {
 
 /* Section Header Card */
 .section-header-card {
-	background-color: var(--primary-green);
+	background-color: $primary;
 	color: white;
-	border-radius: var(--card-radius);
+	border-radius: $card-radius;
 	padding: clamp(10px, 1.5vw, 15px);
 	text-align: center;
-	box-shadow: var(--card-shadow);
+	box-shadow: $card-shadow;
 	grid-column: 1 / -1;
 	margin-bottom: clamp(5px, 1vw, 10px);
 	width: 100%;
@@ -230,29 +196,29 @@ h1 {
 	border-radius: 12px;
 	padding: clamp(15px, 2vw, 20px);
 	margin-bottom:30px;
-	box-shadow: var(--card-shadow);
-	transition: transform var(--transition-speed),
-	background-color var(--transition-speed),
-	box-shadow var(--transition-speed);
+	box-shadow: $card-shadow;
+	transition: transform $transition-speed,
+	background-color $transition-speed,
+	box-shadow $transition-speed;
 	text-align:center;
 	width: 100%;
 }
 
 .feature-card:hover {
 	transform: translateY(-5px);
-	background-color: var(--light-green);
+	background-color: $primary-light;
 	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .feature-card > .feature-title {
-	color: var(--primary-green);
+	color: $primary;
 	text-align: center;
 	margin-bottom: clamp(10px, 1.5vw, 15px);
 	font-size: clamp(1.1rem, 1.8vw, 1.3rem);
 }
 
 .feature-card > .feature-description {
-	color: var(--text-dark);
+	color: $neutral-1100;
 	font-size: clamp(0.9rem, 1.2vw, 1rem);
 	line-height: 1.5;
 }
@@ -260,7 +226,7 @@ h1 {
 .feature-icon {
 	width: clamp(3rem, 5vw, 4rem);
 	font-size: clamp(2rem, 3vw, 2.5rem);
-	color: var(--primary-green);
+	color: $primary;
 	margin: 0 auto clamp(10px, 1.5vw, 15px) auto;
 	justify-self: center;
 	align-items: center;
@@ -269,7 +235,7 @@ h1 {
 	width: 100%;
 	height: 100%;
 	object-fit: contain;
-	transition: transform var(--transition-speed);
+	transition: transform $transition-speed;
 }
 .feature-card:hover > .feature-icon > img {
 	transform: scale(1.1);
@@ -278,11 +244,11 @@ h1 {
 /*News section*/
 .news-card {
 	background-color: white;
-	border-radius: var(--card-radius);
+	border-radius: $card-radius;
 	padding: clamp(15px, 2vw, 20px);
-	box-shadow: var(--card-shadow);
+	box-shadow: $card-shadow;
 	width:100%;
-	transition:box-shadow var(--transition-speed);
+	transition:box-shadow $transition-speed;
 }
 
 .news-card:hover {
@@ -292,7 +258,7 @@ h1 {
 .news-item {
 	border-bottom: 1px solid #ccc;
 	padding: clamp(10px, 1.5vw, 15px) 0;
-	transition: background-color var(--transition-speed);
+	transition: background-color $transition-speed;
 }
 
 .news-item:hover {
@@ -312,7 +278,7 @@ h1 {
 	font-weight: bold;
 	margin: 5px 0;
 	font-size: clamp(1rem, 1.5vw, 1.2rem);
-	color: var(--primary-green);
+	color: $primary;
 }
 
 .news-item > .news-description{
@@ -327,13 +293,13 @@ h1 {
 	width: 100%;
 }
 .footer > a{
-	color: var(--primary-green);
-	transition:color var(--transition-speed);
+	color: $primary;
+	transition:color $transition-speed;
 	padding: clamp(8px, 1.5vw, 15px) 0;
 }
 
 .footer > a:hover{
-	color: var(--dark-green);
+	color: $primary-dark;
 }
 /* Global styles for social media icons */
 

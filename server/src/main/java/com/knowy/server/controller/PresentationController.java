@@ -11,7 +11,7 @@ import java.util.List;
 @Controller
 public class PresentationController {
 
-	@GetMapping("/")
+	@GetMapping("/landing-page")
 	public String viewLandingPage(ModelMap interfaceScreen) {
 
 		List<NewsDto> newsList = new ArrayList<>();
