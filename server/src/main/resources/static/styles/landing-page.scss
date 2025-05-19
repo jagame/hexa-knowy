@@ -11,7 +11,7 @@
     margin: 0;
     padding: 0;
     line-height: 1.5;
-    color: $neutral-1100;
+    color: $neutral-700;
     overflow-x: hidden;
 }
 
@@ -218,7 +218,7 @@
 }
 
 .feature-card > .feature-description {
-	color: $neutral-1100;
+	color: $neutral-700;
 	font-size: clamp(0.9rem, 1.2vw, 1rem);
 	line-height: 1.5;
 }
