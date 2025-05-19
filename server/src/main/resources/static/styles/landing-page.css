@@ -271,7 +271,7 @@ h1 {
 	object-fit: contain;
 	transition: transform var(--transition-speed);
 }
-.feature-card:hover > .feature-icon img {
+.feature-card:hover > .feature-icon > img {
 	transform: scale(1.1);
 }
 

@@ -99,10 +99,10 @@
 		<div class="news-card">
 			<!-- Iterate on the list of news from controller and from component -->
 			<div th:each="novedad : ${newsList}">
-				<div th:replace="components/news-card-component :: news-card-component(
+				<div th:replace="~{components/news-card-component :: news-card-component(
                      ${novedad.date},
                      ${novedad.title},
-                     ${novedad.text})"></div>
+                     ${novedad.text})}"></div>
 			</div>
 		</div>
 	</section>
