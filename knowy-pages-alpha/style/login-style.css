@@ -5,7 +5,7 @@
     font-family: 'Arial', sans-serif;
 }
 
-img {
+#knowyLogo{
     position: relative;
     top: -150px;
     left: 0;
@@ -86,10 +86,13 @@ body {
 }
 
 label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 500;
-    color: #333;
+
+}
+#password{
+	display: block;
+	margin-bottom: 6px;
+	font-weight: 500;
+	color: #333;
 }
 
 .password-container {

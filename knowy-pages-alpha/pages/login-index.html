@@ -2,13 +2,12 @@
 <html lang="es"
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" th:href="@{/styles/global.css}">
 	<title>Login</title>
 </head>
 <body>
-<img src="../resources/pictures/knowylogo.png" alt="Logo de Knowy">
+<img id="knowyLogo" src="../resources/pictures/knowylogo.png" alt="Logo de Knowy">
 <div class="container">
 	<div class="tab-container">
 		<div class="tab tab-login"><a href=# style="text-decoration: none; color: white">Iniciar Sesión</a></div>
@@ -21,7 +20,7 @@
 				<input type="text" id="email" placeholder="Correo o usuario">
 			</div>
 			<div class="form-group">
-				<label for="password">Contraseña</label>
+				<label class="password" for="password">Contraseña</label>
 				<div class="password-container">
 					<input type="password" id="password" placeholder="***************">
 				</div>
@@ -32,7 +31,6 @@
 			</div>
 		</form>
 	</div>
-
 </div>
 <div></div>
 </body>
