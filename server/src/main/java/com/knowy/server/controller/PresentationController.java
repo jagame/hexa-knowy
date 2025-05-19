@@ -15,7 +15,7 @@ public class PresentationController {
 	public String viewLandingPage(ModelMap interfaceScreen) {
 
 		List<NewsDto> newsList = new ArrayList<>();
-		// Create and add three items to the list (simulation of what a DB would look like)
+		// Create and add three items to the list (we simulate the data extracted from the database)
 		NewsDto news1 = new NewsDto();
 		news1.setTitle("Nuevo curso de React avanzado disponible");
 		news1.setDate("15 de abril, 2025");
