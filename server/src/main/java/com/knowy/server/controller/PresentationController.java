@@ -38,4 +38,14 @@ public class PresentationController {
 		interfaceScreen.addAttribute("newsList", newsList);
 		return "pages/landing-page";
 	}
+
+	@GetMapping("/password-change/email")
+	public String passwordChangeEmail() {
+		return "pages/password-change-email";
+	}
+
+	@GetMapping("/password-change")
+	public String passwordChange() {
+		return "pages/password-change";
+	}
 }
