@@ -1,16 +1,49 @@
+@use '_global-vars' as *;
+
+// Exportar a variables CSS (para a futuro colores dinámicos)
+:root {
+	--primary: #{$primary};
+	--primary-light: #{$primary-light};
+	--primary-dark: #{$primary-dark};
+	--neutral-100: #{$neutral-100};
+	--neutral-300: #{$neutral-300};
+	--neutral-500: #{$neutral-500};
+	--neutral-700: #{$neutral-700};
+	--neutral-900: #{$neutral-900};
+}
+
 body {
-    background: white;
-    margin: 30px
-}
+	font-family: "Virgilio", sans-serif;
+	font-size: $base-font-size;
+	line-height: $line-height-base;
 
-.card-container {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 100px;
-}
+	h1 {
+		font-size: 2.25rem;
+		font-weight: 700;
+	}
 
-h1 {
-    text-align: center;
-    font-size: xxx-large;
+	h2 {
+		font-size: 1.875rem;
+		font-weight: 500;
+	}
+
+	h3 {
+		font-size: 1.5rem;
+		font-weight: 500;
+	}
+
+	h4 {
+		font-size: 1.25rem;
+		font-weight: 500;
+	}
+
+	p {
+		font-size: 1rem;
+		font-weight: 400;
+	}
+
+	small {
+		font-size: 0.875rem;
+		font-weight: 400;
+	}
 }
