@@ -1,6 +1,6 @@
-package com.knowy.server.model;
+package com.knowy.server.controller.model;
 
-public class User {
+public class UserDto {
 
 	private String username;
 	private String email;
