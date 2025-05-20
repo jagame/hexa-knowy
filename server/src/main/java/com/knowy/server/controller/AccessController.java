@@ -13,7 +13,7 @@ public class AccessController {
 	@GetMapping("/register")
 	public String register(Model model) {
 		model.addAttribute("user", new UserDto());
-		return "pages/knowy-registro";
+		return "pages/access/register";
 	}
 
 	@PostMapping("/resultado")
@@ -21,7 +21,9 @@ public class AccessController {
 		System.out.println("Usuario recibido: " + user.getUsername());
 		System.out.println("Email recibido: " + user.getEmail());
 		System.out.println("Contraseña recibida: " + user.getPassword());
-		model.addAttribute("user", user);
-		return "pages/resultado";
+
+		model.addAttribute("user", new UserDto());
+
+		return "pages/access/register";
 	}
 }
