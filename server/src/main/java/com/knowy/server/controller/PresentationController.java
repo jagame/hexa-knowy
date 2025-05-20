@@ -11,7 +11,7 @@ import java.util.List;
 @Controller
 public class PresentationController {
 
-	@GetMapping("/landing-page")
+	@GetMapping("/")
 	public String viewLandingPage(ModelMap interfaceScreen) {
 
 		List<NewsDto> newsList = new ArrayList<>();
@@ -37,5 +37,10 @@ public class PresentationController {
 		//And I send the list to the screen
 		interfaceScreen.addAttribute("newsList", newsList);
 		return "pages/landing-page";
+	}
+
+	@GetMapping("/example")
+	public String example() {
+		return "pages/example";
 	}
 }
