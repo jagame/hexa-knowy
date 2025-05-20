@@ -41,4 +41,14 @@ public class AccessController {
 		model.addAttribute("loginForm", login);
 		return "pages/access/login";
 	}
+
+	@GetMapping("/password-change/email")
+	public String passwordChangeEmail() {
+		return "pages/access/password-change-email";
+	}
+
+	@GetMapping("/password-change")
+	public String passwordChange() {
+		return "pages/access/password-change";
+	}
 }
