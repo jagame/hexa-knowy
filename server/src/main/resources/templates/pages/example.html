@@ -1,38 +1,39 @@
 <!DOCTYPE html>
 <html lang="es"
-	  xmlns:th="http://www.thymeleaf.org"
+	  layout:decorate="~{/layouts/user-postlogin-layout}"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{/layouts/example-layout}">
+	  xmlns:th="http://www.thymeleaf.org">
 <head>
 	<title>Index Example</title>
 </head>
 
-<body layout:fragment="body-content">
-
-<h1>Simple Example</h1>
-<section class="card-container">
-	<div
-		th:replace="components/example-card-component :: example-card-component('https://placehold.co/600x400',
+<body>
+<main layout:fragment="main-content">
+	<h1>Simple Example</h1>
+	<section class="card-container">
+		<div
+			th:replace="~{components/example-card-component :: example-card-component('https://placehold.co/600x400',
 			'Mi Título 1',
 			'Contenido de prueba',
 			'Ver más',
-			'#')">
-	</div>
-	<div
-		th:replace="components/example-card-component :: example-card-component('https://placehold.co/600x400',
+			'#')}">
+		</div>
+		<div
+			th:replace="~{components/example-card-component :: example-card-component('https://placehold.co/600x400',
 			'Mi Título 2',
 			'Contenido de prueba',
 			'Ver más',
-			'#')">
-	</div>
-	<div
-		th:replace="components/example-card-component :: example-card-component('https://placehold.co/600x400',
+			'#')}">
+		</div>
+		<div
+			th:replace="~{components/example-card-component :: example-card-component('https://placehold.co/600x400',
 			'Mi Título 3',
 			'Contenido de prueba',
 			'Ver más',
-			'#')">
-	</div>
-</section>
+			'#')}">
+		</div>
+	</section>
+</main>
 
 </body>
 </html>
