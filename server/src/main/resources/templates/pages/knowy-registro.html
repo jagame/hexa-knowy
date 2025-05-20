@@ -9,7 +9,12 @@
 </head>
 
 <body layout:fragment="body-content">
-<img alt="Logo de Knowy" class="knowy-logo" th:src="@{/images/logoWoutText.png}">
+
+<a class="kn-logo">
+	<img alt="Logo de Knowy" class="kn-logo--img" th:src="@{/images/logoWoutText.png}">
+	<h1 class="kn-logo--text">KNOWY</h1>
+</a>
+
 <div class="kn-container">
 	<div class="tab-container">
 		<a class="tab-container__tab tab-container--inactive" href=#>Iniciar Sesión</a>

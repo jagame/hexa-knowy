@@ -7,14 +7,29 @@ body {
 	width: 100vw;
 	height: 100vh;
 	padding-top: 4%;
+	background: $neutral-500 url("../../images/logoWoutText.png") repeat;
+	background-size: 50px;
+	background-blend-mode: soft-light;
 }
 
-.knowy-logo {
-	z-index: 10;
-	width: 150px;
+.kn-logo {
+	display: flex;
+	flex-direction: row;
 	transform: translateY(20px);
 	animation: fadeUp 1s forwards;
 	opacity: 0;
+	justify-content: center;
+	align-items: center;
+	text-decoration: none;
+	cursor: pointer;
+
+	&--img {
+		width: 150px;
+	}
+
+	&--text {
+		color: $primary;
+	}
 }
 
 @keyframes fadeUp {
