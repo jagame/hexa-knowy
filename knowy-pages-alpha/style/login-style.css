@@ -94,6 +94,12 @@ label {
 	font-weight: 500;
 	color: #333;
 }
+#email{
+	display: block;
+	margin-bottom: 6px;
+	font-weight: 500;
+	color: #333;
+}
 
 .password-container {
     position: relative;
