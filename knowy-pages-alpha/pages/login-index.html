@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" th:href="@{/styles/global.css}">
+	<title>Login</title>
+</head>
+<body>
+<img id="knowyLogo" src="../resources/pictures/knowylogo.png" alt="Logo de Knowy">
+<div class="container">
+	<div class="tab-container">
+		<div class="tab tab-login"><a href=# style="text-decoration: none; color: white">Iniciar Sesión</a></div>
+		<div class="tab tab-register"><a href=# style="text-decoration: none; color:black">Registrarse</a></div>
+	</div>
+	<div class="formulario">
+		<form>
+			<div class="form-group">
+				<label class="email" for="email">Correo o usuario</label>
+				<input type="text" id="email" placeholder="Correo o usuario">
+			</div>
+			<div class="form-group">
+				<label class="password" for="password">Contraseña</label>
+				<div class="password-container">
+					<input type="password" id="password" placeholder="***************">
+				</div>
+			</div>
+			<div class="button-container">
+				<button type="submit" class="primary-button">Iniciar</button>
+				<button type="button" class="forgot-password">¿Has olvidado la contraseña?</button>
+			</div>
+		</form>
+	</div>
+</div>
+<div></div>
+</body>
+</html>

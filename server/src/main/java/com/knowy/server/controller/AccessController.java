@@ -1,5 +1,6 @@
 package com.knowy.server.controller;
 
+import com.knowy.server.controller.model.LoginForm;
 import com.knowy.server.controller.model.UserDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,5 +26,19 @@ public class AccessController {
 		model.addAttribute("user", new UserDto());
 
 		return "pages/access/register";
+	}
+
+	@GetMapping("/login")
+	public String viewLogin (Model model){
+		LoginForm loginForm = new LoginForm();
+		model.addAttribute("loginForm", loginForm);
+		return "pages/access/login";
+	}
+
+	@PostMapping("/login")
+	public String postLogin(@ModelAttribute("loginForm") LoginForm login, Model model) {
+		System.out.println("Email: " + login.getEmail() + " Password: " + login.getPassword() + "");
+		model.addAttribute("loginForm", login);
+		return "pages/access/login";
 	}
 }
