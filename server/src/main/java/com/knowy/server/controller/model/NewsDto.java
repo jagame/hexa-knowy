@@ -1,4 +1,4 @@
-package com.knowy.server.dto;
+package com.knowy.server.controller.model;
 
 import lombok.Getter;
 import lombok.Setter;
