@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es"
+	  layout:decorate="~{/layouts/user-postlogin-layout}"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Account</title>
+	<link rel="stylesheet" th:href="@{/styles/account-management.css}">
+</head>
+
+<body>
+<main layout:fragment="main-content">
+	<!-- Main Content -->
+	<div class="container main-container">
+		<div class="row">
+			<div class="col-12 col-lg-3">
+				<div th:replace="~{components/sidebar-account-management :: sidebar('logout')}"></div>
+			</div>
+
+			<!-- Main Content -->
+			<div class="col-12 col-lg-9">
+				<div class="content-card">
+					<h1 class="content-title">Logout</h1>
+
+					<div id="step1" class="delete-step">
+						<div class="alert alert-warning mb-4">
+							<h2 class="h4 alert-warning">Advertencia</h2>
+							<p class="fw-bold mb-0">¿Quiere desconectarse?</p>
+						</div>
+
+						<div class="d-flex flex-column flex-sm-row gap-2 justify-content-end">
+							<a th:href="@{/account}" class="btn btn-secondary">Cancelar</a>
+							<button type="button" class="btn btn-warning" id="continueBtn">Desconectar</button>
+						</div>
+					</div>
+
+					<div id="step2" class="delete-step d-none">
+						<p class="mb-4">Para confirmar la eliminación de tu cuenta, por favor ingresa tu contraseña:</p>
+
+						<form id="deleteAccountForm" th:action="@{/delete-account}" method="post">
+							<div class="mb-3">
+								<label for="deletePassword" class="form-label">Contraseña</label>
+								<input type="password" class="form-control" id="deletePassword" name="password" required>
+							</div>
+
+							<div class="mb-4">
+								<label for="deleteConfirmPassword" class="form-label">Confirmar Contraseña</label>
+								<input type="password" class="form-control" id="deleteConfirmPassword" name="confirmPassword" required>
+								<div class="invalid-feedback" id="deletePasswordError">Las contraseñas no coinciden.</div>
+							</div>
+
+							<div class="d-flex flex-column flex-sm-row gap-2 justify-content-end">
+								<button type="button" class="btn btn-secondary" id="backBtn">Volver</button>
+								<button type="submit" class="btn btn-danger">Eliminar Cuenta</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+
+</body>
+</html>

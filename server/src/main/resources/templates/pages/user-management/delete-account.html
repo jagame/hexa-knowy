@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es"
+	  layout:decorate="~{/layouts/user-postlogin-layout}"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Account</title>
+	<link rel="stylesheet" th:href="@{/styles/account-management.css}">
+</head>
+
+<body>
+<main layout:fragment="main-content">
+	<!-- Main Content -->
+	<div class="container main-container">
+		<div class="row">
+			<div class="col-12 col-lg-3">
+				<div th:replace="~{components/sidebar-account-management :: sidebar('account')}"></div>
+			</div>
+
+			<!-- Main Content -->
+			<div class="col-12 col-lg-9">
+				<div class="content-card">
+					<h1 class="content-title">Eliminar Cuenta</h1>
+
+					<div id="step1" class="delete-step">
+						<div class="alert alert-danger mb-4">
+							<h2 class="h4 alert-heading">Advertencia</h2>
+							<p class="mb-3">Estás a punto de desactivar tu cuenta en Knowy. A partir de realizar este proceso contarás con el plazo de un mes para poder recuperarla.</p>
+							<p class="fw-bold mb-0">¿Está seguro de que desea continuar?</p>
+						</div>
+
+						<div class="d-flex flex-column flex-sm-row gap-2 justify-content-end">
+							<a th:href="@{/account}" class="btn btn-secondary">Cancelar</a>
+							<button th:href="@{/delete-account-continuation}" type="button" class="btn btn-danger" id="continueBtn">Continuar</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+
+</body>
+</html>

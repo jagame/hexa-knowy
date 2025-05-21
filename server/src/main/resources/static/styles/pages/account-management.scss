@@ -1,0 +1,189 @@
+@use '../global-vars' as *;
+
+/* General Styles */
+body {
+	background-color: $neutral-500;
+	color: $neutral-700;
+}
+
+.main-container {
+	display: flex;
+	gap: 20px;
+	padding-top: 20px;
+	padding-bottom: 40px;
+}
+
+/* Sidebar Styles */
+.user-sidebar {
+	background-color: white;
+	border-radius: 10px;
+	padding: 20px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+	position: sticky;
+	top: 100px;
+	width: 250px;
+	flex-shrink: 0;
+}
+
+.sidebar-avatar-container {
+	width: 100px;
+	height: 100px;
+	margin: 0 auto;
+	border-radius: 50%;
+	overflow: hidden;
+	border: 3px solid $primary;
+}
+
+.sidebar-avatar {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.sidebar-menu {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.sidebar-link {
+	display: block;
+	padding: 10px 15px;
+	border-radius: 5px;
+	text-decoration: none;
+	color: $neutral-700;
+	transition: all 0.2s ease;
+}
+
+.sidebar-link:hover {
+	background-color: rgba(0, 0, 0, 0.05);
+	color: $primary;
+}
+
+.sidebar-link.active {
+	background-color: $primary;
+	color: white;
+}
+
+
+.sidebar-link.logout-link.active {
+	background-color: $danger-color;
+	color: white;
+}
+
+.logout-link {
+	margin-top: auto;
+	color: $danger-color;
+}
+
+.logout-link:hover {
+	background-color: rgba(220, 53, 69, 0.1);
+	color: $danger-color;
+}
+
+/* Content Card */
+.content-card {
+	background-color: white;
+	border-radius: 10px;
+	padding: 30px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+	margin-bottom: 20px;
+	flex: 1;
+}
+
+.content-title {
+	color: $primary;
+	margin-bottom: 20px;
+	font-weight: 600;
+}
+
+/* Profile Page */
+.profile-pic-container {
+	width: 150px;
+	height: 150px;
+	border-radius: 50%;
+	overflow: hidden;
+	border: 3px solid $primary;
+	position: relative;
+}
+
+.profile-pic {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.edit-pic-btn {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	background-color: $primary;
+	color: white;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.edit-pic-btn:hover {
+	background-color: $primary-light;
+	color: $neutral-700;
+}
+
+
+/* Delete Account Page */
+.delete-step {
+	transition: all 0.3s ease;
+}
+
+/* Footer */
+.footer {
+	background-color: $neutral-500;
+}
+
+
+@media (max-width: 991px) {
+	.main-container {
+		flex-direction: column;
+		padding:10px;
+	}
+	.user-sidebar{
+		position: relative;
+		z-index: 1;
+		margin-bottom: 20px;
+		width:100%;
+		top:0;
+		left:0;
+		right:0;
+	}
+	.sidebar-link {
+		font-size: 0.9rem;
+		padding: 8px 12px;
+	}
+
+	.content-card{
+		margin-top:0;
+		width: 100%;
+		z-index: 0;
+		padding: 20px;
+	}
+
+	.content-title{
+		font-size: 1.2rem;
+	}
+
+	.profile-pic-container {
+		width: 120px;
+		height: 120px;
+	}
+
+	.edit-pic-btn {
+		width: 30px;
+		height: 30px;
+		font-size: 0.8rem;
+	}
+}
