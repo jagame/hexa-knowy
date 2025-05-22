@@ -1,6 +1,6 @@
 package com.knowy.server.controller;
 
-import com.knowy.server.dto.NewsDto;
+import com.knowy.server.controller.model.NewsDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +11,7 @@ import java.util.List;
 @Controller
 public class PresentationController {
 
-	@GetMapping("/landing-page")
+	@GetMapping("/")
 	public String viewLandingPage(ModelMap interfaceScreen) {
 
 		List<NewsDto> newsList = new ArrayList<>();
@@ -39,13 +39,8 @@ public class PresentationController {
 		return "pages/landing-page";
 	}
 
-	@GetMapping("/password-change/email")
-	public String passwordChangeEmail() {
-		return "pages/password-change-email";
-	}
-
-	@GetMapping("/password-change")
-	public String passwordChange() {
-		return "pages/password-change";
+	@GetMapping("/example")
+	public String example() {
+		return "pages/example";
 	}
 }
