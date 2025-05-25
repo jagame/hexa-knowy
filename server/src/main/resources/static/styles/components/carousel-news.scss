@@ -12,11 +12,11 @@
 	padding: 2px;
 }
 
-.carouselNews a {
+.carouselNews > a {
     color: rgb(234, 229, 229);
 }
 
-.carousel-caption h5 {
+.carousel-caption > h2 {
       font-size: 2rem;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
     }
@@ -29,7 +29,7 @@
       padding: 20px;
     }
 
-.carousel-item img {
+.carousel-item > img {
     border-radius: 10px;
 }
 

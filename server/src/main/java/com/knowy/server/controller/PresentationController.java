@@ -1,6 +1,7 @@
 package com.knowy.server.controller;
 
 import com.knowy.server.controller.model.NewsDto;
+import com.knowy.server.controller.model.NewsHomeDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,5 +43,17 @@ public class PresentationController {
 	@GetMapping("/example")
 	public String example() {
 		return "pages/example";
+	}
+
+	@GetMapping("/carouselNews")
+	public String newsHome(ModelMap interfaceScreen) {
+		List<NewsHomeDto> newsHome = new ArrayList<>();
+		NewsHomeDto cNews1 = new NewsHomeDto(1, "Python", "Nuevo curso Python", "https://i0.wp.com/junilearning.com/wp-content/uploads/2020/06/python-programming-language.webp?fit=800%2C800&ssl=1", "#");
+		newsHome.add(cNews1);
+		NewsHomeDto cNews2 = new NewsHomeDto(2,"HTML5", "Crea páginas web con HTML5", "https://t3.ftcdn.net/jpg/05/78/11/34/360_F_578113446_j72wZX7u698eoV50XXmkLMH7gGuNhpVB.jpg", "#");
+		newsHome.add(cNews2);
+
+		interfaceScreen.addAttribute("newsHome", newsHome);
+		return "components/carousel-news";
 	}
 }
