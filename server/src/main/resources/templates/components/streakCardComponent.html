@@ -1,0 +1,37 @@
+
+<div th:fragment="streakCard2(progresoPorcentaje, leccionesCompletadas, leccionesTotales, rachaActual, linkRetoDiario)">
+	<div class="row justify-content-center">
+		<div class="col-md-8 col-lg-6"> <div class="racha-aciertos-card">
+			<div class="racha-aciertos-card-header">
+				<h2 class="racha-titulo">Racha de aciertos</h2>
+			</div>
+
+			<div class="racha-aciertos-card-body">
+				<div class="racha-contenido-principal">
+					<p class="lecciones-meta">Completa <span th:text="${leccionesTotales}">3</span> lecciones</p>
+					<div class="progreso-container-custom">
+						<div class="progreso-barra-custom">
+							<div class="progreso-barra-relleno-custom" th:style="'width: ' + ${progresoPorcentaje} + '%;'"></div>
+						</div>
+						<span class="progreso-texto" th:text="${leccionesCompletadas} + '/' + ${leccionesTotales}">1/3</span>
+					</div>
+				</div>
+				<div class="racha-circulo-container">
+					<div class="racha-circulo-display">
+						<span th:text="${rachaActual}">7</span>
+						<span class="racha-circulo-dias">dias</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="racha-aciertos-card-footer">
+				<p class="texto-animo-principal">¡Sigue así!</p>
+				<p class="texto-animo-secundario">Mantén tu racha para ganar más puntos</p>
+				<p class="texto-completar-reto-info">Completar reto diario</p>
+			</div>
+		</div>
+
+			<a th:href="${linkRetoDiario}" class="btn-completar-reto-diario">Completar Reto Diario</a>
+		</div>
+	</div>
+</div>

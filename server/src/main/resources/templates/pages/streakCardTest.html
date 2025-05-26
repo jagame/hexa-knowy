@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html layout:decorate="~{/layouts/user-postlogin-layout}"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org"
+	  lang="en">
+<head>
+	<title>StreakCardTest</title>
+	<link th:href="@{/styles/components/Progress-card-component.css}" rel="stylesheet">
+	<link th:href="@{/styles/components/streakCardComponent.css}" rel="stylesheet">
+</head>
+<body>
+<!--	<main layout:fragment="main-content">-->
+<!--		<div th:replace="~{components/Progress-card-component :: streakCard(${nombreUsuario},${progresoPorcentaje},${cursosCompletados},${buttonLink},${rachaActual},${totalCursos})}"></div>-->
+<!--	</main>-->
+	<main layout:fragment="main-content">
+		<div th:insert="~{components/streakCardComponent :: streakCard2(${progresoPorcentaje2},${leccionesCompletadas},${leccionesTotales},${rachaActual2},${linkRetoDiario})}"></div>
+	</main>
+</body>
+</html>
