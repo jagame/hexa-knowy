@@ -42,63 +42,168 @@ body {
 }
 
 .kn-container {
-	//overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 	background-color: #B4D7B2;
 	width: 100%;
-	max-width: 635px;
-	height: 755px;
+	max-width: 535px;
+	height: auto;
 	padding: 1rem 4rem;
+	border-radius: 30px;
+	box-shadow: 0 0px 30px rgba(0, 0, 0, 0.2);
 	transform: translateY(20px);
 	animation: fadeUp 1s forwards;
-	//opacity: 0;
-	border-radius: 30px;
-	box-shadow: 0 6px 18px rgba($dark, 0.15);
 }
 
 .kn-form {
 
+	margin-top: 25px;
+
+	&__title {
+		font-family: 'caveat-brush';
+		font-size: 48px;
+		margin-bottom: 20px;
+	}
+
 	&__group {
 		display: flex;
 		flex-direction: column;
-
+		margin-bottom: 20px;
 	}
 
 	&--label {
 		color: $neutral-900;
+		font-family: 'excalifont';
+		font-size: 22px;
 	}
 
 	&--input {
 		width: 100%;
-		height: 55px;
-		border: 2px solid $primary;
+		height: 45px;
+		padding: 0 10px;
+		font-family: 'excalifont';
+		font-size: 20px;
+		color: $neutral-700;
+		border: 3px solid $primary;
 		border-radius: 8px;
-		//box-shadow: 0 0 0 2px rgba($primary-light, 0.25);
+
+	}
+
+	&__footer {
+		display: flex;
+		flex-direction: column;
+		gap: 15px;
+		margin: 20px 0;
+
+		&-links {
+			display: inline-block;
+			align-self: flex-start;
+			font-family: 'excalifont';
+			font-size: 16px;
+			cursor: pointer;
+			text-decoration: none;
+			color: $secundary-dark;
+
+			&:hover {
+				color: $secundary;
+				text-decoration: underline;
+			}
+		}
+	}
+
+	.kn-button {
+		font-family: 'excalifont';
+		font-size: 32px;
+		width: 100%;
+		height: 45px;
+		cursor: pointer;
+		color: white;
+		border: none;
+		border-radius: 25px;
+		background-color: $primary;
+
+		&:hover {
+			background: $primary-dark;
+		}
+	}
+
+}
+
+@media (max-width: 480px) {
+
+	.kn-logo--img {
+		width: 160px;
+	}
+
+	.kn-logo--text {
+		font-size: 38px;
+	}
+
+	.kn-form__title {
+		font-size: 34px;
+	}
+
+	.kn-container {
+		padding: 1.5rem;
+		background: none;
+		box-shadow: none;
 	}
 }
 
-.kn-button {
-	font-size: 20px;
-	width: 100%;
-	//padding: 0.5rem;
-	height: 55px;
-	cursor: pointer;
-	color: white;
-	border: none;
-	border-radius: 25px;
-	background-color: $primary;
+@media (max-width: 575px) {
 
-	&:hover {
-		background: $primary-dark;
+	.kn-logo--img {
+		width: 160px;
+	}
+
+	.kn-logo--text {
+		font-size: 42px;
+	}
+
+	.kn-form__title {
+		font-size: 36px;
+	}
+
+	.kn-container {
+		padding: 1.5rem;
+		background: none;
+		box-shadow: none;
 	}
 }
 
-.forgot-password {
-	font-size: 14px;
-	cursor: pointer;
-	text-decoration: none;
-	color: $secundary-dark;
+@media (max-height: 700px) {
+	.kn-logo--img {
+		width: 120px;
+	}
 
-	&:hover {
-		color: $secundary;
+	.kn-logo--text {
+		font-size: 36px;
+	}
+
+	.kn-form__title {
+		font-size: 28px;
+	}
+
+	.kn-form--label {
+		font-size: 18px;
+	}
+
+	.kn-form--input{
+		height: 35px;
+		font-size: 16px;
+	}
+
+	.kn-button {
+		height: 35px !important;
+		font-size: 24px !important;
+	}
+
+	.kn-container {
+		padding: 1.5rem;
+		background: none;
+		box-shadow: none;
+		max-width: 435px;
 	}
 }
+
