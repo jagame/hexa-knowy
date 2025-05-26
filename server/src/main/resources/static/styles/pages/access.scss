@@ -3,34 +3,34 @@
 body {
 	display: flex;
 	align-items: center;
-	flex-direction: column;
+	//flex-direction: column;
 	justify-content: center;
-	width: 100vw;
+	//width: 100vw;
 	height: 100vh;
-	margin: -6% 0;
-	padding: 0 4%;
-	background: $neutral-500 url("../../images/logoWoutText.png") repeat;
-	background-size: 50px;
-	background-blend-mode: soft-light;
+	//margin: -6% 0;
+	//padding: 0 4%;
+	background: $primary-super-light;
+	//background-size: 50px;
+	//background-blend-mode: soft-light;
 }
 
 .kn-logo {
 	display: flex;
 	align-items: center;
-	flex-direction: row;
 	justify-content: center;
-	cursor: pointer;
 	transform: translateY(20px);
 	animation: fadeUp 1s forwards;
 	text-decoration: none;
 	opacity: 0;
 
 	&--img {
-		width: 150px;
+		width: 180px;
 	}
 
 	&--text {
-		color: $primary;
+		color: $primary-dark;
+		font-size: 64px;
+		font-family: 'caveat-brush';
 	}
 }
 
@@ -42,61 +42,20 @@ body {
 }
 
 .kn-container {
-	overflow: hidden;
+	//overflow: hidden;
+	background-color: #B4D7B2;
 	width: 100%;
-	max-width: 800px;
+	max-width: 635px;
+	height: 755px;
+	padding: 1rem 4rem;
 	transform: translateY(20px);
 	animation: fadeUp 1s forwards;
-	opacity: 0;
-	border: 2px solid $primary;
-	border-radius: 12px;
-	box-shadow: 0 6px 18px rgba($neutral-900, 0.15);
-}
-
-.tab-container {
-	font-size: large;
-	font-weight: bold;
-	display: flex;
-	flex: 1;
-	width: 100%;
-	height: 3rem;
-	border: none;
-
-	&__tab {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 50%;
-		text-align: center;
-		text-decoration: none;
-	}
-
-	&--inactive {
-		color: $neutral-100;
-		background-color: $primary-light;
-
-		&:hover {
-			color: $neutral-100;
-			background: $primary-dark;
-		}
-	}
-
-	&--active {
-		color: $neutral-100;
-		background-color: $primary;
-
-		&:hover {
-			color: $neutral-100;
-		}
-	}
+	//opacity: 0;
+	border-radius: 30px;
+	box-shadow: 0 6px 18px rgba($dark, 0.15);
 }
 
 .kn-form {
-	display: flex;
-	flex-direction: column;
-	padding: 1rem 2rem;
-	background-color: $neutral-100;
-	gap: 0.75rem;
 
 	&__group {
 		display: flex;
@@ -110,37 +69,36 @@ body {
 
 	&--input {
 		width: 100%;
-		padding: 0.50rem;
+		height: 55px;
 		border: 2px solid $primary;
-		border-radius: 6px;
-		box-shadow: 0 0 0 2px rgba($primary-light, 0.25);
+		border-radius: 8px;
+		//box-shadow: 0 0 0 2px rgba($primary-light, 0.25);
 	}
 }
 
 .kn-button {
-	font-size: large;
-	font-weight: bold;
-	padding: 0.5rem;
+	font-size: 20px;
+	width: 100%;
+	//padding: 0.5rem;
+	height: 55px;
 	cursor: pointer;
-	color: $neutral-100;
+	color: white;
 	border: none;
-	border-radius: 4px;
-	background-color: $primary-light;
+	border-radius: 25px;
+	background-color: $primary;
 
 	&:hover {
-		background: $primary;
+		background: $primary-dark;
 	}
 }
 
 .forgot-password {
 	font-size: 14px;
 	cursor: pointer;
-	text-decoration: underline;
-	color: $primary;
-	border: none;
-	background: none;
+	text-decoration: none;
+	color: $secundary-dark;
 
 	&:hover {
-		color: $primary-dark;
+		color: $secundary;
 	}
 }

@@ -1,19 +1,45 @@
 @use '_global-vars' as *;
 
+@font-face {
+	font-family: 'caveat-brush';
+	src: url('../fonts/CaveatBrush-Regular.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'excalifont';
+	src: url('../fonts/Excalifont-Regular.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'inter';
+	src: url('../fonts/Inter.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
+
 // Exportar a variables CSS (para a futuro colores dinámicos)
 :root {
 	--primary: #{$primary};
-	--primary-light: #{$primary-light};
 	--primary-dark: #{$primary-dark};
+	--primary-light: #{$primary-light};
+	--primary-super-light: #{$primary-super-light};
 	--neutral-100: #{$neutral-100};
 	--neutral-300: #{$neutral-300};
 	--neutral-500: #{$neutral-500};
 	--neutral-700: #{$neutral-700};
 	--neutral-900: #{$neutral-900};
+	--dark: #{$dark};
+	--bg: #{$bg};
+	--danger: #{$danger};
+	--danger-hover: #{$danger-hover};
+	--info: #{$info};
+	--info-hover: #{$info-hover};
 }
 
 body {
-	font-family: "Virgilio", sans-serif;
+	//font-family: 'inter';
 	font-size: $base-font-size;
 	line-height: $line-height-base;
 
