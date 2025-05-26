@@ -1,41 +1,27 @@
-
-<html lang="es"
-	  xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{/layouts/basic-layout}">
-<head>
-	<title>Novedades</title>
-	<link rel="stylesheet" th:href="@{/styles/pages/news-component.css}">
-</head>
-<body layout:fragment="body-content">
-<div class="carousel-news mt-2" th:fragment="carousel-news(id, NewsHomeDto)">
+<div class="carousel-news mt-2" th:fragment="carousel-news()">
 	<div class="row justify-content-center">
 		<div class="col-10 col-md-2 text-center">
-
-				<div id="newsHome" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true">
-					<div class="carousel-inner">
-
-						<div th:each="newsItem, stat : ${newsHome}"
-							 th:classappend="${stat.index == 0} ? ' active' : ''"
-							 class="carousel-item">
-							<a th:href="${newsItem.url}">
-								<img th:src= "${newsItem.image}" alt= "" class= "d-block" style= "width: 100%">
-							</a>
-							<div class="carousel-caption">
-								<h2 th:text= "${newsItem.title}">Título</h2>
-								<p th:text="${newsItem.description}">Descripción</p>
-							</div>
+			<div id="newsHome" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true">
+				<div class="carousel-inner">
+					<div th:each="newsItem, stat : ${newsHome}"
+						 th:classappend="${stat.index == 0} ? ' active' : ''"
+						 class="carousel-item">
+						<a th:href="${newsItem.url}">
+							<img th:src="${newsItem.image}" alt="" class="d-block w-100">
+						</a>
+						<div class="carousel-caption">
+							<h2 th:text="${newsItem.title}">Título</h2>
+							<p th:text="${newsItem.description}">Descripción</p>
 						</div>
 					</div>
-					<button class="carousel-control-prev" type="button" data-bs-target="#newsHome" data-bs-slide="prev">
-						<span class="carousel-control-prev-icon"></span>
-					</button>
-					<button class="carousel-control-next" type="button" data-bs-target="#newsHome" data-bs-slide="next">
-						<span class="carousel-control-next-icon"></span>
-					</button>
 				</div>
+				<button class="carousel-control-prev" type="button" data-bs-target="#newsHome" data-bs-slide="prev">
+					<span class="carousel-control-prev-icon"></span>
+				</button>
+				<button class="carousel-control-next" type="button" data-bs-target="#newsHome" data-bs-slide="next">
+					<span class="carousel-control-next-icon"></span>
+				</button>
 			</div>
 		</div>
 	</div>
-</body>
-</html>
+</div>

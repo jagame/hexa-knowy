@@ -22,6 +22,7 @@
 			integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
 			crossorigin="anonymous"></script>
 	<link rel="stylesheet" th:href="@{/styles/pages/landing-page.css}">
+	<link rel="stylesheet" th:href="@{/styles/components/carousel-news.css}">
 </head>
 <body class="landing-page-content" layout:fragment="body-content">
 
@@ -107,6 +108,8 @@
 			</div>
 		</div>
 	</section>
+
+<div th:replace="~{components/carousel-news :: carousel-news()}"></div>
 
 	<!-- Footer section -->
 	<div th:replace="~{components/footer :: footer}"></div>
