@@ -3,15 +3,9 @@
 body {
 	display: flex;
 	align-items: center;
-	//flex-direction: column;
 	justify-content: center;
-	//width: 100vw;
 	height: 100vh;
-	//margin: -6% 0;
-	//padding: 0 4%;
 	background: $primary-super-light;
-	//background-size: 50px;
-	//background-blend-mode: soft-light;
 }
 
 .kn-logo {
@@ -42,6 +36,8 @@ body {
 }
 
 .kn-container {
+	position: relative;
+	z-index: 1;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -51,9 +47,23 @@ body {
 	height: auto;
 	padding: 1rem 4rem;
 	border-radius: 30px;
-	box-shadow: 0 0px 30px rgba(0, 0, 0, 0.2);
 	transform: translateY(20px);
 	animation: fadeUp 1s forwards;
+	overflow: visible;
+}
+
+.kn-container::before {
+	content: '';
+	position: absolute;
+	top: -20px;
+	left: -20px;
+	right: -20px;
+	bottom: -20px;
+	border-radius: 30px;
+	background: #B4D7B2;
+	filter: blur(12px);
+	z-index: -1;
+	opacity: 8;
 }
 
 .kn-form {
@@ -147,7 +157,11 @@ body {
 	.kn-container {
 		padding: 1.5rem;
 		background: none;
-		box-shadow: none;
+	}
+
+	.kn-container::before {
+		padding: 1.5rem;
+		background: none;
 	}
 }
 
@@ -168,11 +182,16 @@ body {
 	.kn-container {
 		padding: 1.5rem;
 		background: none;
-		box-shadow: none;
+	}
+
+	.kn-container::before {
+		padding: 1.5rem;
+		background: none;
 	}
 }
 
 @media (max-height: 700px) {
+
 	.kn-logo--img {
 		width: 120px;
 	}
@@ -202,8 +221,12 @@ body {
 	.kn-container {
 		padding: 1.5rem;
 		background: none;
-		box-shadow: none;
 		max-width: 435px;
+	}
+
+	.kn-container::before {
+		padding: 1.5rem;
+		background: none;
 	}
 }
 
