@@ -76,6 +76,13 @@ body {
 		margin-bottom: 20px;
 	}
 
+	&__text {
+		font-family: 'excalifont';
+		font-size: 20px;
+		color: $secundary-dark;
+		margin-bottom: 15px;
+	}
+
 	&__group {
 		display: flex;
 		flex-direction: column;
@@ -100,6 +107,11 @@ body {
 
 	}
 
+	&--input:focus {
+		border: 4px solid $primary-dark;
+		outline: none;
+	}
+
 	&__footer {
 		display: flex;
 		flex-direction: column;
@@ -118,6 +130,7 @@ body {
 			&:hover {
 				color: $secundary;
 				text-decoration: underline;
+				text-underline-offset: 4px;
 			}
 		}
 	}
@@ -205,6 +218,10 @@ body {
 }
 
 @media (max-height: 800px) {
+
+	body {
+		height: auto;
+	}
 
 	.kn-logo--img {
 		width: 140px;
