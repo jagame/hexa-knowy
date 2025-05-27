@@ -1,0 +1,17 @@
+<div th:fragment="toggle-user-management(activeMenu)" class="navbar-menu">
+	<nav class="navbar navbar-menu_settings">
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleUserManagement" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<span class="navbar-menu_title">Gestión del usuario</span>
+	</nav>
+	<div class="collapse" id="navbarToggleUserManagement">
+		<div class="navbar-menu_inside p-4">
+			<h5 class="text-white h4">Gestión del usuario</h5>
+			<span class="text-muted">
+					<a th:href="@{/user-profile}" class="toggle-link" th:classappend="${activeMenu == 'user-profile'} ? 'active' : ''">Editar Perfil</a>
+					<a th:href="@{/user-account}" class="toggle-link" th:classappend="${activeMenu == 'user-account'} ? 'active' : ''">Gestión de la Cuenta</a>
+				</span>
+		</div>
+	</div>
+</div>

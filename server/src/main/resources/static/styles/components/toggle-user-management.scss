@@ -1,0 +1,49 @@
+@use "../global-vars" as *;
+
+.navbar-menu_settings{
+	background-color:$primary;
+	border-radius: $card-radius;
+	display:none;
+	padding: clamp(7.5px, 1.5vw, 15px)
+}
+.navbar-menu_title{
+	color: $neutral-100;
+	font-size: large;
+	font-weight: bold;
+}
+
+.navbar-menu_inside {
+	background-color: $primary;
+	border-radius: $card-radius;
+}
+
+.toggle-link {
+	display: block;
+	padding: 10px 15px;
+	border-radius: 5px;
+	text-decoration: none;
+	color: $neutral-700;
+	transition: $transition-speed;
+}
+
+.toggle-link:hover {
+	background-color: $links-bg;
+	color: $warning-color;
+}
+
+.toggle-link.active {
+	background-color: $primary-dark;
+	font-weight: bold;
+	color: white;
+}
+
+/*Responsive Media Queries*/
+/* Extra Small Devices (phones, 576px and down) */
+@media (max-width: 960px) {
+	.navbar-menu{
+		padding: clamp(15px, 3vw, 30px) clamp(15px, 3vw, 30px) 0 clamp(15px, 3vw, 30px);
+	}
+	.navbar-menu_settings{
+		display: block;
+	}
+}

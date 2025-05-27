@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es"
+	  layout:decorate="~{/layouts/user-postlogin-layout}"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="..." crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="..." crossorigin="anonymous"></script>
+	<link rel="stylesheet" th:href="@{/styles/pages/user-management.css}">
+	<title>User profile</title>
+</head>
+
+<body>
+<main layout:fragment="main-content">
+	<div th:replace="components/toggle-user-management :: toggle-user-management('user-profile')"></div>
+
+	<div class="page-container">
+		<div class="row">
+			<div class="user-management-column_aside col-md-3">
+				<div th:replace="components/sidebar-user-management :: sidebar('user-profile')" class="user-management-container_aside ">
+				</div>
+			</div>
+			<div class="user-management-column_main col-md-9">
+				<form id="profileForm">
+					<div class="user-management-container_main ">
+						<div class="description-card">
+							<h1 class="title-management">Editar Perfil</h1>
+							<p class="description-management">Configura tus preferencias en cuanto a lenguajes de programación, editar tu nombre de usuario y tu imágen de perfil.
+								Recuerda mantener la privacidad de tus datos personales. Cualquier usuario podrá ver la información que introduzcas en esta página. </p>
+						</div>
+
+						<div class="row user-information">
+							<div class="picture-edit-container col-lg-3">
+								<img src="https://placehold.co/50x50" alt="User Avatar" class="edit-avatar" id="profilePicture">
+								<label for="profilePicEdit" class="edit-pic-btn">
+									<i class="bi bi-person-bounding-box"></i>
+								</label>
+								<input type="file" id="profilePicEdit" name="profilePicture" class="file-input-overlay" accept="image/*">
+							</div>
+
+							<div class="information-edit-container col-lg-9">
+								<h6 class="section-title">Nombre de Usuario: 👤</h6>
+								<input type="text" class="user-name form-control" required th:value="${username}">
+								<br>
+								<h6 class="section-title">Lenguajes de Programación favoritos ⭐</h6>
+								<select name="languages" id="languages" class="form-control" multiple>
+									<option value="JAVASCRIPT">JavaScript</option>
+									<option value="JAVA">Java</option>
+									<option value="HTML">HTML</option>
+									<option value="CSS">CSS</option>
+									<option value="PYTHON">Python</option>
+									<option value="PHP">PHP</option>
+									<option value="C">#C</option>
+									<option value="TYPESCRIPT">TypeScript</option>
+									<option value="	RUBY">Ruby</option>
+									<option value="SWIFT">Swift</option>
+								</select>
+								<div id="selectedLanguages" class="mt-2"></div>
+							</div>
+						</div>
+						<div class="buttons-form-content">
+							<button type="reset" class="btn btn-inferior">Restablecer</button>
+							<button type="submit" class="btn btn-save">Guardar Cambios</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+</main>
+
+
+</body>
+</html>

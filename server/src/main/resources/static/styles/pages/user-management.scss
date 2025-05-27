@@ -1,0 +1,172 @@
+@use '../global-vars' as *;
+@use '../components/sidebar-user-management' as sidebar-user-management;
+@use '../components/toggle-user-management' as toggle-user-management;
+
+body{
+	background-color: $neutral-500;
+}
+
+.page-container{
+	display: flex;
+	padding: $default-padding1
+}
+
+.row{
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+}
+
+.user-information{
+	gap: 0.5rem;
+	padding: $default-padding1
+}
+
+.user-management-container_main{
+	width: 100%;
+	border-radius: $card-radius;
+	background-color: $neutral-100;
+	padding:$default-padding1
+}
+
+.title-management{
+	color:$primary;
+	font-weight: bold;
+}
+
+.tittle-delete{
+	color: $danger-color;
+	font-weight: bold;
+}
+
+.description-management{
+	color:$neutral-800;
+}
+
+
+.picture-edit-container{
+	width:150px;
+	height:150px;
+	border: 3px solid $primary;
+	border-radius: 50%;
+	overflow: hidden;
+	position:relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+}
+
+.edit-avatar{
+	height:100%;
+	object-fit: cover;
+	display: block;
+}
+
+.edit-pic-btn {
+	position: absolute;
+	background-color: $primary;
+	color: white;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: $transition-speed;
+}
+
+.edit-pic-btn:hover {
+	background-color: $primary-light;
+	color: $neutral-700;
+}
+
+.file-input-overlay {
+	position: absolute;
+	width: 0;
+	height: 0;
+	opacity: 0;
+	overflow: hidden;
+	z-index: -1;
+}
+
+.section-title{
+	color: $primary;
+	font-weight: bold;
+}
+
+.buttons-form-content {
+	display: flex;
+	flex-direction: row;
+	gap: 0.5rem;
+	justify-content: flex-end;
+	flex-wrap: wrap;
+}
+
+.btn-inferior{
+	background-color: $neutral-850;
+	color: white;
+}
+
+.btn-save{
+	background-color: $primary;
+	color: white;
+}
+
+.btn-save:hover{
+	background-color: $primary-light;
+}
+
+.btn-inferior:hover{
+	background-color: $neutral-800;
+}
+
+/*User Account*/
+
+.form-fields{
+	margin-bottom: 1.1rem;
+}
+
+.advice{
+	color: $neutral-800;
+	font-size: small;
+}
+
+.title-delete{
+	color: $danger-color;
+}
+
+.delete-section{
+	border-top:1px solid $primary;
+	margin-top: 3rem;
+	padding-top: 1.5rem;
+}
+
+.btn-delete{
+	background-color: $danger-color;
+	color: white;
+}
+
+.btn-delete:hover{
+	background-color: $danger-dark-color;
+	color: white;
+}
+
+/*delete-account*/
+.delete-warning{
+	padding: $default-padding2;
+	color: $danger-dark-text;
+	background-color: #e5555d3b;
+	border: 1px solid $danger-color;
+	border-radius: $card-radius;
+}
+
+
+/*Responsive Media Queries*/
+/* Extra Small Devices (phones, 960px and down) */
+@media (max-width: 960px) {
+	.user-management-container_aside{
+		display: none;
+	}
+}
