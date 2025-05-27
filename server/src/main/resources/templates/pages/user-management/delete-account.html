@@ -4,41 +4,50 @@
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>Account</title>
-	<link rel="stylesheet" th:href="@{/styles/account-management.css}">
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="..." crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="..." crossorigin="anonymous"></script>
+	<link rel="stylesheet" th:href="@{/styles/pages/user-management.css}">
+	<title>Delete account</title>
 </head>
 
 <body>
 <main layout:fragment="main-content">
-	<!-- Main Content -->
-	<div class="container main-container">
+	<div th:replace="components/toggle-user-management :: toggle-user-management('user-account')"></div>
+
+	<div class="page-container">
 		<div class="row">
-			<div class="col-12 col-lg-3">
-				<div th:replace="~{components/sidebar-account-management :: sidebar('account')}"></div>
-			</div>
-
-			<!-- Main Content -->
-			<div class="col-12 col-lg-9">
-				<div class="content-card">
-					<h1 class="content-title">Eliminar Cuenta</h1>
-
-					<div id="step1" class="delete-step">
-						<div class="alert alert-danger mb-4">
-							<h2 class="h4 alert-heading">Advertencia</h2>
-							<p class="mb-3">Estás a punto de desactivar tu cuenta en Knowy. A partir de realizar este proceso contarás con el plazo de un mes para poder recuperarla.</p>
-							<p class="fw-bold mb-0">¿Está seguro de que desea continuar?</p>
-						</div>
-
-						<div class="d-flex flex-column flex-sm-row gap-2 justify-content-end">
-							<a th:href="@{/account}" class="btn btn-secondary">Cancelar</a>
-							<button th:href="@{/delete-account-continuation}" type="button" class="btn btn-danger" id="continueBtn">Continuar</button>
-						</div>
-					</div>
+			<div class="user-management-column_aside col-lg-3">
+				<div th:replace="components/sidebar-user-management :: sidebar('user-account')" class="user-management-container_aside ">
 				</div>
+			</div>
+			<div class="user-management-column_main col-lg-9">
+				<form id="deleteProfileForm">
+					<div class="user-management-container_main ">
+						<div class="description-card">
+							<h1 class="title-management">Eliminar Cuenta</h1>
+							<p class="description-management">Configura tus preferencias en cuanto a lenguajes de programación, editar tu nombre de usuario y tu imágen de perfil.
+								Recuerda mantener la privacidad de tus datos personales. Cualquier usuario podrá ver la información que introduzcas en esta página.
+							</p>
+						</div>
+
+							<div class="row user-information">
+								<div class="delete-warning">
+									<h3>⚠️ Advertencia ⚠️</h3>
+									<p>Estás a punto de desactivar tu cuenta en Knowy. A partir de realizar este proceso contarás con el plazo de un mes para poder recuperarla.</p>
+									<p><strong>¿Desea continuar?</strong></p>
+								</div>
+							</div>
+							<div class="buttons-form-content">
+								<a th:href="@{/user-account}" class="btn btn-inferior">Cancelar</a>
+								<a th:href="@{/delete-account-end}" class="btn btn-delete">Continuar</a>
+							</div>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
 </main>
+
 
 </body>
 </html>
