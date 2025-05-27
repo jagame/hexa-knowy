@@ -110,7 +110,7 @@ body {
 			display: inline-block;
 			align-self: flex-start;
 			font-family: 'excalifont';
-			font-size: 16px;
+			font-size: 18px;
 			cursor: pointer;
 			text-decoration: none;
 			color: $secundary-dark;
@@ -123,6 +123,10 @@ body {
 	}
 
 	.kn-button {
+		display: flex;
+		justify-content: center;
+		align-content: center;
+		flex-wrap: wrap;
 		font-family: 'excalifont';
 		font-size: 32px;
 		width: 100%;
@@ -143,7 +147,7 @@ body {
 @media (max-width: 480px) {
 
 	.kn-logo--img {
-		width: 160px;
+		width: 140px;
 	}
 
 	.kn-logo--text {
@@ -154,6 +158,10 @@ body {
 		font-size: 34px;
 	}
 
+	.kn-form__footer-links {
+		font-size: 15px;
+	}
+
 	.kn-container {
 		padding: 1.5rem;
 		background: none;
@@ -162,13 +170,14 @@ body {
 	.kn-container::before {
 		padding: 1.5rem;
 		background: none;
+		right: 0;
 	}
 }
 
 @media (max-width: 575px) {
 
 	.kn-logo--img {
-		width: 160px;
+		width: 140px;
 	}
 
 	.kn-logo--text {
@@ -179,6 +188,10 @@ body {
 		font-size: 36px;
 	}
 
+	.kn-form__footer-links {
+		font-size: 15px;
+	}
+
 	.kn-container {
 		padding: 1.5rem;
 		background: none;
@@ -187,13 +200,14 @@ body {
 	.kn-container::before {
 		padding: 1.5rem;
 		background: none;
+		right: 0;
 	}
 }
 
-@media (max-height: 700px) {
+@media (max-height: 800px) {
 
 	.kn-logo--img {
-		width: 120px;
+		width: 140px;
 	}
 
 	.kn-logo--text {
@@ -227,6 +241,7 @@ body {
 	.kn-container::before {
 		padding: 1.5rem;
 		background: none;
+		right: 0;
 	}
 }
 
