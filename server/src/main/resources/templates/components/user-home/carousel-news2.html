@@ -20,7 +20,6 @@
 			 th:classappend="${statItem.index == 0} ? 'active' : ''"
 			 th:each="newItem, statItem : ${newsList}"
 		>
-
 			<img alt="..." class="d-block w-100 h-100 object-fit-cover"
 				 th:src="${newItem.imageUrl}">
 			<div class="carousel-caption d-none d-md-block">
