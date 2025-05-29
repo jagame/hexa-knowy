@@ -7,7 +7,15 @@
 <head>
 	<title>Knowy - Home</title>
 	<link rel="stylesheet" th:href="@{/styles/pages/user-home.css}">
-</head>
+<!--	<style>-->
+<!--		.carousel,-->
+<!--		.carousel-inner,-->
+<!--		.carousel-item {-->
+<!--			height: 100%;-->
+<!--			width: 100%;-->
+<!--		}-->
+<!--	</style>-->
+<!--</head>-->
 <body>
 <main layout:fragment="main-content">
 	<section
@@ -15,11 +23,7 @@
 	</section>
 	<div
 		class="home-grid--1c2r"
-		th:insert="~{components/example-card-component :: example-card-component('https://placehold.co/600x400',
-			'Mi Título 3',
-			'Contenido de prueba',
-			'Ver más',
-			'#')}">
+		th:insert="~{components/user-home/carousel-news2 :: carousel-news('carousel-news-id', ${newsHome})}">
 	</div>
 </main>
 </body>
