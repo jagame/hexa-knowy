@@ -30,3 +30,4 @@ replay_pid*
 # database virtual data
 data/postgres/*
 !data/postgres/.gitkeep
+.data
