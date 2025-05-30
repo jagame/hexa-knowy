@@ -1,0 +1,77 @@
+@use '../global' as *;
+
+/* CSS Reset */
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html, body {
+	height: 100%;
+}
+
+body {
+	display: flex;
+	flex-direction: row;
+	padding: 10px;
+	gap: 10px;
+}
+
+main {
+	justify-content: center;
+	width: 70%;
+	height: 100%;
+	background: indianred;
+
+	> h1 {
+		text-align: center;
+	}
+}
+
+aside {
+	justify-content: center;
+	width: 30%;
+	height: 100%;
+	background: cornflowerblue;
+
+	> h1 {
+		text-align: center;
+	}
+}
+
+.nav-toggle {
+	font-size: 1.25rem;
+	width: 48px;
+	height: 48px;
+	cursor: pointer;
+	color: white;
+	border: none;
+	border-radius: 50%;
+	background: #000;
+	box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+
+	&--main {
+		position: absolute;
+	}
+}
+
+
+.btn-toggle:hover {
+	background-color: darkgray;
+	transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+	main {
+		width: 100%;
+	}
+
+	aside {
+		width: 100%;
+		display: none;
+	}
+}
