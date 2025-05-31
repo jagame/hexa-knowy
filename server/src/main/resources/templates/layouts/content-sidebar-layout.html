@@ -1,58 +1,60 @@
 <!DOCTYPE html>
 <html lang="es"
-	  xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
 	<title>Layout</title>
 
 	<!-- Bootstrap -->
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-		  rel="stylesheet"
+	<link crossorigin="anonymous"
+		  href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
 		  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-		  crossorigin="anonymous">
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+		  rel="stylesheet">
+	<script crossorigin="anonymous"
 			integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-			crossorigin="anonymous"></script>
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
 	<!-- Knowy with global.css-->
 	<link rel="stylesheet" th:href="@{/styles/layouts/content-sidebar-layout.css}">
 </head>
 <body>
 
-<aside layout:fragment="sidebar">
+<header th:replace="~{components/navbar :: knowy-navbar('username-test', 'https://placehold.co/50x50')}"></header>
 
-</aside>
+<div class="layout-body">
+	<aside class="kn-aside" >
+		<button class="nav-toggle" onclick="showMain()"> ></button>
+		<div layout:fragment="sidebar">
 
-<main layout:fragment="main-content">
+		</div>
+	</aside>
+	<main class="kn-main">
+		<button class="nav-toggle nav-toggle--main" onclick="showAside()"> <</button>
+		<div layout:fragment="main-content">
 
-</main>
+		</div>
+	</main>
+</div>
 
-</body>
+<footer th:replace="~{components/footer :: footer}"></footer>
 
 <script>
-	function showAside(displayValue) {
-		if (typeof displayValue !== "string") {
-			throw new Error("The 'showAside' function only supports a string value for the display parameter.");
-		}
+	function showAside() {
+		const aside = document.querySelector(".kn-aside");
+		const main = document.querySelector(".kn-main");
 
-		const main = document.querySelector("main");
-		const aside = document.querySelector("aside");
-
-		aside.style.display = displayValue;
-		main.style.display = "none";
+		aside.classList.add("kn-aside--active");
+		main.classList.add("kn-main--hidden");
 	}
 
-	function showMain(displayValue) {
-		if (typeof displayValue !== "string") {
-			throw new Error("The 'showMain' function only supports a string value for the display parameter.");
-		}
+	function showMain() {
+		const aside = document.querySelector(".kn-aside");
+		const main = document.querySelector(".kn-main");
 
-		const main = document.querySelector("main");
-		const aside = document.querySelector("aside");
-
-		main.style.display = displayValue;
-		aside.style.display = "none";
+		main.classList.remove("kn-main--hidden");
+		aside.classList.remove("kn-aside--active");
 	}
 </script>
+</body>
 </html>
