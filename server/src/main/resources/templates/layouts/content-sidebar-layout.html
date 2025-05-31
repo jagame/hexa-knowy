@@ -23,14 +23,9 @@
 <header th:replace="~{components/navbar :: knowy-navbar('username-test', 'https://placehold.co/50x50')}"></header>
 
 <div class="layout-body">
-	<aside class="kn-aside" >
-		<button class="nav-toggle" onclick="showMain()"> ></button>
-		<div layout:fragment="sidebar">
-
-		</div>
-	</aside>
+	<aside class="kn-aside" layout:fragment="sidebar"></aside>
 	<main class="kn-main">
-		<button class="nav-toggle nav-toggle--main" onclick="showAside()"> <</button>
+		<button class="show-sidebar-btn" data-sidebar-toggler=""> < </button>
 		<div layout:fragment="main-content">
 
 		</div>
@@ -40,21 +35,23 @@
 <footer th:replace="~{components/footer :: footer}"></footer>
 
 <script>
-	function showAside() {
-		const aside = document.querySelector(".kn-aside");
-		const main = document.querySelector(".kn-main");
+	const sidebarToggler = document.querySelectorAll("[data-sidebar-toggler]")
 
-		aside.classList.add("kn-aside--active");
-		main.classList.add("kn-main--hidden");
-	}
+	sidebarToggler.forEach(element => {
+		element.addEventListener("click", () => {
+			const aside = document.querySelector(".kn-aside");
+			const main = document.querySelector(".kn-main");
 
-	function showMain() {
-		const aside = document.querySelector(".kn-aside");
-		const main = document.querySelector(".kn-main");
+			if (aside.classList.contains("kn-aside--active")) {
+				main.classList.remove("kn-main--hidden");
+				aside.classList.remove("kn-aside--active");
+			} else {
+				aside.classList.add("kn-aside--active");
+				main.classList.add("kn-main--hidden");
+			}
+		})
+	})
 
-		main.classList.remove("kn-main--hidden");
-		aside.classList.remove("kn-aside--active");
-	}
 </script>
 </body>
 </html>
