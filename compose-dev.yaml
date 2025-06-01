@@ -21,9 +21,12 @@ services:
         networks:
             - knowy_net
         volumes:
-            - ./data/postgres:/var/lib/postgresql/data
+            - kn_db_data:/var/lib/postgresql/data
             - ./sql/init:/docker-entrypoint-initdb.d
             - ./sql:/sql
+
+volumes:
+    kn_db_data:
 
 networks:
     knowy_net:

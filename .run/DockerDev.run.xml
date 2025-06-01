@@ -4,7 +4,7 @@
       <settings>
         <option name="envFilePath" value="" />
         <option name="removeImagesOnComposeDown" value="ALL" />
-        <option name="removeVolumesOnComposeDown" value="true" />
+        <option name="removeOrphansOnComposeDown" value="false" />
         <option name="commandLineOptions" value="--build" />
         <option name="sourceFilePath" value="compose-dev.yaml" />
       </settings>
