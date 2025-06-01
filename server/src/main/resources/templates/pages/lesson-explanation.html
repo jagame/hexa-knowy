@@ -1,0 +1,22 @@
+
+<body>
+<div class="container-fluid d-flex">
+	<!--aside for reference-->
+	<aside class="bg-danger p-3 mt-2 rounded" style="width: 25%;">
+		<p>Contenido del aside.</p>
+	</aside>
+
+	<main class="main-content">
+		<img class="img-head" th:src="${lesson.image}" alt="Imagen">
+		<div class="container-flex mt-3">
+			<div>
+				<h4 class="title" th:text="${lesson.title}">Título de la lección</h4>
+				<p class="icon"><i class="bi bi-clock-fill m-1"></i>
+					<span class="duration" th:text="${lesson.duration}">Duración de la lección</span></p>
+			</div>
+			<a th:href="${lesson.link}" class="btn btn-lesson">Iniciar lección</a>
+		</div>
+		<p class="info-course">Información del curso</p>
+		<div class="theory"><p th:text="${lesson.theory}">Teoría del curso</p></div>
+	</main>
+</div>

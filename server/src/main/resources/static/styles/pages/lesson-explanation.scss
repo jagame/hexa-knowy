@@ -1,0 +1,81 @@
+@use "../global-vars" as *;
+
+body {
+	box-sizing: border-box;
+	background-color: $neutral-300;
+}
+.img-head {
+	height: 300px;
+	width: 100%;
+	object-fit: cover;
+	border-radius: $card-radius;
+}
+.main-content {
+	display:flex;
+	flex-direction: column;
+	width: 75%;
+
+	margin-left: 10px;
+	margin-top: 10px;
+}
+
+.info-course {
+	font-size: 20px;
+	margin-top: 20px;
+	margin-left: 10px;
+	font-weight: 600;
+
+}
+
+.btn-lesson {
+	font-size: 20px;
+	margin-right: 60px;
+	padding: 20px;
+	border-radius: $card-radius;
+	box-shadow: $card-shadow;
+	background-color: $primary-dark;
+	color:$neutral-100;
+}
+.btn-lesson:hover {
+	background-color: $primary;
+	color: $neutral-100;
+}
+
+.title {
+	font-size: 35px;
+	margin-left: 10px;
+	font-weight: bold;
+}
+
+.theory {
+	background-color: $primary-light;
+	border: 2px solid $primary;
+	padding: 10px;
+	border-radius: $card-radius;
+	box-shadow: $card-shadow;
+}
+
+.icon {
+	margin-left: 10px;
+}
+
+@media (min-width: 600px) {
+	.container-flex {
+		display:flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+}
+
+@media (max-width: 600px) {
+	.btn-lesson {
+		padding: 10px 20px;
+		font-size: 18px;
+		margin-top: 10px;
+	}
+	.title, .icon, .info-course {
+		margin-left: 5px;
+	}
+
+}
