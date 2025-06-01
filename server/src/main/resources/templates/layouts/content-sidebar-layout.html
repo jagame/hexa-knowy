@@ -21,6 +21,7 @@
 </head>
 <body>
 
+<!-- TODO - REPAIR NAVBAR -->
 <header th:replace="~{components/navbar :: knowy-navbar('username-test', 'https://placehold.co/50x50')}"></header>
 
 <div class="layout-body">
@@ -28,10 +29,12 @@
 
     <button class="show-sidebar-btn" data-sidebar-toggler=""> <</button>
     <div class="kn-main">
-        <main layout:fragment="main-content">
+        <main class="kn-main_content" layout:fragment="main-content">
 
         </main>
-        <footer th:replace="~{components/footer :: footer}"></footer>
+        <footer>
+            <p>Configuweijfwrpkgmwvmw</p>
+        </footer>
     </div>
 </div>
 
