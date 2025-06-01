@@ -28,6 +28,4 @@ replay_pid*
 *.iml
 
 # database virtual data
-data/postgres/*
-!data/postgres/.gitkeep
-.data
+data

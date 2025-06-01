@@ -17,11 +17,11 @@ services:
             POSTGRES_PASSWORD: knowy
             POSTGRES_DB: knowydb
         ports:
-            - "5432:5432"
+            - "5434:5432"
         networks:
             - knowy_net
         volumes:
-            - ./.data/postgres:/var/lib/postgresql/data
+            - ./data/postgres:/var/lib/postgresql/data
             - ./sql/init:/docker-entrypoint-initdb.d
             - ./sql:/sql
 
