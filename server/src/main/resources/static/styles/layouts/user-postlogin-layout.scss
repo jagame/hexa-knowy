@@ -1,3 +1,24 @@
 @use '../global' as *;
 @use '../components/navbar' as navbar;
-@use '../components/footer' as footer-card-component;
+
+html, body {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+}
+
+.layout-body {
+	display: flex;
+	flex-direction: column;
+	height: calc(100% - #{navbar.$navbar-height});
+	overflow: auto;
+}
+
+main {
+	flex: 1;
+}

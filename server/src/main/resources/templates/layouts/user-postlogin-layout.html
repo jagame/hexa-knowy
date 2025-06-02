@@ -25,14 +25,13 @@
 </head>
 <body>
 
-<header th:replace="~{components/navbar :: knowy-navbar('username-test', 'https://placehold.co/50x50')}">
-</header>
+<header th:replace="~{components/navbar :: knowy-navbar('username-test', 'https://placehold.co/50x50')}"></header>
 
-<main layout:fragment="main-content">
+<div class="layout-body">
+	<main layout:fragment="main-content"></main>
 
-</main>
-
-<footer th:replace="~{components/footer :: footer}"></footer>
+	<footer th:replace="~{components/footer :: footer}"></footer>
+</div>
 
 </body>
 </html>
