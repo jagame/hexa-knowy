@@ -1,5 +1,4 @@
 // SCSS variables (for compilation)
-
 $primary: #238C51;
 $primary-dark: #197349;
 $primary-light: #BEF2B6;
@@ -25,7 +24,11 @@ $line-height-base: 1.5;
 
 //Shadows
 $card-shadow:  0 4px 8px rgba(0, 0, 0, 0.1);
-$card-radius: 12px;
+
+//Border-radius
+$radius-25: 25px;
+$radius-10: 10px;
+$radius-8: 8px;
 
 //Animations
 $transition-speed: 0.3s;

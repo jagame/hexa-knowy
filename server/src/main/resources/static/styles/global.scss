@@ -21,6 +21,7 @@
 
 // Exportar a variables CSS (para a futuro colores dinámicos)
 :root {
+	// Colors
 	--primary: #{$primary};
 	--primary-dark: #{$primary-dark};
 	--primary-light: #{$primary-light};
@@ -35,6 +36,10 @@
 	--danger-hover: #{$danger-hover};
 	--info: #{$info};
 	--info-hover: #{$info-hover};
+	// Border-radius
+	--radius-25: #{$radius-25};
+	--radius-10: #{$radius-10};
+	--radius-8: #{$radius-8};
 }
 
 body {
@@ -43,27 +48,32 @@ body {
 	line-height: $line-height-base;
 
 	.kn-logo--text {
-		font-size: 4rem;
+		font-size: 64px;
+	}
+	.kn-button {
+		font-size: 28px;
+		border-radius: $radius-25;
+		color: white;
 	}
 	h1 {
-		font-size: 2.5rem;
+		font-size: 40px;
 	}
 	h2 {
-		font-size: 2rem;
+		font-size: 32px;
 	}
 	h3 {
-		font-size: 1.75rem;
+		font-size: 28px;
 	}
 	h4 {
-		font-size: 1.5rem;
+		font-size: 24px;
 	}
 	h5 {
-		font-size: 1.25rem;
+		font-size: 20px;
 	}
 	h6 {
-		font-size: 1rem;
+		font-size: 16px;
 	}
 	p {
-		font-size: 0.75rem;
+		font-size: 12px;
 	}
 }

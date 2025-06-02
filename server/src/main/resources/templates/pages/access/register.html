@@ -18,7 +18,7 @@
 	</div>
 
 	<form action="@{/register}" class="kn-form" method="post" th:action="@{/resultado}" th:object="${user}">
-		<h2 class="kn-form__title">Registro del usuario</h2>
+		<h1 class="kn-form__title">Registro del usuario</h1>
 
 		<div class="kn-form__group">
 			<label class="kn-form--label" for="username">Nombre de usuario:</label>
@@ -38,7 +38,7 @@
 		</div>
 
 		<div class="kn-form__group">
-			<label class="kn-form--label" for="password">Repetir contraseña:</label>
+			<label class="kn-form--label" for="repeat-password">Repetir contraseña:</label>
 			<input class="kn-form--input" id="repeat-password" type="password" required>
 		</div>
 
