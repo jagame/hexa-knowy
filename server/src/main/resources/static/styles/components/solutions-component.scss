@@ -1,0 +1,29 @@
+@use "../global-vars" as *;
+
+.accordion-button {
+	background-color: $primary;
+	color: $neutral-100;
+	transition: $transition-speed;
+	border-radius: $card-radius !important;
+}
+
+.accordion-button:hover {
+	background-color: $primary-light;
+	color: $neutral-100;
+}
+
+.accordion-button:not(.collapsed) {
+	background-color: $primary;
+	color: $neutral-100;
+}
+
+.accordion-button:focus {
+	outline: none;
+	box-shadow: $card-shadow;
+	color: $neutral-100;
+}
+
+.accordion-item {
+	border-radius: $card-radius !important;
+	box-shadow: $card-shadow;
+}
