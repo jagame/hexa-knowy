@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<title>Componente misiones</title>
+
+</head>
+<body>
+
+<div class="missions-container">
+	<h2 class="missions-title">Misiones:</h2>
+
+	<div class="mission-item" th:each="mission : ${missionsList}">
+		<div class="mission-details">
+			<span class="mission-name" th:text="${mission.name}">Haz 3 Partidas Rapidas</span>
+			<span class="mission-progress-text" th:text="${mission.currentProgress} + '/' + ${mission.totalProgress}">2/3</span>
+		</div>
+		<div class="progress-bar-background">
+			<div class="progress-bar-foreground" th:style="'width: ' + (${mission.currentProgress} * 100 / ${mission.totalProgress}) + '%;'"></div>
+		</div>
+	</div>
+
+	<div class="actions-footer">
+		<div class="language-selector-container">
+			<select class="language-dropdown" name="language" th:id="languageSelector">
+				<option th:each="lang : ${languageOptions}"
+						th:value="${lang.value}"
+						th:text="${lang.label}"
+						th:selected="${lang.value == selectedLanguage}">
+					Java
+				</option>
+			</select>
+		</div>
+		<button class="quick-match-button" th:text="${quickMatchButtonText}">Partida Rápida</button>
+	</div>
+
+</div>
+
+</body>
+</html>

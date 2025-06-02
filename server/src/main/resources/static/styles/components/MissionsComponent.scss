@@ -1,0 +1,140 @@
+@use "../global-vars" as *;
+
+
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f0f0f0; /* Light background for context, similar to the image's outer area */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh; /* Full height for centering */
+	margin: 0;
+	padding: 20px; /* Add some padding around the component */
+	box-sizing: border-box;
+}
+
+.missions-container {
+	background-color: #e0e0e0; /* Main container background, slightly darker grey */
+	border-radius: 15px;
+	padding: 20px;
+	width: 380px; /* Approximate width from image */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	display: flex;
+	flex-direction: column;
+	gap: 15px; /* Space between mission items and footer */
+}
+
+.missions-title {
+	color: #333;
+	font-size: 1.3em;
+	font-weight: bold;
+	margin: 0 0 10px 0; /* Margin bottom to separate from first mission */
+	text-align: left;
+}
+
+.mission-item {
+	display: flex;
+	flex-direction: column;
+	gap: 5px; /* Space between text and progress bar */
+}
+
+.mission-details {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 5px; /* Slight padding for text */
+}
+
+.mission-name {
+	color: #333;
+	font-size: 0.95em;
+	font-weight: bold;
+}
+
+.mission-progress-text {
+	color: #555;
+	font-size: 0.9em;
+	font-weight: bold;
+}
+
+.progress-bar-background {
+	background-color: #ffffff; /* White background for the unfilled part of the bar */
+	border-radius: 25px;
+	height: 20px; /* Height of the progress bar */
+	overflow: hidden; /* Ensures the foreground bar stays within rounded corners */
+	border: 1px solid #c0c0c0; /* Slight border for definition */
+	width: 100%;
+}
+
+.progress-bar-foreground {
+	background-color: #333333; /* Dark grey/black for the filled part of the bar */
+	height: 100%;
+	border-radius: 25px 0 0 25px; /* Rounded only on the left if not full */
+	/* If you want it always fully rounded inside: border-radius: 25px; */
+	transition: width 0.3s ease-in-out;
+}
+
+.actions-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 15px; /* Space above the footer */
+}
+
+.language-selector-container {
+	flex-grow: 0.5; /* Allows dropdown to take some space but not dominate */
+}
+
+.language-dropdown {
+	background-color: #4CAF50; /* Green background */
+	color: white;
+	border: none;
+	border-radius: 8px;
+	padding: 10px 15px;
+	font-size: 1em;
+	font-weight: bold;
+	cursor: pointer;
+	appearance: none; /* Remove default system appearance */
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E"); /* White dropdown arrow */
+	background-repeat: no-repeat;
+	background-position: right 10px center;
+	background-size: 12px;
+	padding-right: 35px; /* Make space for the arrow */
+	width: 100%; /* Make dropdown fill its container */
+	box-sizing: border-box;
+}
+
+.language-dropdown:focus {
+	outline: none;
+	box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.5); /* Focus ring */
+}
+
+.language-dropdown option {
+	background-color: white;
+	color: black;
+}
+
+.quick-match-button {
+	background-color: #4CAF50; /* Green background */
+	color: white;
+	border: none;
+	border-radius: 8px;
+	padding: 10px 20px;
+	font-size: 1em;
+	font-weight: bold;
+	cursor: pointer;
+	text-align: center;
+	flex-grow: 1; /* Allows button to take remaining space */
+	margin-left: 10px; /* Space between dropdown and button */
+	transition: background-color 0.2s ease;
+}
+
+.quick-match-button:hover {
+	background-color: #45a049; /* Darker green on hover */
+}
+
+.quick-match-button:active {
+	background-color: #3e8e41; /* Even darker green when pressed */
+}
