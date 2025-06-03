@@ -1,20 +1,20 @@
 <div class="missions-container" th:fragment="missionsComponent(missionsList, lenguageOptions)">
-	<h2 class="missions-title">Misiones:</h2>
+	<h2 class="missionsTitle">Misiones:</h2>
 
-	<div class="mission-item" th:each="mission : ${missionsList}">
-		<div class="mission-details">
-			<span class="mission-name" th:text="${mission.name}"></span>
-			<span class="mission-progress-text" th:text="${mission.fractionProgress}"></span>
+	<div class="missionInstance" th:each="mission : ${missionsList}">
+		<div class="__details">
+			<span class="__description" th:text="${mission.name}"></span>
+			<span class="__progress__text" th:text="${mission.currentProgress + '/' + mission.totalProgress}"></span>
 		</div>
-		<div class="progress-bar-background">
-			<div class="progress-bar-foreground"
+		<div class="__progress-bar-background">
+			<div class="__progress-bar-foreground"
 				 th:style="'width: ' + ${mission.fractionProgress} + '%;'"></div>
 		</div>
 	</div>
 
 	<div class="actions-footer">
-		<div class="language-selector-container">
-			<select class="language-dropdown" name="language" id="languageSelector">
+		<div class="__language-selector-container">
+			<select class="__language-dropdown" name="language" id="languageSelector">
 				<option th:each="lang : ${languageOptions}"
 						th:value="${lang.value}"
 						th:text="${lang.label}"
@@ -23,7 +23,7 @@
 				</option>
 			</select>
 		</div>
-		<button class="quick-match-button">Partida Rápida</button>
+		<button class="__quick-match-button">Partida Rápida</button>
 	</div>
 
 </div>
