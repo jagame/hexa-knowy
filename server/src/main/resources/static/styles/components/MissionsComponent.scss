@@ -1,18 +1,5 @@
 @use "../global-vars" as *;
 
-
-body {
-	font-family: Arial, sans-serif;
-	background-color: #f0f0f0; /* Light background for context, similar to the image's outer area */
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	min-height: 100vh; /* Full height for centering */
-	margin: 0;
-	padding: 20px; /* Add some padding around the component */
-	box-sizing: border-box;
-}
-
 .missions-container {
 	background-color: #e0e0e0; /* Main container background, slightly darker grey */
 	border-radius: 15px;
