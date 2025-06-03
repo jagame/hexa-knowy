@@ -22,20 +22,24 @@
 // Exportar a variables CSS (para a futuro colores dinámicos)
 :root {
 	// Colors
-	--primary: #{$primary};
-	--primary-dark: #{$primary-dark};
-	--primary-light: #{$primary-light};
-	--primary-super-light: #{$primary-super-light};
+	--primary-100: #{$primary-100};
+	--primary-300: #{$primary-300};
+	--primary-500: #{$primary-500};
+	--primary-700: #{$primary-700};
+	--secundary-100: #{$secundary-100};
+	--secundary-300: #{$secundary-300};
+	--secundary-500: #{$secundary-500};
+	--secundary-700: #{$secundary-700};
 	--neutral-100: #{$neutral-100};
 	--neutral-300: #{$neutral-300};
 	--neutral-500: #{$neutral-500};
 	--neutral-700: #{$neutral-700};
 	--neutral-900: #{$neutral-900};
 	--bg: #{$bg};
-	--danger: #{$danger};
-	--danger-hover: #{$danger-hover};
-	--info: #{$info};
-	--info-hover: #{$info-hover};
+	--danger-500: #{$danger-500};
+	--danger-600: #{$danger-600};
+	--info-500: #{$info-500};
+	--info-600: #{$info-600};
 	// Border-radius
 	--radius-25: #{$radius-25};
 	--radius-10: #{$radius-10};

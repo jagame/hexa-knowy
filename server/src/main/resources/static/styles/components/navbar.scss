@@ -16,7 +16,7 @@ $dropdown-label-height: 180px;
 
 /* Knowy navbar style */
 #knowy-navbar {
-	background: $primary;
+	background: $primary-500;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -32,7 +32,7 @@ $dropdown-label-height: 180px;
 /* Links Style */
 #knowy-navbar > .__links {
 	border-top: 1px solid $neutral-500;
-	background: $primary;
+	background: $primary-500;
 
 	> a {
 		text-decoration: none;
@@ -164,12 +164,12 @@ $dropdown-label-height: 180px;
 			cursor: pointer;
 			text-align: center;
 			text-decoration: none;
-			color: $primary
+			color: $primary-500
 		}
 
 		> .__menu-item:hover {
 			text-decoration: underline;
-			color: $primary;
+			color: $primary-500;
 			background: $neutral-500;
 		}
 
@@ -177,7 +177,7 @@ $dropdown-label-height: 180px;
 			display: flex;
 			border-bottom-right-radius: 10px;
 			border-bottom-left-radius: 10px;
-			background: $primary;
+			background: $primary-500;
 		}
 
 		> div > .__menu-item {
@@ -187,7 +187,7 @@ $dropdown-label-height: 180px;
 		}
 
 		> div > .__menu-item:hover {
-			background: $primary-dark;
+			background: $primary-700;
 		}
 
 		> div > .__menu-item-home {
@@ -296,7 +296,7 @@ $dropdown-label-height: 180px;
 		}
 
 		> .__profile-menu {
-			background: $primary;
+			background: $primary-500;
 		}
 
 		> .__menu-item:hover {
@@ -305,7 +305,7 @@ $dropdown-label-height: 180px;
 		}
 
 		> div {
-			background: $primary;
+			background: $primary-500;
 		}
 
 		> div > .__menu-item:hover {

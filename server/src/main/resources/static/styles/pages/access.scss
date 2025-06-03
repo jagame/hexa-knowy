@@ -5,7 +5,7 @@ body {
 	align-items: center;
 	justify-content: center;
 	min-height: 100vh;
-	background: $primary-super-light;
+	background: $primary-100;
 }
 
 .kn-logo {
@@ -22,7 +22,7 @@ body {
 	}
 
 	&--text {
-		color: $primary-dark;
+		color: $primary-700;
 		font-family: 'caveat-brush';
 	}
 }
@@ -40,22 +40,23 @@ body {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	background-color: $primary-super-light;
+	background-color: $primary-100;
 	width: 100%;
 	max-width: 535px;
 	height: auto;
-	padding: 1rem 4rem;
 	border-radius: $radius-25;
 	transform: translateY(20px);
 	animation: fadeUp 1s forwards;
+	padding: 1rem 4rem;
 }
+
 
 .kn-container::before {
 	content: '';
 	position: absolute;
 	top: -20px;
 	left: -20px;
-	right: -20px !important;
+	right: -20px;
 	bottom: -20px;
 	border-radius: $radius-25;
 	background: #B4D7B2;
@@ -63,6 +64,7 @@ body {
 	z-index: -1;
 	opacity: 0.8;
 }
+
 
 .kn-form {
 
@@ -75,7 +77,7 @@ body {
 
 	&__text {
 		font-family: 'excalifont';
-		color: $secundary-dark;
+		color: $secundary-700;
 		margin-bottom: 15px;
 	}
 
@@ -98,13 +100,13 @@ body {
 		font-family: 'excalifont';
 		font-size: 20px;
 		color: $neutral-700;
-		border: 3px solid $primary;
+		border: 3px solid $primary-500;
 		border-radius: $radius-8;
 
 	}
 
 	&--input:focus {
-		border: 4px solid $primary-dark;
+		border: 4px solid $primary-700;
 		outline: none;
 	}
 
@@ -121,10 +123,10 @@ body {
 			font-size: 18px;
 			cursor: pointer;
 			text-decoration: none;
-			color: $secundary-dark;
+			color: $secundary-700;
 
 			&:hover {
-				color: $secundary;
+				color: $secundary-500;
 				text-decoration: underline;
 				text-underline-offset: 4px;
 			}
@@ -142,42 +144,46 @@ body {
 		cursor: pointer;
 		color: white;
 		border: none;
-		background-color: $primary;
+		background-color: $primary-500;
 		transition: $transition-speed;
 
 		&:hover {
-			background: $primary-dark;
+			background: $primary-700;
 		}
 	}
 
 }
 
-@media (max-height: 800px) {
+@media (max-height: 790px) {
 
-	.kn-logo--img {
-		width: 140px;
-	}
+	.kn-logo {
+		.kn-logo--img {
+			width: 140px;
+		}
 
-	.kn-logo--text {
-		font-size: 40px !important;
+		.kn-logo--text {
+			font-size: 40px;
+		}
 	}
 
 	.kn-form__title {
-		font-size: 24px;
+		font-size: 40px;
 	}
 
 	.kn-form--label {
-		font-size: 18px;
+		font-size: 20px;
 	}
 
 	.kn-form--input{
 		height: 45px;
-		font-size: 16px;
+		font-size: 18px;
 	}
 
-	.kn-button {
-		height: 45px !important;
-		font-size: 24px !important;
+	.kn-form {
+		.kn-button {
+			height: 45px;
+			font-size: 24px;
+		}
 	}
 
 	.kn-container {
@@ -195,16 +201,18 @@ body {
 
 @media (max-width: 625px) {
 
-	.kn-logo--img {
-		width: 140px;
-	}
+	.kn-logo {
+		.kn-logo--img {
+			width: 140px;
+		}
 
-	.kn-logo--text {
-		font-size: 40px;
+		.kn-logo--text {
+			font-size: 40px;
+		}
 	}
 
 	.kn-form__title {
-		font-size: 32px;
+		font-size: 40px;
 	}
 
 	.kn-form__footer-links {
@@ -225,19 +233,34 @@ body {
 
 @media (max-width: 480px) {
 
-	.kn-logo--img {
-		width: 140px !important;
-	}
+	.kn-logo {
+		.kn-logo--img {
+			width: 140px;
+		}
 
-	.kn-logo--text {
-		font-size: 40px !important;
+		.kn-logo--text {
+			font-size: 40px;
+		}
 	}
 
 	.kn-form__title {
-		font-size: 32px !important;
+		font-size: 32px;
 	}
+
 	.kn-form--label {
 		font-size: 20px;
+	}
+
+	.kn-form--input{
+		height: 45px;
+		font-size: 18px;
+	}
+
+	.kn-form {
+		.kn-button {
+			height: 45px;
+			font-size: 24px;
+		}
 	}
 }
 
