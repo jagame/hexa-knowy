@@ -5,14 +5,13 @@
 	  lang="en">
 <head>
 	<title>Test</title>
-	<link rel="stylesheet" th:href="@{/components/MissionsComponent.css}">
+	<link rel="stylesheet" th:href="@{/styles/components/MissionsComponent.css}">
 </head>
 <body>
-<!--	<main layout:fragment="main-content">-->
-<!--		<div th:replace="~{components/Progress-card-component :: streakCard(${nombreUsuario},${progresoPorcentaje},${cursosCompletados},${buttonLink},${rachaActual},${totalCursos})}"></div>-->
-<!--	</main>-->
+
 	<main layout:fragment="main-content">
-		<div th:insert="~{components/missionsComponenent :: missions-container()}"></div>
+		<div th:replace="~{components/missionsComponent :: missionsComponent(${missionsList}, ${lenguageOptions})}">Hola</div>
 	</main>
+
 </body>
 </html>
