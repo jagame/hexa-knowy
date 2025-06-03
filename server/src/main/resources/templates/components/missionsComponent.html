@@ -4,7 +4,7 @@
 	<div class="missionInstance" th:each="mission : ${missionsList}">
 		<div class="__details">
 			<span class="__description" th:text="${mission.name}"></span>
-			<span class="__progress__text" th:text="${mission.currentProgress + '/' + mission.totalProgress}"></span>
+			<span class="__progress-text" th:text="${mission.currentProgress + '/' + mission.totalProgress}"></span>
 		</div>
 		<div class="__progress-bar-background">
 			<div class="__progress-bar-foreground"

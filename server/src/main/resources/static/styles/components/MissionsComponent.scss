@@ -1,17 +1,19 @@
 @use "../global-vars" as *;
 
 .missions-container {
-	background-color: #e0e0e0;
+	font-family: "Virgilio", sans-serif;;
+	background-color: $neutral-500;
 	padding: 20px;
 	width: 380px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	box-shadow: $card-shadow;
 	display: flex;
 	flex-direction: column;
 	gap: 15px;
+	border-radius: $card-radius;
 }
 
 .missionsTitle {
-	color: #333;
+	color: $neutral-900;
 	font-size: 1.3em;
 	font-weight: bold;
 	margin: 0 0 10px 0;
@@ -32,29 +34,29 @@
 
 
 		> .__description {
-			color: #333;
+			color: $neutral-900;
 			font-size: 0.95em;
 			font-weight: bold;
 		}
 
-		> .__progress__text {
-			color: #555;
+		> .__progress-text {
+			color: $neutral-700;
 			font-size: 0.9em;
 			font-weight: bold;
 		}
 	}
 
 	> .__progress-bar-background {
-		background-color: #ffffff;
+		background-color: $neutral-100;
 		border-radius: 25px;
 		height: 20px;
 		overflow: hidden;
-		border: 1px solid #c0c0c0;
+		border: 1px solid $neutral-500;
 		width: 100%;
 
 
 		> .__progress-bar-foreground {
-			background-color: #333333;
+			background-color: $neutral-700;
 			height: 100%;
 			border-radius: 25px 0 0 25px;
 			transition: width 0.3s ease-in-out;
@@ -74,7 +76,7 @@
 
 
 		> .__language-dropdown {
-			background-color: #4CAF50;
+			background-color: $primary;
 			color: white;
 			border: none;
 			border-radius: 8px;
@@ -94,7 +96,7 @@
 			box-sizing: border-box;
 
 			> .__language-dropdown option {
-				background-color: white;
+				background-color: $neutral-100;
 				color: black;
 			}
 		}
@@ -107,8 +109,8 @@
 
 
 	.__quick-match-button {
-		background-color: #4CAF50; /* Green background */
-		color: white;
+		background-color: $primary;
+		color: $neutral-100;
 		border: none;
 		border-radius: 8px;
 		padding: 10px 20px;
@@ -122,11 +124,11 @@
 
 
 		.__quick-match-button:hover {
-			background-color: #45a049;
+			background-color: $primary-light;
 		}
 
 		.__quick-match-button:active {
-			background-color: #3e8e41;
+			background-color: $primary-dark;
 		}
 	}
 }
