@@ -99,6 +99,7 @@ $dropdown-label-height: 180px;
 		transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
 		opacity: 0;
 		border-top-left-radius: 10px;
+		pointer-events: none;
 	}
 
 	> .__menu {
@@ -235,6 +236,7 @@ $dropdown-label-height: 180px;
 			position: fixed;
 			display: flex;
 			box-shadow: -8px 0 12px rgba(0, 0, 0, 0.2);
+			pointer-events: none;
 		}
 
 		> .__profile-menu img {
@@ -253,6 +255,7 @@ $dropdown-label-height: 180px;
 		> input:checked ~ .__profile-menu {
 			transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
 			opacity: 1;
+			pointer-events: visible;
 		}
 
 		> .__menu {
