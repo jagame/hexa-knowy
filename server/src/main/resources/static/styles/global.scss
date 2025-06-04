@@ -1,50 +1,83 @@
 @use 'global-reset';
 @use '_global-vars' as *;
 
+@font-face {
+	font-family: 'caveat-brush';
+	src: url('../fonts/CaveatBrush-Regular.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'excalifont';
+	src: url('../fonts/Excalifont-Regular.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'inter';
+	src: url('../fonts/Inter.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
+
 // Exportar a variables CSS (para a futuro colores dinámicos)
 :root {
-	--primary: #{$primary};
-	--primary-light: #{$primary-light};
-	--primary-dark: #{$primary-dark};
+	// Colors
+	--primary-100: #{$primary-100};
+	--primary-300: #{$primary-300};
+	--primary-500: #{$primary-500};
+	--primary-700: #{$primary-700};
+	--secundary-100: #{$secundary-100};
+	--secundary-300: #{$secundary-300};
+	--secundary-500: #{$secundary-500};
+	--secundary-700: #{$secundary-700};
 	--neutral-100: #{$neutral-100};
 	--neutral-300: #{$neutral-300};
 	--neutral-500: #{$neutral-500};
 	--neutral-700: #{$neutral-700};
 	--neutral-900: #{$neutral-900};
+	--bg: #{$bg};
+	--danger-500: #{$danger-500};
+	--danger-600: #{$danger-600};
+	--info-500: #{$info-500};
+	--info-600: #{$info-600};
+	// Border-radius
+	--radius-25: #{$radius-25};
+	--radius-10: #{$radius-10};
+	--radius-8: #{$radius-8};
 }
 
 body {
-	font-family: "Virgilio", sans-serif;
+	font-family: 'inter';
 	font-size: $base-font-size;
 	line-height: $line-height-base;
 
+	.kn-logo--text {
+		font-size: 64px;
+	}
+	.kn-button {
+		font-size: 28px;
+		border-radius: $radius-25;
+	}
 	h1 {
-		font-size: 2.25rem;
-		font-weight: 700;
+		font-size: 40px;
 	}
-
 	h2 {
-		font-size: 1.875rem;
-		font-weight: 500;
+		font-size: 32px;
 	}
-
 	h3 {
-		font-size: 1.5rem;
-		font-weight: 500;
+		font-size: 28px;
 	}
-
 	h4 {
-		font-size: 1.25rem;
-		font-weight: 500;
+		font-size: 24px;
 	}
-
+	h5 {
+		font-size: 20px;
+	}
+	h6 {
+		font-size: 18px;
+	}
 	p {
-		font-size: 1rem;
-		font-weight: 400;
-	}
-
-	small {
-		font-size: 0.875rem;
-		font-weight: 400;
+		font-size: 16px;
 	}
 }
