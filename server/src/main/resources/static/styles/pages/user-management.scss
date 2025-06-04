@@ -1,6 +1,5 @@
 @use '../global-vars' as *;
-@use '../components/sidebar-user-management' as sidebar-user-management;
-@use '../components/toggle-user-management' as toggle-user-management;
+
 
 body{
 	background-color: $neutral-500;
@@ -21,10 +20,67 @@ body{
 	gap: 0.5rem;
 	padding: $default-padding1
 }
+/*Button expand*/
+.expandButton{
+	position: sticky;
+	z-index: 10;
+	visibility: visible;
+	min-width: 40px;
+	max-width: 40px;
+	min-height: 40px;
+	max-height: 40px;
+	margin: 0.25rem;
+	transition: transform 0.3s ease,
+	opacity 0.3s ease;
+	transform: translateX(0);
+	opacity: 1;
+	color: white;
+	border: none;
+	border-radius: 50%;
+	background: #333333;
+}
+
+/*Aside bar user-management*/
+
+.user-sidebar {
+	background-color: $neutral-500;
+	padding: 20px;
+	box-shadow: $card-shadow;
+	width: fit-content;
+}
+
+.sidebar-menu {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.sidebar-link {
+	display: block;
+	padding: 10px 15px;
+	border-radius: 5px;
+	text-decoration: none;
+	color: $neutral-700;
+	transition: $transition-speed;
+}
+
+.sidebar-link:hover {
+	background-color: $links-bg;
+	font-weight: bold;
+	color: $primary;
+}
+
+.sidebar-link.active {
+	background-color: $primary;
+	font-weight: bold;
+	color: white;
+}
+
+
+
 
 .user-management-container_main{
 	width: 100%;
-	border-radius: $card-radius;
 	background-color: $neutral-100;
 	padding:$default-padding1
 }
@@ -96,6 +152,18 @@ body{
 	font-weight: bold;
 }
 
+.language-item {
+	cursor: pointer;
+	padding: 0.4em 0.7em;
+	font-size: 0.9em;
+}
+
+#selectedLanguages {
+	background-color: $primary;
+	color: $neutral-300;
+	border-radius: 5px;
+}
+
 .buttons-form-content {
 	display: flex;
 	flex-direction: row;
@@ -165,8 +233,8 @@ body{
 
 /*Responsive Media Queries*/
 /* Extra Small Devices (phones, 960px and down) */
-@media (max-width: 960px) {
+/*@media (max-width: 960px) {
 	.user-management-container_aside{
 		display: none;
 	}
-}
+}*/
