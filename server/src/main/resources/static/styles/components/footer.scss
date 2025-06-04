@@ -6,16 +6,16 @@
 	padding: 0 clamp(15px, 3vw, 30px);
 	margin: 0 auto;
 	width: 100%;
-	background-color: $neutral-500;
+	background-color: $neutral-300;
 }
 .footer > a{
-	color: $primary;
+	color: $primary-500;
 	transition:color $transition-speed;
 	padding: clamp(8px, 1.5vw, 15px) 0;
 }
 
 .footer > a:hover{
-	color: $primary-dark;
+	color: $primary-700;
 }
 /* Global styles for social media icons */
 

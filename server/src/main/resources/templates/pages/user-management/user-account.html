@@ -50,7 +50,7 @@
 
 <aside layout:fragment="sidebar" class="kn-aside user-sidebar">
 	<div class="user-info text-center mb-4">
-		<h3 class="mt-3" th:text="${username}">Usuario</h3>
+		<h3 class="mt-3 usernameTitle" th:text="${username}">Usuario</h3>
 	</div>
 	<div class="sidebar-menu">
 		<a th:href="@{/user-profile}" class="button sidebar-link but"  data-sidebar-toggler="" >Editar Perfil</a>
@@ -104,6 +104,7 @@
 					<h3 class="title-delete">Desactivación y eliminación de la cuenta</h3>
 				</div>
 				<p class="description-management">Elimina permanentemente tus datos y todo lo asociado con tu cuenta.</p>
+				<br>
 				<a th:href="@{/delete-account}" class="btn btn-delete">Eliminar cuenta</a>
 			</div>
 		</div>

@@ -1,13 +1,31 @@
 @use '../global-vars' as *;
-
-
+@use '../global' as *;
+@font-face {
+	font-family: 'caveat-brush';
+	src: url('../../fonts/CaveatBrush-Regular.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'excalifont';
+	src: url('../../fonts/Excalifont-Regular.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'inter';
+	src: url('../../fonts/Inter.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
 body{
-	background-color: $neutral-500;
+	background-color: $neutral-300;
+	font-family: 'inter';
 }
 
 .page-container{
 	display: flex;
-	padding: $default-padding1
+	padding:30px ;
 }
 
 .row{
@@ -18,7 +36,8 @@ body{
 
 .user-information{
 	gap: 0.5rem;
-	padding: $default-padding1
+	padding: 30px;
+	font-family: 'caveat-brush';
 }
 /*Button expand*/
 
@@ -26,7 +45,7 @@ body{
 	display: inline-block;
 	font-weight: bold;
 
-	background-color: $primary;
+	background-color: $primary-500;
 	text-align: center;
 	vertical-align: middle;
 	padding: 0.375rem 0.75rem;
@@ -41,13 +60,15 @@ body{
 }
 
 .but:hover{
-	background-color: $primary;
+	background-color: $primary-500;
 }
 
 /*Aside bar user-management*/
-
+.usernameTitle{
+	font-family: 'excalifont';
+}
 .user-sidebar {
-	background-color: $neutral-500;
+	background-color: $neutral-300;
 	padding: 20px;
 	box-shadow: $card-shadow;
 	width: fit-content;
@@ -66,22 +87,23 @@ body{
 	text-decoration: none;
 	color: $neutral-100;
 	transition: $transition-speed;
+	font-family: 'caveat-brush';
 }
 
 .sidebar-link:hover {
-	background-color: $links-bg;
+	background-color: $secundary-100;
 	font-weight: bold;
-	color: $primary;
+	color: $primary-500;
 }
 
 .sidebar-link.active {
-	background-color: $primary-dark;
+	background-color: $primary-700;
 	font-weight: bold;
 	color: white;
 }
 
 .sidebar-link.active:hover{
-	background-color: $primary-light;
+	background-color: $primary-300;
 }
 
 
@@ -90,28 +112,31 @@ body{
 .user-management-container_main{
 	width: 100%;
 	background-color: $neutral-100;
-	padding:$default-padding1
+	padding:30px;
 }
 
 .title-management{
-	color:$primary;
+	color:$primary-500;
 	font-weight: bold;
+	font-family: excalifont;
 }
 
 .tittle-delete{
-	color: $danger-color;
+	color: $danger-500;
 	font-weight: bold;
+
 }
 
 .description-management{
-	color:$neutral-800;
+	color:$neutral-900;
+	font-family: 'inter';
 }
 
 
 .picture-edit-container{
 	width:150px;
 	height:150px;
-	border: 3px solid $primary;
+	border: 3px solid $primary-500;
 	border-radius: 50%;
 	overflow: hidden;
 	position:relative;
@@ -122,14 +147,16 @@ body{
 }
 
 .edit-avatar{
+	width:100%;
 	height:100%;
 	object-fit: cover;
 	display: block;
+	background: #f0f0f0;
 }
 
 .edit-pic-btn {
 	position: absolute;
-	background-color: $primary;
+	background-color: $primary-500;
 	color: white;
 	width: 40px;
 	height: 40px;
@@ -142,7 +169,7 @@ body{
 }
 
 .edit-pic-btn:hover {
-	background-color: $primary-light;
+	background-color: $primary-300;
 	color: $neutral-700;
 }
 
@@ -156,7 +183,7 @@ body{
 }
 
 .section-title{
-	color: $primary;
+	color: $primary-500;
 	font-weight: bold;
 }
 
@@ -167,7 +194,7 @@ body{
 }
 
 #selectedLanguages {
-	background-color: $primary;
+	background-color: $primary-500;
 	color: $neutral-300;
 	border-radius: 5px;
 }
@@ -181,21 +208,23 @@ body{
 }
 
 .btn-inferior{
-	background-color: $neutral-850;
+	background-color: $neutral-900;
 	color: white;
+	font-family: 'caveat-brush';
 }
 
 .btn-save{
-	background-color: $primary;
+	background-color: $primary-500;
+	font-family: 'caveat-brush';
 	color: white;
 }
 
 .btn-save:hover{
-	background-color: $primary-light;
+	background-color: $primary-300;
 }
 
 .btn-inferior:hover{
-	background-color: $neutral-800;
+	background-color: $neutral-900;
 }
 
 /*User Account*/
@@ -205,44 +234,38 @@ body{
 }
 
 .advice{
-	color: $neutral-800;
+	color: $neutral-900;
 	font-size: small;
 }
 
 .title-delete{
-	color: $danger-color;
+	color: $danger-500;
+	font-family: excalifont;
 }
 
 .delete-section{
-	border-top:1px solid $primary;
+	border-top:1px solid $primary-500;
 	margin-top: 3rem;
 	padding-top: 1.5rem;
 }
 
 .btn-delete{
-	background-color: $danger-color;
+	background-color: $danger-500;
+	font-family: 'caveat-brush';
 	color: white;
 }
 
 .btn-delete:hover{
-	background-color: $danger-dark-color;
+	background-color: $danger-600;
 	color: white;
 }
 
 /*delete-account*/
 .delete-warning{
-	padding: $default-padding2;
-	color: $danger-dark-text;
+	padding: 30px;
+	color: $danger-600;
 	background-color: #e5555d3b;
-	border: 1px solid $danger-color;
-	border-radius: $card-radius;
+	border: 1px solid $danger-500;
+	border-radius: 8px;
+	font-family: 'inter';
 }
-
-
-/*Responsive Media Queries*/
-/* Extra Small Devices (phones, 960px and down) */
-/*@media (max-width: 960px) {
-	.user-management-container_aside{
-		display: none;
-	}
-}*/
