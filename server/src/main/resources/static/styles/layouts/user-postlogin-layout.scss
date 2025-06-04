@@ -1,9 +1,24 @@
 @use '../global' as *;
 @use '../components/navbar' as navbar;
 
+html, body {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
 body {
-	min-height: 100vh;
-	margin: 0;
 	display: flex;
 	flex-direction: column;
+}
+
+.layout-body {
+	display: flex;
+	flex-direction: column;
+	height: calc(100% - #{navbar.$navbar-height});
+	overflow: auto;
+}
+
+main {
+	flex: 1;
 }
