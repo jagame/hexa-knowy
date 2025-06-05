@@ -5,14 +5,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequestMapping("/home")
 public class UserHomeController {
 
-	@GetMapping("/home")
+	@GetMapping("")
 	public String userHome(Model interfaceScreen) {
 		List<MissionsDto> missionsList = new ArrayList<>();
 		MissionsDto mission1 = new MissionsDto();
@@ -43,17 +45,17 @@ public class UserHomeController {
 		language1.setValue("Java");
 		languageOptions.add(language1);
 
-		MissionsDto language2 = new MissionsDto();
-		language2.setLabel("Phyton");
-		language2.setValue("Phyton");
-		languageOptions.add(language2);
-
-		MissionsDto language3 = new MissionsDto();
-		language3.setLabel("C#");
-		language3.setValue("C#");
-		languageOptions.add(language3);
-
-		interfaceScreen.addAttribute("languageOptions", languageOptions);
+//		MissionsDto language2 = new MissionsDto();  In case we need the controller for language selector.
+//		language2.setLabel("Phyton");
+//		language2.setValue("Phyton");
+//		languageOptions.add(language2);
+//
+//		MissionsDto language3 = new MissionsDto();
+//		language3.setLabel("C#");
+//		language3.setValue("C#");
+//		languageOptions.add(language3);
+//
+//		interfaceScreen.addAttribute("languageOptions", languageOptions);
 
 		return "pages/user-home";
 	}

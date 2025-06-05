@@ -6,14 +6,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MissionsDto {
-	private String name;
-	private int currentProgress;
-	private int totalProgress;
-	private String value;
-	private String label;
+    private String name;
+    private int currentProgress;
+    private int totalProgress;
+    private String value;
+    private String label;
+    private String fractionProgress;
 
 
-	public float getFractionProgress() {
-		return (float) getCurrentProgress() / getTotalProgress() * 100;
-	}
+    public float getFractionProgress() {
+        return (float) getCurrentProgress() / getTotalProgress() * 100;
+    }
 }

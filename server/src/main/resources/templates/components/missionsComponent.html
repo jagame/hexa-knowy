@@ -1,29 +1,29 @@
 <div class="missions-container" th:fragment="missionsComponent(missionsList, lenguageOptions)">
-	<h2 class="missionsTitle">Misiones:</h2>
+	<h2 class="missions__missionsTitle">Retos diarios:</h2>
 
-	<div class="missionInstance" th:each="mission : ${missionsList}">
-		<div class="__details">
-			<span class="__description" th:text="${mission.name}"></span>
-			<span class="__progress-text" th:text="${mission.currentProgress + '/' + mission.totalProgress}"></span>
+	<div class="mission-container__missionInstance" th:each="mission : ${missionsList}">
+		<span class="details__description" th:text="${mission.name}"></span>
+		<div class="missionInstance__details">
+			<span class="details__progress-text" th:text="${mission.currentProgress + '/' + mission.totalProgress}"></span>
 		</div>
-		<div class="__progress-bar-background">
-			<div class="__progress-bar-foreground"
+		<div class="missionInstance__progress-bar-background">
+			<div class="progress-bar-background__progress-bar-foreground"
 				 th:style="'width: ' + ${mission.fractionProgress} + '%;'"></div>
 		</div>
 	</div>
 
 	<div class="actions-footer">
-		<div class="__language-selector-container">
-			<select class="__language-dropdown" name="language" id="languageSelector">
-				<option th:each="lang : ${languageOptions}"
-						th:value="${lang.value}"
-						th:text="${lang.label}"
-						th:selected="${lang.value == selectedLanguage}">
-					Java
-				</option>
-			</select>
-		</div>
-		<button class="__quick-match-button">Partida Rápida</button>
+<!--		<div class="actions-footer__language-selector-container">-->
+<!--			<select class="language-selector-container__language-dropdown" name="language" id="languageSelector">-->
+<!--				<option th:each="lang : ${languageOptions}"-->
+<!--						th:value="${lang.value}"-->
+<!--						th:text="${lang.label}"-->
+<!--						th:selected="${lang.value == selectedLanguage}">-->
+<!--					Java-->
+<!--				</option>-->
+<!--			</select>-->
+<!--		</div>-->
+		<button class="actions-footer__quick-match-button">Partida Rápida</button>
 	</div>
 
 </div>

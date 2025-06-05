@@ -1,6 +1,17 @@
 spring:
     application:
         name: knowy-server
+    thymeleaf:
+        cache: false
+    devtools:
+      restart:
+          poll-interval: 1s
 server:
     port: 8080
-
+logging:
+    level:
+        org:
+            springframework:
+                jdbc:
+                    core:
+                        StatementCreatorUtils=TRACE:
