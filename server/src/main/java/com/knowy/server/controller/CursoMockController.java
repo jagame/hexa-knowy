@@ -11,21 +11,25 @@ import java.util.List;
 @Controller
 public class CursoMockController {
 
-	@GetMapping("/test/curso-aside")
+	@GetMapping("/course")
 	public String mostrarCurso(Model model) {
 		CursoDTO curso = new CursoDTO();
-		curso.setNombre("Curso de Java Básico");
-		curso.setPorcentajeCompletado(60);
+		curso.setNombre("Java Básico");
+		curso.setPorcentajeCompletado(80);
 
 		List<LeccionDTO> lecciones = List.of(
 			new LeccionDTO(1, "Introducción", LeccionDTO.EstadoLeccion.COMPLETADA),
-			new LeccionDTO(2, "Variables y Tipos", LeccionDTO.EstadoLeccion.COMPLETADA),
-			new LeccionDTO(3, "Condicionales", LeccionDTO.EstadoLeccion.SIGUIENTE),
-			new LeccionDTO(4, "Bucles", LeccionDTO.EstadoLeccion.BLOQUEADA)
+			new LeccionDTO(2, "¿Qué es Java y cómo funciona?", LeccionDTO.EstadoLeccion.COMPLETADA),
+			new LeccionDTO(3, "Tipos de datos y variables", LeccionDTO.EstadoLeccion.COMPLETADA),
+			new LeccionDTO(4, "Estructuras de control", LeccionDTO.EstadoLeccion.COMPLETADA),
+			new LeccionDTO(5, "Bucles", LeccionDTO.EstadoLeccion.COMPLETADA),
+			new LeccionDTO(6, "Métodos (funciones)", LeccionDTO.EstadoLeccion.COMPLETADA),
+			new LeccionDTO(7, "Arreglos (arrays)", LeccionDTO.EstadoLeccion.SIGUIENTE),
+			new LeccionDTO(8, "Introducción ", LeccionDTO.EstadoLeccion.BLOQUEADA)
 		);
 
 		curso.setLecciones(lecciones);
 		model.addAttribute("curso", curso);
-		return "pages/curso-aside-mock";
+		return "/pages/course-page";
 	}
 }

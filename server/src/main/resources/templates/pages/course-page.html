@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es"
+	  layout:decorate="~{layouts/content-sidebar-layout}"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Index Example</title>
+	<link rel="stylesheet" th:href="@{/styles/pages/course-page.css}">
+</head>
+
+<body>
+
+<aside layout:fragment="sidebar">
+	<button data-sidebar-toggler=""> > </button>
+	<div th:replace="~{components/lessonscard ::lessonscard(${curso})}"></div>
+</aside>
+
+<main layout:fragment="main-content">
+	<h1>Main</h1>
+	<div th:replace="~{components/example-card-component :: example-card-component('https://placehold.co/600x400', title, 'description text', buttonText, buttonLink)}"></div>
+</main>
+
+
+</body>
+</html>

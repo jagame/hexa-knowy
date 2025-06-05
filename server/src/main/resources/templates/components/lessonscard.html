@@ -1,0 +1,30 @@
+<div class="lessonscard" th:fragment="lessonscard(curso)">
+
+	<div class="coursetitle">
+		<h2 th:text="${curso.nombre}">Nombre del Curso</h2>
+		<div class="coursetitle__progressbar">
+			<span class="coursetitle__percentage" th:text="${curso.porcentajeCompletado + '% completado'}"></span>
+			<progress th:value="${curso.porcentajeCompletado}" max="100"></progress>
+			<div class="coursetitle__btn">Introducción al curso</div>
+		</div>
+	</div>
+
+	<ul class="lessonlist">
+
+
+		<li th:each="leccion : ${curso.lecciones}"
+			th:class="${leccion.estado.name() == 'BLOQUEADA'} ? 'blocked-lesson' : 'lessonitem'">
+			<a href="#" class="lessonlink">
+				<div class="lessonicon">
+					<span th:if="${leccion.estado.name() == 'COMPLETADA'}">✅</span>
+					<span th:if="${leccion.estado.name() == 'SIGUIENTE'}">▶️</span>
+					<span th:if="${leccion.estado.name() == 'BLOQUEADA'}">🔒</span>
+				</div>
+				<div class="lessoninfo">
+					<span class="lessonnumber" th:text="'Lección ' + ${leccion.numero}"></span>
+					<span class="lessonname" th:text="${leccion.nombre}"></span>
+				</div>
+			</a>
+		</li>
+	</ul>
+</div>
