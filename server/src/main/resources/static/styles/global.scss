@@ -25,11 +25,13 @@
 	--radius-25: #{$radius-25};
 	--radius-10: #{$radius-10};
 	--radius-8: #{$radius-8};
+
+	// Root Font Size
+	font-size:  #{$base-font-size}
 }
 
 body {
 	font-family: 'inter';
-	font-size: $base-font-size;
 	line-height: $line-height-base;
 
 	.kn-logo--text {
