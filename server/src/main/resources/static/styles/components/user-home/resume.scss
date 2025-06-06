@@ -24,7 +24,7 @@
 		padding: 0.5rem;
 		text-align: center;
 		border-radius: 50%;
-		background: $primary;
+		background: $primary-500;
 		gap: 0;
 
 		&--text {
@@ -52,7 +52,7 @@
 			width: 60%;
 			height: 100%;
 			transition: width 0.5s;
-			background-color: $primary;
+			background-color: $primary-500;
 		}
 	}
 }

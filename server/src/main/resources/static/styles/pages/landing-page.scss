@@ -47,7 +47,7 @@
     align-items: center;
 }
 .logo-text {
-    color: $primary;
+    color: $primary-500;
     font-size: clamp(2rem, 4vw, 3rem);
     font-weight: bold;
     margin-bottom: clamp(10px, 2vw, 20px);
@@ -83,7 +83,7 @@
 }
 
 .btn-login {
-    background-color: $primary;
+    background-color: $primary-500;
     color: white;
     text-align: center;
     padding: clamp(10px, 2vw, 15px);
@@ -96,7 +96,7 @@
 }
 
 .btn-login:hover {
-    background-color: $primary-dark;
+    background-color: $primary-700;
     color: white;
 }
 
@@ -110,7 +110,7 @@
     text-decoration: none;
     font-weight: bold;
     display: block;
-    border: 2px solid $primary;
+    border: 2px solid $primary-500;
     transition: background-color $transition-speed;
 }
 
@@ -119,7 +119,7 @@
 }
 
 .languages-footer {
-    background-color: $primary;
+    background-color: $primary-500;
     color: white;
     padding: clamp(10px, 1.5vw, 15px) 0;
     text-align: center;
@@ -127,7 +127,7 @@
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
-    scrollbar-color: $primary-light $primary;
+    scrollbar-color: $primary-300 $primary-500;
 }
 
 .languages-footer::-webkit-scrollbar {
@@ -135,11 +135,11 @@
 }
 
 .languages-footer::-webkit-scrollbar-track {
-    background: $primary;
+    background: $primary-500;
 }
 
 .languages-footer::-webkit-scrollbar-thumb {
-    background-color: $primary-light;
+    background-color: $primary-300;
     border-radius: 20px;
 }
 
@@ -152,7 +152,7 @@
 }
 
 .languages-footer > span:hover{
-    color: $primary-light;
+    color: $primary-300;
 }
 
 /* Styles for contentBox cards (functionalitiesCard, newsCard)*/
@@ -175,7 +175,7 @@
 
 /* Section Header Card */
 .section-header-card {
-	background-color: $primary;
+	background-color: $primary-500;
 	color: white;
 	border-radius: $card-radius;
 	padding: clamp(10px, 1.5vw, 15px);
@@ -206,12 +206,12 @@
 
 .feature-card:hover {
 	transform: translateY(-5px);
-	background-color: $primary-light;
+	background-color: $primary-300;
 	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .feature-card > .feature-title {
-	color: $primary;
+	color: $primary-500;
 	text-align: center;
 	margin-bottom: clamp(10px, 1.5vw, 15px);
 	font-size: clamp(1.1rem, 1.8vw, 1.3rem);
@@ -226,7 +226,7 @@
 .feature-icon {
 	width: clamp(3rem, 5vw, 4rem);
 	font-size: clamp(2rem, 3vw, 2.5rem);
-	color: $primary;
+	color: $primary-500;
 	margin: 0 auto clamp(10px, 1.5vw, 15px) auto;
 	justify-self: center;
 	align-items: center;
@@ -278,7 +278,7 @@
 	font-weight: bold;
 	margin: 5px 0;
 	font-size: clamp(1rem, 1.5vw, 1.2rem);
-	color: $primary;
+	color: $primary-500;
 }
 
 .news-item > .news-description{
@@ -294,13 +294,13 @@
 	width: 100%;
 }
 .footer > a{
-	color: $primary;
+	color: $primary-500;
 	transition:color $transition-speed;
 	padding: clamp(8px, 1.5vw, 15px) 0;
 }
 
 .footer > a:hover{
-	color: $primary-dark;
+	color: $primary-700;
 }
 /* Global styles for social media icons */
 
