@@ -2,6 +2,7 @@
 
 body {
 	box-sizing: border-box;
+	font-family: Arial;
 	background-color: $neutral-300;
 }
 .img-head {
@@ -13,15 +14,15 @@ body {
 .main-content {
 	display:flex;
 	flex-direction: column;
-	width: 75%;
 
 	margin-left: 10px;
 	margin-top: 10px;
 }
 
 .info-course {
+	color: #2F9E44;
 	font-size: 20px;
-	margin-top: 20px;
+	margin-top: 30px;
 	margin-left: 10px;
 	font-weight: 600;
 
@@ -33,26 +34,28 @@ body {
 	padding: 20px;
 	border-radius: $card-radius;
 	box-shadow: $card-shadow;
-	background-color: $primary-dark;
+	background-color: $primary-500;
 	color:$neutral-100;
 }
 .btn-lesson:hover {
-	background-color: $primary;
+	background-color: $primary-700;
 	color: $neutral-100;
+}
+
+.btn-lesson:focus, .btn-lesson:active {
+	outline: none;
+	box-shadow: 0 0 10px $primary-700;
 }
 
 .title {
 	font-size: 35px;
-	margin-left: 10px;
+	margin: 10px;
 	font-weight: bold;
 }
 
 .theory {
-	background-color: $primary-light;
-	border: 2px solid $primary;
-	padding: 10px;
-	border-radius: $card-radius;
-	box-shadow: $card-shadow;
+	margin-top: 30px;
+	margin-left: 10px;
 }
 
 .icon {
