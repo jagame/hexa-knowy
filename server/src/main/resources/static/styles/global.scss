@@ -1,24 +1,4 @@
-@use 'global-reset';
 @use '_global-vars' as *;
-
-@font-face {
-	font-family: 'caveat-brush';
-	src: url('../fonts/CaveatBrush-Regular.woff2') format('woff2');
-	font-weight: normal;
-	font-style: normal;
-}
-@font-face {
-	font-family: 'excalifont';
-	src: url('../fonts/Excalifont-Regular.woff2') format('woff2');
-	font-weight: normal;
-	font-style: normal;
-}
-@font-face {
-	font-family: 'inter';
-	src: url('../fonts/Inter.woff2') format('woff2');
-	font-weight: normal;
-	font-style: normal;
-}
 
 // Exportar a variables CSS (para a futuro colores dinámicos)
 :root {
@@ -45,11 +25,13 @@
 	--radius-25: #{$radius-25};
 	--radius-10: #{$radius-10};
 	--radius-8: #{$radius-8};
+
+	// Root Font Size
+	font-size:  #{$base-font-size}
 }
 
 body {
 	font-family: 'inter';
-	font-size: $base-font-size;
 	line-height: $line-height-base;
 
 	.kn-logo--text {
