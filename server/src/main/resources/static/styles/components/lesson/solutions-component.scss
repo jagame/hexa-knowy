@@ -1,0 +1,50 @@
+@use "../../global-vars" as *;
+
+summary {
+	list-style: none;
+}
+
+.main-accordion {
+	margin-bottom: 1.25rem;
+}
+
+.main-accordion > summary {
+	font-size: $base-font-size;
+	font-weight: 600;
+	padding: 0.75rem 1.25rem;
+	background-color: $primary-500;
+	color: $bg;
+	border-radius: $card-radius;
+}
+
+.main-accordion > summary:hover {
+	background-color: $primary-700;
+}
+
+.summary-icon {
+	float: right;
+}
+
+.sub-accordion {
+	background-color: $primary-500;
+	border-radius: $card-radius;
+	padding: 0.75rem 1.25rem;
+	margin-top: 0.75rem;
+	transition: box-shadow $transition-speed ease;
+	color: $bg;
+}
+
+.sub-accordion:hover {
+	box-shadow: $card-shadow;
+	background-color: $primary-700;
+	color: $bg;
+}
+
+.sub-accordion > summary {
+	font-weight: 400;
+}
+
+.sub-accordion > p {
+	margin: 0.5rem 0;
+}
+
