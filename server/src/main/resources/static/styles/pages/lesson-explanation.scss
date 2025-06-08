@@ -1,0 +1,84 @@
+@use "../global-vars" as *;
+
+body {
+	box-sizing: border-box;
+	font-family: Arial;
+	background-color: $neutral-300;
+}
+.img-head {
+	height: 300px;
+	width: 100%;
+	object-fit: cover;
+	border-radius: $card-radius;
+}
+.main-content {
+	display:flex;
+	flex-direction: column;
+
+	margin-left: 10px;
+	margin-top: 10px;
+}
+
+.info-course {
+	color: #2F9E44;
+	font-size: 20px;
+	margin-top: 30px;
+	margin-left: 10px;
+	font-weight: 600;
+
+}
+
+.btn-lesson {
+	font-size: 20px;
+	margin-right: 60px;
+	padding: 20px;
+	border-radius: $card-radius;
+	box-shadow: $card-shadow;
+	background-color: $primary-500;
+	color:$neutral-100;
+}
+.btn-lesson:hover {
+	background-color: $primary-700;
+	color: $neutral-100;
+}
+
+.btn-lesson:focus, .btn-lesson:active {
+	outline: none;
+	box-shadow: 0 0 10px $primary-700;
+}
+
+.title {
+	font-size: 35px;
+	margin: 10px;
+	font-weight: bold;
+}
+
+.theory {
+	margin-top: 30px;
+	margin-left: 10px;
+}
+
+.icon {
+	margin-left: 10px;
+}
+
+@media (min-width: 600px) {
+	.container-flex {
+		display:flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+}
+
+@media (max-width: 600px) {
+	.btn-lesson {
+		padding: 10px 20px;
+		font-size: 18px;
+		margin-top: 10px;
+	}
+	.title, .icon, .info-course {
+		margin-left: 5px;
+	}
+
+}
