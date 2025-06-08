@@ -1,11 +1,14 @@
 package com.knowy.server.controller;
 
 import com.knowy.server.controller.model.NewsDto;
+import com.knowy.server.controller.model.NewsHomeDto;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -36,6 +39,26 @@ public class PresentationController {
 
 		//And I send the list to the screen
 		interfaceScreen.addAttribute("newsList", newsList);
+
+		//Test carousel-news
+		List<NewsHomeDto> newsHome = Arrays.asList(new NewsHomeDto(
+				1,
+				"Python",
+				"Nuevo curso Python",
+				"https://i0.wp.com/junilearning.com/wp-content/uploads/2020/06/python-programming-language.webp?fit=800%2C800&ssl=1",
+				"#"),
+			new NewsHomeDto(
+				2,
+				"HTML5",
+				"Crea páginas web con HTML5",
+				"https://t3.ftcdn.net/jpg/05/78/11/34/360_F_578113446_j72wZX7u698eoV50XXmkLMH7gGuNhpVB.jpg",
+				"#"),
+			new NewsHomeDto(3,
+				"JavaScript",
+				"Aprende JavaScript",
+				"https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Unofficial_JavaScript_logo_2.svg/2048px-Unofficial_JavaScript_logo_2.svg.png",
+				"#"));
+		interfaceScreen.addAttribute("newsHome", newsHome);
 		return "pages/landing-page";
 	}
 
@@ -43,4 +66,5 @@ public class PresentationController {
 	public String example() {
 		return "pages/example";
 	}
+
 }
