@@ -15,6 +15,10 @@
 	<div
 		class="home-grid--1c2r"
 		th:insert="~{components/user-home/carousel-news :: carousel-news('carousel-news-id', ${newsHome})}">
+
+	<div class="home-grid--1c2r">
+		<div th:replace="~{components/missionsComponent :: missionsComponent(${missionsList}, ${lenguageOptions})}"></div>
+	</div>
 	</div>
 </main>
 </body>
