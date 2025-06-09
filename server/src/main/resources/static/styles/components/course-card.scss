@@ -18,6 +18,9 @@
 	font-weight: normal;
 	font-style: normal;
 }
+body{
+	font-family: inter;
+}
 .course-card {
 	width: 22rem;
 	border-radius: $radius-25;
@@ -66,17 +69,23 @@
 	color: $secundary-500;
 }
 
-.progress-bar__start{
-	background-color: $secundary-500;
-}
+.home-resume__bar-container{
+		overflow: hidden;
+		width: 100%;
+		height: 10px;
+		border-radius: 10px;
+		background-color: rgb($neutral-300, 0.5);
 
+	.course-card-bar-progress_bar {
+			width: 60%;
+			height: 100%;
+			transition: width 0.5s;
+			background-color: $secundary-500;
 
-.progress-bar__finish{
-	background-color: $primary-500;
-}
-
-.course-card-bar-progress__bar{
-	font-family: inter;
+	}
+	.course-card-bar-progress_bar[data-progress='100']{
+		background-color:$primary-500;
+	}
 }
 
 .course-card__course-creator{

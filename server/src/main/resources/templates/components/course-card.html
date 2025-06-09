@@ -8,10 +8,8 @@
 	<div class="course-card__bar-progress">
 		<div class="course-card-bar-progress__progress" th:text="${course.getProgress()} +'% completado'"></div>
 		<div class="course-card-bar-progress__bar">
-			<div class="progress">
-				<div class="progress-bar" role="progressbar"
-					 th:style="'width:' + ${course.getProgress()} + '%'"
-					 th:aria-valuenow="${course.getProgress()}" aria-valuemin="0" aria-valuemax="100"></div>
+			<div class="home-resume__bar-container">
+				<div class="course-card-bar-progress_bar" th:data-progress="${course.getProgress()}" th:style="'width:' + ${course.getProgress()} + '%'"></div>
 			</div>
 		</div>
 	</div>

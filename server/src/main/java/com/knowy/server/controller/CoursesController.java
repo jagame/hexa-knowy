@@ -17,7 +17,7 @@ public class CoursesController {
 		CourseCardDTO courseTest1 = new CourseCardDTO();
 		courseTest1.setName("Curso Java/Angular 2025");
 		courseTest1.setCreator("Creador del curso");
-		courseTest1.setProgress(100);
+		courseTest1.setProgress(55);
 		if(courseTest1.getProgress()>0 && courseTest1.getProgress()<100){
 			courseTest1.setAction("▷ Continuar curso");
 		}else if(courseTest1.getProgress() == 0){
