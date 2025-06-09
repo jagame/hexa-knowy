@@ -1,14 +1,14 @@
 <div class="missions-container" th:fragment="missionsComponent(missionsList, lenguageOptions)">
-	<h2 class="missions__missionsTitle">Retos diarios:</h2>
+	<h2 class="missions__missions-title">Retos diarios:</h2>
 
-	<div class="mission-container__missionInstance" th:each="mission : ${missionsList}">
-		<span class="details__description" th:text="${mission.name}"></span>
-		<div class="missionInstance__details">
-			<span class="details__progress-text" th:text="${mission.currentProgress + '/' + mission.totalProgress}"></span>
+	<div class="mission-container__mission-instance" th:each="mission : ${missionsList}">
+		<span class="mission-container__description" th:text="${mission.name}"></span>
+		<div class="mission-instance__details">
+			<span class="mission-instance__progress-text" th:text="${mission.currentProgress + '/' + mission.totalProgress}"></span>
 		</div>
-		<div class="missionInstance__progress-bar-background">
+		<div class="mission-instance__progress-bar-background">
 			<div class="progress-bar-background__progress-bar-foreground"
-				 th:style="'width: ' + ${mission.fractionProgress} + '%;'"></div>
+				 th:style="'width: ' + ${mission.getFractionProgress} + '%;'"></div>
 		</div>
 	</div>
 

@@ -26,7 +26,7 @@
 	border-radius: $card-radius;
 }
 
-.missions__missionsTitle {
+.missions__missions-title {
 	color: $neutral-900;
 	font-size: 1.3em;
 	font-weight: bold;
@@ -34,7 +34,7 @@
 	text-align: left;
 }
 
-.mission-container__missionInstance {
+.mission-container__mission-instance {
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
@@ -43,7 +43,7 @@
 	padding: 8px;
 }
 
-.missionInstance__details {
+.mission-instance__details {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -51,7 +51,7 @@
 	margin-left: 5px;
 }
 
-.details__description {
+.mission-container__description {
 	color: $neutral-900;
 	font-size: 0.7em;
 	font-weight: bold;
@@ -59,14 +59,14 @@
 	margin-top: 3px;
 }
 
-.details__progress-text {
+.mission-instance__progress-text {
 	color: $neutral-700;
 	font-size: 0.7em;
 	font-weight: bold;
 }
 
 
-.missionInstance__progress-bar-background {
+.mission-instance__progress-bar-background {
 	background-color: $neutral-300;
 	border-radius: 25px;
 	height: 6px;

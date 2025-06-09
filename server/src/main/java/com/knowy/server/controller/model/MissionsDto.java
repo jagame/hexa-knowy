@@ -11,10 +11,9 @@ public class MissionsDto {
     private int totalProgress;
     private String value;
     private String label;
-    private String fractionProgress;
 
 
-    public float getFractionProgress() {
+	public float getFractionProgress() {
         return (float) getCurrentProgress() / getTotalProgress() * 100;
     }
 }
