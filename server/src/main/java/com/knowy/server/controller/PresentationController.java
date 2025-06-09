@@ -1,6 +1,7 @@
 package com.knowy.server.controller;
 
 import com.knowy.server.controller.model.NewsDto;
+import com.knowy.server.controller.model.SolutionDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,24 +37,19 @@ public class PresentationController {
 
 		//And I send the list to the screen
 		interfaceScreen.addAttribute("newsList", newsList);
-		return "pages/landing-page";
+
+
+		List<SolutionDto> solutions = new ArrayList<>();
+		solutions.add(new SolutionDto("Tarjeta 1: JavaScript vs Java", "Pregunta tarjeta 1", "Solución tarjeta 1"));
+		solutions.add(new SolutionDto("Tarjeta 2: PHP", "Pregunta tarjeta 2", "Solución tarjeta 2"));
+		solutions.add(new SolutionDto("Tarjeta 3: Python", "Pregunta tarjeta 3", "Solución tarjeta 3"));
+		interfaceScreen.addAttribute("solutions", solutions);
+
+		return "/pages/landing-page";
 	}
 
 	@GetMapping("/example")
 	public String example() {
 		return "pages/example";
 	}
-
-	//Simulating homepage
-	@GetMapping("/index")
-	public String viewIndexPage() {
-		return "pages/index";
-	}
-
-
-
-
-
-
-
 }

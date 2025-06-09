@@ -1,20 +1,27 @@
 <!-- templates/components/user-home/resume -->
 <section class="home-resume"
-     th:fragment="example-card-component(username, genderSuffix, streak, progress)">
+     th:fragment="example-card-component(username, greeting, streak, fractionProgress, fractionNum, fractionDen)">
 
-    <div class="home-resume__presentation-streak">
-        <h2 th:text="${'Bienvenid' + genderSuffix + ', ' + username}"></h2>
-        <div class="home-resume__streak">
-            <h4 class="home-resume__streak--text" th:text="${streak}"></h4>
-            <p class="home-resume__streak--text">días</p>
+    <section class="home-resume__presentation-streak">
+        <h2 th:text="${greeting} + ', ' + ${username}"></h2>
+        <div class="streak">
+			<span class="streak__text">Racha</span>
+			<div class="streak__days">
+				<span class="streak__days--text" th:text="${streak}"></span>
+				<p class="streak__days--text">días</p>
+			</div>
         </div>
-    </div>
+    </section>
 
-    <div class="home-resume__bar-text">
-        <h4>Cursos:</h4>
-        <h4 th:text="${progress} + '%'"></h4>
-    </div>
-    <div class="home-resume__bar-container">
-        <div class="home-resume__bar-container__bar-progress" th:style="'width:' + ${progress} + '%'"></div>
-    </div>
+	<section class="home-resume__course-progress">
+		<div class="home-resume__bar-text">
+			<span>Cursos:</span>
+			<span class="home-resume__bar-text--fraction" th:text="${fractionNum} + '/' + ${fractionDen}"></span>
+		</div>
+		<div class="home-resume__bar-container">
+			<div class="home-resume__bar-container__bar-progress" th:style="'width:' + ${fractionProgress} + '%'"></div>
+		</div>
+
+		<button class="home-resume__course-btn">| > | Ir a cursos</button>
+	</section>
 </section>
