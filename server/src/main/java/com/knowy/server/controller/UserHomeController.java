@@ -1,6 +1,7 @@
 package com.knowy.server.controller;
 
 import com.knowy.server.controller.model.MissionsDto;
+import com.knowy.server.controller.model.NewsHomeDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -11,11 +12,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/home")
 public class UserHomeController {
 
-	@GetMapping("")
-	public String userHome(Model interfaceScreen) {
+	@GetMapping("/home")
+	public String userHome(Model model) {
+		List<NewsHomeDto> newsHome = new ArrayList<>();
+		newsHome.add(new NewsHomeDto(1, "La conspiración de los grillos", "Una historia que no deja dormir",
+			"https://picsum.photos/id/10/900/900", "https://picsum.photos/id/10/900/900"));
+
+		newsHome.add(new NewsHomeDto(2, "El código de las sombras", "Tecnología, misterio y traición",
+			"https://picsum.photos/id/20/900/900", "https://picsum.photos/id/20/900/900"));
+
+		newsHome.add(new NewsHomeDto(3, "Viaje al centro del café", "Una travesía entre aromas y secretos",
+			"https://picsum.photos/id/30/900/900", "https://picsum.photos/id/30/900/900"));
+
+		newsHome.add(new NewsHomeDto(4, "No abras la puerta roja", "Suspenso psicológico en cada página",
+			"https://picsum.photos/id/40/900/900", "https://picsum.photos/id/40/900/900"));
+
+		newsHome.add(new NewsHomeDto(5, "La física del silencio", "Cuando el universo conspira para callar",
+			"https://picsum.photos/id/50/900/900", "https://picsum.photos/id/50/900/900"));
+
+
+		model.addAttribute("newsHome", newsHome);
+
 		List<MissionsDto> missionsList = new ArrayList<>();
 		MissionsDto mission1 = new MissionsDto();
 		mission1.setName("Completa 3 lecciones");
@@ -36,7 +55,7 @@ public class UserHomeController {
 
 		missionsList.add(mission3);
 
-		interfaceScreen.addAttribute("missionsList", missionsList);
+		model.addAttribute("missionsList", missionsList);
 
 //		List<MissionsDto> languageOptions = new ArrayList<>();
 
@@ -56,7 +75,6 @@ public class UserHomeController {
 //		languageOptions.add(language3);
 //
 //		interfaceScreen.addAttribute("languageOptions", languageOptions);
-
 		return "pages/user-home";
 	}
 }
