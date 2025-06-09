@@ -1,0 +1,245 @@
+@use '../global-vars' as *;
+
+body {
+	font-family: 'inter';
+	background-color: $neutral-300;
+}
+
+.page-container {
+	display: flex;
+	padding: 30px;
+}
+
+.row {
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+
+.user-information {
+	font-family: 'caveat-brush';
+	padding: 30px;
+	gap: 0.5rem;
+}
+
+/*Aside bar user-management*/
+.username-title {
+	font-family: 'excalifont';
+}
+
+.user-sidebar {
+	padding: 20px;
+	background-color: $neutral-300;
+	box-shadow: $card-shadow;
+}
+
+.sidebar-menu {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.sidebar-link {
+	font-size: 1rem;
+	font-weight: bold;
+	line-height: 1.5;
+	display: inline-block;
+	padding: 0.375rem 0.75rem;
+	transition: $transition-speed;
+	text-align: center;
+	vertical-align: middle;
+	text-decoration: none;
+	color: $neutral-900;
+	box-shadow: $card-shadow;
+	background-color: $neutral-100;
+	font-family: 'caveat-brush';
+	border-radius: 5px;
+}
+
+.sidebar-link:hover {
+	font-weight: bold;
+	color: $neutral-900;
+	background-color: $secundary-300;
+}
+
+.sidebar-link.active {
+	font-weight: bold;
+	color: white;
+	background-color: $primary-500;
+}
+
+.sidebar-link.active:hover {
+	background-color: $primary-300;
+}
+
+
+.user-management-container_main {
+	width: 100%;
+	padding: 30px;
+	background-color: $neutral-100;
+}
+
+.title-management {
+	font-family: excalifont;
+	font-weight: bold;
+	color: $primary-500;
+}
+
+.tittle-delete {
+	font-weight: bold;
+	color: $danger-500;
+
+}
+
+.description-management {
+	font-family: 'inter';
+	color: $neutral-900;
+}
+
+
+.picture-edit-container {
+	position: relative;
+	display: flex;
+	overflow: hidden;
+	align-items: center;
+	justify-content: center;
+	width: 150px;
+	height: 150px;
+	padding: 0;
+	border: 3px solid $primary-500;
+	border-radius: 50%;
+}
+
+.edit-avatar {
+	display: block;
+	width: 100%;
+	height: 100%;
+	background: #f0f0f0;
+	object-fit: cover;
+}
+
+.edit-pic-btn {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	cursor: pointer;
+	transition: $transition-speed;
+	color: white;
+	border-radius: 50%;
+	background-color: $primary-500;
+}
+
+.edit-pic-btn:hover {
+	color: $neutral-700;
+	background-color: $primary-300;
+}
+
+.file-input-overlay {
+	position: absolute;
+	z-index: -1;
+	overflow: hidden;
+	width: 0;
+	height: 0;
+	opacity: 0;
+}
+
+.section-title {
+	font-weight: bold;
+	color: $primary-500;
+}
+
+.language-item {
+	font-size: 0.9em;
+	padding: 0.4em 0.7em;
+	cursor: pointer;
+}
+
+#selectedLanguages {
+	color: $neutral-300;
+	border-radius: 5px;
+	background-color: $primary-500;
+}
+
+.buttons-form-content {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	gap: 0.5rem;
+}
+
+.btn{
+	display: inline-block;
+	font-size: 1rem;
+	font-size: 1rem;
+	line-height: 1.5;
+	padding: 0.375rem 0.75rem;
+	font-family: 'caveat-brush';
+	min-width: 150px;
+	text-align: center;
+	justify-content: center;
+}
+
+.btn-inferior {
+	color: white;
+	background-color: $neutral-900;
+}
+
+.btn-save {
+	color: white;
+	background-color: $primary-500;
+}
+
+.btn-save:hover {
+	background-color: $primary-300;
+}
+
+.btn-inferior:hover {
+	background-color: $neutral-500;
+}
+
+/*User Account*/
+
+.form-fields {
+	margin-bottom: 1.1rem;
+}
+
+.advice {
+	font-size: small;
+	color: $neutral-900;
+}
+
+.title-delete {
+	font-family: excalifont;
+	color: $danger-500;
+}
+
+.delete-section {
+	margin-top: 3rem;
+	padding-top: 1.5rem;
+	border-top: 1px solid $primary-500;
+}
+
+.btn-delete {
+	font-family: 'caveat-brush';
+	color: white;
+	background-color: $danger-500;
+}
+
+.btn-delete:hover {
+	color: white;
+	background-color: $danger-650;
+}
+
+/*delete-account*/
+.delete-warning {
+	font-family: 'inter';
+	padding: 30px;
+	color: $danger-600;
+	border: 1px solid $danger-500;
+	border-radius: 8px;
+	background-color: #e5555d20;
+}
