@@ -1,0 +1,29 @@
+<div class="missions-container" th:fragment="missionsComponent(missionsList, lenguageOptions)">
+	<h2 class="missions__missions-title">Retos diarios:</h2>
+
+	<div class="mission-container__mission-instance" th:each="mission : ${missionsList}">
+		<span class="mission-container__description" th:text="${mission.name}"></span>
+		<div class="mission-instance__details">
+			<span class="mission-instance__progress-text" th:text="${mission.currentProgress + '/' + mission.totalProgress}"></span>
+		</div>
+		<div class="mission-instance__progress-bar-background">
+			<div class="progress-bar-background__progress-bar-foreground"
+				 th:style="'width: ' + ${mission.getFractionProgress} + '%;'"></div>
+		</div>
+	</div>
+
+	<div class="actions-footer">
+<!--		<div class="actions-footer__language-selector-container">-->
+<!--			<select class="language-selector-container__language-dropdown" name="language" id="languageSelector">-->
+<!--				<option th:each="lang : ${languageOptions}"-->
+<!--						th:value="${lang.value}"-->
+<!--						th:text="${lang.label}"-->
+<!--						th:selected="${lang.value == selectedLanguage}">-->
+<!--					Java-->
+<!--				</option>-->
+<!--			</select>-->
+<!--		</div>-->
+		<button class="actions-footer__quick-match-button">Partida Rápida</button>
+	</div>
+
+</div>

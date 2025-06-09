@@ -1,0 +1,14 @@
+<div th:fragment="solutions-component">
+	<details name="solution-component" class="main-accordion">
+		<summary>Ver Soluciones<i class="bi bi-caret-down summary-icon"></i></summary>
+
+		<div th:each="solution : ${solutions}">
+			<details  name="solution" class="sub-accordion">
+				<summary th:text="${solution.tituloTarjeta}">Titulo tarjeta</summary>
+				<p th:text="${solution.pregunta}">Pregunta</p>
+				<hr>
+				<p th:text="${solution.solucion}">Solución</p>
+			</details>
+		</div>
+	</details>
+</div>
