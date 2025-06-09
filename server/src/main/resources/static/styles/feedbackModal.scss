@@ -1,0 +1,117 @@
+@use 'global-vars' as *;
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Fondo semi-transparente oscuro */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Asegura que esté por encima de otros elementos */
+  /* Opcional: Para ocultarlo inicialmente */
+  /* display: none; */
+}
+
+/* Estilos para el contenedor del modal principal */
+.modal-overlay__modal-container {
+  background-color: #333; /* Fondo oscuro del modal */
+  border-radius: 15px; /* Bordes redondeados */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 400px; /* Ancho máximo para el modal */
+  text-align: center;
+  font-family: 'Comic Sans MS', cursive, sans-serif; /* Fuente similar a la imagen */
+  color: white;
+  position: relative; /* Para posicionar la 'x' de cerrar */
+  overflow: hidden; /* Para que la barra verde superior no se desborde */
+}
+
+/* Estilos para la barra superior "¡Correcto!" */
+.modal-overlay__modal-header {
+  background-color: #28a745; /* Verde de la barra superior */
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 15px 15px 0 0; /* Bordes redondeados solo arriba */
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1.5em;
+  transform: translateY(-100%); /* Inicialmente oculto hacia arriba */
+  animation: slideInHeader 0.5s forwards ease-out; /* Animación de entrada */
+}
+
+@keyframes slideInHeader {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.modal-overlay__modal-body {
+  margin-top: 50px; /* Espacio para la barra verde superior */
+  padding-top: 20px; /* Espacio adicional para el texto */
+}
+
+.modal-overlay__modal-body h2 {
+  font-size: 1.8em;
+  margin-bottom: 25px;
+  color: white;
+}
+
+.difficulty-buttons-container {
+  display: flex;
+  justify-content: space-around;
+  gap: 15px; /* Espacio entre los botones */
+  padding: 30px 15px; /* Espacio a los lados */
+}
+
+.dbutton {
+  flex: 1; /* Para que ocupen el espacio disponible equitativamente */
+  padding: 15px 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  font-family: 'Comic Sans MS', cursive, sans-serif; /* Misma fuente que el modal */
+  color: white; /* Color del texto de los botones */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave */
+}
+
+/* Colores específicos para cada botón */
+.difficulty-button--easy {
+  background-color: #28a745; /* Verde */
+}
+.difficulty-button--easy:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.difficulty-button--normal {
+  background-color: #ff8c00; /* Naranja */
+}
+.difficulty-button--normal:hover {
+  background-color: #e07b00;
+  transform: translateY(-2px);
+}
+
+.difficulty-button--difficult {
+  background-color: #dc3545; /* Rojo */
+}
+.difficulty-button--difficult:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+}
+
+/* Opcional: Ocultar el modal por defecto y mostrarlo con JavaScript */
+.modal-overlay.hidden {
+  display: none;
+}

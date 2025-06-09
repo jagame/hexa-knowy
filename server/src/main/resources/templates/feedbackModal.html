@@ -1,0 +1,40 @@
+<div class="modal-overlay" th:fragment="feedbackModal">
+	<div class="modal-overlay__modal-container">
+		<div class="modal-overlay__modal-header">¡Correcto!</div>
+		<div class="modal-overlay__modal-body">
+			<h2>¿Cuál fue la dificultad del ejercicio?</h2>
+			<div class="difficulty-buttons-container">
+				<form th:action="@{/feedback/submit}" method="post" class="button-form">
+					<input type="hidden" name="dificultad" value="1"/>
+					<button onclick="closeModal()" type="submit" class="dbutton difficulty-button--easy">
+						Fácil
+						<img src="https://tabler.io/icons/icon/mood-smile.svg">
+					</button>
+				</form>
+
+				<form th:action="@{/feedback/submit}" method="post" class="button-form">
+					<input type="hidden" name="dificultad" value="2"/>
+					<button onclick="closeModal()" type="submit" class="dbutton difficulty-button--normal">
+						Normal
+						<img src="https://tabler.io/icons/icon/mood-neutral.svg">
+					</button>
+				</form>
+				<form th:action="@{/feedback/submit}" method="post" class="button-form">
+					<input type="hidden" name="dificultad" value="3"/>
+					<button onclick="closeModal()" class="dbutton difficulty-button--difficult">
+						Difícil
+						<img src="https://tabler.io/icons/icon/mood-sad.svg">
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script th:inline="javascript">
+	function closeModal() {
+		document.getElementById('feedbackModal').classList.add('hidden');
+	}
+	function openModal() {
+		document.getElementById('feedbackModal').classList.remove('hidden'); //esta función será aplicada a las opciones de cada pregunta
+	}
+</script>
