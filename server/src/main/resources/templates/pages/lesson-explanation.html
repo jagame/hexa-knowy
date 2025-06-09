@@ -23,6 +23,8 @@
 		</div>
 		<p class="info-course">Información del curso</p>
 		<div class="theory"><p th:text="${lesson.theory}">Teoría del curso</p></div>
+		<div th:replace="~{components/lesson/feedbackModal :: feedbackModal}"></div>
+		<button onclick="openModal()">Abrir modal</button>
 	</main>
 
 </body>
