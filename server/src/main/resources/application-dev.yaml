@@ -1,0 +1,10 @@
+spring:
+    config:
+        activate:
+            on-profile: dev
+    application:
+        name: knowy-server
+    thymeleaf:
+        cache: false
+server:
+    port: 8080
