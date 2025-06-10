@@ -11,11 +11,24 @@
 <body>
 
 <aside layout:fragment="sidebar">
-	<button data-sidebar-toggler=""> > </button>
+	<div class="lessons-component">
+	<div class="course-title">
+		<h2 th:text="${curso.nombre}">Nombre del Curso</h2>
+		<div class="course-title__progressbar">
+			<span class="course-title__percentage" th:text="${curso.porcentajeCompletado + '% completado'}"></span>
+
+			<div class="progress-bar">
+				<div class="progress" th:style="'width:' + ${curso.porcentajeCompletado} + '%'"></div>
+			</div>
+			<a class="introduction-btn--purple">Introducción al curso</a>
+		</div>
+	</div>
 	<div th:replace="~{components/lessonscard ::lessonscard(${curso})}"></div>
+	</div>
 </aside>
 
 <main layout:fragment="main-content">
+	<button class="show-sidebar-btn" data-sidebar-toggler=""> < </button>
 	<h1>Main</h1>
 	<div th:replace="~{components/example-card-component :: example-card-component('https://placehold.co/600x400', title, 'description text', buttonText, buttonLink)}"></div>
 </main>
