@@ -7,7 +7,7 @@
 }
 
 .landing-page-content {
-    background: $neutral-500;
+    background: $neutral-100;
     margin: 0;
     padding: 0;
     line-height: 1.5;
@@ -22,7 +22,7 @@
 
 /* Styles for the KNOWY main card */
 .knowy-card {
-    background-color: $neutral-500 !important;
+    background-color: $neutral-100;
     overflow: hidden;
     margin-bottom: clamp(15px, 3vw, 30px);
 }
