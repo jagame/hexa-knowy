@@ -13,17 +13,17 @@
 <aside layout:fragment="sidebar">
 	<div class="lessons-component">
 	<div class="course-title">
-		<h2 th:text="${curso.nombre}">Nombre del Curso</h2>
+		<h2 th:text="${course.name}">Nombre del Curso</h2>
 		<div class="course-title__progressbar">
-			<span class="course-title__percentage" th:text="${curso.porcentajeCompletado + '% completado'}"></span>
+			<span class="course-title__percentage" th:text="${course.percentageCompleted + '% completado'}"></span>
 
 			<div class="progress-bar">
-				<div class="progress" th:style="'width:' + ${curso.porcentajeCompletado} + '%'"></div>
+				<div class="progress" th:style="'width:' + ${course.percentageCompleted} + '%'"></div>
 			</div>
 			<a class="introduction-btn--purple">Introducción al curso</a>
 		</div>
 	</div>
-	<div th:replace="~{components/lessonscard ::lessonscard(${curso})}"></div>
+	<div th:replace="~{components/lessonscard ::lessonscard(${course})}"></div>
 	</div>
 </aside>
 

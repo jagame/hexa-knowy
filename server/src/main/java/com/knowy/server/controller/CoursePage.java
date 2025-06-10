@@ -1,7 +1,8 @@
 package com.knowy.server.controller;
 
-import com.knowy.server.controller.model.CursoDTO;
-import com.knowy.server.controller.model.LeccionDTO;
+
+import com.knowy.server.controller.model.CourseDTO;
+import com.knowy.server.controller.model.LessonDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,31 +13,32 @@ import java.util.List;
 public class CoursePage {
 
 	@GetMapping("/course")
-	public String mostrarCurso(Model model) {
-		CursoDTO curso = new CursoDTO();
-		curso.setNombre("Java Básico");
-		curso.setPorcentajeCompletado(40);
+	public String showCourse(Model model) {
+		CourseDTO course = new CourseDTO();
+		course.setName("Java Básico");
+		course.setPercentageCompleted(40);
 
-		List<LeccionDTO> lecciones = List.of(
-			new LeccionDTO(1, "Introducción", LeccionDTO.EstadoLeccion.COMPLETADA),
-			new LeccionDTO(2, "¿Qué es Java y cómo funciona?", LeccionDTO.EstadoLeccion.COMPLETADA),
-			new LeccionDTO(3, "Tipos de datos y variables", LeccionDTO.EstadoLeccion.COMPLETADA),
-			new LeccionDTO(4, "Estructuras de control", LeccionDTO.EstadoLeccion.COMPLETADA),
-			new LeccionDTO(5, "Bucles", LeccionDTO.EstadoLeccion.COMPLETADA),
-			new LeccionDTO(6, "Métodos (funciones)", LeccionDTO.EstadoLeccion.COMPLETADA),
-			new LeccionDTO(7, "Arreglos (arrays)", LeccionDTO.EstadoLeccion.SIGUIENTE),
-			new LeccionDTO(8, "Introducción a la Programación Orientada a Objetos", LeccionDTO.EstadoLeccion.BLOQUEADA),
-			new LeccionDTO(9, "Introducción a la Programación Orientada a Objetos", LeccionDTO.EstadoLeccion.BLOQUEADA),
-			new LeccionDTO(10, "Introducción a la Programación Orientada a Objetos", LeccionDTO.EstadoLeccion.BLOQUEADA)
+		List<LessonDTO> lessons = List.of(
+			new LessonDTO(1, "Introducción", LessonDTO.LessonStatus.COMPLETE),
+			new LessonDTO(2, "¿Qué es Java y cómo funciona?", LessonDTO.LessonStatus.COMPLETE),
+			new LessonDTO(3, "Tipos de datos y variables", LessonDTO.LessonStatus.COMPLETE),
+			new LessonDTO(4, "Estructuras de control", LessonDTO.LessonStatus.COMPLETE),
+			new LessonDTO(5, "Bucles", LessonDTO.LessonStatus.COMPLETE),
+			new LessonDTO(6, "Métodos (funciones)", LessonDTO.LessonStatus.COMPLETE),
+			new LessonDTO(7, "Arreglos (arrays)", LessonDTO.LessonStatus.NEXT_LESSON),
+			new LessonDTO(8, "Introducción a la Programación Orientada a Objetos", LessonDTO.LessonStatus.BLOCKED),
+			new LessonDTO(9, "Introducción a la Programación Orientada a Objetos", LessonDTO.LessonStatus.BLOCKED),
+			new LessonDTO(10, "Introducción a la Programación Orientada a Objetos", LessonDTO.LessonStatus.BLOCKED)
 		);
+
 		int lastLesson = -1;
-		for(int i = 0; i < lecciones.size(); i++) {
-			if(lecciones.get(i).getEstado() == LeccionDTO.EstadoLeccion.COMPLETADA) {
+		for(int i = 0; i < lessons.size(); i++) {
+			if(lessons.get(i).getStatus() == LessonDTO.LessonStatus.COMPLETE) {
 				lastLesson = i;
 			}
 		}
-		curso.setLecciones(lecciones);
-		model.addAttribute("curso", curso);
+		course.setLessons(lessons);
+		model.addAttribute("course", course);
 		model.addAttribute("lastLesson", lastLesson);
 		return "/pages/course-page";
 	}

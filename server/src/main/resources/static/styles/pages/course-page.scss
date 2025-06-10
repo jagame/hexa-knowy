@@ -13,42 +13,14 @@
 	text-align: center;
 	align-content: center;
 	font-family: caveat-brush;
-
-
-	.course-title__progressbar {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-	//
-	//	progress {
-	//		margin-top:3px;
-	//		width: 100%;
-	//		max-width: 260px;
-	//		height: 12px;
-	//		border-radius: 10px;
-	//		appearance: none;
-	//		-webkit-appearance: none;
-	//		background-color: $secundary-300;
-	//		overflow: hidden;
-
-			//&::-webkit-progress-bar {
-			//	background-color: $secundary-300;
-			//	border-radius: 10px;
-			//}
-			//
-			//&::-webkit-progress-value {
-			//	background-color: $secundary-700;
-			//	border-radius: 10px;
-			//	transition: width 0.3s ease;
-			//}
-			//
-			//&::-moz-progress-bar {
-			//	background-color: $secundary-700;
-			//	border-radius: 10px;
-			//	transition: width 0.3s ease;
-			//}
 }
+
+.course-title__progressbar {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
 
 .progress-bar {
 	width: 100%;
@@ -66,33 +38,33 @@
 	transition: width 0.3s ease-in-out;
 }
 
-	.course-title__percentage {
-		margin-top: 0.5em;
-		font-weight: 600;
-		font-size: 0.85rem;
-		font-family:inter;
-		font-style: normal;
-	}
+.course-title__percentage {
+	margin-top: 0.5em;
+	font-weight: 600;
+	font-size: 0.85rem;
+	font-family:inter;
+	font-style: normal;
+}
 
-	.introduction-btn--purple{
-		border-radius:$radius-25;
-		background-color:$secundary-700;
-		color:$primary-100;
-		padding:10px 50px ;
-		margin-top: 0.75em;
-		margin-bottom: 1em;
-		transition: 0.3s ease-in-out;
-		text-decoration:none;
-	}
-	.introduction-btn--purple:hover{
-		scale: 1.01;
-		color:$primary-100;
-		text-decoration:none;
-	}
+.introduction-btn--purple{
+	border-radius:$radius-25;
+	background-color:$secundary-700;
+	color:$primary-100;
+	padding:10px 50px ;
+	margin-top: 0.75em;
+	margin-bottom: 1em;
+	transition: 0.2s ease-in-out;
+	text-decoration:none;
+}
+.introduction-btn--purple:hover{
+	scale: 1.02;
+	color:$primary-100;
+	text-decoration:none;
+}
 
-	.introduction-btn--purple:active{
+.introduction-btn--purple:active{
 	scale: 1;
-	}
+}
 
 @font-face {
 	font-family: 'caveat-brush';

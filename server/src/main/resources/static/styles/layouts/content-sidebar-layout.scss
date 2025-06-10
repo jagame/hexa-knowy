@@ -87,14 +87,6 @@ html, body {
 	border-radius: 50%;
 	background: #333333;
 
-	//&--hidden {
-	//	z-index: 0;
-	//	visibility: hidden;
-	//	transform: translateX(500%);
-	//	pointer-events: none;
-	//	opacity: 0;
-	//}
-
 	@media (max-width: 768px) {
 		display: block;
 	}

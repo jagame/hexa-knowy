@@ -1,34 +1,21 @@
-<div class="lesson-card" th:fragment="lessonscard(curso)">
+<div class="lesson-card" th:fragment="lessonscard(course)">
 
 	<div class="lesson-list">
-		<div class = "lesson-item"  th:each="leccion : ${curso.lecciones}"
-			 th:data-status="${leccion.estado.name()}">
+		<div class = "lesson-item"  th:each="lesson : ${course.lessons}"
+			 th:data-status="${lesson.status.name()}">
 			<a href="#" class="lesson-item__lesson-link">
 
 				<div class="lesson-item__lesson-icon">
-					<span th:if="${leccion.estado.name() == 'COMPLETADA'}">✅</span>
-					<span th:if="${leccion.estado.name() == 'SIGUIENTE'}">▶️</span>
-					<span th:if="${leccion.estado.name() == 'BLOQUEADA'}">🔒</span>
+					<span th:if="${lesson.status.name() == 'COMPLETE'}">✅</span>
+					<span th:if="${lesson.status.name() == 'NEXT_LESSON'}">▶️</span>
+					<span th:if="${lesson.status.name() == 'BLOCKED'}">🔒</span>
 				</div>
 				<div class="lesson-item__lesson-info">
-					<span class="lesson-info__lesson-number" th:text="'Lección ' + ${leccion.numero}"></span>
-					<span class="lesson-info__lesson-name" th:text="${leccion.nombre}"></span>
+					<span class="lesson-info__lesson-number" th:text="'Lección ' + ${lesson.number}"></span>
+					<span class="lesson-info__lesson-name" th:text="${lesson.name}"></span>
 				</div>
-				<button th:if="${leccion.numero == lastLesson+1}" class="show-sidebar-btn" data-sidebar-toggler=""> >️ </button>
+				<button th:if="${lesson.number == lastLesson+1}" class="show-sidebar-btn" data-sidebar-toggler=""> >️ </button>
 			</a>
 		</div>
 	</div>
 </div>
-
-<!--	<style>
-				[data-status="COMPLETED"] {
-					background: green;
-				}
-				[data-status="NEXT"] {
-					background: yellow;
-				}
-				[data-status="BLOCK"] {
-					background: red;
-				}
-			</style>
-			<span th:data-status="${leccion.estado.name()}"></span>-->

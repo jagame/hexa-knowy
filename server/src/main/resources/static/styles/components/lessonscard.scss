@@ -39,23 +39,20 @@
 		cursor: pointer;
 	}
 
-		//&:hover {
-		//	background-color: $primary-500;
-		//}
 
-		.lesson-item__lesson-icon {
-			margin-right:auto;
-			flex-shrink: 0;
-			font-size: 1.4rem;
-			width: 32px;
-			text-align: center;
-			margin-right: 12px;
-		}
+	.lesson-item__lesson-icon {
+		margin-right:auto;
+		flex-shrink: 0;
+		font-size: 1.4rem;
+		width: 32px;
+		text-align: center;
+		margin-right: 12px;
+	}
 
-		.lesson-item__lesson-info {
-			margin-right:auto;
-			display: flex;
-			flex-direction: column;
+	.lesson-item__lesson-info {
+		margin-right:auto;
+		display: flex;
+		flex-direction: column;
 
 			.lesson-info__lesson-number {
 				font-weight: 700;
@@ -71,78 +68,23 @@
 			.show-sidebar-btn{
 				margin-left:auto;
 			}
-		}
 	}
+}
 
 
-[data-status="COMPLETADA"] {
+[data-status="COMPLETE"] {
 	background: $primary-500;
 }
 
-[data-status="COMPLETADA"]:hover {
+[data-status="COMPLETE"].hover {
 	background: $primary-300;
 }
 
-[data-status="SIGUIENTE"] {
+[data-status="NEXT_LESSON"] {
 	background: $secundary-500;
 }
 
-[data-status="SIGUIENTE"]:hover{
-	background: $secundary-300;
-}
 
-[data-status="BLOQUEADA"] {
+[data-status="BLOCKED"] {
 	background: $danger-500;
 }
-
-[data-status="BLOQUEADA"]:hover{
-	background: #f26f66;
-}
-//.blocked-lesson {
-//	background: $primary-300;
-//	border-radius: 8px;
-//	padding: 0;
-//	box-shadow: 0 1px 6px rgb(0 0 0 / 0.1);
-//	transition: background-color 0.3s ease;
-//	width: auto;
-
-	//&:hover {
-	//	background-color: $danger-500;
-	//	color: #b30000;
-	//}
-
-
-
-	//.lessonlink {
-	//	display: flex;
-	//	align-items: center;
-	//	text-decoration: none;
-	//	color: #2c3e50;
-	//	padding: 10px 15px;
-	//	border-radius: 8px;
-	//	cursor: pointer;
-	//
-	//	.lessonicon {
-	//		flex-shrink: 0;
-	//		font-size: 1.4rem;
-	//		width: 32px;
-	//		text-align: center;
-	//		margin-right: 12px;
-	//	}
-	//
-	//	.lessoninfo {
-	//		display: flex;
-	//		flex-direction: column;
-	//
-	//		.lessonnumber {
-	//			font-weight: 700;
-	//			font-size: 0.95rem;
-	//			margin-bottom: 3px;
-	//		}
-	//
-	//		.lessonname {
-	//			font-size: 0.9rem;
-	//			color: #555;
-	//		}
-	//	}
-	//}
