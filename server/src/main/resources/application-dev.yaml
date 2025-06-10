@@ -1,7 +1,4 @@
 spring:
-    config:
-        activate:
-            on-profile: dev
     application:
         name: knowy-server
     thymeleaf:
