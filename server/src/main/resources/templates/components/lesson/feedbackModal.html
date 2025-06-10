@@ -8,7 +8,7 @@
 					<input type="hidden" name="dificultad" value="1"/>
 					<button onclick="closeModal()" type="submit" class="dbutton difficulty-button--easy">
 						Fácil
-						<img src="/static/images/mood-happy.png" alt="feliz">
+						<i class="ti ti-mood-happy"></i>
 					</button>
 				</form>
 
@@ -16,20 +16,24 @@
 					<input type="hidden" name="dificultad" value="2"/>
 					<button onclick="closeModal()" type="submit" class="dbutton difficulty-button--normal">
 						Normal
-						<img src="/static/images/mood-empty.png" alt="normal">
+						<i class="ti ti-mood-empty"></i>
 					</button>
 				</form>
 				<form th:action="@{/feedback/submit}" method="post" class="button-form">
 					<input type="hidden" name="dificultad" value="3"/>
 					<button onclick="closeModal()" class="dbutton difficulty-button--difficult">
 						Difícil
-						<img src="/static/images/mood-sad.png" alt="triste">
+						<i class="ti ti-mood-sad"></i>
 					</button>
 				</form>
 			</div>
+			<h3>¡Valoración obligatoria!</h3>
 		</div>
 	</div>
 </div>
+<script
+	src="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/js/tabler.min.js">
+</script>
 <script th:inline="javascript">
 	function closeModal() {
 		document.getElementById('feedbackModal').classList.add('hidden');

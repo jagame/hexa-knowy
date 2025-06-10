@@ -26,6 +26,6 @@ public class LessonController {
 		System.out.println("Dificultad seleccionada por el usuario: " + dificultad);
 		valoracion = Integer.parseInt(dificultad); //aquí invocaríamos un método de cada pregunta para guardar el feedback y luego procesarlo?
 		redirectAttributes.addFlashAttribute("mensajeFeedback", "Gracias por tu feedback: " + dificultad);
-		return "redirect:/";
+		return "redirect:/"; //este redirect irá a la próxima tarjeta de la lección.
 	}
 }
