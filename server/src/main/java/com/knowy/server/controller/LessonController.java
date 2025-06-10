@@ -21,10 +21,10 @@ public class LessonController {
 
 
 	}
-	@PostMapping("/feedback/submit")
+	@PostMapping("/feedback/submit") //he usado este controller porque estaba relacionado, si hace falta lo meto en otra pantalla
 	public String submitEval(@RequestParam("dificultad") String dificultad, RedirectAttributes redirectAttributes) {
 		System.out.println("Dificultad seleccionada por el usuario: " + dificultad);
-		valoracion = Integer.parseInt(dificultad); //aquí invocaríamos un método de cada pregunta para guardar el feedback y luego procesarlo?
+		valoracion = Integer.parseInt(dificultad); //aquí invocaríamos un metodo de cada pregunta para guardar el feedback y luego procesarlo. Debería hacer dto? yo creo que debería ser el dto de la tarjeta guardada.
 		redirectAttributes.addFlashAttribute("mensajeFeedback", "Gracias por tu feedback: " + dificultad);
 		return "redirect:/"; //este redirect irá a la próxima tarjeta de la lección.
 	}
