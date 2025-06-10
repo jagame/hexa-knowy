@@ -1,0 +1,105 @@
+@use "../global-vars" as *;
+@use "../global" as *;
+body{
+	font-family: inter;
+}
+.course-card {
+	width: 22rem;
+	border-radius: $radius-25;
+	background-color: $neutral-100;
+	box-shadow: $card-shadow;
+	margin: 1.5rem auto;
+	padding-bottom: 1.2rem;
+}
+
+.course-card__picture-container{
+	position: relative;
+	width: 100%;
+	height: 11rem;
+	overflow: hidden;
+}
+
+.course-card__tags{
+	position: absolute;
+	display: flex;
+	gap: 0.7rem;
+	margin: 10px;
+}
+
+.course-card-tags__tag{
+	background: $info-500;
+	color: $neutral-100;
+	border-radius: $radius-10;
+	font-weight: bold;
+	padding: 0.2em 1.1em;
+}
+
+.course-card__bar-progress{
+	color:$secundary-500;
+	font-size: 0.95em;
+	padding: 0.2em 1.1em;
+}
+
+.course-card-bar-progress__progress{
+	font-family: inter;
+	color:$secundary-500;
+	margin-top: 0.5em;
+	padding: 0.313em;
+}
+
+.course-card-bar-progress__progress-bar{
+	color: $secundary-500;
+}
+
+.home-resume__bar-container{
+		overflow: hidden;
+		width: 100%;
+		height: 10px;
+		border-radius: 10px;
+		background-color: rgb($neutral-300, 0.5);
+
+	.course-card-bar-progress_bar {
+			width: 60%;
+			height: 100%;
+			transition: width 0.5s;
+			background-color: $secundary-500;
+
+	}
+	.course-card-bar-progress_bar[data-progress='100']{
+		background-color:$primary-500;
+	}
+}
+
+.course-card__course-creator{
+	font-family: excalifont;
+	color:$secundary-700;
+	margin-top:1em;
+	padding: 0.313px;
+	margin-left: 1.2em;
+}
+
+.course-card__course-name{
+	font-family: excalifont;
+	color: $neutral-900;
+	padding: 0.313px;
+	margin-left: 1.2em;
+}
+
+.course-card__button-action{
+	display: block;
+	background-color: $primary-500;
+	color: $neutral-100;
+	border-radius: $radius-25;
+	font-weight: bold;
+	cursor: pointer;
+	transition: $transition-speed;
+	text-decoration:none;
+	text-align:center;
+	padding: 0.8em 0;
+	margin: 1.5em 1.2em 0 1.2em;
+}
+
+.course-card__button-action:hover{
+	background-color: $primary-700;
+	color: $secundary-700;
+}
