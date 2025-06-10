@@ -17,6 +17,8 @@
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Knowy with global.css-->
+	<link rel="stylesheet" th:href="@{/styles/global-reset.css}">
+	<link rel="stylesheet" th:href="@{/styles/font.css}">
     <link rel="stylesheet" th:href="@{/styles/layouts/content-sidebar-layout.css}">
 </head>
 <body>
@@ -32,9 +34,7 @@
         <main class="kn-main_content" layout:fragment="main-content">
 
         </main>
-        <footer>
-            <p>Configuweijfwrpkgmwvmw</p>
-        </footer>
+		<footer th:replace="~{components/footer :: footer}"></footer>
     </div>
 </div>
 
