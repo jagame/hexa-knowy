@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="server [verify,spring-boot:run...]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+  <configuration default="false" name="MavenKnowyDev" type="MavenRunConfiguration" factoryName="Maven">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings" />
@@ -11,9 +11,8 @@
           </option>
           <option name="goals">
             <list>
-              <option value="verify" />
               <option value="spring-boot:run" />
-              <option value="-Dspring.profiles.active=dev" />
+              <option value="-Dspring-boot.run.profiles=dev" />
             </list>
           </option>
           <option name="multimoduleDir" />

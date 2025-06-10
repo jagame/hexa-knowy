@@ -3,5 +3,8 @@ spring:
         name: knowy-server
     thymeleaf:
         cache: false
+    config:
+        activate:
+            on-profile: dev
 server:
     port: 8080
