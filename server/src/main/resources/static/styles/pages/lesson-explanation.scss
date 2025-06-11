@@ -1,5 +1,5 @@
 @use "../global-vars" as *;
-
+@use "../components/lesson/feedbackModal";
 body {
 	box-sizing: border-box;
 	font-family: Arial;
