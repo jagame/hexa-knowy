@@ -17,7 +17,7 @@
 
 	<div class="carousel-inner h-100 w-100 kn-radius">
 
-		<a class="carousel-item h-100 w-100"
+		<div class="carousel-item h-100 w-100"
 		   th:classappend="${statItem.index == 0} ? 'active' : ''"
 		   th:each="newItem, statItem : ${newsList}"
 		   th:href="${newItem.linkUrl}"
@@ -28,7 +28,7 @@
 				<h5 class="text-legible--title" th:text="${newItem.title}"></h5>
 				<p class="d-none d-md-block" th:text="${newItem.description}"></p>
 			</div>
-		</a>
+		</div>
 	</div>
 
 	<button class="carousel-control-prev" data-bs-slide="prev" th:data-bs-target="${'#' + id}" type="button">
