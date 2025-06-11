@@ -2,6 +2,8 @@
   <configuration default="false" name="KnowyServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
     <module name="server" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.knowy.server.KnowyServerApplication" />
-    <method v="2" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
   </configuration>
 </component>
