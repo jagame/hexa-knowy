@@ -1,6 +1,9 @@
-<div th:fragment="options-questionnaire">
-	<div class="questionnaire-question" th:text="${prueba}"> </div>
-	<div class="questionnaire-question"> </div>
-	<div class="questionnaire-question"> </div>
-	<div class="questionnaire-question"> </div>
+<div th:fragment="options-questionnaire" class="options-questionnaire">
+	<button th:each="option : ${options}"
+			class="questionnaire-option"
+			type="button"
+			th:text="${option.getLetter() + ' '+option.getText()}">
+	</button>
 </div>
+
+

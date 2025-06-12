@@ -1,5 +1,6 @@
 @use '../global' as *;
 @use '../components/navbar' as navbar;
+@use '../components/cards-questionnaire/options-questionnaire';
 
 html, body {
 	width: 100%;
