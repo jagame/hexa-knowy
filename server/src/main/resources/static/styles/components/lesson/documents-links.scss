@@ -1,0 +1,60 @@
+@use '../../_global-vars' as *;
+
+
+
+body {
+	font-family: 'Excalifont', sans-serif; 			/* Fuente principal Excalifont */
+	background-color: #f4f4f4;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
+
+.documentContainer {								/*Contenedor grande*/
+	border: 2px solid #5b92c2;
+	border-radius: $radius-8;
+	width: 500px;
+	background-color: #f3f3f3;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.documentHeader {
+	font-family: 'Caveat Brush', cursive;  			/* Fuente cabecera Caveat Brush */
+	background-color: #1993ff;
+	padding: 10px;
+	border-bottom: 2px solid #5b92c2;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	text-align: left;
+	color: white;
+	font-size: 24px;
+}
+
+.documentContainerPadding {  					/*Padding con cabecera contenedor*/
+	padding: 15px;
+}
+
+.documentButton {                   		 	  /* Botones */
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin-bottom: 15px;
+}
+
+.documentButton a {								/* Estilo botones "a"*/
+	border: 2px solid #5b92c2;
+	text-decoration: none;
+	background-color: #ffffff;
+	color: black;
+	padding: 10px;
+	text-align: center;
+	border-radius: 4px;
+	font-weight: bold;
+	transition: background-color 0.3s;
+	font-family: 'Inter', sans-serif;
+}
+
+.documentButton a:hover {							/* Sombra botones "a"*/
+	background-color: #c4e3ff;
+}

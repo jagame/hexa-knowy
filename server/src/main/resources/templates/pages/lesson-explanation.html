@@ -23,6 +23,10 @@
 		</div>
 		<p class="info-course">Información del curso</p>
 		<div class="theory"><p th:text="${lesson.theory}">Teoría del curso</p></div>
+
+
+		<div th:replace="~{components/lesson/documents-links :: documentLinkComponent(${LinksLessonList})}" ></div>
+
 	</main>
 
 </body>

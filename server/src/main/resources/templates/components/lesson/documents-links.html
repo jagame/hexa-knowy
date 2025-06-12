@@ -1,0 +1,15 @@
+
+<div class="documentContainer" th:fragment="documentLinkComponent(LinksList)">
+	<div class="documentHeader">Documentos</div>
+	<div class="documentContainerPadding">
+
+		<!--Botones de cada enlace externos -->
+		<div class="documentButton">
+			<div th:each="link : ${LinksList}">
+				<a th:href="${link.getLinkUrl()}" th:text="'🔗 ' + ${link.getLinkTitle()}" target="_blank"></a>
+			</div>
+		</div>
+
+	</div>
+</div>
+
