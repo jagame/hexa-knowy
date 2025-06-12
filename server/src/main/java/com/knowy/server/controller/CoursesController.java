@@ -29,4 +29,9 @@ public class CoursesController {
 		interfaceScreen.addAttribute("course", courseTest1);
 		return "pages/test";
 	}
+
+	@GetMapping("/my-courses")
+	public String viewMyCourses() {
+		return "pages/my-courses";
+	}
 }

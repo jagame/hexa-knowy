@@ -1,0 +1,197 @@
+@use "../global-vars" as *;
+
+body {
+	box-sizing: border-box;
+	background-color: $bg;
+}
+.container {
+	display: flex;
+	align-items: stretch;
+	padding: 20px;
+	gap: 20px;
+	justify-content: center;
+}
+
+.left-column {
+	display: flex;
+	flex: 0 0 80%;
+	flex-direction: column;
+
+}
+
+.right-column {
+	display: flex;
+	flex: 0 0 20%;
+	flex-direction: column;
+	min-height: 0;
+	max-height: 730px;
+	border-radius: $radius-10;
+	overflow-y: auto;
+	box-shadow: $card-shadow;
+}
+
+.filters {
+	background-color: $primary-100;
+	padding: 20px;
+	border-radius: $radius-10;
+	margin-bottom: 20px;
+	box-shadow: $card-shadow;
+	display: flex;
+	justify-content: space-between;
+}
+
+.filters-dropdowns {
+	display: flex;
+	gap: 20px;
+}
+
+.filters-buttons {
+	display: flex;
+	gap: 20px;
+}
+
+.courses {
+	background-color: $primary-100;
+	padding: 20px;
+	border-radius: $radius-10;
+	box-shadow: $card-shadow;
+}
+
+.recommendations {
+	background-color: $primary-100;
+	padding: 20px;
+	border-radius: $radius-10;
+	box-shadow: $card-shadow;
+}
+/*eliminar, card para test*/
+.card {
+	margin-top: 20px;
+}
+
+.list-group-item input[type="checkbox"]:checked {
+	background-color: $primary-500;
+	border-color: $primary-500;
+}
+
+.form-check-input:focus {
+	border-color: $primary-500;
+	box-shadow: 0 0 0 0.1rem $primary-500;
+}
+
+.pagination > li > a {
+	color: $secundary-500;
+}
+
+.pagination > li > a:hover,
+.pagination > li > a:focus {
+	background-color: $secundary-500;
+	color: $bg;
+	box-shadow: none;
+}
+
+.btn-categories, .btn-order, .btn-visualization {
+	background-color: $primary-500;
+	color: $bg;
+}
+
+.btn-categories:hover, .btn-order:hover, .btn-visualization:hover {
+	background-color: $primary-700;
+	color: $bg;
+}
+
+.dropdown-toggle[aria-expanded="true"] {
+	background-color: $primary-700;
+	border-color: $bg;
+	color: $bg;
+}
+
+.btn-apply {
+	background-color: $primary-500;
+	color: $bg;
+}
+
+.btn-delete {
+	background-color: $danger-600;
+	color: $bg;
+}
+
+.btn-apply:hover {
+	background-color: $primary-700;
+	color: $bg;
+}
+
+.btn-delete:hover {
+	background-color: $danger-650;
+	color: $bg;
+}
+
+.btn-apply:active {
+	background-color: $primary-700 !important;
+	color:$bg !important;
+}
+
+.btn-delete:active {
+	background-color: $danger-650 !important;
+	color: $bg !important;
+}
+
+.recommendations > h4 {
+	font-weight: bold;
+	color: $secundary-500;
+}
+
+.h2-courses {
+	font-weight: bold;
+	color:$primary-500;
+}
+
+.btn-categories:active, .btn-order:active, .btn-visualization:active {
+	background-color: $primary-700 !important;
+	color: $bg !important;
+}
+
+@media (max-width: 600px) {
+	.container {
+		display:flex;
+		flex-direction: column;
+		width: 100%;
+		padding: 0;
+		margin: 0;
+	}
+
+	.left-column, .right-column {
+		flex: 0 0 100%;
+		max-width: 100%;
+	}
+
+	.filters, .courses, .recommendations {
+		width: 100%;
+		box-sizing: border-box;
+
+	}
+
+	.filters {
+		flex-direction: column;
+
+	}
+
+	.filters-dropdowns, .filters-buttons {
+		display: block;
+		width: auto;
+		text-align: center;
+
+	}
+
+	.filters-dropdowns > div {
+		display: block;
+		margin: 5px auto;
+
+	}
+
+	.filters-buttons > button {
+		display: block;
+		width: 50%;
+		margin: 5px auto;
+
+	}
+}
