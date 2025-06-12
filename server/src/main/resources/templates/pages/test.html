@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es"
+	  layout:decorate="~{layouts/content-sidebar-layout}"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Index Example</title>
+</head>
+
+<body>
+
+<aside layout:fragment="sidebar">
+	<button data-sidebar-toggler=""> > </button>
+	<h1>Sidebar</h1>
+</aside>
+
+<main layout:fragment="main-content">
+	<h1>Main</h1>
+	<div th:replace="~{components/cards-questionnaire/options-questionnaire :: options-questionnaire}"></div>
+
+</main>
+
+
+</body>
+</html>
