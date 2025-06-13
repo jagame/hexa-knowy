@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="KnowyServerDev+SassWatch" type="CompoundRunConfigurationType">
+    <toRun name="KnowyServerDevWatch" type="MavenRunConfiguration" />
+    <toRun name="KnowyServerDev" type="SpringBootApplicationConfigurationType" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -2,6 +2,7 @@
 @use '../components/navbar';
 @use '../components/footer';
 
+
 html, body {
 	height: 100%;
 	overflow: hidden;
@@ -63,7 +64,6 @@ html, body {
 	@media (min-width: 768px) {
 		position: static;
 		width: 30%;
-		height: auto;
 		transition: none;
 		transform: none;
 	}
@@ -87,14 +87,6 @@ html, body {
 	border: none;
 	border-radius: 50%;
 	background: #333333;
-
-	&--hidden {
-		z-index: 0;
-		visibility: hidden;
-		transform: translateX(500%);
-		pointer-events: none;
-		opacity: 0;
-	}
 
 	@media (max-width: 768px) {
 		display: block;
