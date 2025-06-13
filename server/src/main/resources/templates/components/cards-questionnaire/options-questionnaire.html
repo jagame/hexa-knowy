@@ -1,9 +1,0 @@
-<div th:fragment="options-questionnaire" class="options-questionnaire">
-	<button th:each="option : ${options}"
-			class="questionnaire-option"
-			type="button"
-			th:text="${option.getLetter() + ' '+option.getText()}">
-	</button>
-</div>
-
-

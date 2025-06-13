@@ -2,11 +2,11 @@
 
 /*Options-questionnaire*/
 
-.options-questionnaire{
-	width: 84rem;
+.options-quiz{
+	width: 70%;
 }
 
-.questionnaire-option{
+.quiz-option{
 	width: 100%;
 	text-align: left;
 	padding: 15px 20px;
@@ -17,16 +17,16 @@
 	transition: $transition-speed;
 	font-family: excalifont;
 }
-.questionnaire-option:hover {
+.quiz-option:hover {
 	color: $neutral-100;
 	background: $secundary-500;
 }
-.questionnaire-option.correct {
+.quiz-option.correct {
 	background: $primary-500;
 	color: $neutral-100;
 	border-color: $primary-700;
 }
-.questionnaire-option.incorrect {
+.quiz-option.incorrect {
 	background: $danger-600;
 	color: $neutral-100;
 	border-color: $danger-650;
