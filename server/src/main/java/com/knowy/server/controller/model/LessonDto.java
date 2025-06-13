@@ -1,25 +1,22 @@
 package com.knowy.server.controller.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+@AllArgsConstructor
 @Getter
 @Setter
-public class LessonDto {
-	private String title;
-	private String duration;
-	private String image;
-	private String link;
-	private String theory;
+public class LessonDTO {
+	private int number;
+	private String name;
+	private LessonStatus status; //depende de ENUM EstadoLeccion
 
-	public LessonDto() {
-	}
-
-	public LessonDto(String title, String duration, String image, String link, String theory) {
-		this.title = title;
-		this.duration = duration;
-		this.image = image;
-		this.link = link;
-		this.theory = theory;
+	public enum LessonStatus {
+		COMPLETE,
+		NEXT_LESSON,
+		BLOCKED
 	}
 }
+
+
