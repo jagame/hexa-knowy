@@ -3,6 +3,7 @@
 body {
 	box-sizing: border-box;
 	background-color: $bg;
+
 }
 .container {
 	display: flex;
@@ -24,13 +25,14 @@ body {
 	flex: 0 0 20%;
 	flex-direction: column;
 	min-height: 0;
-	max-height: 730px;
+	max-height: 760px;
 	border-radius: $radius-10;
 	overflow-y: auto;
 	box-shadow: $card-shadow;
 }
 
 .filters {
+	font-family: 'caveat-brush';
 	background-color: $primary-100;
 	padding: 20px;
 	border-radius: $radius-10;
@@ -68,6 +70,18 @@ body {
 	margin-top: 20px;
 }
 
+.dropdown-categories .dropdown-menu .form-check-input {
+	margin: 5px;
+}
+
+.dropdown-order .dropdown-menu .form-check-input {
+	margin: 5px;
+}
+
+.dropdown-visualization .dropdown-menu .form-check-input {
+	margin: 5px;
+}
+
 .list-group-item input[type="checkbox"]:checked {
 	background-color: $primary-500;
 	border-color: $primary-500;
@@ -79,6 +93,7 @@ body {
 }
 
 .pagination > li > a {
+	font-family: 'caveat-brush';
 	color: $secundary-500;
 }
 
@@ -138,11 +153,13 @@ body {
 .recommendations > h4 {
 	font-weight: bold;
 	color: $secundary-500;
+	font-family: 'excalifont';
 }
 
 .h2-courses {
 	font-weight: bold;
 	color:$primary-500;
+	font-family: 'excalifont';
 }
 
 .btn-categories:active, .btn-order:active, .btn-visualization:active {
@@ -193,5 +210,22 @@ body {
 		width: 50%;
 		margin: 5px auto;
 
+	}
+
+	.recommendations {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.recommendations-cards {
+		display: flex;
+		gap: 10px;
+		overflow-x: auto;
+	}
+
+	//estilo de las cards de prueba, modificar
+	.recommendations-cards .card {
+		flex: 0 0 auto;
+		width: 200px;
 	}
 }
