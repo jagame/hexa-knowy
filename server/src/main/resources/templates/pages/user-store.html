@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es"
+	  layout:decorate="~{layouts/user-postlogin-layout}"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+	<title>Knowy - Store</title>
+	<link rel="stylesheet" th:href="@{/styles/pages/user-store.css}">
+</head>
+<body>
+<main layout:fragment="main-content">
+	<section
+		th:replace="~{components/user-home/resume :: example-card-component('Anastasia', 'Bienvenida', 10230, 20, 2, 10)}">
+	</section>
+	<div
+		class="home-grid--1c3r"
+		th:insert="~{components/user-home/carousel-news :: carousel-news('carousel-news-id', ${newsHome})}">
+	</div>
+
+	<div
+		class="home-grid--1c2r"
+		th:insert="~{components/user-home/missionsComponent :: missionsComponent(${missionsList}, ${lenguageOptions})}">
+	</div>
+</main>
+</body>
+</html>
