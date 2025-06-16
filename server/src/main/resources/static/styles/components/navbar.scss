@@ -1,6 +1,5 @@
 @use "../global-vars" as *;
 
-$navbar-height: 12vh;
 $dropdown-label-height: 180px;
 
 #knowy-navbar {
@@ -9,9 +8,10 @@ $dropdown-label-height: 180px;
 	top: 0;
 	display: grid;
 	width: 100%;
-	height: $navbar-height;
+	height: fit-content;
+	padding: 0.25rem;
 	grid-template-columns: 1fr;
-	grid-template-rows: 65% 35%;
+	grid-template-rows: 100%;
 }
 
 /* Knowy navbar style */
@@ -21,18 +21,14 @@ $dropdown-label-height: 180px;
 }
 
 /* Links */
-#knowy-navbar > .__links {
+#knowy-navbar > .__profile-container > .__links {
+	font-family: 'caveat-brush';
 	font-weight: bold;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	color: $neutral-100;
 	gap: 1rem;
-}
-
-/* Links Style */
-#knowy-navbar > .__links {
-	border-top: 1px solid $neutral-500;
-	background: $primary-500;
 
 	> a {
 		text-decoration: none;
@@ -50,12 +46,25 @@ $dropdown-label-height: 180px;
 	grid-template-columns: 1fr 1fr 1fr;
 
 	> .__logo {
+		display: flex;
+		align-items: center;
 		align-self: center;
-		height: 100%;
-		padding: 4px 10px;
-		grid-column: 2;
+		flex-direction: row;
+		justify-content: center;
+		grid-column: 1;
 		justify-self: center;
-		object-fit: contain;
+
+		> .--text {
+			font-family: 'caveat-brush';
+			font-size: 1.75rem;
+			color: $neutral-100;
+		}
+
+		> img {
+			width: 5rem;
+			height: 5rem;
+			object-fit: contain;
+		}
 	}
 }
 
@@ -81,10 +90,22 @@ $dropdown-label-height: 180px;
 	}
 
 	> label > img {
-		height: 90%;
+		height: 100%;
 		border-radius: 50%;
 		aspect-ratio: 1;
 		object-fit: cover;
+	}
+
+	> label > span {
+		font-family: 'caveat-brush';
+		display: block;
+		color: $neutral-100;
+	}
+
+	> .__profile {
+		> .--text {
+			font-size: 1.25rem;
+		}
 	}
 
 	> .__profile-menu {
@@ -97,12 +118,18 @@ $dropdown-label-height: 180px;
 		height: $dropdown-label-height;
 		padding-top: 0.5rem;
 		transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
+		pointer-events: none;
 		opacity: 0;
 		border-top-left-radius: 10px;
-		pointer-events: none;
+	}
+
+	> .__profile-menu > .--text {
+		font-family: 'caveat-brush';
+		font-size: 1.25rem;
 	}
 
 	> .__menu {
+		font-family: 'caveat-brush';
 		position: absolute;
 		z-index: 100;
 		right: 0;
@@ -160,12 +187,16 @@ $dropdown-label-height: 180px;
 		box-shadow: 8px 0 12px rgba(0, 0, 0, 0.1), 0 8px 12px rgba(0, 0, 0, 0.1);
 
 		& .__menu-item {
-			font-size: large;
+			font-size: 1.5rem;
 			font-weight: 600;
 			cursor: pointer;
 			text-align: center;
 			text-decoration: none;
 			color: $primary-500
+		}
+
+		& .__menu-item--visibility {
+			display: none;
 		}
 
 		> .__menu-item:hover {
@@ -204,11 +235,10 @@ $dropdown-label-height: 180px;
 /* Responsive */
 @media (max-width: 768px) {
 	#knowy-navbar {
-		height: 80px;
 		grid-template-rows: 100%;
 	}
 
-	#knowy-navbar > .__links {
+	#knowy-navbar > .__profile-container > .__links {
 		display: none;
 	}
 
@@ -225,7 +255,6 @@ $dropdown-label-height: 180px;
 		z-index: 100;
 		grid-column: 2;
 
-
 		> input:checked + label {
 			display: none;
 		}
@@ -235,8 +264,9 @@ $dropdown-label-height: 180px;
 		> .__profile-menu {
 			position: fixed;
 			display: flex;
-			box-shadow: -8px 0 12px rgba(0, 0, 0, 0.2);
+			height: $dropdown-label-height;
 			pointer-events: none;
+			box-shadow: -8px 0 12px rgba(0, 0, 0, 0.2);
 		}
 
 		> .__profile-menu img {
@@ -254,11 +284,12 @@ $dropdown-label-height: 180px;
 
 		> input:checked ~ .__profile-menu {
 			transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
-			opacity: 1;
 			pointer-events: visible;
+			opacity: 1;
 		}
 
 		> .__menu {
+			position: fixed;
 			top: $dropdown-label-height;
 			right: 0;
 			width: 70vw;
@@ -282,6 +313,10 @@ $dropdown-label-height: 180px;
 				cursor: pointer;
 				text-align: center;
 				text-decoration: none;
+			}
+
+			& .__menu-item--visibility {
+				display: block;
 			}
 
 			> div {
@@ -313,6 +348,14 @@ $dropdown-label-height: 180px;
 
 		> div > .__menu-item:hover {
 			text-decoration: underline;
+		}
+	}
+}
+
+@media (max-width: 576px) {
+	#knowy-navbar > .__profile-container > .__dropdown {
+		> .__profile > .--text {
+			display: none;
 		}
 	}
 }

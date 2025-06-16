@@ -15,7 +15,7 @@ body {
 .layout-body {
 	display: flex;
 	flex-direction: column;
-	height: calc(100% - #{navbar.$navbar-height});
+	height: 100%;
 	overflow: auto;
 }
 
