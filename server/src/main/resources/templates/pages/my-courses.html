@@ -1,171 +1,191 @@
 <!DOCTYPE html>
 <html lang="es"
-	  layout:decorate="~{layouts/basic-layout}"
+	  layout:decorate="~{layouts/user-postlogin-layout}"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  xmlns:th="http://www.thymeleaf.org">
+>
 
 <head>
 	<title>Mis cursos</title>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
 	<link rel="stylesheet" th:href="@{/styles/pages/my-courses.css}">
 </head>
-<body layout:fragment="body-content">
+<body>
 
-<div class="container">
+<main layout:fragment="main-content">
 
-	<div class="left-column">
+	<div class="container-fluid">
+		<div class="row row-cols-md-2 row-cols-1">
+			<section class="col-md-9 col-12">
+				<!--filters-->
+				<div class="filters">
+					<div class="filters-dropdowns">
 
-		<div class="filters">
-			<div class="filters-dropdowns">
-				<div class="dropdown-categories">
-					<button class="btn btn-categories dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-						Categorías
-					</button>
-					<ul class="dropdown-menu">
-						<li class="list-group-item">
-							<input class="form-check-input me-1" type="checkbox" value="" id="categoriesFirstCheckbox">
-							<label class="form-check-label" for="categoriesFirstCheckbox">En curso</label>
-						</li>
-						<li class="list-group-item">
-							<input class="form-check-input me-1" type="checkbox" value="" id="categoriesSecondCheckbox">
-							<label class="form-check-label" for="categoriesSecondCheckbox">Terminados</label>
-						</li>
-					</ul>
+						<!--categories-->
+						<div class="dropdown-categories">
+							<button aria-expanded="false" class="btn btn-categories dropdown-toggle w-100"
+									data-bs-toggle="dropdown"
+									type="button">
+								Categorías
+							</button>
+							<ul class="dropdown-menu">
+								<li class="list-group-item">
+									<input class="form-check-input me-1" id="categoriesFirstCheckbox" type="checkbox"
+										   value="">
+									<label class="form-check-label" for="categoriesFirstCheckbox">En curso</label>
+								</li>
+								<li class="list-group-item">
+									<input class="form-check-input me-1" id="categoriesSecondCheckbox" type="checkbox"
+										   value="">
+									<label class="form-check-label" for="categoriesSecondCheckbox">Terminados</label>
+								</li>
+							</ul>
+						</div>
+
+						<!--order-->
+						<div class="dropdown-order">
+							<button aria-expanded="false" class="btn btn-order dropdown-toggle w-100"
+									data-bs-toggle="dropdown"
+									type="button">
+								Orden
+							</button>
+							<ul class="dropdown-menu">
+								<li class="list-group-item">
+									<input class="form-check-input me-1" id="orderFirstCheckbox" type="checkbox"
+										   value="">
+									<label class="form-check-label" for="orderFirstCheckbox">En curso</label>
+								</li>
+								<li class="list-group-item">
+									<input class="form-check-input me-1" id="orderSecondCheckbox" type="checkbox"
+										   value="">
+									<label class="form-check-label" for="orderSecondCheckbox">Terminados</label>
+								</li>
+							</ul>
+						</div>
+
+						<!--visualization-->
+						<div class="dropdown-visualization">
+							<button aria-expanded="false" class="btn btn-visualization dropdown-toggle w-100"
+									data-bs-toggle="dropdown"
+									type="button">
+								Visualización
+							</button>
+							<ul class="dropdown-menu">
+								<li class="list-group-item">
+									<input class="form-check-input me-1" id="visualizationFirstCheckbox" type="checkbox"
+										   value="">
+									<label class="form-check-label" for="visualizationFirstCheckbox">En curso</label>
+								</li>
+								<li class="list-group-item">
+									<input class="form-check-input me-1" id="visualizationSecondCheckbox"
+										   type="checkbox"
+										   value="">
+									<label class="form-check-label" for="visualizationSecondCheckbox">Terminados</label>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="row row-cols-2 g-2">
+						<div class="col">
+							<button class="btn btn-apply w-100" type="button">Aplicar</button>
+						</div>
+						<div class="col">
+							<button class="btn btn-delete w-100" type="button">Borrar</button>
+						</div>
+					</div>
 				</div>
 
-				<div class="dropdown-order">
-					<button class="btn btn-order dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-						Orden
-					</button>
-					<ul class="dropdown-menu">
-						<li class="list-group-item">
-							<input class="form-check-input me-1" type="checkbox" value="" id="orderFirstCheckbox">
-							<label class="form-check-label" for="orderFirstCheckbox">En curso</label>
-						</li>
-						<li class="list-group-item">
-							<input class="form-check-input me-1" type="checkbox" value="" id="orderSecondCheckbox">
-							<label class="form-check-label" for="orderSecondCheckbox">Terminados</label>
-						</li>
-					</ul>
+				<!--course-->
+				<div class="courses">
+					<div class="row">
+						<span><h2 class="h2-courses">Mis cursos</h2></span>
+						<div class="col-md-4">
+
+							<div class="card" style="width: 100%;">
+								<img alt="..." class="card-img-top" src="https://placehold.co/200">
+								<div class="card-body">
+									<h5 class="card-title">Card title</h5>
+									<p class="card-text">Some quick example text.</p>
+									<a class="btn btn-primary" href="#">Go somewhere</a>
+								</div>
+							</div>
+
+						</div>
+						<div class="col-md-4">
+
+							<div class="card" style="width: 100%;">
+								<img alt="..." class="card-img-top" src="https://placehold.co/200">
+								<div class="card-body">
+									<h5 class="card-title">Card title</h5>
+									<p class="card-text">Some quick example text.</p>
+									<a class="btn btn-primary" href="#">Go somewhere</a>
+								</div>
+							</div>
+
+						</div>
+
+						<div class="col-md-4">
+
+							<div class="card" style="width: 100%;">
+								<img alt="..." class="card-img-top" src="https://placehold.co/200">
+								<div class="card-body">
+									<h5 class="card-title">Card title</h5>
+									<p class="card-text">Some quick example text.</p>
+									<a class="btn btn-primary" href="#">Go somewhere</a>
+								</div>
+							</div>
+
+						</div>
+
+					</div>
+
+					<nav aria-label="Page navigation">
+						<ul class="pagination justify-content-center mt-5">
+							<li class="page-item">
+								<a aria-label="Previous" class="page-link" href="#">
+									<span aria-hidden="true">&laquo;</span>
+									<span class="sr-only"></span>
+								</a>
+							</li>
+							<li class="page-item"><a class="page-link" href="#">1</a></li>
+							<li class="page-item"><a class="page-link" href="#">2</a></li>
+							<li class="page-item"><a class="page-link" href="#">3</a></li>
+							<li class="page-item">
+								<a aria-label="Next" class="page-link" href="#">
+									<span aria-hidden="true">&raquo;</span>
+									<span class="sr-only"></span>
+								</a>
+							</li>
+						</ul>
+					</nav>
+
+				</div>
+			</section>
+
+			<aside class="recommendations col-md-3 col-12">
+				<h4>Recomendaciones para ti</h4>
+
+				<div class="card" style="width: 100%;">
+					<img alt="..." class="card-img-top" src="https://placehold.co/200">
+					<div class="card-body">
+						<h5 class="card-title">Card title</h5>
+						<p class="card-text">Some quick example text.</p>
+						<a class="btn btn-warning" href="#">Go somewhere</a>
+					</div>
 				</div>
 
-				<div class="dropdown-visualization">
-					<button class="btn btn-visualization dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-						Visualización
-					</button>
-					<ul class="dropdown-menu">
-						<li class="list-group-item">
-							<input class="form-check-input me-1" type="checkbox" value="" id="visualizationFirstCheckbox">
-							<label class="form-check-label" for="visualizationFirstCheckbox">En curso</label>
-						</li>
-						<li class="list-group-item">
-							<input class="form-check-input me-1" type="checkbox" value="" id="visualizationSecondCheckbox">
-							<label class="form-check-label" for="visualizationSecondCheckbox">Terminados</label>
-						</li>
-					</ul>
+				<div class="card" style="width: 100%;">
+					<img alt="..." class="card-img-top" src="https://placehold.co/200">
+					<div class="card-body">
+						<h5 class="card-title">Card title</h5>
+						<p class="card-text">Some quick example text.</p>
+						<a class="btn btn-warning" href="#">Go somewhere</a>
+					</div>
 				</div>
-			</div>
-
-			<div class="filters-buttons">
-				<button type="button" class="btn btn-apply">Aplicar</button>
-
-				<button type="button" class="btn btn-delete">Borrar</button>
-			</div>
+			</aside>
 		</div>
 
-
-		<div class="courses">
-
-			<div class="row">
-				<span><h2 class="h2-courses">Mis cursos</h2></span>
-				<div class="col-md-4">
-
-					<div class="card" style="width: 100%;">
-						<img src="https://placehold.co/200" class="card-img-top" alt="...">
-						<div class="card-body">
-							<h5 class="card-title">Card title</h5>
-							<p class="card-text">Some quick example text.</p>
-							<a href="#" class="btn btn-primary">Go somewhere</a>
-						</div>
-					</div>
-
-				</div>
-				<div class="col-md-4">
-
-					<div class="card" style="width: 100%;">
-						<img src="https://placehold.co/200" class="card-img-top" alt="...">
-						<div class="card-body">
-							<h5 class="card-title">Card title</h5>
-							<p class="card-text">Some quick example text.</p>
-							<a href="#" class="btn btn-primary">Go somewhere</a>
-						</div>
-					</div>
-
-				</div>
-
-				<div class="col-md-4">
-
-					<div class="card" style="width: 100%;">
-						<img src="https://placehold.co/200" class="card-img-top" alt="...">
-						<div class="card-body">
-							<h5 class="card-title">Card title</h5>
-							<p class="card-text">Some quick example text.</p>
-							<a href="#" class="btn btn-primary">Go somewhere</a>
-						</div>
-					</div>
-
-				</div>
-
-			</div>
-
-			<nav aria-label="Page navigation">
-				<ul class="pagination justify-content-center mt-5">
-					<li class="page-item">
-						<a class="page-link" href="#" aria-label="Previous">
-							<span aria-hidden="true">&laquo;</span>
-							<span class="sr-only"></span>
-						</a>
-					</li>
-					<li class="page-item"><a class="page-link" href="#">1</a></li>
-					<li class="page-item"><a class="page-link" href="#">2</a></li>
-					<li class="page-item"><a class="page-link" href="#">3</a></li>
-					<li class="page-item">
-						<a class="page-link" href="#" aria-label="Next">
-							<span aria-hidden="true">&raquo;</span>
-							<span class="sr-only"></span>
-						</a>
-					</li>
-				</ul>
-			</nav>
-
-		</div>
 	</div>
-
-	<div class="right-column">
-		<div class="recommendations">
-			<h4>Recomendaciones para ti</h4>
-
-			<div class="card" style="width: 100%;">
-				<img src="https://placehold.co/200" class="card-img-top" alt="...">
-				<div class="card-body">
-					<h5 class="card-title">Card title</h5>
-					<p class="card-text">Some quick example text.</p>
-					<a href="#" class="btn btn-warning">Go somewhere</a>
-				</div>
-			</div>
-
-			<div class="card" style="width: 100%;">
-				<img src="https://placehold.co/200" class="card-img-top" alt="...">
-				<div class="card-body">
-					<h5 class="card-title">Card title</h5>
-					<p class="card-text">Some quick example text.</p>
-					<a href="#" class="btn btn-warning">Go somewhere</a>
-				</div>
-			</div>
-
-
-		</div>
-	</div>
-</div>
+</main>
 </body>
 </html>
