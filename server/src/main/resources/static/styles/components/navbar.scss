@@ -210,13 +210,14 @@ $dropdown-label-height: 180px;
 		> div {
 			display: flex;
 			border-bottom: $radius-10;
-			background: $primary-500;
 			border-bottom-right-radius: $radius-10;
 			border-bottom-left-radius: $radius-10;
+			background: $primary-500;
 		}
 
 		> div > .__menu-item {
 			font-weight: bold;
+			font-size: 1.1rem;
 			text-decoration: none;
 			color: $neutral-100;
 		}
@@ -228,6 +229,7 @@ $dropdown-label-height: 180px;
 		> div > .__menu-item-logout {
 			border-bottom-right-radius: $radius-10;
 			border-bottom-left-radius: $radius-10;
+			font-size: 1.1rem;
 		}
 	}
 }
@@ -289,12 +291,17 @@ $dropdown-label-height: 180px;
 		}
 
 		> .__menu {
+			font-size: 1.1rem;
 			position: fixed;
 			top: $dropdown-label-height;
 			right: 0;
 			width: 60vw;
 			max-width: 500px;
 			height: calc(100vh - $dropdown-label-height);
+
+			> .__menu-item-logout {
+				font-size: 1.5rem;
+			}
 		}
 
 		> input:checked ~ .__menu {
@@ -313,6 +320,7 @@ $dropdown-label-height: 180px;
 				cursor: pointer;
 				text-align: center;
 				text-decoration: none;
+				font-size: 1.5rem;
 			}
 
 			& .__menu-item--visibility {
