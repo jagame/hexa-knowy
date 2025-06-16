@@ -9,7 +9,6 @@ $dropdown-label-height: 180px;
 	display: grid;
 	width: 100%;
 	height: fit-content;
-	padding: 0.25rem;
 	grid-template-columns: 1fr;
 	grid-template-rows: 100%;
 }
@@ -23,12 +22,13 @@ $dropdown-label-height: 180px;
 /* Links */
 #knowy-navbar > .__profile-container > .__links {
 	font-family: 'caveat-brush';
+	font-size: 1.1rem;
 	font-weight: bold;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	color: $neutral-100;
-	gap: 1rem;
+	gap: 1.25rem;
 
 	> a {
 		text-decoration: none;
@@ -43,7 +43,7 @@ $dropdown-label-height: 180px;
 /* Profile container */
 #knowy-navbar > .__profile-container {
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-columns: 20% auto 28%;
 
 	> .__logo {
 		display: flex;
@@ -56,7 +56,7 @@ $dropdown-label-height: 180px;
 
 		> .--text {
 			font-family: 'caveat-brush';
-			font-size: 1.75rem;
+			font-size: 1.5rem;
 			color: $neutral-100;
 		}
 
@@ -83,7 +83,7 @@ $dropdown-label-height: 180px;
 		align-items: center;
 		justify-content: flex-end;
 		height: 100%;
-		padding: 0 10px;
+		padding: 0.5rem 0.5rem 0.5rem 0;
 		cursor: pointer;
 		user-select: none;
 		gap: 0.5rem;
@@ -104,7 +104,8 @@ $dropdown-label-height: 180px;
 
 	> .__profile {
 		> .--text {
-			font-size: 1.25rem;
+			font-size: 1.1rem;
+			text-align: right;
 		}
 	}
 
@@ -125,7 +126,7 @@ $dropdown-label-height: 180px;
 
 	> .__profile-menu > .--text {
 		font-family: 'caveat-brush';
-		font-size: 1.25rem;
+		font-size: 1.1rem;
 	}
 
 	> .__menu {
@@ -181,8 +182,8 @@ $dropdown-label-height: 180px;
 
 	> .__menu {
 		border: 1px solid $neutral-500;
-		border-bottom-right-radius: 10px;
-		border-bottom-left-radius: 10px;
+		border-bottom-right-radius: $radius-10;
+		border-bottom-left-radius: $radius-10;
 		background: $neutral-100;
 		box-shadow: 8px 0 12px rgba(0, 0, 0, 0.1), 0 8px 12px rgba(0, 0, 0, 0.1);
 
@@ -202,14 +203,15 @@ $dropdown-label-height: 180px;
 		> .__menu-item:hover {
 			text-decoration: underline;
 			color: $primary-500;
-			background: $neutral-500;
+			background: $neutral-300;
 		}
 
 		> div {
 			display: flex;
-			border-bottom-right-radius: 10px;
-			border-bottom-left-radius: 10px;
+			border-bottom: $radius-10;
 			background: $primary-500;
+			border-bottom-right-radius: $radius-10;
+			border-bottom-left-radius: $radius-10;
 		}
 
 		> div > .__menu-item {
@@ -222,12 +224,9 @@ $dropdown-label-height: 180px;
 			background: $primary-700;
 		}
 
-		> div > .__menu-item-home {
-			border-bottom-left-radius: 10px;
-		}
-
 		> div > .__menu-item-logout {
-			border-bottom-right-radius: 10px;
+			border-bottom-right-radius: $radius-10;
+			border-bottom-left-radius: $radius-10;
 		}
 	}
 }
