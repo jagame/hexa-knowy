@@ -1,0 +1,43 @@
+<div th:fragment="options-quiz" class="options-quiz">
+	<button th:each="option : ${options}"
+			class="quiz-option"
+			type="button"
+			th:text="${option.getLetter() + ' '+option.getText()}"
+			th:attr="data-correct=${option.correct}">
+	</button>
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			const answeredButtons = document.querySelectorAll('.quiz-option');
+			let answered = false;
+
+
+			answeredButtons.forEach(btn => {
+				btn.addEventListener('click', function() {
+					if (answered) return;
+					answered = true;
+
+
+					answeredButtons.forEach(b => {
+						const isCorrect = b.getAttribute('data-correct') === 'true';
+						if (b === btn) {
+							if (isCorrect) {
+								b.classList.add('correct');
+							} else {
+								b.classList.add('incorrect');
+							}
+						} else if (isCorrect) {
+							b.classList.add('correct');
+						}
+					});
+				});
+			});
+		});
+	</script>
+</div>
+
+
+
+
+
+
+

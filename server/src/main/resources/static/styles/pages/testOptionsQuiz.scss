@@ -1,6 +1,6 @@
 @use '../global-vars' as *;
 @use '../components/navbar';
-
+@use '../components/cards-questionnaire/options-quiz';
 
 body{
 	font-family:excalifont;
