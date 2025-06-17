@@ -1,7 +1,7 @@
 package com.knowy.server.controller;
 
 
-import com.knowy.server.controller.model.LessonDTO;
+import com.knowy.server.controller.dto.LessonDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
