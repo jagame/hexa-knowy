@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Repository
-public class AccessRepositoryImpl implements AccessRepository {
+public class AccessDummyRepositoryImpl implements AccessRepository {
 
 	Map<String, String> tokenMap = new HashMap<>();
 

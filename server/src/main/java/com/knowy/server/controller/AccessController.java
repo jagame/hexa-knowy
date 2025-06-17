@@ -39,7 +39,7 @@ public class AccessController {
 	}
 
 	@GetMapping("/login")
-	public String viewLogin (Model model){
+	public String viewLogin(Model model) {
 		LoginForm loginForm = new LoginForm();
 		model.addAttribute("loginForm", loginForm);
 		return "pages/access/login";
@@ -67,16 +67,26 @@ public class AccessController {
 	}
 
 	@GetMapping("/password-change")
-	public String passwordChange(@RequestParam String token) {
+	public String passwordChange(
+		@RequestParam String token,
+		Model model
+	) {
 		if (accessService.isTokenRegistered(token)) {
+			model.addAttribute("token", token);
+			model.addAttribute("passwordForm", new UserPasswordFormDto());
 			return "pages/access/password-change";
 		}
 		return "redirect:/";
 	}
 
 	@PostMapping("/password-change")
-	public String passwordChange(@RequestParam String token, @ModelAttribute UserPasswordFormDto userPasswordFormDto) {
+	public String passwordChange(
+		@RequestParam String token,
+		@ModelAttribute("passwordForm") UserPasswordFormDto userPasswordFormDto
+	) {
 		if (accessService.isTokenRegistered(token)) {
+			// TODO - Borrar
+			System.out.println("Contraseña de Usuario recibida -> 1:" + userPasswordFormDto.getPassword() + "2:" + userPasswordFormDto.getConfirmPassword());
 			accessService.updateUserPassword(
 				token,
 				userPasswordFormDto.getPassword(),

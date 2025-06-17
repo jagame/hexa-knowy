@@ -10,7 +10,7 @@ import lombok.Setter;
 public class LessonDTO {
 	private int number;
 	private String name;
-	private LessonStatus status; //depende de ENUM EstadoLeccion
+	private LessonStatus status; //depende de ENUM LessonStatus
 
 	public enum LessonStatus {
 		COMPLETE,

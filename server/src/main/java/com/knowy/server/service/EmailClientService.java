@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 public class EmailClientService {
 
 	public void sendTokenToEmail(String token, String email) {
+		// TODO - Implementar servicio de correo
 		System.out.println("Token: " + token);
 	}
 }
