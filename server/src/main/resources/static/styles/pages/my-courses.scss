@@ -167,18 +167,17 @@ body {
 	color: $bg !important;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
 	.container {
 		display:flex;
 		flex-direction: column;
-		width: 100%;
 		padding: 0;
 		margin: 0;
 	}
 
 	.left-column, .right-column {
 		flex: 0 0 100%;
-		max-width: 100%;
+		min-width: 100%;
 	}
 
 	.filters, .courses, .recommendations {
