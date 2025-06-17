@@ -1,91 +1,6 @@
 @use '../global-vars' as *;
 @use '../components/navbar';
-@use '../components/cards-questionnaire/options-quiz';
-
-body{
-	font-family:excalifont;
-}
-.test-container {
-	max-width: 800px;
-	margin: 2rem auto;
-	padding: 1.5rem;
-	background-color: $primary-300;
-	border-radius: 20px;
-}
-
-
-.curso-banner {
-	background-color: $primary-500;
-	color: white;
-	text-align: center;
-	border-radius: 30px;
-	padding: 0.7rem 1rem;
-	align-content: center;
-	margin:2em;
-	font-weight: bold;
-	font-size: 1.2rem;
-	font-family:caveat-brush;
-}
-
-
-.info-panel {
-	display: flex;
-	justify-content: space-around;
-	margin: 1.5rem 0;
-
-
-	div {
-		background-color: white;
-		border: 2px solid $primary-500;
-		border-radius: 20px;
-		padding: 0.5rem 1rem;
-		font-weight: bold;
-	}
-}
-
-
-.enunciado {
-	background-color: $secundary-300;
-	border: 2px solid $secundary-500;
-	color: $secundary-500;
-	border-radius: 16px;
-	overflow: hidden;
-
-
-	.enunciado-header {
-		background-color: transparent;
-		color: $secundary-500;
-		font-weight: bold;
-		font-size: 1rem;
-		padding: 1rem 1rem;
-		cursor: pointer;
-
-
-		i.rotate-icon {
-			font-size: 1.2rem;
-			color: $secundary-500;
-			transition: transform 0.3s ease;
-		}
-
-
-		&[aria-expanded="true"] .rotate-icon {
-			transform: rotate(180deg); // Flecha hacia arriba
-		}
-
-
-		&[aria-expanded="false"] .rotate-icon {
-			transform: rotate(0deg);
-		}
-	}
-
-
-	.enunciado-contenido {
-		background-color: $secundary-300;
-		color: black;
-		padding: 1rem 1.25rem;
-		font-size: 1rem;
-	}
-}
+@use '../layouts/quiz-layout';
 
 
 
@@ -93,53 +8,45 @@ body{
 
 
 
+//.enunciado {
+//	background-color: $secundary-300;
+//	border: 2px solid $secundary-500;
+//	color: $secundary-500;
+//	border-radius: 16px;
+//	overflow: hidden;
+//
+//
+//	.enunciado-header {
+//		background-color: transparent;
+//		color: $secundary-500;
+//		font-weight: bold;
+//		font-size: 1rem;
+//		padding: 1rem 1rem;
+//		cursor: pointer;
+//
+//
+//		i.rotate-icon {
+//			font-size: 1.2rem;
+//			color: $secundary-500;
+//			transition: transform 0.3s ease;
+//		}
+//
+//
+//		&[aria-expanded="true"] .rotate-icon {
+//			transform: rotate(180deg); // Flecha hacia arriba
+//		}
 
-.navegacion {
-	display: flex;
-	justify-content: space-between;
-	margin: 2rem;
-
-
-	button {
-		background-color: $primary-500;
-		color: white;
-		border: none;
-		padding: 0.8rem 1.5rem;
-		font-size: 1rem;
-		font-weight: bold;
-		border-radius: 15px;
-		cursor: pointer;
-		transition: background-color 0.3s;
-
-
-		&:hover {
-			background-color: $primary-700;
-		}
-	}
-}
-
-
-.responder{
-
-
-	text-align:center;
-
-
-	button {
-		width: 90%;
-		background-color: $primary-500;
-		color: white;
-		border: none;
-		padding: 0.8rem 1.5rem;
-		font-size: 1rem;
-		font-weight: bold;
-		border-radius: 15px;
-		cursor: pointer;
-		transition: background-color 0.3s;
+		//
+		//&[aria-expanded="false"] .rotate-icon {
+		//	transform: rotate(0deg);
+		//}
 
 
-		&:hover {
-			background-color: $primary-700;
-		}
-	}
-}
+	//
+	//.enunciado-contenido {
+	//	background-color: $secundary-300;
+	//	color: black;
+	//	padding: 1rem 1.25rem;
+	//	font-size: 1rem;
+	//}
+

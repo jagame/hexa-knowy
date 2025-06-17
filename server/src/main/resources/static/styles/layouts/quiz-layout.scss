@@ -1,0 +1,65 @@
+@use '../global-vars' as *;
+@use '../components/navbar';
+@use '../components/cards-questionnaire/options-quiz';
+@use '../components/cards-questionnaire/quiz-header';
+
+body{
+	font-family:excalifont;
+}
+.test-container {
+	max-width: 800px;
+	margin: 2rem auto;
+	padding: 1.5rem;
+	background-color: $primary-300;
+	border-radius: 20px;
+}
+
+.navegacion {
+	display: flex;
+	justify-content: space-between;
+	margin: 2rem;
+
+
+	button {
+		background-color: $primary-500;
+		color: white;
+		border: none;
+		padding: 0.8rem 1.5rem;
+		font-size: 1rem;
+		font-weight: bold;
+		border-radius: 15px;
+		cursor: pointer;
+		transition: background-color 0.3s;
+
+
+		&:hover {
+			background-color: $primary-700;
+		}
+	}
+}
+
+
+.responder{
+
+
+	text-align:center;
+
+
+	button {
+		width: 90%;
+		background-color: $primary-500;
+		color: white;
+		border: none;
+		padding: 0.8rem 1.5rem;
+		font-size: 1rem;
+		font-weight: bold;
+		border-radius: 15px;
+		cursor: pointer;
+		transition: background-color 0.3s;
+
+
+		&:hover {
+			background-color: $primary-700;
+		}
+	}
+}
