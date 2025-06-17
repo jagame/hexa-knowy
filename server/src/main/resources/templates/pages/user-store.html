@@ -10,17 +10,67 @@
 </head>
 <body>
 <main layout:fragment="main-content">
-	<section
-		th:replace="~{components/user-home/resume :: example-card-component('Anastasia', 'Bienvenida', 10230, 20, 2, 10)}">
-	</section>
-	<div
-		class="home-grid--1c3r"
-		th:insert="~{components/user-home/carousel-news :: carousel-news('carousel-news-id', ${newsHome})}">
-	</div>
+	<div class="container-fluid">
+		<section class="filtros-container flex-wrap">
+			<div class="filtros">
+				<select class="form-select filter-select">
+					<option selected>Categorías</option>
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+				</select>
+				<select class="form-select filter-select">
+					<option selected>Orden</option>
+					<option value="1">1</option>
+					<option value="2">2</option>
+				</select>
+			</div>
 
-	<div
-		class="home-grid--1c2r"
-		th:insert="~{components/user-home/missionsComponent :: missionsComponent(${missionsList}, ${lenguageOptions})}">
+			<div class="acciones">
+				<button class="btn-aplicar"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+												 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+												 class="icon icon-tabler icons-tabler-outline icon-tabler-check">
+					<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+					<path d="M5 12l5 5l10 -10" />
+				</svg>
+					Aplicar</button>
+				<button class="btn-borrar"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+												fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+												class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+					<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+					<path d="M4 7l16 0" />
+					<path d="M10 11l0 6" />
+					<path d="M14 11l0 6" />
+					<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+					<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+				</svg>
+					Borrar</button>
+			</div>
+		</section>
+
+			<div class="curso-card mt-5">
+				<div class="imagen-container">
+					<img src="sevilla2.jpg" alt="Imagen del curso" />
+					<div class="tags-container">
+						<div class="tag"><span>html</span></div>
+						<div class="tag"><span>javascript</span></div>
+						<div class="tag"><span>sql</span></div>
+					</div>
+				</div>
+				<div class="card-body-custom">
+					<div>
+						<h6 class="creator">Nombre del creador</h6>
+						<p class="fecha">16/5/2023</p>
+						<h5 class="descripcion">
+							Lorem ipsum dolor sit amet est consectetur adipiscing elit nullam
+							commodo, vulputate acfhjsdajklfhsdjklfhsdklsd
+						</h5>
+					</div>
+					<button class="btn-curso">+ Obtener curso</button>
+				</div>
+			</div>
+
 	</div>
 </main>
 </body>
