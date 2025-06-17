@@ -1,0 +1,13 @@
+<div th:fragment="quiz-header">
+	<div class="curso-banner" th:object="${quizLayout}">
+		<h2 th:text="*{courseName}">Angular 19 nivel intermedio + Firebase</h2>
+	</div>
+
+	<!-- Datos de navegación -->
+	<div class="info-panel" th:object="${quizLayout}">
+		<div>Lección: <span th:text="*{lessonNumber}">2</span></div>
+		<div>Nº Tarjeta: <span th:text="*{quizCardNumber}">9</span></div>
+		<div>Racha: <span th:text="*{cardStreak}">8</span></div>
+		<div>Precisión: <span th:text="*{correctPercentage} + '%'">85%</span></div>
+	</div>
+</div>
