@@ -22,8 +22,8 @@ $dropdown-label-height: 180px;
 /* Links */
 #knowy-navbar > .__profile-container > .__links {
 	font-family: 'caveat-brush';
-	font-size: 1.1rem;
-	font-weight: bold;
+	font-size: 1.2rem;
+	font-weight: normal;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -78,7 +78,7 @@ $dropdown-label-height: 180px;
 	}
 
 	> label {
-		font-weight: bold;
+		font-weight: normal;
 		display: flex;
 		align-items: center;
 		justify-content: flex-end;
@@ -104,8 +104,12 @@ $dropdown-label-height: 180px;
 
 	> .__profile {
 		> .--text {
-			font-size: 1.1rem;
+			font-size: 1.2rem;
+			overflow: hidden;
+			max-width: 150px;
 			text-align: right;
+			white-space: nowrap;
+			text-overflow: ellipsis;
 		}
 	}
 
@@ -137,8 +141,8 @@ $dropdown-label-height: 180px;
 		display: flex;
 		visibility: hidden;
 		flex-direction: column;
-		width: 25vw;
-		max-width: 210px;
+		width: 225px;
+		max-width: 225px;
 		transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
 		opacity: 0;
 	}
@@ -173,10 +177,6 @@ $dropdown-label-height: 180px;
 		color: $neutral-100;
 	}
 
-	> label > span {
-		padding-bottom: 0.5rem;
-	}
-
 	> label > img {
 		border: 2px solid $neutral-100;
 	}
@@ -191,10 +191,11 @@ $dropdown-label-height: 180px;
 		& .__menu-item {
 			font-size: 1.1rem;
 			font-weight: 600;
+			padding: 0.25rem;
 			cursor: pointer;
 			text-align: center;
 			text-decoration: none;
-			color: $primary-500
+			color: $primary-500;
 		}
 
 		& .__menu-item--visibility {
@@ -216,8 +217,8 @@ $dropdown-label-height: 180px;
 		}
 
 		> div > .__menu-item {
-			font-weight: bold;
 			font-size: 1.1rem;
+			font-weight: bold;
 			text-decoration: none;
 			color: $neutral-100;
 		}
@@ -227,9 +228,9 @@ $dropdown-label-height: 180px;
 		}
 
 		> div > .__menu-item-logout {
+			font-size: 1.1rem;
 			border-bottom-right-radius: $radius-10;
 			border-bottom-left-radius: $radius-10;
-			font-size: 1.1rem;
 		}
 	}
 }
@@ -268,6 +269,7 @@ $dropdown-label-height: 180px;
 			display: flex;
 			height: $dropdown-label-height;
 			pointer-events: none;
+			padding: 0.75rem;
 			box-shadow: -8px 0 12px rgba(0, 0, 0, 0.2);
 		}
 
@@ -281,7 +283,7 @@ $dropdown-label-height: 180px;
 			align-self: start;
 			content: "✖";
 			cursor: pointer;
-			color: $neutral-900;
+			color: $neutral-300;
 		}
 
 		> input:checked ~ .__profile-menu {
@@ -316,11 +318,11 @@ $dropdown-label-height: 180px;
 			box-shadow: -8px 0 10px rgba(0, 0, 0, 0.2);
 
 			& .__menu-item {
+				font-size: 1.5rem;
 				padding: 1rem 0;
 				cursor: pointer;
 				text-align: center;
 				text-decoration: none;
-				font-size: 1.5rem;
 			}
 
 			& .__menu-item--visibility {
@@ -339,6 +341,10 @@ $dropdown-label-height: 180px;
 		&:hover {
 			text-decoration: underline;
 			text-decoration-color: $neutral-100;
+		}
+
+		> .__profile {
+			padding: 0.75rem;
 		}
 
 		> .__profile-menu {
