@@ -7,7 +7,7 @@
 }
 
 .landing-page-content {
-    background: $neutral-100;
+    background: $bg;
     margin: 0;
     padding: 0;
     line-height: 1.5;
@@ -22,7 +22,7 @@
 
 /* Styles for the KNOWY main card */
 .knowy-card {
-    background-color: $neutral-100;
+    background-color: $bg;
     overflow: hidden;
     margin-bottom: clamp(15px, 3vw, 30px);
 }
@@ -47,16 +47,15 @@
     align-items: center;
 }
 .logo-text {
-    color: $primary-500;
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: bold;
-    margin-bottom: clamp(10px, 2vw, 20px);
+    color: $primary-700;
+	font-size: clamp(2.25rem, 6vw, 4rem);
+	font-family: 'caveat-brush';
     text-align: center;
 }
 
 .brain-logo {
-    width: clamp(150px, 30vw, 250px);
-    height: clamp(150px, 30vw, 250px);
+    width: clamp(175px, 30vw, 275px);
+    height: clamp(175px, 30vw, 275px);
     margin: 0 auto;
 }
 
@@ -67,10 +66,11 @@
 }
 
 .tagline {
-    font-size: clamp(1.2rem, 3vw, 2rem);
-    font-weight: bold;
+	text-align: center;
+	font-size: clamp(1.5rem, 3vw, 1.75rem);
+	font-family: 'excalifont';
     margin-bottom: clamp(15px, 3vw, 30px);
-    color: #333;
+    color: black;
 }
 
 .buttons {
@@ -88,40 +88,44 @@
     text-align: center;
     padding: clamp(10px, 2vw, 15px);
     border-radius: 10px;
-    font-size: clamp(1rem, 1.5vw, 1.2rem);
+	border: 3px solid $primary-500;
+	font-size: clamp(1.3rem, 2.5vw, 1.5rem);
     text-decoration: none;
-    font-weight: bold;
+	font-family: 'excalifont';
     display: block;
     transition: background-color $transition-speed;
 }
 
 .btn-login:hover {
     background-color: $primary-700;
+	border: 3px solid $primary-700;
     color: white;
 }
 
 .btn-register {
     background-color: transparent;
-    color: #333;
+    color: $secundary-700;
     text-align: center;
     padding: clamp(10px, 2vw, 15px);
-    border-radius: 10px;
-    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    border-radius: $radius-10;
+	font-size: clamp(1.3rem, 2.5vw, 1.5rem);
     text-decoration: none;
-    font-weight: bold;
+	font-family: 'excalifont';
     display: block;
-    border: 2px solid $primary-500;
+    border: 3px solid $secundary-500;
     transition: background-color $transition-speed;
 }
 
 .btn-register:hover {
-    background-color: #d0d0d0;
+    background-color: $secundary-500;
+	color: white;
 }
 
 .languages-footer {
     background-color: $primary-500;
     color: white;
-    padding: clamp(10px, 1.5vw, 15px) 0;
+	font-family: 'excalifont';
+    padding: clamp(15px, 1.5vw, 20px) 0;
     text-align: center;
     white-space: nowrap;
     overflow-x: auto;
@@ -145,14 +149,14 @@
 
 .languages-footer > span {
     display: inline-block;
-    margin: 0 clamp(10px, 2vw, 20px);
+    margin: 0 clamp(20px, 3vw, 30px);
     font-size: clamp(0.9rem, 1.5vw, 1.2rem);
     transition: color $transition-speed;
     cursor: pointer;
 }
 
 .languages-footer > span:hover{
-    color: $primary-300;
+    color: $secundary-300;
 }
 
 /* Styles for contentBox cards (functionalitiesCard, newsCard)*/
@@ -188,7 +192,8 @@
 
 .section-header-card > .section-header-title {
 	margin: 0;
-	font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+	font-size: clamp(1.5rem, 2.5vw, 1.75rem);
+	font-family: 'caveat-brush';
 }
 /*End of the Section Header Card*/
 .feature-card {
@@ -206,21 +211,23 @@
 
 .feature-card:hover {
 	transform: translateY(-5px);
-	background-color: $primary-300;
+	background-color: $secundary-100;
 	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .feature-card > .feature-title {
-	color: $primary-500;
+	color: $primary-700;
 	text-align: center;
 	margin-bottom: clamp(10px, 1.5vw, 15px);
 	font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+	font-family: 'excalifont';
 }
 
 .feature-card > .feature-description {
 	color: $neutral-700;
 	font-size: clamp(0.9rem, 1.2vw, 1rem);
 	line-height: 1.5;
+	font-family: 'inter';
 }
 
 .feature-icon {
@@ -368,7 +375,7 @@ a:hover > .bi-twitter-x{
     }
 
     .languages-footer {
-        padding: 10px 0;
+        padding: 15px 0;
     }
 
     .languages-footer > span {
