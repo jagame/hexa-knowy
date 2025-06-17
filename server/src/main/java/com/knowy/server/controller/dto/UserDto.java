@@ -1,4 +1,4 @@
-package com.knowy.server.controller.model;
+package com.knowy.server.controller.dto;
 
 public class UserDto {
 
