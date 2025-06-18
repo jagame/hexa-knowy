@@ -11,7 +11,7 @@
     margin: 0;
     padding: 0;
     line-height: 1.5;
-    color: $neutral-700;
+    color: black;
     overflow-x: hidden;
 }
 
@@ -32,7 +32,7 @@
     flex-direction: row;
     align-items: center;
     padding: clamp(15px, 3vw, 30px);
-    gap: 20px;
+	background-color: $primary-300;
 }
 
 .text-content {
@@ -88,7 +88,6 @@
     text-align: center;
     padding: clamp(10px, 2vw, 15px);
     border-radius: 10px;
-	border: 3px solid $primary-500;
 	font-size: clamp(1.3rem, 2.5vw, 1.5rem);
     text-decoration: none;
 	font-family: 'excalifont';
@@ -98,13 +97,12 @@
 
 .btn-login:hover {
     background-color: $primary-700;
-	border: 3px solid $primary-700;
     color: white;
 }
 
 .btn-register {
-    background-color: transparent;
-    color: $secundary-700;
+    background-color: $secundary-500;
+    color: white;
     text-align: center;
     padding: clamp(10px, 2vw, 15px);
     border-radius: $radius-10;
@@ -112,12 +110,11 @@
     text-decoration: none;
 	font-family: 'excalifont';
     display: block;
-    border: 3px solid $secundary-500;
     transition: background-color $transition-speed;
 }
 
 .btn-register:hover {
-    background-color: $secundary-500;
+    background-color: $secundary-700;
 	color: white;
 }
 
@@ -263,13 +260,15 @@
 }
 
 .news-item {
+	border-radius: $radius-8;
 	border-bottom: 1px solid #ccc;
-	padding: clamp(10px, 1.5vw, 15px) 0;
+	padding: clamp(10px, 1.5vw, 15px) 10px;
+	margin: 10px 0;
 	transition: background-color $transition-speed;
 }
 
 .news-item:hover {
-	background-color: #f9f9f9;
+	background-color: $neutral-100;
 }
 
 .news-item:last-child {
@@ -277,20 +276,21 @@
 }
 
 .news-date {
-	color: #666;
-	font-size: clamp(0.8rem, 1.1vw, 0.9rem);
+	color: $info-500;
+	font-size: clamp(0.7rem, 1vw, 0.75rem);
+	font-family: 'caveat-brush';
 }
 
 .news-title {
-	font-weight: bold;
-	margin: 5px 0;
-	font-size: clamp(1rem, 1.5vw, 1.2rem);
+	font-family: 'excalifont';
+	margin: 8px 0;
+	font-size: clamp(1rem, 1.5vw, 1.25rem);
 	color: $primary-500;
 }
 
 .news-item > .news-description{
 	font-size: clamp(0.9rem, 1.2vw, 1rem);
-	line-height: 1.5;
+	font-family: 'inter';
 }
 
 /*Footer styles*/
