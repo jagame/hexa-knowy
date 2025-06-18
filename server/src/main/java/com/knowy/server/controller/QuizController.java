@@ -21,7 +21,6 @@ public class QuizController {
 
 
 
-
 	public  QuizController(OptionQuizService optionQuizService) {
 		this.optionQuizService = optionQuizService;
 	}
