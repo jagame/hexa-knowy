@@ -10,12 +10,10 @@
 			const answeredButtons = document.querySelectorAll('.quiz-option');
 			let answered = false;
 
-
 			answeredButtons.forEach(btn => {
 				btn.addEventListener('click', function() {
 					if (answered) return;
 					answered = true;
-
 
 					answeredButtons.forEach(b => {
 						const isCorrect = b.getAttribute('data-correct') === 'true';
@@ -34,10 +32,6 @@
 		});
 	</script>
 </div>
-
-
-
-
 
 
 

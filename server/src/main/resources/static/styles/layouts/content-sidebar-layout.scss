@@ -1,5 +1,6 @@
 @use '../global' as *;
 @use '../components/navbar';
+@use '../components/footer';
 
 
 html, body {
@@ -12,7 +13,7 @@ html, body {
 	display: flex;
 	flex-direction: row;
 	width: 100%;
-	height: calc(100% - #{navbar.$navbar-height});
+	height: 100%;
 	overflow: hidden;
 }
 

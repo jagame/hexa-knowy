@@ -1,0 +1,47 @@
+<html lang="en"
+	  xmlns:th="http://www.thymeleaf.org"
+>
+
+<div class="carousel slide h-100 w-100 kn-radius" data-bs-ride="carousel" th:fragment="carousel-news(id, newsList)"
+	 th:id="${id}">
+
+	<div class="carousel-indicators">
+		<button aria-current="true" data-bs-slide-to="0"
+				th:aria-label="${'Slide ' + stat.count}"
+				th:classappend="${stat.index == 0} ? 'active' : ''"
+				th:data-bs-slide-to="${stat.index}"
+				th:data-bs-target="${'#' + id}"
+				th:each="newItem, stat : ${newsList}"
+				type="button"></button>
+	</div>
+
+	<div class="carousel-inner h-100 w-100 kn-radius">
+
+		<div class="carousel-item h-100 w-100"
+		   th:classappend="${statItem.index == 0} ? 'active' : ''"
+		   th:each="newItem, statItem : ${newsList}"
+		   th:href="${newItem.linkUrl}"
+		>
+			<img alt="..." class="d-block w-100 h-100 object-fit-cover kn-radius"
+				 th:src="${newItem.imageUrl}">
+			<div class="carousel-caption text-legible">
+				<h5 class="text-legible--title" th:text="${newItem.title}"></h5>
+				<p class="d-none d-md-block" th:text="${newItem.description}"></p>
+			</div>
+		</div>
+	</div>
+
+	<button class="carousel-control-prev" data-bs-slide="prev" th:data-bs-target="${'#' + id}" type="button">
+		<span aria-hidden="true" class="carousel-control-prev-icon"></span>
+		<span class="visually-hidden">Anterior</span>
+	</button>
+	<button class="carousel-control-next" data-bs-slide="next" th:data-bs-target="${'#' + id}" type="button">
+		<span aria-hidden="true" class="carousel-control-next-icon"></span>
+		<span class="visually-hidden">Siguiente</span>
+	</button>
+
+</div>
+
+</html>
+
+

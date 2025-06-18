@@ -1,14 +1,10 @@
 @use "../../global-vars" as *;
 
-
 /*Options-questionnaire*/
 
-
 .options-quiz{
-	width: 80%;
-
+	width: 70%;
 }
-
 
 .quiz-option{
 	width: 100%;
@@ -35,5 +31,4 @@
 	color: $neutral-100;
 	border-color: $danger-650;
 }
-
 

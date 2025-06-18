@@ -1,0 +1,24 @@
+@use '../../global-vars' as *;
+
+.kn-radius {
+	border-radius: $radius-25;
+}
+
+.text-legible {
+	padding: 0.5em 1em;
+	color: white;
+	border-radius: 0.5em;
+	background-color: rgba(0, 0, 0, 0.1);
+	text-shadow:
+		0 1px 3px rgba(0, 0, 0, 0.8),
+		0 0 10px rgba(0, 0, 0, 0.4);
+	backdrop-filter: blur(2px);
+	font-family: excalifont, serif;
+
+	&--title {
+		font-weight: 600;
+	}
+}
+
+
+

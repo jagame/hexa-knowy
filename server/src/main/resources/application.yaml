@@ -3,4 +3,3 @@ spring:
         name: knowy-server
 server:
     port: 8080
-
