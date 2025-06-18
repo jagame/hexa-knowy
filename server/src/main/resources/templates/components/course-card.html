@@ -1,25 +1,26 @@
-<div th:fragment="course-card" class="course-card">
+<div class="course-card" th:fragment="course-card(courseItem)">
 	<div class="course-card__picture-container">
-		<div class="course-card__tags" >
-			<span class="course-card-tags__tag" th:each="tag: ${course.getTags()}" th:text="${tag}"></span>
+		<div class="course-card__tags">
+			<span class="course-card-tags__tag" th:each="tag: ${courseItem.getTags()}" th:text="${tag}"></span>
 		</div>
 		<img src="https://picsum.photos/370/200">
 	</div>
 	<div class="course-card__bar-progress">
-		<div class="course-card-bar-progress__progress" th:text="${course.getProgress()} +'% completado'"></div>
+		<div class="course-card-bar-progress__progress" th:text="${courseItem.getProgress()} +'% completado'"></div>
 		<div class="course-card-bar-progress__bar">
 			<div class="home-resume__bar-container">
-				<div class="course-card-bar-progress_bar" th:data-progress="${course.getProgress()}" th:style="'width:' + ${course.getProgress()} + '%'"></div>
+				<div class="course-card-bar-progress_bar" th:data-progress="${courseItem.getProgress()}"
+					 th:style="'width:' + ${courseItem.getProgress()} + '%'"></div>
 			</div>
 		</div>
 	</div>
 	<div class="course-card_course-description">
 		<div class="course-card__course-creator">
-			<h6 th:text="${course.getCreator()}"></h6>
+			<h6 th:text="${courseItem.getCreator()}"></h6>
 		</div>
 		<div class="course-card__course-name">
-			<h5 th:text="${course.getName()}"></h5>
+			<h5 th:text="${courseItem.getName()}"></h5>
 		</div>
-		<a class="course-card__button-action" th:text="${course.getAction()}"></a>
+		<a class="course-card__button-action" th:text="${courseItem.getAction()}"></a>
 	</div>
 </div>
