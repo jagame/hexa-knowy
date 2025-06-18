@@ -1,14 +1,4 @@
 services:
-    web-server:
-        build: server
-        container_name: kn-server
-        ports:
-            - "8080:8080"
-        networks:
-            - knowy_net
-        depends_on:
-            -   postgres
-
     postgres:
         image: postgres:17
         container_name: kn-postgres17
@@ -24,7 +14,6 @@ services:
             - kn_db_data:/var/lib/postgresql/data
             - ./sql/init:/docker-entrypoint-initdb.d
             - ./sql:/sql
-
     pgadmin:
         image: dpage/pgadmin4:9.4
         container_name: kn-pgadmin4
