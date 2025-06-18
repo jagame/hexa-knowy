@@ -1,0 +1,36 @@
+<div th:fragment="question-component" class="question-component-container">
+
+	<div class="enunciado-container">
+		<div class="enunciado-container__enunciado-header">
+			<p th:text="${'Pregunta ' + questionNumber}" class="enunciado-header__text"></p>
+			<button class="toggle-button" id="toggleEnunciado">
+				<i class="fas fa-chevron-down toggle-icon"></i> </button>
+		</div>
+		<div class="enunciado-container__enunciado-content" id="enunciadoContent">
+			<p th:text="${questionText}" id="enunciadoText" class="enunciado-content__text">
+			</p>
+		</div>
+	</div>
+
+	<div class="media-container">
+		<img th:src="${imgPath}" alt="Imagen o Video de la Lección" class="lesson-media">
+	</div>
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			const toggleButton = document.getElementById('toggleEnunciado');
+			const enunciadoContent = document.getElementById('enunciadoContent');
+			const toggleIcon = toggleButton.querySelector('.toggle-icon');
+
+			if (toggleButton && enunciadoContent && toggleIcon) { // Verificar si los elementos existen
+				toggleButton.addEventListener('click', function() {
+					enunciadoContent.classList.toggle('hidden');
+					toggleIcon.classList.toggle('fa-chevron-down');
+					toggleIcon.classList.toggle('fa-chevron-up');
+				});
+			} else {
+				console.warn("Elementos del enunciado no encontrados para el toggle. (toggleEnunciado, enunciadoContent, toggleIcon)");
+			}
+		});
+	</script>
+
+</div>

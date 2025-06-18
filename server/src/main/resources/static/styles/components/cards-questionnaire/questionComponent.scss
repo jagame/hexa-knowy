@@ -1,0 +1,114 @@
+@use "../../global-vars" as *;
+
+.question-component-container {
+	width: 100%;
+	max-width: 800px;
+	background-color: white;
+	border-radius: $radius-10;
+	box-shadow: $card-shadow;
+	padding: 20px;
+	box-sizing: border-box;
+}
+
+.enunciado-container {
+	border: 2px solid $secundary-500;
+	border-radius: $radius-8;
+	margin-bottom: 20px;
+	overflow: hidden;
+}
+
+.enunciado-container__enunciado-header {
+	background-color: $secundary-500;
+	color: white;
+	padding: 10px 15px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-weight: bold;
+	font-size: 1.1em;
+	cursor: pointer;
+	border-radius: $radius-8 $radius-8 0 0;
+}
+
+.enunciado-header__text {
+	flex-grow: 1;
+	text-align: left;
+}
+
+.toggle-button {
+	background: none;
+	border: none;
+	color: white;
+	font-size: 1.2em;
+	cursor: pointer;
+	padding: 5px;
+	transition: transform $transition-speed ease;
+
+	.toggle-button .toggle-icon {
+
+	}
+}
+.enunciado-container__enunciado-content {
+	padding: 15px;
+	background-color: #EFEFEF;
+	border-top: 1px solid $neutral-300;
+	text-align: center;
+	font-size: 0.95em;
+	color: $neutral-700;
+	max-height: 500px;
+	opacity: 1;
+	transition: max-height $transition-speed ease-out, opacity $transition-speed ease-out, padding $transition-speed ease-out;
+	box-sizing: border-box;
+}
+
+.enunciado-container__enunciado-content.hidden {
+	max-height: 0;
+	padding-top: 0;
+	padding-bottom: 0;
+	opacity: 0;
+	overflow: hidden;
+}
+
+.media-container {
+	border: 2px solid $primary-500;
+	border-radius: $radius-25;
+	padding: 15px;
+	text-align: center;
+	margin-bottom: 20px;
+	background-color: $primary-100;
+}
+
+.lesson-media {
+	max-width: 95%;
+	height: auto;
+	border-radius: $radius-8;
+	display: block;
+	margin: 0 auto;
+}
+
+
+.media-container.hidden {
+	display: none;
+}
+
+
+@media (max-width: 768px) {
+	.question-component-container {
+		padding: 15px;
+		border-radius: $radius-10;
+	}
+	.enunciado-container__enunciado-header,
+	.enunciado-container__enunciado-content,
+	.media-container {
+		padding: 10px;
+	}
+}
+
+@media (max-width: 480px) {
+	.enunciado-container__enunciado-header {
+		font-size: 1em;
+	}
+	.enunciado-container__enunciado-content p {
+		font-size: 0.85em;
+	}
+}
