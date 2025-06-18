@@ -98,11 +98,10 @@
 
 				<!--course-->
 				<div class="courses">
-
 						<span><h2 class="h2-courses">Mis cursos</h2></span>
-					<div class="row row-cols-1 row-cols-md-4">
-						<div class="col" th:each="course : ${courses}">
-							<div th:replace="~{components/course-card :: course-card}"></div>
+					<div class="courses-container">
+						<div class="m-1" th:each="course : ${courses}">
+							<div th:replace="~{components/course-card :: course-card(${course})}"></div>
 						</div>
 					</div>
 
@@ -133,12 +132,11 @@
 			<!--recommendation column-->
 			<aside class="recommendations col-md-3 col-12">
 				<h4>Recomendaciones para ti</h4>
-				<div class="row row-cols-1">
-					<div class="col" th:each="course : ${courses}">
-						<div th:replace="~{components/course-card :: course-card}"></div>
+				<div class="recommendations-cards">
+					<div th:each="recommendation : ${recommendations}">
+						<div th:replace="~{components/course-card :: course-card(${recommendation})}"></div>
 					</div>
 				</div>
-
 			</aside>
 		</div>
 

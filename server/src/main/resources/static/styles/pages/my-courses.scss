@@ -1,16 +1,15 @@
 @use "../global-vars" as *;
 
-body {
-	box-sizing: border-box;
-	background-color: $bg;
-
+main {
+	padding: 0.5rem;
 }
+
 .container {
 	display: flex;
 	align-items: stretch;
+	justify-content: center;
 	padding: 20px;
 	gap: 20px;
-	justify-content: center;
 }
 
 .left-column {
@@ -22,24 +21,24 @@ body {
 
 .right-column {
 	display: flex;
+	overflow-y: auto;
 	flex: 0 0 20%;
 	flex-direction: column;
 	min-height: 0;
 	max-height: 760px;
 	border-radius: $radius-10;
-	overflow-y: auto;
 	box-shadow: $card-shadow;
 }
 
 .filters {
 	font-family: 'caveat-brush';
-	background-color: $primary-100;
-	padding: 20px;
-	border-radius: $radius-10;
-	margin-bottom: 20px;
-	box-shadow: $card-shadow;
 	display: flex;
 	justify-content: space-between;
+	margin-bottom: 20px;
+	padding: 20px;
+	border-radius: $radius-10;
+	background-color: $primary-100;
+	box-shadow: $card-shadow;
 }
 
 .filters-dropdowns {
@@ -53,18 +52,28 @@ body {
 }
 
 .courses {
-	background-color: $primary-100;
 	padding: 20px;
 	border-radius: $radius-10;
+	background-color: $primary-100;
 	box-shadow: $card-shadow;
 }
 
+.courses-container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+}
+
 .recommendations {
-	background-color: $primary-100;
+	overflow-y: auto;
+	max-height: 100vh;
 	padding: 20px;
 	border-radius: $radius-10;
+	background-color: $primary-100;
 	box-shadow: $card-shadow;
 }
+
 /*eliminar, card para test*/
 .card {
 	margin-top: 20px;
@@ -83,8 +92,8 @@ body {
 }
 
 .list-group-item input[type="checkbox"]:checked {
-	background-color: $primary-500;
 	border-color: $primary-500;
+	background-color: $primary-500;
 }
 
 .form-check-input:focus {
@@ -99,80 +108,80 @@ body {
 
 .pagination > li > a:hover,
 .pagination > li > a:focus {
-	background-color: $secundary-500;
 	color: $bg;
+	background-color: $secundary-500;
 	box-shadow: none;
 }
 
 .btn-categories, .btn-order, .btn-visualization {
-	background-color: $primary-500;
 	color: $bg;
+	background-color: $primary-500;
 }
 
 .btn-categories:hover, .btn-order:hover, .btn-visualization:hover {
-	background-color: $primary-700;
 	color: $bg;
+	background-color: $primary-700;
 }
 
 .dropdown-toggle[aria-expanded="true"] {
-	background-color: $primary-700;
-	border-color: $bg;
 	color: $bg;
+	border-color: $bg;
+	background-color: $primary-700;
 }
 
 .btn-apply {
-	background-color: $primary-500;
 	color: $bg;
+	background-color: $primary-500;
 }
 
 .btn-delete {
-	background-color: $danger-600;
 	color: $bg;
+	background-color: $danger-600;
 }
 
 .btn-apply:hover {
-	background-color: $primary-700;
 	color: $bg;
+	background-color: $primary-700;
 }
 
 .btn-delete:hover {
-	background-color: $danger-650;
 	color: $bg;
+	background-color: $danger-650;
 }
 
 .btn-apply:active {
+	color: $bg !important;
 	background-color: $primary-700 !important;
-	color:$bg !important;
 }
 
 .btn-delete:active {
-	background-color: $danger-650 !important;
 	color: $bg !important;
+	background-color: $danger-650 !important;
 }
 
 .recommendations > h4 {
+	font-family: 'excalifont';
 	font-weight: bold;
 	color: $secundary-500;
-	font-family: 'excalifont';
 }
 
 .h2-courses {
-	font-weight: bold;
-	color:$primary-500;
 	font-family: 'excalifont';
+	font-weight: bold;
+	color: $primary-500;
 }
 
 .btn-categories:active, .btn-order:active, .btn-visualization:active {
-	background-color: $primary-700 !important;
 	color: $bg !important;
+	background-color: $primary-700 !important;
 }
 
 @media (max-width: 768px) {
 	.container {
-		display:flex;
+		display: flex;
 		flex-direction: column;
-		padding: 0;
 		margin: 0;
+		padding: 0;
 	}
 
 	.left-column, .right-column {
@@ -181,8 +190,8 @@ body {
 	}
 
 	.filters, .courses, .recommendations {
-		width: 100%;
 		box-sizing: border-box;
+		width: 100%;
 
 	}
 
@@ -214,12 +223,13 @@ body {
 	.recommendations {
 		display: flex;
 		flex-direction: column;
+		margin-top: 1rem;
 	}
 
 	.recommendations-cards {
 		display: flex;
-		gap: 10px;
 		overflow-x: auto;
+		gap: 10px;
 	}
 
-	}
+}
