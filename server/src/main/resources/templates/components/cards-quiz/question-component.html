@@ -15,22 +15,6 @@
 	<div class="media-container">
 		<img th:src="${imgPath}" alt="Imagen o Video de la Lección" class="lesson-media">
 	</div>
-	<script>
-		document.addEventListener('DOMContentLoaded', function() {
-			const toggleButton = document.getElementById('toggleEnunciado');
-			const enunciadoContent = document.getElementById('enunciadoContent');
-			const toggleIcon = toggleButton.querySelector('.toggle-icon');
 
-			if (toggleButton && enunciadoContent && toggleIcon) { // Verificar si los elementos existen
-				toggleButton.addEventListener('click', function() {
-					enunciadoContent.classList.toggle('hidden');
-					toggleIcon.classList.toggle('fa-chevron-down');
-					toggleIcon.classList.toggle('fa-chevron-up');
-				});
-			} else {
-				console.warn("Elementos del enunciado no encontrados para el toggle. (toggleEnunciado, enunciadoContent, toggleIcon)");
-			}
-		});
-	</script>
 
 </div>

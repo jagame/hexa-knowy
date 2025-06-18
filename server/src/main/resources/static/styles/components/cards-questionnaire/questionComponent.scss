@@ -1,13 +1,12 @@
 @use "../../global-vars" as *;
 
 .question-component-container {
-	width: 100%;
-	max-width: 800px;
-	background-color: white;
-	border-radius: $radius-10;
-	box-shadow: $card-shadow;
-	padding: 20px;
-	box-sizing: border-box;
+
+	margin:1em;
+	width: 80%;
+	display:flex;
+	flex-direction: column;
+
 }
 
 .enunciado-container {
@@ -45,6 +44,7 @@
 	transition: transform $transition-speed ease;
 
 	.toggle-button .toggle-icon {
+		color:white;
 
 	}
 }
@@ -52,7 +52,6 @@
 	padding: 15px;
 	background-color: #EFEFEF;
 	border-top: 1px solid $neutral-300;
-	text-align: center;
 	font-size: 0.95em;
 	color: $neutral-700;
 	max-height: 500px;
