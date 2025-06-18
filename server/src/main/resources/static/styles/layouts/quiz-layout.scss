@@ -6,6 +6,7 @@
 body{
 	font-family:excalifont;
 }
+
 .test-container {
 	max-width: 800px;
 	margin: 2rem auto;
@@ -14,39 +15,43 @@ body{
 	border-radius: 20px;
 }
 
-.navegacion {
+.answers-container{
 	display: flex;
-	justify-content: space-between;
-	margin: 2rem;
-
-
-	button {
-		background-color: $primary-500;
-		color: white;
-		border: none;
-		padding: 0.8rem 1.5rem;
-		font-size: 1rem;
-		font-weight: bold;
-		border-radius: 15px;
-		cursor: pointer;
-		transition: background-color 0.3s;
-
-
-		&:hover {
-			background-color: $primary-700;
-		}
-	}
+	justify-content: center;
+	align-items: center;
+	margin:1em;
 }
 
-
-.responder{
-
-
+.answer-button{
 	text-align:center;
 
+	.answer-button__element {
+		width: 80%;
+		background-color: $primary-500;
+		color: white;
+		border: none;
+		padding: 0.8rem 1.5rem;
+		font-size: 1rem;
+		font-weight: bold;
+		border-radius: 15px;
+		cursor: pointer;
+		transition: background-color 0.3s;
 
-	button {
-		width: 90%;
+		&:hover {
+			background-color: $primary-700;
+		}
+	}
+}
+
+
+.navigation-buttons {
+	width:80%;
+	display: flex;
+	justify-content: space-between;
+	margin: 1em auto 0 auto;
+
+
+	.navigation-buttons__element {
 		background-color: $primary-500;
 		color: white;
 		border: none;
@@ -63,3 +68,5 @@ body{
 		}
 	}
 }
+
+

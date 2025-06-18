@@ -5,9 +5,10 @@
 	color: white;
 	text-align: center;
 	border-radius: 30px;
-	padding: 0.7rem 1rem;
+	width:80%;
+	margin:1em auto 1em auto;
+	padding:0.5em 1em;
 	align-content: center;
-	margin:2em;
 	font-weight: bold;
 	font-size: 1.2rem;
 	font-family:caveat-brush;
@@ -16,15 +17,27 @@
 
 .info-panel {
 	display: flex;
-	justify-content: space-around;
-	margin: 1.5rem 0;
+	justify-content: space-between;
+	width:75%;
+	margin: 1.5rem auto 0 auto;
 
 
-	div {
+	.info-panel__element {
+		text-align:center;
 		background-color: white;
 		border: 2px solid $primary-500;
 		border-radius: 20px;
 		padding: 0.5rem 1rem;
 		font-weight: bold;
+
+		.info-panel__element__content{
+			color:$primary-500;
+		}
+
+		@media (max-width: 768px){
+			text-align:center;
+			font-weight:normal;
+			border:none;
+		}
 	}
 }

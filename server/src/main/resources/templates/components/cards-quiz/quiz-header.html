@@ -5,9 +5,9 @@
 
 	<!-- Datos de navegación -->
 	<div class="info-panel" th:object="${quizLayout}">
-		<div>Lección: <span th:text="*{lessonNumber}">2</span></div>
-		<div>Nº Tarjeta: <span th:text="*{quizCardNumber}">9</span></div>
-		<div>Racha: <span th:text="*{cardStreak}">8</span></div>
-		<div>Precisión: <span th:text="*{correctPercentage} + '%'">85%</span></div>
+		<div class="info-panel__element">Lección: <span class="info-panel__element__content" th:text="*{lessonNumber}">0</span></div>
+		<div class="info-panel__element">Nº Tarjeta: <span class="info-panel__element__content" th:text="*{quizCardNumber}">0</span></div>
+		<div class="info-panel__element">Racha: <span class="info-panel__element__content" th:text="*{cardStreak}">0</span></div>
+		<div class="info-panel__element">Precisión: <span class="info-panel__element__content" th:text="*{correctPercentage} + '%'">0%</span></div>
 	</div>
 </div>
