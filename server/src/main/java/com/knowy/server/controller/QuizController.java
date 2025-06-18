@@ -2,6 +2,7 @@ package com.knowy.server.controller;
 
 
 import com.knowy.server.controller.model.OptionQuizDTO;
+import com.knowy.server.controller.model.QuestionDTO;
 import com.knowy.server.controller.model.QuizLayoutDTO;
 import com.knowy.server.service.OptionQuizService;
 import org.springframework.stereotype.Controller;
@@ -17,28 +18,33 @@ import java.util.List;
 public class QuizController {
 
 
-	private final OptionQuizService optionQuizService;
+    private final OptionQuizService optionQuizService;
 
 
+    public QuizController(OptionQuizService optionQuizService) {
+        this.optionQuizService = optionQuizService;
+    }
 
-	public  QuizController(OptionQuizService optionQuizService) {
-		this.optionQuizService = optionQuizService;
-	}
 
+    //User-Account
+    @GetMapping("/testOptionsQuiz")
+    public String viewComponents(@RequestParam(defaultValue = "3") int quizID, ModelMap model) {
+        List<OptionQuizDTO> options = optionQuizService.getOptionsForQuiz(quizID);
+        QuizLayoutDTO quizLayoutDTO = new QuizLayoutDTO(
+                "Java Básico",
+                2,
+                9,
+                8,
+                75
+        );
+        model.addAttribute("quizLayout", quizLayoutDTO);
+        model.addAttribute("options", options);
 
-	//User-Account
-	@GetMapping("/testOptionsQuiz")
-	public String viewComponents(@RequestParam(defaultValue = "3") int quizID, ModelMap model) {
-		List<OptionQuizDTO> options = optionQuizService.getOptionsForQuiz(quizID);
-		QuizLayoutDTO quizLayoutDTO = new QuizLayoutDTO(
-			"Java Básico",
-			2,
-			9,
-			8,
-			75
-		);
-		model.addAttribute("quizLayout", quizLayoutDTO);
-		model.addAttribute("options", options);
-		return "/pages/testOptionsQuiz";
-	}
+        QuestionDTO questionDTO = new QuestionDTO("1", "Question", "images/knowylogo.png");
+        model.addAttribute("questionNumber", questionDTO.getQuestionNumber());
+        model.addAttribute("questionText", questionDTO.getQuestionText());
+        model.addAttribute("imgPath", questionDTO.getImgPath());
+
+        return "/pages/testOptionsQuiz";
+    }
 }
