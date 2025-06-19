@@ -56,6 +56,12 @@ body{
 	justify-content: space-between;
 	margin: 1em auto 0 auto;
 
+	@media (max-width: 576px) {
+		flex-direction: column;
+		gap: 10px;
+		align-items: center;
+		width:100%;
+	}
 
 	.navigation-buttons__element {
 		background-color: $primary-500;

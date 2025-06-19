@@ -16,10 +16,11 @@
 
 .info-panel {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: space-between;
-	width:75%;
+	width: 100%;
+	max-width: 75%;
 	margin: 1.5rem auto 0 auto;
-
 
 	.info-panel__element {
 		text-align:center;
@@ -28,15 +29,16 @@
 		border-radius: 20px;
 		padding: 0.5rem 1rem;
 		font-weight: bold;
+		flex: 1 1 100px;
+		margin: 0.5rem;
 
 		.info-panel__element__content{
 			color:$primary-500;
 		}
 
 		@media (max-width: 768px){
-			text-align:center;
-			font-weight:normal;
-			border:none;
+			font-weight: normal;
+			border: none;
 		}
 	}
 }
