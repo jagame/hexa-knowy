@@ -1,6 +1,6 @@
 package com.knowy.server.controller;
 
-import com.knowy.server.controller.servicio.UserService;
+import com.knowy.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -43,10 +43,10 @@ public class UserConfigController {
 
 	@PostMapping("/update-email")
 	public String updateEmail(@RequestParam String newEmail, @RequestParam String currentPassword, RedirectAttributes redirectAttributes){
-		if(userService.validateCurrentPassword(currentPassword)&& userService.validateEmail(newEmail)){
+		if(userService.validateCurrentPassword(currentPassword)&& userService.validateEqualEmail(newEmail)){
 			userService.setEmail(newEmail);
 			redirectAttributes.addFlashAttribute("successEmail", "Email actualizado");
-		}else if(userService.validateCurrentPassword(currentPassword)&& (!userService.validateEmail(newEmail))){
+		}else if(userService.validateCurrentPassword(currentPassword)&& (!userService.validateEqualEmail(newEmail))){
 			redirectAttributes.addFlashAttribute("errorEmail", "Email no valido");
 		}else{
 			redirectAttributes.addFlashAttribute("errorEmail", "Contraseña incorrecta");

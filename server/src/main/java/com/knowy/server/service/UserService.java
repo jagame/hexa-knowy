@@ -1,4 +1,4 @@
-package com.knowy.server.controller.servicio;
+package com.knowy.server.service;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 	private String username = "usuario123";
 	private String privateUsername = "usuario@Privado123";
-	private String email = "usuario123gmail.com";
+	private String email = "usuario123@gmail.com";
 	private String password = "12345aA@";
 
 	public boolean validatePrivateUsername(String newPrivateUsername){
@@ -21,9 +21,10 @@ public class UserService {
 		return this.password.equals(pass);
 	}
 
-	public boolean validateEmail(String email){
+	public boolean validateEqualEmail(String email){
 		return !(this.email.equals(email));
 	}
+
 
 
 
