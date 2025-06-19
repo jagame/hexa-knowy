@@ -29,7 +29,7 @@
 	<header class="knowy-card">
 		<div class="knowy-content">
 			<div class="logo-content">
-				<h2 class="logo-text">KNOWY</h2>
+				<h1 class="logo-text">KNOWY</h1>
 				<div class="brain-logo">
 					<img class="img-content" src="/images/logoWoutText.png" alt="KNOWY Brain Logo" loading="lazy">
 				</div>
@@ -37,8 +37,8 @@
 			<div class="text-content">
 				<h2 class="tagline">¡¡Los conceptos de programación a tu ritmo!!</h2>
 				<div class="buttons">
-					<a href="#" class="btn-login">Iniciar Sesión</a>
-					<a href="#" class="btn-register">Registrarse</a>
+					<a th:href="@{/login}" class="btn-login">Iniciar Sesión</a>
+					<a th:href="@{/register}" class="btn-register">Registrarse</a>
 				</div>
 			</div>
 		</div>
@@ -56,7 +56,7 @@
 	<!-- Functionalities Section -->
 	<section class="card-container">
 		<header class="section-header-card">
-			<h2 class="section-header-title">Funcionalidades</h2>
+			<h3 class="section-header-title">Funcionalidades</h3>
 		</header>
 		<div class="functionalities-grid">
 			<article th:replace="~{components/functionalities-card-component :: functionalities-card-component('/images/learning.webp',
@@ -94,7 +94,7 @@
 	<!-- News section -->
 	<section class="card-container">
 		<header class="section-header-card">
-			<h2>Últimas Novedades</h2>
+			<h3 class="section-header-title">Últimas Novedades</h3>
 		</header>
 
 		<div class="news-card">
