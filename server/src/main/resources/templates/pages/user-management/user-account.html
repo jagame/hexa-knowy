@@ -1,25 +1,21 @@
 <!DOCTYPE html>
 <html lang="es"
-	  layout:decorate="~{layouts/content-sidebar-layout}"
+	  layout:decorate="~{layouts/content-sidebar-layout.html}"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
-	<script>
-
-	</script>
-
 	<link rel="stylesheet" th:href="@{/styles/pages/user-management.css}">
 	<title>User profile</title>
 </head>
 
 <body>
 
-<aside layout:fragment="sidebar" class="kn-aside user-sidebar">
+<aside class="kn-aside user-sidebar" layout:fragment="sidebar">
 	<div class="user-info text-center mb-4">
 		<h3 class="mt-3 username-title" th:text="${username}">Usuario</h3>
 	</div>
 	<div class="sidebar-menu">
-		<a th:href="@{/user-profile}" class="button sidebar-link"  data-sidebar-toggler="">Editar Perfil</a>
+		<a class="button sidebar-link" data-sidebar-toggler="" th:href="@{/user-profile}">Editar Perfil</a>
 		<button class="sidebar-link" data-sidebar-toggler="" th:classappend="active">Gestión de la Cuenta</button>
 	</div>
 </aside>
@@ -29,19 +25,20 @@
 		<div class="description-card">
 			<h1 class="title-management">Gestión de la Cuenta</h1>
 		</div>
-		<form id="accountForm" th:action="@{/update-privateUsername}" method="post">
+		<form id="accountForm" method="post" th:action="@{/update-privateUsername}">
 			<div class="row user-information">
 				<div class="form-fields">
-					<label for="privateName" class="section-title">Nombre de Usuario Privado 👤</label>
-					<input type="text" class="form-control" id="privateName" name="newPrivateUsername" th:placeholder="${privateUsername}" required>
-					<span th:if="${success}" class="advice-success" th:text="${success}"></span>
-					<span th:if="${error}" class="advice-error" th:text="${error}"></span>
+					<label class="section-title" for="privateName">Nombre de Usuario Privado 👤</label>
+					<input class="form-control" id="privateName" name="newPrivateUsername" required
+						   th:placeholder="${privateUsername}" type="text">
+					<span class="advice-success" th:if="${success}" th:text="${success}"></span>
+					<span class="advice-error" th:if="${error}" th:text="${error}"></span>
 				</div>
 
 			</div>
 			<div class="buttons-form-content">
-				<button type="reset" class="btn btn-inferior">Restablecer</button>
-				<button type="submit" class="btn btn-save">Guardar Cambios</button>
+				<button class="btn btn-inferior" type="reset">Restablecer</button>
+				<button class="btn btn-save" type="submit">Guardar Cambios</button>
 			</div>
 		</form>
 
@@ -52,12 +49,12 @@
 			<p class="description-management">Cambie su correo electrónico, deberá verificar su contraseña.</p>
 
 			<br>
-			<button type="button" class="btn btn-inferior" data-bs-toggle="modal" data-bs-target="#changeEmail">
+			<button class="btn btn-inferior" data-bs-target="#changeEmail" data-bs-toggle="modal" type="button">
 				Cambiar correo
 			</button>
 			<p>
-				<span th:if="${successEmail}" class="advice-success" th:text="${successEmail}"></span>
-				<span th:if="${errorEmail}" class="advice-error" th:text="${errorEmail}"></span>
+				<span class="advice-success" th:if="${successEmail}" th:text="${successEmail}"></span>
+				<span class="advice-error" th:if="${errorEmail}" th:text="${errorEmail}"></span>
 			</p>
 
 		</div>
@@ -65,9 +62,10 @@
 			<div class="description-card delete">
 				<h3 class="user-account-tittle-section">Cambiar contraseña 🔑</h3>
 			</div>
-			<p class="description-management">Por su seguridad, se redirigirá a la pantalla externa de cambio de contraseña. </p>
+			<p class="description-management">Por su seguridad, se redirigirá a la pantalla externa de cambio de
+				contraseña. </p>
 			<br>
-			<a th:href="@{/password-change/email}" class="btn btn-inferior">Cambiar contraseña</a>
+			<a class="btn btn-inferior" th:href="@{/password-change/email}">Cambiar contraseña</a>
 		</div>
 		<div class="user-account-section">
 			<div class="description-card delete">
@@ -75,36 +73,38 @@
 			</div>
 			<p class="description-management">Elimina permanentemente tus datos y todo lo asociado con tu cuenta.</p>
 			<br>
-			<a th:href="@{/delete-account}" class="btn btn-delete">Eliminar cuenta</a>
+			<a class="btn btn-delete" th:href="@{/delete-account}">Eliminar cuenta</a>
 
 		</div>
 	</div>
+</main>
 
-
-
+<div layout:fragment="layout-overlay">
 	<!-- Email-Change-Modal-->
-	<div class="modal fade" id="changeEmail" tabindex="-1" aria-labelledby="emailLabel" aria-hidden="true">
+	<div aria-hidden="true" aria-labelledby="emailLabel" class="modal fade" id="changeEmail" tabindex="-1">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="emailLabel">Modificar correo electrónico 📧</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+					<button aria-label="Cerrar" class="btn-close" data-bs-dismiss="modal" type="button"></button>
 				</div>
 				<div class="modal-body">
-					<form id="emailChangeForm" th:action="@{/update-email}" method="post">
+					<form id="emailChangeForm" method="post" th:action="@{/update-email}">
 						<label for="email">Correo Electrónico</label>
-						<input type="email" id="email" name="newEmail" class="form-control" th:placeholder="${email}" required>
+						<input class="form-control" id="email" name="newEmail" required th:placeholder="${email}"
+							   type="email">
 						<label for="currentPassword">Contraseña actual 🔑</label>
-						<input type="password" id="currentPassword" name="currentPassword" class="form-control">
+						<input class="form-control" id="currentPassword" name="currentPassword" type="password">
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-					<button type="submit" class="btn btn-primary" form="emailChangeForm">Guardar</button>
+					<button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cerrar</button>
+					<button class="btn btn-primary" form="emailChangeForm" type="submit">Guardar</button>
 				</div>
 			</div>
 		</div>
 	</div>
-</main>
+</div>
+
 </body>
 </html>
