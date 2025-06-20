@@ -38,12 +38,10 @@ services:
         depends_on:
             - postgres
         volumes:
-            - kn_pgadmin_data:/var/lib/pgadmin
-            - ./sql:/sql
+            - ./sql:/var/lib/pgadmin/storage
 
 volumes:
     kn_db_data:
-    kn_pgadmin_data:
 
 networks:
     knowy_net:
