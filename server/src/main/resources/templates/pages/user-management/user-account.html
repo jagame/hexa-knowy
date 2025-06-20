@@ -12,7 +12,7 @@
 
 <aside class="kn-aside user-sidebar" layout:fragment="sidebar">
 	<div class="user-info text-center mb-4">
-		<h3 class="mt-3 username-title" th:text="${username}">Usuario</h3>
+		<h3 class="mt-3 username-title" th:text="${user.getUsername()}">Usuario</h3>
 	</div>
 	<div class="sidebar-menu">
 		<a class="button sidebar-link" data-sidebar-toggler="" th:href="@{/user-profile}">Editar Perfil</a>
@@ -30,7 +30,7 @@
 				<div class="form-fields">
 					<label class="section-title" for="privateName">Nombre de Usuario Privado 👤</label>
 					<input class="form-control" id="privateName" name="newPrivateUsername" required
-						   th:placeholder="${privateUsername}" type="text">
+						   th:placeholder="${user.getPrivateUsername()}" type="text">
 					<span class="advice-success" th:if="${success}" th:text="${success}"></span>
 					<span class="advice-error" th:if="${error}" th:text="${error}"></span>
 				</div>
@@ -91,7 +91,7 @@
 				<div class="modal-body">
 					<form id="emailChangeForm" method="post" th:action="@{/update-email}">
 						<label for="email">Correo Electrónico</label>
-						<input class="form-control" id="email" name="newEmail" required th:placeholder="${email}"
+						<input class="form-control" id="email" name="newEmail" required th:placeholder="${user.getEmail()}"
 							   type="email">
 						<label for="currentPassword">Contraseña actual 🔑</label>
 						<input class="form-control" id="currentPassword" name="currentPassword" type="password">
