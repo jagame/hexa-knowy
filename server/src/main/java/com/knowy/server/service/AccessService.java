@@ -41,4 +41,15 @@ public class AccessService {
 	public void updateUserPassword(String token, String oldPassword, String newPassword) {
 		//TODO - Implementar descrifrado de Token y verificar datos ocultos para cambiar los datos vía AccessRepository
 	}
+
+	public boolean isPasswordValid(String email, String password) {
+		PrivateUser user = accessRepository.findUserByEmailAndPass(email);
+
+		// Si el usuario no existe o la contraseña no coincide, login inválido
+		if (user == null) {
+			return false;
+		}
+
+		return user.getPassword().equals(password);
+	}
 }

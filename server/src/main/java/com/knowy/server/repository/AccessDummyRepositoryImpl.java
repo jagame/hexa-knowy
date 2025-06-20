@@ -38,4 +38,19 @@ public class AccessDummyRepositoryImpl implements AccessRepository {
 	public void saveToken(PrivateUser privateUser) {
 		tokenMap.put(privateUser.getEmail(), privateUser.getToken());
 	}
+
+	@Override
+	public PrivateUser findUserByEmailAndPass(String email) {
+		// Solo devolvemos el usuario si el email coincide
+		if (email.equals("kn@gmail.com")) {
+			PrivateUser user = new PrivateUser();
+			user.setId(1L);
+			user.setEmail("kn@gmail.com");
+			user.setPassword("123");
+			return user;
+		}
+		// Si no hay coincidencia, devolvemos null (como haría una BBDD)
+		return null;
+	}
+
 }

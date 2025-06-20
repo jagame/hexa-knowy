@@ -47,11 +47,16 @@ public class AccessController {
 
 	@PostMapping("/login")
 	public String postLogin(@ModelAttribute("loginForm") LoginForm login, Model model) {
-		System.out.println("Email: " + login.getEmail() + " Password: " + login.getPassword() + "");
-		model.addAttribute("loginForm", login);
-		return "pages/access/login";
-	}
+		boolean isValid = accessService.isPasswordValid(login.getEmail(), login.getPassword());
 
+		if (isValid) {
+			return "redirect:/home";
+		} else {
+			model.addAttribute("loginError", "¡Las credenciales no son válidas!");
+			model.addAttribute("loginForm", new LoginForm());
+			return "pages/access/login";
+		}
+	}
 	@GetMapping("/password-change/email")
 	public String passwordChangeEmail(Model model) {
 		model.addAttribute("emailForm", new UserEmailFormDto());

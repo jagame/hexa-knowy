@@ -11,4 +11,6 @@ public interface AccessRepository {
 	boolean isTokenRegistered(String token);
 
 	void saveToken(PrivateUser privateUser);
+
+	PrivateUser findUserByEmailAndPass(String email);
 }
