@@ -71,13 +71,17 @@
 </aside>
 
 <main layout:fragment="main-content">
-	<form id="profileForm">
+	<form id="profileForm" th:action="@{update-user-profile}" method="post">
 		<div class="user-management-container_main ">
 			<div class="description-card">
 				<h1 class="title-management">Editar Perfil</h1>
 				<p class="description-management">Configura tus preferencias en cuanto a lenguajes de programación, editar tu nombre de usuario y tu imágen de perfil.
 					Recuerda mantener la privacidad de tus datos personales. Cualquier usuario podrá ver la información que introduzcas en esta página. </p>
 			</div>
+
+			<!--messages for username update-->
+			<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+			<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
 
 			<div class="row user-information">
 				<div class="picture-edit-container col-lg-3">
@@ -90,7 +94,7 @@
 
 				<div class="information-edit-container col-lg-9">
 					<h6 class="section-title">Nombre de Usuario: 👤</h6>
-					<input type="text" class="user-name form-control" required th:value="${username}">
+					<input type="text" name="username" class="user-name form-control" required th:value="${username}">
 					<br>
 					<h6 class="section-title">Lenguajes de Programación favoritos ⭐</h6>
 					<select name="languages" id="languages" class="form-control" multiple>
