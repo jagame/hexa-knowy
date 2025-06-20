@@ -2,6 +2,8 @@ package com.knowy.server.repository;
 
 import com.knowy.server.entity.PrivateUser;
 
+import java.util.Optional;
+
 public interface AccessRepository {
 
 	boolean isEmailRegistered(String email);
@@ -12,5 +14,5 @@ public interface AccessRepository {
 
 	void saveToken(PrivateUser privateUser);
 
-	PrivateUser findUserByEmailAndPass(String email);
+	Optional<PrivateUser> findUserByEmailAndPass(String email);
 }
