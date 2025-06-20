@@ -53,7 +53,7 @@ public class AccessController {
 
 		if (authToken.isPresent()) {
 			String token = authToken.get();
-			// Comprobación por consola del token generado
+			// TODO: almacenar el token en sesión para uso posterior (JWT)
 			System.out.println("Login correcto. Token generado: " + token);
 
 			return "redirect:/home";
