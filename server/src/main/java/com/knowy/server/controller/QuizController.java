@@ -12,10 +12,6 @@ import java.util.List;
 @Controller
 public class QuizController {
 
-	public  QuizController() {
-
-	}
-
 	//OptionsQuiz
 	@GetMapping("/testOptionsQuiz")
 	public String viewComponents(@RequestParam(defaultValue = "3") int quizID, ModelMap model) {
