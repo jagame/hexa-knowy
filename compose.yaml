@@ -23,7 +23,6 @@ services:
         volumes:
             - kn_db_data:/var/lib/postgresql/data
             - ./sql/init:/docker-entrypoint-initdb.d
-            - ./sql:/sql
 
 volumes:
     kn_db_data:
