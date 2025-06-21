@@ -13,7 +13,6 @@ services:
         volumes:
             - kn_db_data:/var/lib/postgresql/data
             - ./sql/init:/docker-entrypoint-initdb.d
-            - ./sql:/sql
     pgadmin:
         image: dpage/pgadmin4:9.4
         container_name: kn-pgadmin4
