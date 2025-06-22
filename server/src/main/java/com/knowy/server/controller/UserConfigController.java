@@ -1,12 +1,12 @@
 package com.knowy.server.controller;
 
-import com.knowy.server.services.UserSrvc;
+import com.knowy.server.dto.UserProfileDTO;
+import com.knowy.server.entities.UserEntity;
+import com.knowy.server.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 public class UserConfigController {
@@ -41,37 +41,36 @@ public class UserConfigController {
 	}
 
 	//Service to validate username
-	private final UserSrvc userSrvc;
+	private final UserService userService;
 
-	public UserConfigController(UserSrvc userSrvc) {
-		this.userSrvc = userSrvc;
+	public UserConfigController(UserService userService) {
+		this.userService = userService;
 	}
 
 	//Update User-profile
 	@PostMapping("/update-user-profile")
-	public String updateUserProfile(@RequestParam("username") String newUserName,
-									@RequestParam(value= "profilePicture", required = false) String newProfilePicture,
-									@RequestParam(value= "languages", required = false) List<String> languages,
+	public String updateUserProfile(@ModelAttribute("profileDto") UserProfileDTO userProfileDTO,
 									Model model) {
 
 		//check if username is already taken
-		if(userSrvc.takenUserName(newUserName)) {
+		if(userService.takenUserName(userProfileDTO.getUsername())) {
 			model.addAttribute("error", "Ese nombre de usuario ya existe");
 			return "pages/user-management/user-profile";
 		}
 
 		//check if username contains banned words
-		if (userSrvc.inappropriateName(newUserName)) {
+		if (userService.inappropriateName(userProfileDTO.getUsername())) {
 			model.addAttribute("error", "El nombre de usuario contiene palabras inapropiadas");
 			return "pages/user-management/user-profile";
 
 		} else {
-			userSrvc.updateProfile(newUserName, newProfilePicture);
-			userSrvc.updateFavLanguages(languages);
+			userService.updateProfile(userProfileDTO.getUsername(), userProfileDTO.getProfilePicture());
+			userService.updateFavLanguages(userProfileDTO.getLanguages());
+
 			model.addAttribute("success", "Perfil actualizado correctamente");
-			model.addAttribute("username", userSrvc.getUserTest().getUsername());
-			model.addAttribute("profilePicture", userSrvc.getUserTest().getProfilePicture());
-			model.addAttribute("languages", userSrvc.getUserTest().getFavouriteLanguages());
+			model.addAttribute("username", userService.getUserTest().getUsername());
+			model.addAttribute("profilePicture", userService.getUserTest().getProfilePicture());
+			model.addAttribute("languages", userService.getUserTest().getFavouriteLanguages());
 
 		}
 		return "pages/user-management/user-profile";

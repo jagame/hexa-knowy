@@ -71,7 +71,7 @@
 </aside>
 
 <main layout:fragment="main-content">
-	<form id="profileForm" th:action="@{update-user-profile}" method="post">
+	<form id="profileForm" th:action="@{/update-user-profile}" th:object="${profileDto}" method="post">
 		<div class="user-management-container_main ">
 			<div class="description-card">
 				<h1 class="title-management">Editar Perfil</h1>
