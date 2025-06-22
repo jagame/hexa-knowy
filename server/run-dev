@@ -1,4 +1,0 @@
-
-./mvnw spring-boot:start -Pdev -Dspring-boot.run.profiles=dev
-./mvnw generate-resources &
-
