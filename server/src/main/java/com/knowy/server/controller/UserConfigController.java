@@ -44,7 +44,7 @@ public class UserConfigController {
 	}
 
 	@PostMapping("/update-email")
-	public String updateEmail(@RequestParam String newEmail, @RequestParam String currentPassword, @RequestParam String username, RedirectAttributes redirectAttributes){
+	public String updateEmail(@RequestParam String username, @RequestParam String newEmail, @RequestParam String currentPassword, RedirectAttributes redirectAttributes){
 		if(userService.updateEmail(username, newEmail, currentPassword)){
 			redirectAttributes.addFlashAttribute("successEmail", "Email actualizado");
 		}else{
