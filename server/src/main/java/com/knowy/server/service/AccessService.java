@@ -1,6 +1,5 @@
 package com.knowy.server.service;
 
-import com.knowy.server.entity.PrivateUser;
 import com.knowy.server.repository.AccessRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,18 +18,18 @@ public class AccessService {
 		this.emailClientService = emailClientService;
 	}
 
-	public void sendEmailWithToken(String email) {
-		if (isEmailRegistered(email)) {
-
-			PrivateUser user = accessRepository.findUserByEmail(email);
-			user.setToken(tokenService.createPasswordResetToken(user.getEmail(), user.getId()));
-
-			accessRepository.saveToken(user);
-
-			emailClientService.sendTokenToEmail(user.getToken(), user.getEmail());
-		}
-		System.out.println("Not exist email: " + email);
-	}
+//	public void sendEmailWithToken(String email) {
+//		if (isEmailRegistered(email)) {
+//
+//			PrivateUser user = accessRepository.findUserByEmail(email);
+//			user.setToken(tokenService.createPasswordResetToken(user.getEmail(), user.getId()));
+//
+//			accessRepository.saveToken(user);
+//
+//			emailClientService.sendTokenToEmail(user.getToken(), user.getEmail());
+//		}
+//		System.out.println("Not exist email: " + email);
+//	}
 
 	private boolean isEmailRegistered(String email) {
 		return accessRepository.isEmailRegistered(email);
@@ -44,18 +43,18 @@ public class AccessService {
 		//TODO - Implementar descrifrado de Token y verificar datos ocultos para cambiar los datos vía AccessRepository
 	}
 
-	public Optional<String> authenticateUser(String email, String password) {
-		Optional<PrivateUser> foundUser = accessRepository.findUserByEmailAndPwd(email);
-
-		if (foundUser.isPresent()) {
-			PrivateUser user = foundUser.get();
-
-			if (user.getPassword().equals(password)) {
-				String token = tokenService.createLoginToken(user.getEmail(), user.getId());
-				return Optional.of(token);
-			}
-		}
-
-		return Optional.empty();
-	}
+//	public Optional<String> authenticateUser(String email, String password) {
+//		Optional<PrivateUser> foundUser = accessRepository.findUserByEmailAndPwd(email);
+//
+//		if (foundUser.isPresent()) {
+//			PrivateUser user = foundUser.get();
+//
+//			if (user.getPassword().equals(password)) {
+//				String token = tokenService.createLoginToken(user.getEmail(), user.getId());
+//				return Optional.of(token);
+//			}
+//		}
+//
+//		return Optional.empty();
+//	}
 }
