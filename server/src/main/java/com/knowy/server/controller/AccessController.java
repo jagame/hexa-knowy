@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class AccessController {
-
+/*
 	AccessService accessService;
 
 	public AccessController(AccessService accessService) {
@@ -94,5 +94,5 @@ public class AccessController {
 			);
 		}
 		return "redirect:/login";
-	}
+	}*/
 }

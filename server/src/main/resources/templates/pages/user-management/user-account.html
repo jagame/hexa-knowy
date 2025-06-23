@@ -25,12 +25,12 @@
 		<div class="description-card">
 			<h1 class="title-management">Gestión de la Cuenta</h1>
 		</div>
-		<form id="accountForm" method="post" th:action="@{/update-privateUsername}">
+		<form id="accountForm" method="post" th:action="@{/update-Nickname}">
 			<div class="row user-information">
 				<div class="form-fields">
-					<label class="section-title" for="privateName">Nombre de Usuario Privado 👤</label>
-					<input class="form-control" id="privateName" name="newPrivateUsername" required
-						   th:placeholder="${user.getPrivateUsername()}" type="text">
+					<label class="section-title" for="privateName">Nombre de Usuario 👤</label>
+					<input class="form-control" id="privateName" name="newNickname" required
+						   th:placeholder="${publicUser.getNickname()}" type="text">
 					<span class="advice-success" th:if="${success}" th:text="${success}"></span>
 					<span class="advice-error" th:if="${error}" th:text="${error}"></span>
 				</div>
@@ -91,11 +91,11 @@
 				<div class="modal-body">
 					<form id="emailChangeForm" method="post" th:action="@{/update-email}">
 						<label for="email">Correo Electrónico</label>
-						<input class="form-control" id="email" name="newEmail" required th:placeholder="${user.getEmail()}"
+						<input class="form-control" id="email" name="newEmail" required th:placeholder="${privateUser.getEmail()}"
 							   type="email">
 						<label for="currentPassword">Contraseña actual 🔑</label>
 						<input class="form-control" id="currentPassword" name="currentPassword" type="password">
-						<input type="hidden" th:value="${user.getUsername()}" name="username">
+						<input type="hidden" th:value="${privateUser.getEmail()}" name="email">
 					</form>
 				</div>
 				<div class="modal-footer">

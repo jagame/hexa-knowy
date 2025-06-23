@@ -1,56 +1,58 @@
 package com.knowy.server.service;
 
-import com.knowy.server.entity.UserConfiguration;
-import com.knowy.server.repository.UserConfigDummyRepository;
+import com.knowy.server.entity.PrivateUserEntity;
+import com.knowy.server.entity.PublicUserEntity;
+import com.knowy.server.repository.JpaPrivateUserRepository;
+import com.knowy.server.repository.JpaPublicUserRepository;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class UserService {
-	private final UserConfigDummyRepository userConfigDummyRepository;
+	private final JpaPrivateUserRepository jpaPrivateUserRepository;
+	private final JpaPublicUserRepository jpaPublicUserRepository;
 
-	public UserService(UserConfigDummyRepository userConfigDummyRepository) {
-		this.userConfigDummyRepository = userConfigDummyRepository;
-	}
-	//checked
-	public UserConfiguration getCurrentUser(String email){
-		return userConfigDummyRepository.findUserConfigByEmail(email);
-	}
-	//checked
-	public boolean validatePrivateUsername(String newPrivateUsername, String email){
-		return !(newPrivateUsername.equals(userConfigDummyRepository.findPrivateUser(email)));
+
+	public UserService(JpaPrivateUserRepository jpaPrivateUserRepository, JpaPublicUserRepository jpaPublicUserRepository) {
+		this.jpaPrivateUserRepository = jpaPrivateUserRepository;
+		this.jpaPublicUserRepository = jpaPublicUserRepository;
 	}
 
-	//checked
-	public boolean updatePrivateUsername(String newPrivateUsername, String email){
-		if(validatePrivateUsername(newPrivateUsername, email)){
-			userConfigDummyRepository.setPrivateUsername(newPrivateUsername);
+	public PrivateUserEntity getCurrentPrivateUser(String email){
+		return jpaPrivateUserRepository.findByEmail(email);
+	}
+	public PublicUserEntity getCurrentPublicUser(Integer id){
+		return jpaPublicUserRepository.findById(id).get();
+	}
+
+	public boolean validateNickname(String newNickname, Integer id){
+		PublicUserEntity usuarioPublico = getCurrentPublicUser(id);
+		return!(usuarioPublico.getNickname().equals(newNickname));
+	}
+
+	public boolean updateNickname(String newNickname, Integer id){
+		if(validateNickname(newNickname, id)){
+			jpaPublicUserRepository.updateNickname(newNickname, id);
 			return true;
 		}
 		return false;
 	}
 
-	//checked
-	public boolean validateEqualEmail(String username, String newEmail){
-		return(userConfigDummyRepository.findEmailByUsername(username).equals(newEmail));
+	public boolean validateEqualEmail(String email, String newEmail){
+		PrivateUserEntity usuarioPrivado = getCurrentPrivateUser(email);
+		return!(usuarioPrivado.getEmail().equals(newEmail));
 	}
 
-	//in process
-	public boolean validateCurrentPassword(String currentPassword, String username){
-		return(userConfigDummyRepository.findPasswordByUsername(username).equals(currentPassword));
+	public boolean validateCurrentPassword(String currentPassword, String email){
+		PrivateUserEntity usuarioPrivado = getCurrentPrivateUser(email);
+		return (usuarioPrivado.getPassword().equals(currentPassword));
 	}
 
-	//checked
-	public boolean updateEmail(String username,  String newEmail, String currentPassword){
-		if(validateEqualEmail(username, newEmail)&&validateCurrentPassword(currentPassword,username)){
-			userConfigDummyRepository.setEmail(newEmail);
+	public boolean updateEmail(String email,  String newEmail, String currentPassword){
+		if(validateEqualEmail(email, newEmail) && validateCurrentPassword(currentPassword, email)){
+			jpaPrivateUserRepository.updateEmail(newEmail);
 			return true;
 		}
 		return false;
 	}
-
-
-
-
-
 }

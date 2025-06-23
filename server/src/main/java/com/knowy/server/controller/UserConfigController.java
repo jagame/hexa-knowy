@@ -1,6 +1,7 @@
 package com.knowy.server.controller;
 
-import com.knowy.server.entity.UserConfiguration;
+import com.knowy.server.entity.PrivateUserEntity;
+import com.knowy.server.entity.PublicUserEntity;
 import com.knowy.server.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,13 +30,15 @@ public class UserConfigController {
 	//User-Account
 	@GetMapping("/user-account")
 	public String viewUserAccount(Model model) {
-		UserConfiguration user = userService.getCurrentUser("usuario123@correo.com");
-		model.addAttribute("user", user);
+		PrivateUserEntity privateUser = userService.getCurrentPrivateUser("usuario123@correo.com");
+		model.addAttribute("privateUser", privateUser);
+		PublicUserEntity publicUser = userService.getCurrentPublicUser(3);
+		model.addAttribute("publicUser", publicUser);
 		return "pages/user-management/user-account";
 	}
-	@PostMapping("/update-privateUsername")
-	public String updatePrivateUsername(@RequestParam String newPrivateUsername, @RequestParam String email, RedirectAttributes redirectAttributes) {
-		if(userService.updatePrivateUsername(email, newPrivateUsername)){
+	@PostMapping("/update-Nickname")
+	public String updatePrivateUsername(@RequestParam String newNickName, @RequestParam Integer id, RedirectAttributes redirectAttributes) {
+		if(userService.updateNickname(newNickName, id)){
 			redirectAttributes.addFlashAttribute("success", "Nombre privado actualizado");
 		}else{
 			redirectAttributes.addFlashAttribute("error", "Nombre no valido");
@@ -44,8 +47,8 @@ public class UserConfigController {
 	}
 
 	@PostMapping("/update-email")
-	public String updateEmail(@RequestParam String username, @RequestParam String newEmail, @RequestParam String currentPassword, RedirectAttributes redirectAttributes){
-		if(userService.updateEmail(username, newEmail, currentPassword)){
+	public String updateEmail(@RequestParam String email, @RequestParam String newEmail, @RequestParam String currentPassword, RedirectAttributes redirectAttributes){
+		if(userService.updateEmail(email, newEmail, currentPassword)){
 			redirectAttributes.addFlashAttribute("successEmail", "Email actualizado");
 		}else{
 			redirectAttributes.addFlashAttribute("error", "Algo salió mal");

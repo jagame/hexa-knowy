@@ -1,14 +1,14 @@
 package com.knowy.server.repository;
 
-import com.knowy.server.entity.PrivateUser;
+import com.knowy.server.entity.PrivateUserEntity;
 
 public interface AccessRepository {
 
 	boolean isEmailRegistered(String email);
 
-	PrivateUser findUserByEmail(String email);
+	PrivateUserEntity findUserByEmail(String email);
 
 	boolean isTokenRegistered(String token);
 
-	void saveToken(PrivateUser privateUser);
+	void saveToken(PrivateUserEntity privateUserEntity);
 }
