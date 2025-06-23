@@ -45,7 +45,7 @@ public class AccessService {
 	}
 
 	public Optional<String> authenticateUser(String email, String password) {
-		Optional<PrivateUser> foundUser = accessRepository.findUserByEmailAndPass(email);
+		Optional<PrivateUser> foundUser = accessRepository.findUserByEmailAndPwd(email);
 
 		if (foundUser.isPresent()) {
 			PrivateUser user = foundUser.get();

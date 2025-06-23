@@ -14,5 +14,5 @@ public interface AccessRepository {
 
 	void saveToken(PrivateUser privateUser);
 
-	Optional<PrivateUser> findUserByEmailAndPass(String email);
+	Optional<PrivateUser> findUserByEmailAndPwd(String email);
 }

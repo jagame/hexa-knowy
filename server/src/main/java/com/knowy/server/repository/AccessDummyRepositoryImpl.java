@@ -41,7 +41,7 @@ public class AccessDummyRepositoryImpl implements AccessRepository {
 	}
 
 	@Override
-	public Optional<PrivateUser> findUserByEmailAndPass(String email) {
+	public Optional<PrivateUser> findUserByEmailAndPwd(String email) {
 		// Solo devolvemos el usuario si el email coincide
 		if (email.equals("kn@gmail.com")) {
 			PrivateUser user = new PrivateUser();
