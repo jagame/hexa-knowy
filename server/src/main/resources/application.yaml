@@ -1,5 +1,14 @@
 spring:
     application:
         name: knowy-server
+    datasource:
+        url: jdbc:postgresql://postgres:5432/knowydb
+        username: knowy
+        password: knowy
+    jpa:
+        properties:
+            hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+        hibernate:
+            ddl-auto: validate
 server:
     port: 8080
