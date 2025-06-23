@@ -95,6 +95,7 @@
 							   type="email">
 						<label for="currentPassword">Contraseña actual 🔑</label>
 						<input class="form-control" id="currentPassword" name="currentPassword" type="password">
+						<input type="hidden" th:value="${user.getUsername()}" name="username">
 					</form>
 				</div>
 				<div class="modal-footer">

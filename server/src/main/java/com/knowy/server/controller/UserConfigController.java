@@ -1,6 +1,6 @@
 package com.knowy.server.controller;
 
-import com.knowy.server.controller.dto.UserConfigDTO;
+import com.knowy.server.entity.UserConfiguration;
 import com.knowy.server.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,14 +29,13 @@ public class UserConfigController {
 	//User-Account
 	@GetMapping("/user-account")
 	public String viewUserAccount(Model model) {
-		UserConfigDTO user = userService.getCurrentUser();
+		UserConfiguration user = userService.getCurrentUser("usuario123@correo.com");
 		model.addAttribute("user", user);
 		return "pages/user-management/user-account";
 	}
 	@PostMapping("/update-privateUsername")
-	public String updatePrivateUsername(@RequestParam String newPrivateUsername, RedirectAttributes redirectAttributes) {
-		if (userService.validatePrivateUsername(newPrivateUsername)){
-			userService.setPrivateUsername(newPrivateUsername);
+	public String updatePrivateUsername(@RequestParam String newPrivateUsername, @RequestParam String email, RedirectAttributes redirectAttributes) {
+		if(userService.updatePrivateUsername(email, newPrivateUsername)){
 			redirectAttributes.addFlashAttribute("success", "Nombre privado actualizado");
 		}else{
 			redirectAttributes.addFlashAttribute("error", "Nombre no valido");
@@ -45,14 +44,11 @@ public class UserConfigController {
 	}
 
 	@PostMapping("/update-email")
-	public String updateEmail(@RequestParam String newEmail, @RequestParam String currentPassword, RedirectAttributes redirectAttributes){
-		if(userService.validateCurrentPassword(currentPassword)&& userService.validateEqualEmail(newEmail)){
-			userService.setEmail(newEmail);
+	public String updateEmail(@RequestParam String newEmail, @RequestParam String currentPassword, @RequestParam String username, RedirectAttributes redirectAttributes){
+		if(userService.updateEmail(username, newEmail, currentPassword)){
 			redirectAttributes.addFlashAttribute("successEmail", "Email actualizado");
-		}else if(userService.validateCurrentPassword(currentPassword)&& (!userService.validateEqualEmail(newEmail))){
-			redirectAttributes.addFlashAttribute("errorEmail", "Email no valido");
 		}else{
-			redirectAttributes.addFlashAttribute("errorEmail", "Contraseña incorrecta");
+			redirectAttributes.addFlashAttribute("error", "Algo salió mal");
 		}
 		return "redirect:/user-account";
 	}

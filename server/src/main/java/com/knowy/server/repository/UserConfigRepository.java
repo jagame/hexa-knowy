@@ -1,8 +1,13 @@
 package com.knowy.server.repository;
 
-public interface UserConfigRepository {
-	String findPasswordByEmail(String email);
-	boolean checkPassword(String email, String password);
+import com.knowy.server.entity.UserConfiguration;
 
+public interface UserConfigRepository{
+	UserConfiguration findUserConfigByEmail(String email);
+	String findEmailByUsername(String username);
+	String findPrivateUser(String email);
+	void setEmail(String email);
+	public String findPasswordByUsername(String username);
+	void setPrivateUsername(String privateUsername);
 
 }
