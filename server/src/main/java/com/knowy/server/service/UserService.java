@@ -13,20 +13,16 @@ public class UserService {
 	private String email = "usuario123@gmail.com";
 	private String password = "12345aA@";
 
-	public boolean validatePrivateUsername(String newPrivateUsername){
+	public boolean validatePrivateUsername(String newPrivateUsername) {
 		return !(newPrivateUsername.equals(this.privateUsername));
 	}
 
-	public boolean validateCurrentPassword(String pass){
+	public boolean validateCurrentPassword(String pass) {
 		return this.password.equals(pass);
 	}
 
-	public boolean validateEqualEmail(String email){
+	public boolean validateEqualEmail(String email) {
 		return !(this.email.equals(email));
 	}
-
-
-
-
 
 }

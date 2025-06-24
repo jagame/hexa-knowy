@@ -1,3 +1,5 @@
+package com.knowy.server.controller.dto;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

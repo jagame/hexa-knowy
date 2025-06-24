@@ -5,8 +5,11 @@ import com.knowy.server.controller.dto.UserDto;
 import com.knowy.server.controller.dto.UserEmailFormDto;
 import com.knowy.server.controller.dto.UserPasswordFormDto;
 import com.knowy.server.service.AccessService;
+import com.knowy.server.service.exception.InvalidUserException;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,15 +30,21 @@ public class AccessController {
 		return "pages/access/register";
 	}
 
-	@PostMapping("/resultado")
-	public String procesarFormulario(@ModelAttribute UserDto user, Model model) {
-		System.out.println("Usuario recibido: " + user.getUsername());
-		System.out.println("Email recibido: " + user.getEmail());
-		System.out.println("Contraseña recibida: " + user.getPassword());
+	@PostMapping("/register")
+	public String procesarFormulario(@Valid @ModelAttribute UserDto user, Model model,
+									 Errors errors) {
+		if (errors.hasErrors()){
+			return "pages/access/register";
+		}
 
-		model.addAttribute("user", new UserDto());
-
-		return "pages/access/register";
+		try{
+			accessService.registerNewUser(user);
+			return "redirect:/home";
+		} catch (InvalidUserException e) {
+			model.addAttribute("user", user);
+			model.addAttribute("error", e.getMessage());
+			return "pages/access/register";
+		}
 	}
 
 	@GetMapping("/login")
@@ -52,47 +61,47 @@ public class AccessController {
 		return "pages/access/login";
 	}
 
-	@GetMapping("/password-change/email")
-	public String passwordChangeEmail(Model model) {
-		model.addAttribute("emailForm", new UserEmailFormDto());
-
-		return "pages/access/password-change-email";
-	}
-
-	@PostMapping("/password-change/email")
-	public String passwordChangeEmail(@ModelAttribute("emailForm") UserEmailFormDto email) {
-		accessService.sendEmailWithToken(email.getEmail());
-
-		return "redirect:/login";
-	}
-
-	@GetMapping("/password-change")
-	public String passwordChange(
-		@RequestParam String token,
-		Model model
-	) {
-		if (accessService.isTokenRegistered(token)) {
-			model.addAttribute("token", token);
-			model.addAttribute("passwordForm", new UserPasswordFormDto());
-			return "pages/access/password-change";
-		}
-		return "redirect:/";
-	}
-
-	@PostMapping("/password-change")
-	public String passwordChange(
-		@RequestParam String token,
-		@ModelAttribute("passwordForm") UserPasswordFormDto userPasswordFormDto
-	) {
-		if (accessService.isTokenRegistered(token)) {
-			// TODO - Borrar
-			System.out.println("Contraseña de Usuario recibida -> 1:" + userPasswordFormDto.getPassword() + "2:" + userPasswordFormDto.getConfirmPassword());
-			accessService.updateUserPassword(
-				token,
-				userPasswordFormDto.getPassword(),
-				userPasswordFormDto.getConfirmPassword()
-			);
-		}
-		return "redirect:/login";
-	}
+//	@GetMapping("/password-change/email")
+//	public String passwordChangeEmail(Model model) {
+//		model.addAttribute("emailForm", new UserEmailFormDto());
+//
+//		return "pages/access/password-change-email";
+//	}
+//
+//	@PostMapping("/password-change/email")
+//	public String passwordChangeEmail(@ModelAttribute("emailForm") UserEmailFormDto email) {
+//		accessService.sendEmailWithToken(email.getEmail());
+//
+//		return "redirect:/login";
+//	}
+//
+//	@GetMapping("/password-change")
+//	public String passwordChange(
+//		@RequestParam String token,
+//		Model model
+//	) {
+//		if (accessService.isTokenRegistered(token)) {
+//			model.addAttribute("token", token);
+//			model.addAttribute("passwordForm", new UserPasswordFormDto());
+//			return "pages/access/password-change";
+//		}
+//		return "redirect:/";
+//	}
+//
+//	@PostMapping("/password-change")
+//	public String passwordChange(
+//		@RequestParam String token,
+//		@ModelAttribute("passwordForm") UserPasswordFormDto userPasswordFormDto
+//	) {
+//		if (accessService.isTokenRegistered(token)) {
+//			// TODO - Borrar
+//			System.out.println("Contraseña de Usuario recibida -> 1:" + userPasswordFormDto.getPassword() + "2:" + userPasswordFormDto.getConfirmPassword());
+//			accessService.updateUserPassword(
+//				token,
+//				userPasswordFormDto.getPassword(),
+//				userPasswordFormDto.getConfirmPassword()
+//			);
+//		}
+//		return "redirect:/login";
+//	}
 }

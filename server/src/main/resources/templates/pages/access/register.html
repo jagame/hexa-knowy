@@ -17,7 +17,7 @@
 		<span class="kn-logo--text">KNOWY</span>
 	</div>
 
-	<form action="@{/register}" class="kn-form" method="post" th:action="@{/resultado}" th:object="${user}">
+	<form class="kn-form" method="post" th:action="@{/register}" th:object="${user}" onsubmit="return validarFormularioCompleta()">
 		<h1 class="kn-form__title">Registro del usuario</h1>
 
 		<div class="kn-form__group">
@@ -25,29 +25,85 @@
 			<input class="kn-form--input" id="username" placeholder="johnd67" th:field="${user.username}"
 				   type="text" required>
 		</div>
+		<span class="text-danger" th:if="${#fields.hasErrors('username')}"
+			  th:errors="*{username}">></span>
+
 
 		<div class="kn-form__group">
 			<label class="kn-form--label" for="email">Correo electrónico:</label>
 			<input class="kn-form--input" id="email" placeholder="johndoe@gmail.com" th:field="${user.email}" type="text" required>
 		</div>
+		<span class="text-danger" th:if="${#fields.hasErrors('email')}"
+			  th:errors="*{email}">></span>
+
 
 		<div class="kn-form__group">
 			<label class="kn-form--label" for="password">Contraseña:</label>
 			<input class="kn-form--input" id="password" th:field="${user.password}"
-				   type="password" placeholder="Escriba su contraseña" required>
+				   type="password" placeholder="Escriba su contraseña" required oninput="verifyPassword(); checkNewPassword()">
+			<p class="password-advice" id="passwordAdvice1"></p>
 		</div>
 
 		<div class="kn-form__group">
 			<label class="kn-form--label" for="repeat-password">Repetir contraseña:</label>
-			<input class="kn-form--input" id="repeat-password" placeholder="Escriba de nuevo su contraseña" type="password" required>
+			<input class="kn-form--input" id="repeat-password" placeholder="Escriba de nuevo su contraseña" type="password"
+				   required oninput= "checkNewPassword();">
+			<p class="password-advice" id="passwordAdvice2"></p>
 		</div>
 
 		<div class="kn-form__footer">
-			<a class="kn-form__footer-links" href="#">¿Ya tienes cuenta? ¡Volver al inicio de sesion!</a>
+			<a class="kn-form__footer-links" href="/login">¿Ya tienes cuenta? ¡Volver al inicio de sesion!</a>
 		</div>
-
+		<span class="text-danger" th:if="${error}" th:text="${error}"></span>
 		<button class="kn-button" type="submit">Registrar</button>
 	</form>
 </div>
+
+<script>
+	function verifyPassword() {
+		const password = document.getElementById('password').value;
+		const advice = document.getElementById('passwordAdvice1');
+
+		const minLength = password.length >= 8;
+		const hasUpper = /[A-Z]/.test(password);
+		const hasLower = /[a-z]/.test(password);
+		const hasNumber = /[0-9]/.test(password);
+		const hasSymbol = /[^A-Za-z0-9]/.test(password);
+
+		if (minLength && hasUpper && hasLower && hasNumber && hasSymbol) {
+			advice.style.color = "green";
+			advice.textContent = "¡Contraseña válida!";
+		} else {
+			advice.style.color = "red";
+			advice.textContent = "Mínimo 8 caracteres con mayúsculas, minúsculas, números y símbolos.";
+		}
+	}
+
+	function checkNewPassword() {
+		const passwordNew = document.getElementById('password').value;
+		const passwordConfirmation = document.getElementById('repeat-password').value;
+		const advice2 = document.getElementById('passwordAdvice2');
+
+		if (passwordNew === passwordConfirmation) {
+			advice2.style.color = "green";
+			advice2.textContent = "¡Las contraseñas coinciden!";
+		} else {
+			advice2.style.color = "red";
+			advice2.textContent = "¡Las contraseñas no coinciden!";
+		}
+	}
+
+	function validarFormularioCompleta() {
+		verifyPassword();
+		checkNewPassword();
+
+		const advice1 = document.getElementById('passwordAdvice1').textContent;
+		const advice2 = document.getElementById('passwordAdvice2').textContent;
+
+		return advice1 === "¡Contraseña válida!" && advice2 === "¡Las contraseñas coinciden!";
+	}
+</script>
+
+
 </body>
 </html>

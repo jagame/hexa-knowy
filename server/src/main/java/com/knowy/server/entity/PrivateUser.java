@@ -1,51 +1,33 @@
 package com.knowy.server.entity;
 
+import jakarta.persistence.*;
+import lombok.*;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+
+@Entity
+@Table(name = "private_user")
 public class PrivateUser {
 
-	private Long id;
-	private String username;
-	private String password;
+	@Id
+	private Integer id;
+
+	@OneToOne
+	@MapsId
+	@JoinColumn(name = "id")
+	private PublicUser publicUser;
+
+	@Column(name = "email", nullable = false, unique = true, length = 100)
 	private String email;
+
+	@Column(name = "password", nullable = false)
+	private String password;
+
+	@Column(name = "token", nullable = true, length = 255)
 	private String token;
 
-	public Long getId() {
-		return id;
-	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
 }

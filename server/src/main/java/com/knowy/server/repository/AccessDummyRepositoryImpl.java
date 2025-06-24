@@ -15,19 +15,20 @@ public class AccessDummyRepositoryImpl implements AccessRepository {
 		tokenMap.put("kn@gmail.com", "access_token");
 	}
 
+
 	@Override
 	public boolean isEmailRegistered(String email) {
 		return tokenMap.containsKey(email);
 	}
 
-	@Override
-	public PrivateUser findUserByEmail(String email) {
-		PrivateUser privateUser = new PrivateUser();
-		privateUser.setId(2L);
-		privateUser.setUsername("ImATest");
-		privateUser.setEmail(email);
-		return privateUser;
-	}
+//	@Override
+//	public PrivateUser findUserByEmail(String email) {
+//		PrivateUser privateUser = new PrivateUser();
+//		privateUser.setId(2L);
+////		publisetUsername("ImATest");
+//		privateUser.setEmail(email);
+//		return privateUser;
+//	}
 
 	@Override
 	public boolean isTokenRegistered(String token) {

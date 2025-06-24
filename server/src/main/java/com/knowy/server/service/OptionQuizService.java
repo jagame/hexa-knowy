@@ -1,7 +1,7 @@
 package com.knowy.server.service;
 
 
-import com.knowy.server.controller.model.OptionQuizDTO;
+import com.knowy.server.controller.dto.OptionQuizDTO;
 import com.knowy.server.repository.OptionsQuizRepository;
 import org.springframework.stereotype.Service;
 
