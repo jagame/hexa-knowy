@@ -1,11 +1,11 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="DockerDeploy" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+  <configuration default="false" name="Docker-Dev-OnlyDB" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
     <deployment type="docker-compose.yml">
       <settings>
         <option name="envFilePath" value="" />
-        <option name="removeImagesOnComposeDown" value="ALL" />
+        <option name="removeVolumesOnComposeDown" value="true" />
         <option name="commandLineOptions" value="--build" />
-        <option name="sourceFilePath" value="compose.yaml" />
+        <option name="sourceFilePath" value="compose-dev-onlydb.yaml" />
       </settings>
     </deployment>
     <method v="2" />
