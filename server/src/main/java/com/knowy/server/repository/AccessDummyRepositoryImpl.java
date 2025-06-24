@@ -21,19 +21,26 @@ public class AccessDummyRepositoryImpl implements AccessRepository {
 		return tokenMap.containsKey(email);
 	}
 
-//	@Override
-//	public PrivateUser findUserByEmail(String email) {
-//		PrivateUser privateUser = new PrivateUser();
-//		privateUser.setId(2L);
-////		publisetUsername("ImATest");
-//		privateUser.setEmail(email);
-//		return privateUser;
-//	}
+	@Override
+	public PrivateUser findUserByEmail(String email) {
+		PrivateUser privateUser = new PrivateUser();
+		privateUser.setId(60);
+//		publisetUsername("ImATest");
+		privateUser.setEmail(email);
+		return privateUser;
+	}
 
 	@Override
 	public boolean isTokenRegistered(String token) {
 		return tokenMap.containsValue(token);
 	}
+
+//	@Override
+//	public PrivateUser findUserByUsername(String username){
+//		PrivateUser privateUser = new PrivateUser();
+//		privateUser.setId(60);
+//		return privateUser;
+//	}
 
 	@Override
 	public void saveToken(PrivateUser privateUser) {

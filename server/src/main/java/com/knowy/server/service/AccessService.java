@@ -3,10 +3,7 @@ package com.knowy.server.service;
 import com.knowy.server.controller.dto.UserDto;
 import com.knowy.server.entity.PrivateUser;
 import com.knowy.server.entity.PublicUser;
-import com.knowy.server.repository.JPAPrivateUserRepository;
-import com.knowy.server.repository.JPAPublicUserRepository;
-import com.knowy.server.repository.PrivateUserRepository;
-import com.knowy.server.repository.PublicUserRepository;
+import com.knowy.server.repository.*;
 import com.knowy.server.service.exception.InvalidUserException;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +12,7 @@ import java.util.UUID;
 @Service
 public class AccessService {
 
-//	AccessRepository accessRepository;
+	AccessRepository accessRepository;
 //	TokenService tokenService;
 //	EmailClientService emailClientService;
 
@@ -60,7 +57,6 @@ public class AccessService {
 		return publicUser;
 
 	}
-    //FIN CAMBIOS NICOEDRICOS
 
 
 
@@ -80,9 +76,9 @@ public class AccessService {
 //	private boolean isUserNameRegistered(String username){
 //		return accessRepository.findUserByUsername(username) != null;
 //	}
-//	private boolean isEmailRegistered(String email) {
-//		return accessRepository.isEmailRegistered(email);
-//	}
+	private boolean isEmailRegistered(String email) {
+		return accessRepository.isEmailRegistered(email);
+	}
 //
 //	public boolean isTokenRegistered(String token) {
 //		return accessRepository.isTokenRegistered(token);

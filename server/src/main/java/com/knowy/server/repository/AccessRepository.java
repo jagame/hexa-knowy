@@ -7,7 +7,7 @@ public interface AccessRepository {
 
 	boolean isEmailRegistered(String email);
 
-	PrivateUser findUserByUsername(String username);
+//	PrivateUser findUserByUsername(String username);
 
 	PrivateUser findUserByEmail(String email);
 

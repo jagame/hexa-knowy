@@ -61,6 +61,8 @@ public class AccessController {
 		return "pages/access/login";
 	}
 
+
+	//COMENTADO POR CONTENER REFERENCIAS A TOKEN
 //	@GetMapping("/password-change/email")
 //	public String passwordChangeEmail(Model model) {
 //		model.addAttribute("emailForm", new UserEmailFormDto());
