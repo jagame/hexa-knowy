@@ -21,6 +21,6 @@ public class PublicUserEntity {
 	@Column(name = "nickname", nullable = false, length = 50)
 	private String nickname;
 
-//	@OneToOne(mappedBy = "publicUserEntity")
-//	private PrivateUserEntity privateUserEntity;
+	@OneToOne(mappedBy = "publicUserEntity")
+	private PrivateUserEntity privateUserEntity;
 }

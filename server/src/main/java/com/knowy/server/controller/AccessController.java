@@ -4,7 +4,9 @@ import com.knowy.server.controller.dto.LoginForm;
 import com.knowy.server.controller.dto.UserDto;
 import com.knowy.server.controller.dto.UserEmailFormDto;
 import com.knowy.server.controller.dto.UserPasswordFormDto;
+import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.service.AccessService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,6 +65,20 @@ public class AccessController {
 //			return "pages/access/login";
 //		}
 //	}
+
+	@PostMapping("/login")
+	public String postLogin(@ModelAttribute("loginForm") LoginForm login, Model model, HttpSession session) {
+		Optional<String> authToken = accessService.authenticateUser(login.getEmail(), login.getPassword(), session);
+
+		if (authToken.isPresent()) {
+			System.out.println("Login correcto. Token generado: " + authToken.get());
+			return "redirect:/home";
+		} else {
+			model.addAttribute("loginError", "¡Las credenciales son incorrectas!");
+			model.addAttribute("loginForm", new LoginForm());
+			return "pages/access/login";
+		}
+	}
 
 	@GetMapping("/password-change/email")
 	public String passwordChangeEmail(Model model) {
