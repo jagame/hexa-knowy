@@ -18,17 +18,6 @@ public class UserService {
 		this.jpaPublicUserRepository = jpaPublicUserRepository;
 	}
 
-	public PrivateUserEntity getCurrentPrivateUser(String email){
-		return jpaPrivateUserRepository.findByEmail(email);
-	}
-	public PublicUserEntity getCurrentPublicUser(Integer id){
-		return jpaPublicUserRepository.findById(id).get();
-	}
-
-	public boolean validateNickname(String newNickname, Integer id){
-		PublicUserEntity usuarioPublico = getCurrentPublicUser(id);
-		return!(usuarioPublico.getNickname().equals(newNickname));
-	}
 
 	public boolean updateNickname(String newNickname, Integer id){
 		if(validateNickname(newNickname, id)){
@@ -38,21 +27,34 @@ public class UserService {
 		return false;
 	}
 
-	public boolean validateEqualEmail(String email, String newEmail){
-		PrivateUserEntity usuarioPrivado = getCurrentPrivateUser(email);
-		return!(usuarioPrivado.getEmail().equals(newEmail));
-	}
-
-	public boolean validateCurrentPassword(String currentPassword, String email){
-		PrivateUserEntity usuarioPrivado = getCurrentPrivateUser(email);
-		return (usuarioPrivado.getPassword().equals(currentPassword));
+	private boolean validateNickname(String newNickname, Integer id){
+		PublicUserEntity usuarioPublico = getCurrentPublicUser(id);
+		return!(usuarioPublico.getNickname().equals(newNickname));
 	}
 
 	public boolean updateEmail(String email,  String newEmail, String currentPassword){
 		if(validateEqualEmail(email, newEmail) && validateCurrentPassword(currentPassword, email)){
-			jpaPrivateUserRepository.updateEmail(newEmail);
+			jpaPrivateUserRepository.updateEmail(email, newEmail);
 			return true;
 		}
 		return false;
+	}
+
+	private boolean validateEqualEmail(String email, String newEmail){
+		PrivateUserEntity usuarioPrivado = getCurrentPrivateUser(email);
+		return !(usuarioPrivado.getEmail().equals(newEmail));
+	}
+
+	public PrivateUserEntity getCurrentPrivateUser(String email){
+		return jpaPrivateUserRepository.findByEmail(email);
+	}
+
+	private boolean validateCurrentPassword(String currentPassword, String email){
+		PrivateUserEntity usuarioPrivado = getCurrentPrivateUser(email);
+		return (usuarioPrivado.getPassword().equals(currentPassword));
+	}
+
+	public PublicUserEntity getCurrentPublicUser(Integer id) {
+		return jpaPublicUserRepository.findById(id).orElseThrow();
 	}
 }

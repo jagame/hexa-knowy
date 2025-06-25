@@ -12,11 +12,14 @@ public class PrivateUserEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
-	private Long id;
+	private Integer id;
 
 	@Column(name="password", length=100)
 	private String password;
 
 	@Column(name = "email", length=100)
 	private String email;
+
+	@OneToOne(mappedBy = "privateUser", cascade = CascadeType.ALL)
+	private PublicUserEntity publicUser;
 }

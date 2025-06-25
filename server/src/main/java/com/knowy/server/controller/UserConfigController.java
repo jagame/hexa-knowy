@@ -1,8 +1,10 @@
 package com.knowy.server.controller;
 
+import com.knowy.server.controller.dto.UserConfigSessionDTO;
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.entity.PublicUserEntity;
 import com.knowy.server.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -29,16 +31,22 @@ public class UserConfigController {
 
 	//User-Account
 	@GetMapping("/user-account")
-	public String viewUserAccount(Model model) {
-		PrivateUserEntity privateUser = userService.getCurrentPrivateUser("usuario123@correo.com");
+	public String viewUserAccount(Model model, HttpSession session) {
+		String email = getCurrentEmail(session);
+
+		PrivateUserEntity privateUser = userService.getCurrentPrivateUser(email);
 		model.addAttribute("privateUser", privateUser);
 		PublicUserEntity publicUser = userService.getCurrentPublicUser(3);
 		model.addAttribute("publicUser", publicUser);
+
+		UserConfigSessionDTO userConfigSessionDTO = new UserConfigSessionDTO();
+		userConfigSessionDTO.setEmail(privateUser.getEmail());
+		model.addAttribute("userConfigSessionDTO", userConfigSessionDTO);
 		return "pages/user-management/user-account";
 	}
 	@PostMapping("/update-Nickname")
-	public String updatePrivateUsername(@RequestParam String newNickName, @RequestParam Integer id, RedirectAttributes redirectAttributes) {
-		if(userService.updateNickname(newNickName, id)){
+	public String updatePrivateUsername(String newNickname, Integer id, RedirectAttributes redirectAttributes) {
+		if(userService.updateNickname(newNickname, id)) {
 			redirectAttributes.addFlashAttribute("success", "Nombre privado actualizado");
 		}else{
 			redirectAttributes.addFlashAttribute("error", "Nombre no valido");
@@ -47,11 +55,13 @@ public class UserConfigController {
 	}
 
 	@PostMapping("/update-email")
-	public String updateEmail(@RequestParam String email, @RequestParam String newEmail, @RequestParam String currentPassword, RedirectAttributes redirectAttributes){
-		if(userService.updateEmail(email, newEmail, currentPassword)){
+	public String updateEmail(@ModelAttribute UserConfigSessionDTO userConfigSessionDTO,
+							  RedirectAttributes redirectAttributes, HttpSession session){
+		if(userService.updateEmail(userConfigSessionDTO.getEmail(), userConfigSessionDTO.getNewEmail(), userConfigSessionDTO.getCurrentPassword())){
+			session.setAttribute("email", userConfigSessionDTO.getNewEmail());
 			redirectAttributes.addFlashAttribute("successEmail", "Email actualizado");
 		}else{
-			redirectAttributes.addFlashAttribute("error", "Algo salió mal");
+			redirectAttributes.addFlashAttribute("errorEmail", "Algo salió mal");
 		}
 		return "redirect:/user-account";
 	}
@@ -68,5 +78,14 @@ public class UserConfigController {
 	public String deleteAccountEnd(ModelMap interfaceScreen) {
 		interfaceScreen.addAttribute("username", username);
 		return "pages/user-management/delete-account-end";
+	}
+
+	private String getCurrentEmail(HttpSession session){
+		String email = (String) session.getAttribute("email");
+		if (email == null) {
+			email = "usuario123@correo.com";
+			session.setAttribute("email", email);
+		}
+		return email;
 	}
 }

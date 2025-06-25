@@ -14,6 +14,11 @@ public class PublicUserEntity {
 	@Column(name = "id", nullable = false)
 	private Integer id;
 
+	@OneToOne
+	@MapsId
+	@JoinColumn(name = "id")
+	private PrivateUserEntity privateUser;
+
 	@Column(name = "nickname", nullable = false, length = 50)
 	private String nickname;
 }

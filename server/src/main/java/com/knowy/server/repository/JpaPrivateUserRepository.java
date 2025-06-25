@@ -7,14 +7,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface JpaPrivateUserRepository extends PrivateUserRepository, JpaRepository<PrivateUserEntity, Integer> {
 	@Override
-	default PrivateUserEntity findByEmail(String email){
-		return findByEmail(email);
-	}
+	PrivateUserEntity findByEmail(String email);
 
 	@Override
-	default void updateEmail(String email){
+	default void updateEmail(String email, String newEmail){
 		PrivateUserEntity usuario = findByEmail(email);
-		usuario.setEmail(email);
+		usuario.setEmail(newEmail);
 		save(usuario);
 	}
 }

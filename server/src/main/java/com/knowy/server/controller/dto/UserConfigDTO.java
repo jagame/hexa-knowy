@@ -11,6 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+//Delete if it's not in use
+//TODO
 public class UserConfigDTO {
 	private Long id;
 	private String username;
