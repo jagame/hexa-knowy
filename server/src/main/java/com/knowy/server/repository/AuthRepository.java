@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface AuthRepository extends JpaRepository<PrivateUserEntity, Long> {
 
-	@Query("SELECT pu FROM PrivateUserEntity pu JOIN FETCH pu.publicUserEntity WHERE pu.email = :email")
+	@Query("SELECT privateUser FROM PrivateUserEntity privateUser JOIN FETCH privateUser.publicUserEntity WHERE privateUser.email = :email")
 	Optional<PrivateUserEntity> findUserByEmailWithPublicData(@Param("email") String email);
 }

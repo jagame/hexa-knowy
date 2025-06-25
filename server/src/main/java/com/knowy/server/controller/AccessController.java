@@ -68,12 +68,14 @@ public class AccessController {
 
 	@PostMapping("/login")
 	public String postLogin(@ModelAttribute("loginForm") LoginForm login, Model model, HttpSession session) {
+		// Intentar obtener token de autenticación
 		Optional<String> authToken = accessService.authenticateUser(login.getEmail(), login.getPassword(), session);
-
+		// Si el token existe, login correcto
 		if (authToken.isPresent()) {
 			System.out.println("Login correcto. Token generado: " + authToken.get());
 			return "redirect:/home";
 		} else {
+			// Credenciales inválidas: informar error y reiniciar formulario
 			model.addAttribute("loginError", "¡Las credenciales son incorrectas!");
 			model.addAttribute("loginForm", new LoginForm());
 			return "pages/access/login";

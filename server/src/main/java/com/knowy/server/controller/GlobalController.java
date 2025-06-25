@@ -11,12 +11,14 @@ public class GlobalController {
 
 	@ModelAttribute
 	public void addUserDataToModel(HttpSession session, Model model) {
+		// Recuperar el objeto de usuario almacenado en la sesión
 		PrivateUserEntity loggedUser = (PrivateUserEntity) session.getAttribute("loggedUser");
-
+		// Verificar que exista un usuario en sesión y que tenga datos públicos vinculados
 		if (loggedUser != null && loggedUser.getPublicUserEntity() != null) {
+			// Obtener el apodo (nickname) desde la entidad de datos públicos
 			String nickname = loggedUser.getPublicUserEntity().getNickname();
 			model.addAttribute("username", nickname);
-			// TODO: url de la imagen del usuario
+			// TODO: Obtener y añadir la URL de la imagen de perfil del usuario
 		}
 	}
 }
