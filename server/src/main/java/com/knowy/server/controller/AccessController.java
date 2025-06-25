@@ -49,23 +49,6 @@ public class AccessController {
 		return "pages/access/login";
 	}
 
-//	@PostMapping("/login")
-//	public String postLogin(@ModelAttribute("loginForm") LoginForm login, Model model) {
-//		Optional<String> authToken = accessService.authenticateUser(login.getEmail(), login.getPassword());
-//
-//		if (authToken.isPresent()) {
-//			String token = authToken.get();
-//			// TODO: almacenar el token en sesión para uso posterior (JWT)
-//			System.out.println("Login correcto. Token generado: " + token);
-//
-//			return "redirect:/home";
-//		} else {
-//			model.addAttribute("loginError", "¡Las credenciales son incorrectas!");
-//			model.addAttribute("loginForm", new LoginForm());
-//			return "pages/access/login";
-//		}
-//	}
-
 	@PostMapping("/login")
 	public String postLogin(@ModelAttribute("loginForm") LoginForm login, Model model, HttpSession session) {
 		// Intentar obtener token de autenticación

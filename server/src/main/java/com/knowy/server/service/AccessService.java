@@ -48,21 +48,6 @@ public class AccessService {
 		//TODO - Implementar descrifrado de Token y verificar datos ocultos para cambiar los datos vía AccessRepository
 	}
 
-//	public Optional<String> authenticateUser(String email, String password) {
-//		Optional<PrivateUser> foundUser = accessRepository.findUserByEmailAndPwd(email);
-//
-//		if (foundUser.isPresent()) {
-//			PrivateUser user = foundUser.get();
-//
-//			if (user.getPassword().equals(password)) {
-//				String token = tokenService.createLoginToken(user.getEmail(), user.getId());
-//				return Optional.of(token);
-//			}
-//		}
-//
-//		return Optional.empty();
-//	}
-
 	public Optional<String> authenticateUser(String email, String password, HttpSession session) {
 		// Buscar el usuario por correo, incluyendo los datos públicos
 		Optional<PrivateUserEntity> foundUser = authRepository.findUserByEmailWithPublicData(email);
