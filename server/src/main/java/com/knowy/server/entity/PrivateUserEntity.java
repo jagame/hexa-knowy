@@ -25,6 +25,6 @@ public class PrivateUserEntity {
 	private String password;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "public_user_id")
+	@JoinColumn(name = "id")
 	private PublicUserEntity publicUserEntity;
 }

@@ -9,8 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface AuthRepository extends JpaRepository<PrivateUserEntity, Long> {
+public interface AuthRepository extends JpaRepository<PrivateUserEntity, Long>,
+	AuthRepositoryContract {
 
-	@Query("SELECT privateUser FROM PrivateUserEntity privateUser JOIN FETCH privateUser.publicUserEntity WHERE privateUser.email = :email")
-	Optional<PrivateUserEntity> findUserByEmailWithPublicData(@Param("email") String email);
+//	@Query("SELECT privateUser FROM PrivateUserEntity privateUser JOIN FETCH privateUser.publicUserEntity WHERE privateUser.email = :email")
+//	Optional<PrivateUserEntity> findUserByEmailWithPublicData(@Param("email") String email);
 }
