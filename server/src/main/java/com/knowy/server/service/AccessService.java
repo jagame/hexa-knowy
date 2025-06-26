@@ -3,8 +3,7 @@ package com.knowy.server.service;
 import com.knowy.server.controller.dto.AuthResult;
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.repository.AccessRepository;
-import com.knowy.server.repository.AuthRepository;
-import jakarta.servlet.http.HttpSession;
+import com.knowy.server.repository.JpaAuthRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -13,11 +12,11 @@ import java.util.Optional;
 public class AccessService {
 
 	AccessRepository accessRepository;
-	AuthRepository authRepository;
+	JpaAuthRepository authRepository;
 	TokenService tokenService;
 	EmailClientService emailClientService;
 
-	public AccessService(AccessRepository accessRepository, AuthRepository authRepository, TokenService tokenService, EmailClientService emailClientService) {
+	public AccessService(AccessRepository accessRepository, JpaAuthRepository authRepository, TokenService tokenService, EmailClientService emailClientService) {
 		this.accessRepository = accessRepository;
 		this.authRepository = authRepository;
 		this.tokenService = tokenService;
@@ -50,7 +49,7 @@ public class AccessService {
 	}
 
 	public Optional<AuthResult> authenticateUser(String email, String password) {
-		Optional<PrivateUserEntity> foundUser = authRepository.findUserByEmailWithPublicData(email);
+		Optional<PrivateUserEntity> foundUser = authRepository.findByEmail(email);
 
 		if (foundUser.isPresent()) {
 			PrivateUserEntity user = foundUser.get();
