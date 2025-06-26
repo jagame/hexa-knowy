@@ -6,6 +6,8 @@ import com.knowy.server.repository.JpaPrivateUserRepository;
 import com.knowy.server.repository.JpaPublicUserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 public class UserService {
@@ -18,43 +20,41 @@ public class UserService {
 		this.jpaPublicUserRepository = jpaPublicUserRepository;
 	}
 
+	public Optional<PublicUserEntity> findPublicUserById(Integer id) {
+		return jpaPublicUserRepository.findUserById(id);
+	}
+
+	public Optional<PrivateUserEntity> findPrivateUserByEmail(String email){
+		return jpaPrivateUserRepository.findByEmail(email);
+	}
+
+	private boolean isValidNickname(String newNickname, PublicUserEntity user){
+		return !(user.getNickname().equals(newNickname));
+	}
+
+	private boolean isValidEmail(String newEmail, PrivateUserEntity privateUser){
+		return !(privateUser.getEmail().equals(newEmail));
+	}
+
+	private boolean isValidPassword(String currentPassword, PrivateUserEntity privateUser){
+		return privateUser.getPassword().equals(currentPassword);
+	}
 
 	public boolean updateNickname(String newNickname, Integer id){
-		if(validateNickname(newNickname, id)){
+		Optional<PublicUserEntity> publicUser = findPublicUserById(id);
+		if(publicUser.isPresent() && isValidNickname(newNickname, publicUser.get())){
 			jpaPublicUserRepository.updateNickname(newNickname, id);
 			return true;
 		}
 		return false;
 	}
 
-	private boolean validateNickname(String newNickname, Integer id){
-		PublicUserEntity usuarioPublico = getCurrentPublicUser(id);
-		return!(usuarioPublico.getNickname().equals(newNickname));
-	}
-
 	public boolean updateEmail(String email,  String newEmail, String currentPassword){
-		if(validateEqualEmail(email, newEmail) && validateCurrentPassword(currentPassword, email)){
+		Optional<PrivateUserEntity> privateUser = findPrivateUserByEmail(email);
+		if(privateUser.isPresent() && isValidEmail(newEmail, privateUser.get()) && isValidPassword(currentPassword, privateUser.get())){
 			jpaPrivateUserRepository.updateEmail(email, newEmail);
 			return true;
 		}
 		return false;
-	}
-
-	private boolean validateEqualEmail(String email, String newEmail){
-		PrivateUserEntity usuarioPrivado = getCurrentPrivateUser(email);
-		return !(usuarioPrivado.getEmail().equals(newEmail));
-	}
-
-	public PrivateUserEntity getCurrentPrivateUser(String email){
-		return jpaPrivateUserRepository.findByEmail(email);
-	}
-
-	private boolean validateCurrentPassword(String currentPassword, String email){
-		PrivateUserEntity usuarioPrivado = getCurrentPrivateUser(email);
-		return (usuarioPrivado.getPassword().equals(currentPassword));
-	}
-
-	public PublicUserEntity getCurrentPublicUser(Integer id) {
-		return jpaPublicUserRepository.findById(id).orElseThrow();
 	}
 }

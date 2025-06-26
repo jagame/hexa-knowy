@@ -9,14 +9,14 @@ import java.util.Optional;
 @Repository
 public interface JpaPublicUserRepository extends PublicUserRepository, JpaRepository<PublicUserEntity, Integer> {
 	@Override
-	default Optional<PublicUserEntity> findUser(Integer id) {
+	default Optional<PublicUserEntity> findUserById(Integer id) {
 		return findById(id);
 	}
 	@Override
 	default void updateNickname(String nickname, int id){
-		PublicUserEntity usuario = findUser(id).orElseThrow();
-		usuario.setNickname(nickname);
-		save(usuario);
+		findUserById(id).ifPresent(user -> {
+			user.setNickname(nickname);
+			save(user);
+		});
 	}
-
 }

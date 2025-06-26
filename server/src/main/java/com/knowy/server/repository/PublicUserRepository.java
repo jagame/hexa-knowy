@@ -5,6 +5,6 @@ import java.util.Optional;
 
 
 public interface PublicUserRepository {
-	Optional<PublicUserEntity> findUser(Integer id);
+	Optional<PublicUserEntity> findUserById(Integer id);
 	void updateNickname(String nickname, int id);
 }
