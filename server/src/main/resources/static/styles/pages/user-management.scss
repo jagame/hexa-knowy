@@ -207,9 +207,16 @@ body {
 	margin-bottom: 1.1rem;
 }
 
-.advice {
+.advice-success {
+	font-family: 'caveat-brush';
 	font-size: small;
-	color: $neutral-900;
+	color: $primary-500;
+}
+
+.advice-error {
+	font-family: 'caveat-brush';
+	font-size: small;
+	color: $danger-500;
 }
 
 .title-delete {
@@ -217,10 +224,15 @@ body {
 	color: $danger-500;
 }
 
-.delete-section {
+.user-account-section {
 	margin-top: 3rem;
 	padding-top: 1.5rem;
 	border-top: 1px solid $primary-500;
+}
+
+.user-account-tittle-section{
+	font-family: excalifont;
+	color: $primary-500;
 }
 
 .btn-delete {

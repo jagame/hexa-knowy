@@ -1,7 +1,7 @@
 package com.knowy.server.controller;
 
-import com.knowy.server.controller.model.NewsDto;
-import com.knowy.server.controller.model.SolutionDto;
+import com.knowy.server.controller.dto.NewsDto;
+import com.knowy.server.controller.dto.SolutionDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;

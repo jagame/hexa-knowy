@@ -1,0 +1,34 @@
+@use "../../global-vars" as *;
+
+/*Options-questionnaire*/
+
+.options-quiz{
+	width: 70%;
+}
+
+.quiz-option{
+	width: 100%;
+	text-align: left;
+	padding: 15px 20px;
+	margin-bottom: 10px;
+	border: 3px solid $secundary-700;
+	border-radius: $radius-10;
+	background: $neutral-100;
+	transition: $transition-speed;
+	font-family: excalifont;
+}
+.quiz-option:hover {
+	color: $neutral-100;
+	background: $secundary-500;
+}
+.quiz-option.correct {
+	background: $primary-500;
+	color: $neutral-100;
+	border-color: $primary-700;
+}
+.quiz-option.incorrect {
+	background: $danger-600;
+	color: $neutral-100;
+	border-color: $danger-650;
+}
+

@@ -23,7 +23,21 @@ services:
         volumes:
             - kn_db_data:/var/lib/postgresql/data
             - ./sql/init:/docker-entrypoint-initdb.d
-            - ./sql:/sql
+
+    pgadmin:
+        image: dpage/pgadmin4:9.4
+        container_name: kn-pgadmin4
+        environment:
+            PGADMIN_DEFAULT_EMAIL: kn@kn.com
+            PGADMIN_DEFAULT_PASSWORD: kn
+        ports:
+            - "5054:80"
+        networks:
+            - knowy_net
+        depends_on:
+            - postgres
+        volumes:
+            - ./sql:/var/lib/pgadmin/storage
 
 volumes:
     kn_db_data:
