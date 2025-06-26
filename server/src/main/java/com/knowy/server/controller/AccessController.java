@@ -1,9 +1,6 @@
 package com.knowy.server.controller;
 
-import com.knowy.server.controller.dto.LoginForm;
-import com.knowy.server.controller.dto.UserDto;
-import com.knowy.server.controller.dto.UserEmailFormDto;
-import com.knowy.server.controller.dto.UserPasswordFormDto;
+import com.knowy.server.controller.dto.*;
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.service.AccessService;
 import jakarta.servlet.http.HttpSession;
@@ -51,14 +48,17 @@ public class AccessController {
 
 	@PostMapping("/login")
 	public String postLogin(@ModelAttribute("loginForm") LoginForm login, Model model, HttpSession session) {
-		// Intentar obtener token de autenticación
-		Optional<String> authToken = accessService.authenticateUser(login.getEmail(), login.getPassword(), session);
-		// Si el token existe, login correcto
-		if (authToken.isPresent()) {
-			System.out.println("Login correcto. Token generado: " + authToken.get());
+		Optional<AuthResult> authResult = accessService.authenticateUser(login.getEmail(), login.getPassword());
+
+		if (authResult.isPresent()) {
+			PrivateUserEntity user = authResult.get().getUser();
+			String token = authResult.get().getToken();
+
+			session.setAttribute("loggedUser", user);
+			session.setAttribute("authToken", token);
+			System.out.println("Login correcto. Token generado: " + token);
 			return "redirect:/home";
 		} else {
-			// Credenciales inválidas: informar error y reiniciar formulario
 			model.addAttribute("loginError", "¡Las credenciales son incorrectas!");
 			model.addAttribute("loginForm", new LoginForm());
 			return "pages/access/login";

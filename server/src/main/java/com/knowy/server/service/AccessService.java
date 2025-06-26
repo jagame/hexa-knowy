@@ -1,5 +1,6 @@
 package com.knowy.server.service;
 
+import com.knowy.server.controller.dto.AuthResult;
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.repository.AccessRepository;
 import com.knowy.server.repository.AuthRepository;
@@ -48,24 +49,16 @@ public class AccessService {
 		//TODO - Implementar descrifrado de Token y verificar datos ocultos para cambiar los datos vía AccessRepository
 	}
 
-	public Optional<String> authenticateUser(String email, String password, HttpSession session) {
-		// Buscar el usuario por correo, incluyendo los datos públicos
+	public Optional<AuthResult> authenticateUser(String email, String password) {
 		Optional<PrivateUserEntity> foundUser = authRepository.findUserByEmailWithPublicData(email);
-		// Si el usuario existe, proceder a verificar la contraseña
+
 		if (foundUser.isPresent()) {
 			PrivateUserEntity user = foundUser.get();
-			// Comparar la contraseña ingresada con la almacenada
 			if (user.getPassword().equals(password)) {
-				// Generar un token de autenticación único para este usuario
 				String token = tokenService.createLoginToken(user.getEmail(), user.getId().longValue());
-				// Almacenar en la sesión HTTP los atributos que indican que el usuario ha iniciado sesión correctamente
-				session.setAttribute("loggedUser", user);
-				session.setAttribute("authToken", token);
-				// Devolver el token envuelto en Optional para indicar éxito
-				return Optional.of(token);
+				return Optional.of(new AuthResult(user, token));
 			}
 		}
-		// Si no existe el usuario o la contraseña no coincide, devolver vacío
 		return Optional.empty();
 	}
 }
