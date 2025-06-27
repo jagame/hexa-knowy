@@ -87,6 +87,11 @@ body {
 		margin-bottom: 20px;
 	}
 
+	&__error {
+		color: $danger-500;
+		font-family: 'excalifont';
+	}
+
 	&--label {
 		color: $neutral-900;
 		font-family: 'excalifont';
