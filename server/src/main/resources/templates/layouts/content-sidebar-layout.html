@@ -38,7 +38,7 @@
 <body>
 
 <!-- TODO - REPAIR NAVBAR -->
-<header th:replace="~{components/navbar :: knowy-navbar(username=${username}, avatar='https://placehold.co/50x50')}"></header>
+<header th:replace="~{components/navbar :: knowy-navbar(username=${username}, avatar=${avatar})}"></header>
 
 <div class="layout-body">
 	<aside class="kn-aside" layout:fragment="sidebar"></aside>
