@@ -28,12 +28,12 @@ public class UserService {
 		return jpaPrivateUserRepository.findByEmail(email);
 	}
 
-	private boolean isValidNickname(String newNickname, PublicUserEntity user){
-		return !(user.getNickname().equals(newNickname));
+	private boolean isCurrentNickname(String newNickname, PublicUserEntity user){
+		return (user.getNickname().equals(newNickname));
 	}
 
-	private boolean isValidEmail(String newEmail, PrivateUserEntity privateUser){
-		return !(privateUser.getEmail().equals(newEmail));
+	private boolean isCurrentEmail(String newEmail, PrivateUserEntity privateUser){
+		return (privateUser.getEmail().equals(newEmail));
 	}
 
 	private boolean isValidPassword(String currentPassword, PrivateUserEntity privateUser){
@@ -42,7 +42,7 @@ public class UserService {
 
 	public boolean updateNickname(String newNickname, Integer id){
 		Optional<PublicUserEntity> publicUser = findPublicUserById(id);
-		if(publicUser.isPresent() && isValidNickname(newNickname, publicUser.get())){
+		if(publicUser.isPresent() && !isCurrentNickname(newNickname, publicUser.get())){
 			jpaPublicUserRepository.updateNickname(newNickname, id);
 			return true;
 		}
@@ -51,7 +51,7 @@ public class UserService {
 
 	public boolean updateEmail(String email,  String newEmail, String currentPassword){
 		Optional<PrivateUserEntity> privateUser = findPrivateUserByEmail(email);
-		if(privateUser.isPresent() && isValidEmail(newEmail, privateUser.get()) && isValidPassword(currentPassword, privateUser.get())){
+		if(privateUser.isPresent() && !isCurrentEmail(newEmail, privateUser.get()) && isValidPassword(currentPassword, privateUser.get())){
 			jpaPrivateUserRepository.updateEmail(email, newEmail);
 			return true;
 		}
