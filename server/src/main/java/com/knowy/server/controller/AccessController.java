@@ -41,14 +41,14 @@ public class AccessController {
 
 	@GetMapping("/login")
 	public String viewLogin(Model model) {
-		LoginForm loginForm = new LoginForm();
+		LoginFormDto loginForm = new LoginFormDto();
 		model.addAttribute("loginForm", loginForm);
 		return "pages/access/login";
 	}
 
 	@PostMapping("/login")
-	public String postLogin(@ModelAttribute("loginForm") LoginForm login, Model model, HttpSession session) {
-		Optional<AuthResult> authResult = accessService.authenticateUser(login.getEmail(), login.getPassword());
+	public String postLogin(@ModelAttribute("loginForm") LoginFormDto login, Model model, HttpSession session) {
+		Optional<AuthResultDto> authResult = accessService.authenticateUser(login.getEmail(), login.getPassword());
 
 		if (authResult.isPresent()) {
 			PrivateUserEntity user = authResult.get().getUser();
@@ -60,7 +60,7 @@ public class AccessController {
 			return "redirect:/home";
 		} else {
 			model.addAttribute("loginError", "¡Las credenciales son incorrectas!");
-			model.addAttribute("loginForm", new LoginForm());
+			model.addAttribute("loginForm", new LoginFormDto());
 			return "pages/access/login";
 		}
 	}

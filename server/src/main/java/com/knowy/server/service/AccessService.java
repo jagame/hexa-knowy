@@ -1,6 +1,6 @@
 package com.knowy.server.service;
 
-import com.knowy.server.controller.dto.AuthResult;
+import com.knowy.server.controller.dto.AuthResultDto;
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.repository.AccessRepository;
 import com.knowy.server.repository.JpaAuthRepository;
@@ -48,14 +48,14 @@ public class AccessService {
 		//TODO - Implementar descrifrado de Token y verificar datos ocultos para cambiar los datos vía AccessRepository
 	}
 
-	public Optional<AuthResult> authenticateUser(String email, String password) {
+	public Optional<AuthResultDto> authenticateUser(String email, String password) {
 		Optional<PrivateUserEntity> foundUser = authRepository.findByEmail(email);
 
 		if (foundUser.isPresent()) {
 			PrivateUserEntity user = foundUser.get();
 			if (user.getPassword().equals(password)) {
 				String token = tokenService.createLoginToken(user.getEmail(), user.getId().longValue());
-				return Optional.of(new AuthResult(user, token));
+				return Optional.of(new AuthResultDto(user, token));
 			}
 		}
 		return Optional.empty();
