@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @Controller
 public class AccessController {
-
+/*
 	AccessService accessService;
 
 	public AccessController(AccessService accessService) {
@@ -107,5 +107,5 @@ public class AccessController {
 			);
 		}
 		return "redirect:/login";
-	}
+	}*/
 }
