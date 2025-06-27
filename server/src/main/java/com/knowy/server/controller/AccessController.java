@@ -1,16 +1,17 @@
 package com.knowy.server.controller;
 
-import com.knowy.server.controller.dto.LoginForm;
-import com.knowy.server.controller.dto.UserDto;
-import com.knowy.server.controller.dto.UserEmailFormDto;
-import com.knowy.server.controller.dto.UserPasswordFormDto;
+import com.knowy.server.controller.dto.*;
+import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.service.AccessService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Optional;
 
 @Controller
 public class AccessController {
@@ -40,16 +41,28 @@ public class AccessController {
 
 	@GetMapping("/login")
 	public String viewLogin(Model model) {
-		LoginForm loginForm = new LoginForm();
+		LoginFormDto loginForm = new LoginFormDto();
 		model.addAttribute("loginForm", loginForm);
 		return "pages/access/login";
 	}
 
 	@PostMapping("/login")
-	public String postLogin(@ModelAttribute("loginForm") LoginForm login, Model model) {
-		System.out.println("Email: " + login.getEmail() + " Password: " + login.getPassword() + "");
-		model.addAttribute("loginForm", login);
-		return "pages/access/login";
+	public String postLogin(@ModelAttribute("loginForm") LoginFormDto login, Model model, HttpSession session) {
+		Optional<AuthResultDto> authResult = accessService.authenticateUser(login.getEmail(), login.getPassword());
+
+		if (authResult.isPresent()) {
+			PrivateUserEntity user = authResult.get().getUser();
+			String token = authResult.get().getToken();
+
+			session.setAttribute("loggedUser", user);
+			session.setAttribute("authToken", token);
+			System.out.println("Login correcto. Token generado: " + token);
+			return "redirect:/home";
+		} else {
+			model.addAttribute("loginError", "¡Las credenciales son incorrectas!");
+			model.addAttribute("loginForm", new LoginFormDto());
+			return "pages/access/login";
+		}
 	}
 
 	@GetMapping("/password-change/email")
@@ -59,12 +72,12 @@ public class AccessController {
 		return "pages/access/password-change-email";
 	}
 
-	@PostMapping("/password-change/email")
-	public String passwordChangeEmail(@ModelAttribute("emailForm") UserEmailFormDto email) {
-		accessService.sendEmailWithToken(email.getEmail());
-
-		return "redirect:/login";
-	}
+//	@PostMapping("/password-change/email")
+//	public String passwordChangeEmail(@ModelAttribute("emailForm") UserEmailFormDto email) {
+//		accessService.sendEmailWithToken(email.getEmail());
+//
+//		return "redirect:/login";
+//	}
 
 	@GetMapping("/password-change")
 	public String passwordChange(

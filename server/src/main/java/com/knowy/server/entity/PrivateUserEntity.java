@@ -1,25 +1,30 @@
 package com.knowy.server.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Table(name= "private_user")
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Table(name = "private_user")
 public class PrivateUserEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
 	private Integer id;
 
-	@Column(name="password", length=100)
-	private String password;
-
-	@Column(name = "email", length=100)
+	@Column(name = 	"email", length = 100, nullable = false)
 	private String email;
 
-	@OneToOne(mappedBy = "privateUser", cascade = CascadeType.ALL)
-	private PublicUserEntity publicUser;
+	@Column(name = "password", length = 100, nullable = false)
+	private String password;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id")
+	private PublicUserEntity publicUserEntity;
 }

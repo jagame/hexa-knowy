@@ -1,11 +1,15 @@
 package com.knowy.server.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "public_user")
 public class PublicUserEntity {
@@ -14,11 +18,9 @@ public class PublicUserEntity {
 	@Column(name = "id", nullable = false)
 	private Integer id;
 
-	@OneToOne
-	@MapsId
-	@JoinColumn(name = "id")
-	private PrivateUserEntity privateUser;
-
 	@Column(name = "nickname", nullable = false, length = 50)
 	private String nickname;
+
+	@OneToOne(mappedBy = "publicUserEntity")
+	private PrivateUserEntity privateUserEntity;
 }
