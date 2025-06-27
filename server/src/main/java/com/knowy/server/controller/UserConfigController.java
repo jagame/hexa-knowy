@@ -67,4 +67,40 @@ public class UserConfigController {
 		interfaceScreen.addAttribute("username", username);
 		return "pages/user-management/delete-account-end";
 	}
+
+	//Service to validate username
+	private final UserService userService;
+
+	public UserConfigController(UserService userService) {
+		this.userService = userService;
+	}
+
+	//Update User-profile
+	@PostMapping("/update-user-profile")
+	public String updateUserProfile(@ModelAttribute("profileDto") UserProfileDTO userProfileDTO,
+									Model model) {
+
+		//check if username is already taken
+		if(userService.takenUserName(userProfileDTO.getUsername())) {
+			model.addAttribute("error", "Ese nombre de usuario ya existe");
+			return "pages/user-management/user-profile";
+		}
+
+		//check if username contains banned words
+		if (userService.inappropriateName(userProfileDTO.getUsername())) {
+			model.addAttribute("error", "El nombre de usuario contiene palabras inapropiadas");
+			return "pages/user-management/user-profile";
+
+		} else {
+			userService.updateProfile(userProfileDTO.getUsername(), userProfileDTO.getProfilePicture());
+			userService.updateFavLanguages(userProfileDTO.getLanguages());
+
+			model.addAttribute("success", "Perfil actualizado correctamente");
+			model.addAttribute("username", userService.getUserTest().getUsername());
+			model.addAttribute("profilePicture", userService.getUserTest().getProfilePicture());
+			model.addAttribute("languages", userService.getUserTest().getFavouriteLanguages());
+
+		}
+		return "pages/user-management/user-profile";
+	}
 }

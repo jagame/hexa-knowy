@@ -1,9 +1,9 @@
 package com.knowy.server.services;
 
-import com.knowy.server.entities.UserEntity;
+import com.knowy.server.entity.UserEntity;
 import com.knowy.server.repositories.BannedWordsRepository;
 import com.knowy.server.repositories.ExistingUsernameRepository;
-import com.knowy.server.repositories.UserRepositoryTest;
+import com.knowy.server.repository.UserRepositoryImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,11 +12,11 @@ import java.util.List;
 @Service
 public class UserService {
 
-	private final UserRepositoryTest userRepo;
+	private final UserRepositoryImpl userRepo;
 	private final BannedWordsRepository bannedWordsRepo;
 	private final ExistingUsernameRepository existingUsernameRepo;
 
-	public UserService(UserRepositoryTest userRepo, BannedWordsRepository bannedWordsRepo, ExistingUsernameRepository existingUsernameRepo) {
+	public UserService(UserRepositoryImpl userRepo, BannedWordsRepository bannedWordsRepo, ExistingUsernameRepository existingUsernameRepo) {
 		this.userRepo = userRepo;
 		this.bannedWordsRepo = bannedWordsRepo;
 		this.existingUsernameRepo = existingUsernameRepo;
@@ -49,7 +49,7 @@ public class UserService {
 	}
 
 	//method to check if the new username contains any of the banned words
-	public boolean inappropriateName(String userName) {
+	public boolean isInappropriateName(String userName) {
 		if (userName == null) {
 			return false;
 		}
@@ -59,7 +59,7 @@ public class UserService {
 
 
 	//method to check if the username already exists
-	public boolean takenUserName(String userName) {
+	public boolean isTakenUserName(String userName) {
 		if (userName == null) {
 			return false;
 		}
