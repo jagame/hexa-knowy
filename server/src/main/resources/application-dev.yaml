@@ -10,5 +10,15 @@ spring:
             hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
         hibernate:
             ddl-auto: validate
+    mail:
+        host: localhost
+        port: 1025
+        properties:
+            mail:
+                debug: true
+                smtp:
+                    auth: false
+                    starttls:
+                        enable: false
 server:
     port: 8080
