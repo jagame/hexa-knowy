@@ -20,7 +20,7 @@
 	box-shadow: none;
 }
 .accordion-button:not(.collapsed)::after {
-	filter: brightness(0) invert(1); // Esto hace la flecha blanca
+	filter: brightness(0) invert(1);
 }
 
 .accordion .accordion-item{
