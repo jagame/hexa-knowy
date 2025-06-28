@@ -1,12 +1,10 @@
 package com.knowy.server.controller;
 
-import com.knowy.server.controller.model.MissionsDto;
-import com.knowy.server.controller.model.NewsHomeDto;
+import com.knowy.server.controller.dto.MissionsDto;
+import com.knowy.server.controller.dto.NewsHomeDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
 import java.util.List;

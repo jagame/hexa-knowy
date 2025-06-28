@@ -1,0 +1,2 @@
+INSERT INTO public.profile_image (url) VALUES ('/images/profile/profile_image_test1.webp'); -- id = 1
+INSERT INTO public.profile_image (url) VALUES ('/images/profile/profile_image_test2.jpg'); -- id = 2

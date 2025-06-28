@@ -24,18 +24,20 @@
 
 		<div class="kn-form__group">
 			<label class="kn-form--label" for="email">Correo electrónico:</label>
-			<input class="kn-form--input" id="email" name="email" placeholder="johndoe@gmail.com" th:field="*{email}" required/>
+			<input class="kn-form--input" type="email" id="email" name="email" placeholder="johndoe@gmail.com" th:field="*{email}" required/>
 		</div>
 
 		<div class="kn-form__group">
 			<label class="kn-form--label" for="password">Contraseña:</label>
-			<input class="kn-form--input" id="password" name="password" placeholder="Escriba su contraseña" th:field="*{password}" type="password" required/>
+			<input class="kn-form--input" type="password" id="password" name="password" placeholder="Escriba su contraseña" th:field="*{password}" required/>
 		</div>
 
+		<h5 th:if="${loginError}" th:text="${loginError}" class="kn-form__error"></h5>
+
 		<div class="kn-form__footer">
-			<a class="kn-form__footer-links" href="#">¿Has olvidado la contraseña?</a>
-			<a class="kn-form__footer-links" href="#">¿No tienes cuenta? <span class="enlace-underline">¡Regístrate aquí!</span></a>
-			<a class="kn-form__footer-links" href="#">Volver a la web</a>
+			<a class="kn-form__footer-links" th:href="@{/password-change/email}">¿Has olvidado la contraseña?</a>
+			<a class="kn-form__footer-links" th:href="@{/register}">¿No tienes cuenta? <span class="enlace-underline">¡Regístrate aquí!</span></a>
+			<a class="kn-form__footer-links" th:href="@{/}">Volver a la web</a>
 		</div>
 
 		<button class="kn-button" type="submit">Iniciar Sesión</button>

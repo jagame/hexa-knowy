@@ -1,0 +1,87 @@
+@use '../_global-vars' as *;
+@use '../components/lessonscard';
+
+.lessons-component{
+	border-radius: $radius-25;
+	box-shadow: 0 1px 6px rgb(0 0 0 / 0.1);
+	padding: 1em;
+	margin: 1em 1em 0 1em;
+	background-color: $primary-300;
+}
+.course-title {
+	color: black;
+	text-align: center;
+	align-content: center;
+	font-family: caveat-brush;
+}
+
+.course-title__progressbar {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+
+.progress-bar {
+	width: 100%;
+	max-width:260px;
+	height: 10px;
+	background-color: #e0e0e0;
+	border-radius: 10px;
+	overflow: hidden;
+	margin: 0.5em 1em;
+}
+
+.progress {
+	height: 100%;
+	background-color: $secundary-700;
+	transition: width 0.3s ease-in-out;
+}
+
+.course-title__percentage {
+	margin-top: 0.5em;
+	font-weight: 600;
+	font-size: 0.85rem;
+	font-family:inter;
+	font-style: normal;
+}
+
+.introduction-btn--purple{
+	border-radius:$radius-25;
+	background-color:$secundary-700;
+	color:$primary-100;
+	padding:10px 50px ;
+	margin-top: 0.75em;
+	margin-bottom: 1em;
+	transition: 0.2s ease-in-out;
+	text-decoration:none;
+}
+.introduction-btn--purple:hover{
+	scale: 1.02;
+	color:$primary-100;
+	text-decoration:none;
+}
+
+.introduction-btn--purple:active{
+	scale: 1;
+}
+
+@font-face {
+	font-family: 'caveat-brush';
+	src: url('../../fonts/CaveatBrush-Regular.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'excalifont';
+	src: url('../../fonts/Excalifont-Regular.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'inter';
+	src: url('../../fonts/Inter.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
+
