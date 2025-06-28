@@ -3,6 +3,9 @@ package com.knowy.server.controller;
 import com.knowy.server.controller.dto.*;
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.service.AccessService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +18,7 @@ import java.util.Optional;
 
 @Controller
 public class AccessController {
-/*
+
 	AccessService accessService;
 
 	public AccessController(AccessService accessService) {
@@ -65,6 +68,29 @@ public class AccessController {
 		}
 	}
 
+	// LOGOUT SIN QUE DESTRUYA LA COOKIE
+//	@GetMapping("/logout")
+//	public String logout(HttpSession session) {
+//		session.invalidate(); // Invalida la sesión actual (cierra sesión)
+//		return "redirect:/"; // Redirige a la página de inicio
+//	}
+
+	@GetMapping("/logout")
+	public String logout(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.invalidate();
+		}
+
+		// Eliminar cookie JSESSIONID del navegador
+		Cookie cookie = new Cookie("JSESSIONID", null);
+		cookie.setPath("/");
+		cookie.setMaxAge(0);
+		response.addCookie(cookie);
+
+		return "redirect:/";
+	}
+
 	@GetMapping("/password-change/email")
 	public String passwordChangeEmail(Model model) {
 		model.addAttribute("emailForm", new UserEmailFormDto());
@@ -107,5 +133,5 @@ public class AccessController {
 			);
 		}
 		return "redirect:/login";
-	}*/
+	}
 }
