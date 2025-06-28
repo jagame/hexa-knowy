@@ -19,28 +19,6 @@ public class EmailClientService {
 		this.mailSender = mailSender;
 	}
 
-	public void sendTokenToEmail(String token, String email, String appUrl) throws MailDispatchException {
-		String subject = "Código de verificación KNOWY";
-		String body = tokenBody(token, appUrl);
-
-		sendEmail(email, subject, body);
-	}
-
-	private String tokenBody(String token, String appUrl) {
-		String url = "%s?token=%s".formatted(appUrl, token);
-		return """
-			Hola,
-			
-			Tu enlace de verificación es:
-			%s
-			
-			Si no solicitaste este enlace de recuperación, puedes ignorar este correo.
-			
-			---
-			© 2025 KNOWY, Inc
-			""".formatted(url);
-	}
-
 	public void sendEmail(String to, String subject, String body) throws MailDispatchException {
 		try {
 			SimpleMailMessage message = new SimpleMailMessage();

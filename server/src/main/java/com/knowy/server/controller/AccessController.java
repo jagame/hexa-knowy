@@ -3,6 +3,7 @@ package com.knowy.server.controller;
 import com.knowy.server.controller.dto.*;
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.service.AccessService;
+import com.knowy.server.service.exception.AccessException;
 import com.knowy.server.service.exception.MailDispatchException;
 import com.knowy.server.service.exception.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -70,13 +71,26 @@ public class AccessController {
 		}
 	}
 
+	/**
+	 * Handles GET requests to display the password change email form.
+	 *
+	 * @param model the model to which the email form DTO is added
+	 * @return the name of the view for the password change email page
+	 */
 	@GetMapping("/password-change/email")
 	public String passwordChangeEmail(Model model) {
 		model.addAttribute("emailForm", new UserEmailFormDto());
-
 		return "pages/access/password-change-email";
 	}
 
+	/**
+	 * Handles the POST request to initiate a password change by sending a recovery email.
+	 *
+	 * @param email the form object containing the user's email address
+	 * @param redirectAttributes attributes used to pass flash messages during redirect
+	 * @param httpServletRequest the HTTP servlet request object, used to build the password change URL
+	 * @return a redirect string to either the login page on success or back to the email form on failure
+	 */
 	@PostMapping("/password-change/email")
 	public String passwordChangeEmail(
 		@ModelAttribute("emailForm") UserEmailFormDto email,
@@ -84,13 +98,14 @@ public class AccessController {
 		HttpServletRequest httpServletRequest
 	) {
 		try {
-			accessService.sendEmailWithToken(email.getEmail(), getPasswordChangeUrl(httpServletRequest));
+			accessService.sendRecoveryPasswordEmail(email.getEmail(), getPasswordChangeUrl(httpServletRequest));
 			return "redirect:/login";
-		} catch (UserNotFoundException | MailDispatchException e) {
+		} catch (AccessException e) {
 			redirectAttributes.addFlashAttribute("error", e.getMessage());
 			return "redirect:/password-change/email";
 		}
 	}
+
 
 	private String getPasswordChangeUrl(HttpServletRequest httpServletRequest) {
 		return getDomainUrl(httpServletRequest) + "/password-change";
@@ -104,6 +119,13 @@ public class AccessController {
 		return scheme + "://" + serverName + ":" + serverPort;
 	}
 
+	/**
+	 * Handles GET requests to display the password change form if the token is valid.
+	 *
+	 * @param token the token used to verify the password change request
+	 * @param model the model to which the token and password form DTO are added
+	 * @return the name of the password change view if the token is registered, otherwise redirects to the home page
+	 */
 	@GetMapping("/password-change")
 	public String passwordChange(
 		@RequestParam String token,
@@ -117,14 +139,19 @@ public class AccessController {
 		return "redirect:/";
 	}
 
+	/**
+	 * Handles POST requests to update the user's password if the token is valid.
+	 *
+	 * @param token the token used to verify the password change request
+	 * @param userPasswordFormDto the form object containing the new password and its confirmation
+	 * @return a redirect string to the login page after updating the password
+	 */
 	@PostMapping("/password-change")
 	public String passwordChange(
 		@RequestParam String token,
 		@ModelAttribute("passwordForm") UserPasswordFormDto userPasswordFormDto
 	) {
 		if (accessService.isTokenRegistered(token)) {
-			// TODO - Borrar
-			System.out.println("Contraseña de Usuario recibida -> 1:" + userPasswordFormDto.getPassword() + "2:" + userPasswordFormDto.getConfirmPassword());
 			accessService.updateUserPassword(
 				token,
 				userPasswordFormDto.getPassword(),
