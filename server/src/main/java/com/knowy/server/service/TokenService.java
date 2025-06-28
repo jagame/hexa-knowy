@@ -7,12 +7,12 @@ import java.util.UUID;
 @Service
 public class TokenService {
 
-	public String createPasswordResetToken(String email, Long userId) {
+	public String createPasswordResetToken(String email, int userId) {
 		// TODO - Implementar JWT
 		return UUID.randomUUID().toString();
 	}
 
-	public String createLoginToken(String email, Long userId) {
+	public String createLoginToken(String email, int userId) {
 		// TODO - Reemplazar por JWT más adelante
 		return UUID.randomUUID().toString();
 	}

@@ -3,19 +3,24 @@ package com.knowy.server.controller;
 import com.knowy.server.controller.dto.*;
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.service.AccessService;
+import com.knowy.server.service.exception.MailDispatchException;
+import com.knowy.server.service.exception.UserNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
 
+@Slf4j
 @Controller
 public class AccessController {
-/*
 	AccessService accessService;
 
 	public AccessController(AccessService accessService) {
@@ -72,12 +77,32 @@ public class AccessController {
 		return "pages/access/password-change-email";
 	}
 
-//	@PostMapping("/password-change/email")
-//	public String passwordChangeEmail(@ModelAttribute("emailForm") UserEmailFormDto email) {
-//		accessService.sendEmailWithToken(email.getEmail());
-//
-//		return "redirect:/login";
-//	}
+	@PostMapping("/password-change/email")
+	public String passwordChangeEmail(
+		@ModelAttribute("emailForm") UserEmailFormDto email,
+		RedirectAttributes redirectAttributes,
+		HttpServletRequest httpServletRequest
+	) {
+		try {
+			accessService.sendEmailWithToken(email.getEmail(), getPasswordChangeUrl(httpServletRequest));
+			return "redirect:/login";
+		} catch (UserNotFoundException | MailDispatchException e) {
+			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			return "redirect:/password-change/email";
+		}
+	}
+
+	private String getPasswordChangeUrl(HttpServletRequest httpServletRequest) {
+		return getDomainUrl(httpServletRequest) + "/password-change";
+	}
+
+	private String getDomainUrl(HttpServletRequest request) {
+		String scheme = request.getScheme();
+		String serverName = request.getServerName();
+		int serverPort = request.getServerPort();
+
+		return scheme + "://" + serverName + ":" + serverPort;
+	}
 
 	@GetMapping("/password-change")
 	public String passwordChange(
@@ -107,5 +132,5 @@ public class AccessController {
 			);
 		}
 		return "redirect:/login";
-	}*/
+	}
 }

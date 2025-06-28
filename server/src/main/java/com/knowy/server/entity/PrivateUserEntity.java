@@ -24,6 +24,9 @@ public class PrivateUserEntity {
 	@Column(name = "password", length = 100, nullable = false)
 	private String password;
 
+	@Column(name = "token", nullable = false, unique = true)
+	private String token;
+
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id")
 	private PublicUserEntity publicUserEntity;

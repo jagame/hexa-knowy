@@ -7,6 +7,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.net.http.HttpHeaders;
+
 @Slf4j
 @Service
 public class EmailClientService {
@@ -17,25 +19,26 @@ public class EmailClientService {
 		this.mailSender = mailSender;
 	}
 
-	public void sendTokenToEmail(String token, String email) throws MailDispatchException {
-		String subject = "Tu código de verificación KNOWY";
-		String body = tokenBody(token);
+	public void sendTokenToEmail(String token, String email, String appUrl) throws MailDispatchException {
+		String subject = "Código de verificación KNOWY";
+		String body = tokenBody(token, appUrl);
 
 		sendEmail(email, subject, body);
 	}
 
-	private String tokenBody(String token) {
+	private String tokenBody(String token, String appUrl) {
+		String url = "%s?token=%s".formatted(appUrl, token);
 		return """
 			Hola,
 			
-			Tu código de verificación es: %s
+			Tu enlace de verificación es:
+			%s
 			
-			Si no solicitaste este código, puedes ignorar este correo.
+			Si no solicitaste este enlace de recuperación, puedes ignorar este correo.
 			
 			---
 			© 2025 KNOWY, Inc
-			Términos: https://knowy.com/terminos
-			""".formatted(token);
+			""".formatted(url);
 	}
 
 	public void sendEmail(String to, String subject, String body) throws MailDispatchException {
