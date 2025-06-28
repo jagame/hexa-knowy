@@ -1,17 +1,16 @@
 package com.knowy.server.repository;
 
-import com.knowy.server.entity.UserEntity;
+import com.knowy.server.entity.PublicUserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
+@Repository
+public interface UserRepository extends JpaRepository<PublicUserEntity, Long> {
 
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
+	Optional<PublicUserEntity> findByUsername(String username);
 
-	UserEntity findByUsername(String username);
-
-	void saveUser(UserEntity user);
-
-	List<UserEntity> id(Long id);
+	boolean existsByUsername(String username);
 }

@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,6 +22,9 @@ public class PublicUserEntity {
 
 	@Column(name = "nickname", nullable = false, length = 50)
 	private String nickname;
+
+	private String profilePicture;
+	private List<String> favouriteLanguages;
 
 	@OneToOne(mappedBy = "publicUserEntity")
 	private PrivateUserEntity privateUserEntity;

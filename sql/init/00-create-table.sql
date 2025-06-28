@@ -84,6 +84,13 @@ CREATE TABLE IF NOT EXISTS public.public_user_option
 	PRIMARY KEY (id_public_user, id_option)
 );
 
+CREATE TABLE IF NOT EXISTS public.banned_words
+(
+	id			serial 		NOT NULL,
+	word		varchar(40) NOT NULL,
+	PRIMARY KEY (id)
+);
+
 -- FK private_user
 ALTER TABLE IF EXISTS public.private_user
 	ADD FOREIGN KEY (id)

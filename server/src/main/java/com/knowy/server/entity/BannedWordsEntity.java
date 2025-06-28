@@ -6,20 +6,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "public_user")
-public class UserEntity {
+@Table(name = "banned_words")
+public class BannedWordsEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String username;
-	private String profilePicture;
-	private List<String> favouriteLanguages;
+	private String word;
 }

@@ -1,4 +1,4 @@
-package com.knowy.server.dto;
+package com.knowy.server.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserProfileDTO {
+
 
 	private String username;
 	private String profilePicture;
