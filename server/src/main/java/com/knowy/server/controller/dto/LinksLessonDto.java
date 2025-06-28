@@ -1,4 +1,4 @@
-package com.knowy.server.controller.model;
+package com.knowy.server.controller.dto;
 
 import lombok.*;
 
@@ -10,6 +10,11 @@ public class LinksLessonDto {
 	private String linkUrl;
 	private LinkType type;
 	private String fileName;
+
+	public enum LinkType {
+		EXTERNAL,
+		DOCUMENT;
+	}
 }
 
 

@@ -1,7 +1,7 @@
 package com.knowy.server.controller;
 
 
-import com.knowy.server.controller.dto.LessonDto;
+import com.knowy.server.controller.dto.LessonDTO;
 import com.knowy.server.controller.dto.LinksLessonDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,12 +20,14 @@ public class LessonController {
 	@GetMapping("/lesson")
 	public String showLesson(Model model) {
 
-		LessonDTO lesson = new LessonDTO(1, "JavaScript moderno", LessonDTO.LessonStatus.BLOCKED);
-		//This does not work and crashes the whole branch.
-		//LessonDTO lesson = new LessonDTO("JavaScript moderno", "100 horas", "https://media.licdn.com/dms/image/v2/D4D12AQG_8eaFpxIX8g/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1685624189443?e=2147483647&v=beta&t=sYff1Zh5dsatOSYyUiMR8zwn3VqkG3x55bwFbEo5D-g", "#", "Teoria de la leccion");
+		LessonDTO lesson = new LessonDTO(
+			1,
+			"JavaScript moderno",
+			"https://picsum.photos/seed/picsum/1000/1000",
+			2,
+			LessonDTO.LessonStatus.BLOCKED
+		);
 		model.addAttribute("lesson", lesson);
-
-
 
 		// Array of links from each lesson?
 		List<LinksLessonDto> LinksLessonList = new ArrayList<>();
@@ -34,32 +36,32 @@ public class LessonController {
 		LinksLessonList.add(new LinksLessonDto(
 			"Ecosia - Buscador ecológico",
 			"https://www.ecosia.org",
-			LinkType.EXTERNAL, ""
+			LinksLessonDto.LinkType.EXTERNAL, ""
 		));
 
 		LinksLessonList.add(new LinksLessonDto(
 			"Wikipedia - Enciclopedia libre",
 			"https://es.wikipedia.org",
-			LinkType.EXTERNAL, ""
+			LinksLessonDto.LinkType.EXTERNAL, ""
 		));
 
 		LinksLessonList.add(new LinksLessonDto(
 			"MDN Web Docs - JavaScript",
 			"https://developer.mozilla.org/es/docs/Web/JavaScript",
-			LinkType.EXTERNAL, ""
+			LinksLessonDto.LinkType.EXTERNAL, ""
 		));
 
 		//Downloadable documents
 		LinksLessonList.add(new LinksLessonDto(
 			"Guía de JavaScript ES6+",
 			"/documents/javascript-es6-guide.pdf",
-			LinkType.DOCUMENT, "javascript-es6-guide.pdf"
+			LinksLessonDto.LinkType.DOCUMENT, "javascript-es6-guide.pdf"
 		));
 
 		LinksLessonList.add(new LinksLessonDto(
 			"Ejercicios prácticos",
 			"/documents/javascript-exercises.zip",
-			LinkType.DOCUMENT, "javascript-exercises.zip"
+			LinksLessonDto.LinkType.DOCUMENT, "javascript-exercises.zip"
 		));
 
 
@@ -67,7 +69,9 @@ public class LessonController {
 
 		return "pages/lesson-explanation";
 	}
-	@PostMapping("/feedback/submit") //he usado este controller porque estaba relacionado, si hace falta lo meto en otra pantalla
+
+	@PostMapping("/feedback/submit")
+	//he usado este controller porque estaba relacionado, si hace falta lo meto en otra pantalla
 	public String submitEval(@RequestParam("dificultad") String dificultad, RedirectAttributes redirectAttributes) {
 		System.out.println("Dificultad seleccionada por el usuario: " + dificultad);
 		valoracion = Integer.parseInt(dificultad); //aquí invocaríamos un metodo de cada pregunta para guardar el feedback y luego procesarlo. Debería hacer dto? yo creo que debería ser el dto de la tarjeta guardada.
