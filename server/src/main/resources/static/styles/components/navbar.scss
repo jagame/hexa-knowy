@@ -87,6 +87,8 @@ $dropdown-label-height: 180px;
 		cursor: pointer;
 		user-select: none;
 		gap: 0.5rem;
+		width: fit-content;
+		margin-left: auto;
 	}
 
 	> label > img {
@@ -179,6 +181,8 @@ $dropdown-label-height: 180px;
 
 	> label > img {
 		border: 2px solid $neutral-100;
+		width: 5rem;
+		height: 5rem;
 	}
 
 	> .__menu {

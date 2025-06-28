@@ -20,7 +20,7 @@
 </head>
 <body>
 
-<header th:replace="~{components/navbar :: knowy-navbar('username-test','https://placehold.co/50x50')}"></header>
+<header th:replace="~{components/navbar :: knowy-navbar(username=${username}, avatar=${avatar})}"></header>
 
 <div class="layout-body">
 	<main layout:fragment="main-content"></main>
