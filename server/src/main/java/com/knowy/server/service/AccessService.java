@@ -1,0 +1,63 @@
+package com.knowy.server.service;
+
+import com.knowy.server.controller.dto.AuthResultDto;
+import com.knowy.server.entity.PrivateUserEntity;
+import com.knowy.server.repository.AccessRepository;
+import com.knowy.server.repository.JpaAuthRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class AccessService {
+
+	AccessRepository accessRepository;
+	JpaAuthRepository authRepository;
+	TokenService tokenService;
+	EmailClientService emailClientService;
+
+	public AccessService(AccessRepository accessRepository, JpaAuthRepository authRepository, TokenService tokenService, EmailClientService emailClientService) {
+		this.accessRepository = accessRepository;
+		this.authRepository = authRepository;
+		this.tokenService = tokenService;
+		this.emailClientService = emailClientService;
+	}
+
+//	public void sendEmailWithToken(String email) {
+//		if (isEmailRegistered(email)) {
+//
+//			PrivateUser user = accessRepository.findUserByEmail(email);
+//			user.setToken(tokenService.createPasswordResetToken(user.getEmail(), user.getId()));
+//
+//			accessRepository.saveToken(user);
+//
+//			emailClientService.sendTokenToEmail(user.getToken(), user.getEmail());
+//		}
+//		System.out.println("Not exist email: " + email);
+//	}
+
+	private boolean isEmailRegistered(String email) {
+		return accessRepository.isEmailRegistered(email);
+	}
+
+	public boolean isTokenRegistered(String token) {
+		return accessRepository.isTokenRegistered(token);
+	}
+
+	public void updateUserPassword(String token, String oldPassword, String newPassword) {
+		//TODO - Implementar descrifrado de Token y verificar datos ocultos para cambiar los datos vía AccessRepository
+	}
+
+	public Optional<AuthResultDto> authenticateUser(String email, String password) {
+		Optional<PrivateUserEntity> foundUser = authRepository.findByEmail(email);
+
+		if (foundUser.isPresent()) {
+			PrivateUserEntity user = foundUser.get();
+			if (user.getPassword().equals(password)) {
+				String token = tokenService.createLoginToken(user.getEmail(), user.getId().longValue());
+				return Optional.of(new AuthResultDto(user, token));
+			}
+		}
+		return Optional.empty();
+	}
+}

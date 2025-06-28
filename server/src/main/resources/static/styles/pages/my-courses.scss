@@ -1,0 +1,235 @@
+@use "../global-vars" as *;
+
+main {
+	padding: 0.5rem;
+}
+
+.container {
+	display: flex;
+	align-items: stretch;
+	justify-content: center;
+	padding: 20px;
+	gap: 20px;
+}
+
+.left-column {
+	display: flex;
+	flex: 0 0 80%;
+	flex-direction: column;
+
+}
+
+.right-column {
+	display: flex;
+	overflow-y: auto;
+	flex: 0 0 20%;
+	flex-direction: column;
+	min-height: 0;
+	max-height: 760px;
+	border-radius: $radius-10;
+	box-shadow: $card-shadow;
+}
+
+.filters {
+	font-family: 'caveat-brush';
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 20px;
+	padding: 20px;
+	border-radius: $radius-10;
+	background-color: $primary-100;
+	box-shadow: $card-shadow;
+}
+
+.filters-dropdowns {
+	display: flex;
+	gap: 20px;
+}
+
+.filters-buttons {
+	display: flex;
+	gap: 20px;
+}
+
+.courses {
+	padding: 20px;
+	border-radius: $radius-10;
+	background-color: $primary-100;
+	box-shadow: $card-shadow;
+}
+
+.courses-container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+}
+
+.recommendations {
+	overflow-y: auto;
+	max-height: 100vh;
+	padding: 20px;
+	border-radius: $radius-10;
+	background-color: $primary-100;
+	box-shadow: $card-shadow;
+}
+
+/*eliminar, card para test*/
+.card {
+	margin-top: 20px;
+}
+
+.dropdown-categories .dropdown-menu .form-check-input {
+	margin: 5px;
+}
+
+.dropdown-order .dropdown-menu .form-check-input {
+	margin: 5px;
+}
+
+.dropdown-visualization .dropdown-menu .form-check-input {
+	margin: 5px;
+}
+
+.list-group-item input[type="checkbox"]:checked {
+	border-color: $primary-500;
+	background-color: $primary-500;
+}
+
+.form-check-input:focus {
+	border-color: $primary-500;
+	box-shadow: 0 0 0 0.1rem $primary-500;
+}
+
+.pagination > li > a {
+	font-family: 'caveat-brush';
+	color: $secundary-500;
+}
+
+.pagination > li > a:hover,
+.pagination > li > a:focus {
+	color: $bg;
+	background-color: $secundary-500;
+	box-shadow: none;
+}
+
+.btn-categories, .btn-order, .btn-visualization {
+	color: $bg;
+	background-color: $primary-500;
+}
+
+.btn-categories:hover, .btn-order:hover, .btn-visualization:hover {
+	color: $bg;
+	background-color: $primary-700;
+}
+
+.dropdown-toggle[aria-expanded="true"] {
+	color: $bg;
+	border-color: $bg;
+	background-color: $primary-700;
+}
+
+.btn-apply {
+	color: $bg;
+	background-color: $primary-500;
+}
+
+.btn-delete {
+	color: $bg;
+	background-color: $danger-600;
+}
+
+.btn-apply:hover {
+	color: $bg;
+	background-color: $primary-700;
+}
+
+.btn-delete:hover {
+	color: $bg;
+	background-color: $danger-650;
+}
+
+.btn-apply:active {
+	color: $bg !important;
+	background-color: $primary-700 !important;
+}
+
+.btn-delete:active {
+	color: $bg !important;
+	background-color: $danger-650 !important;
+}
+
+.recommendations > h4 {
+	font-family: 'excalifont';
+	font-weight: bold;
+	color: $secundary-500;
+}
+
+.h2-courses {
+	font-family: 'excalifont';
+	font-weight: bold;
+	color: $primary-500;
+}
+
+.btn-categories:active, .btn-order:active, .btn-visualization:active {
+	color: $bg !important;
+	background-color: $primary-700 !important;
+}
+
+@media (max-width: 768px) {
+	.container {
+		display: flex;
+		flex-direction: column;
+		margin: 0;
+		padding: 0;
+	}
+
+	.left-column, .right-column {
+		flex: 0 0 100%;
+		min-width: 100%;
+	}
+
+	.filters, .courses, .recommendations {
+		box-sizing: border-box;
+		width: 100%;
+
+	}
+
+	.filters {
+		flex-direction: column;
+
+	}
+
+	.filters-dropdowns, .filters-buttons {
+		display: block;
+		width: auto;
+		text-align: center;
+
+	}
+
+	.filters-dropdowns > div {
+		display: block;
+		margin: 5px auto;
+
+	}
+
+	.filters-buttons > button {
+		display: block;
+		width: 50%;
+		margin: 5px auto;
+
+	}
+
+	.recommendations {
+		display: flex;
+		flex-direction: column;
+		margin-top: 1rem;
+	}
+
+	.recommendations-cards {
+		display: flex;
+		overflow-x: auto;
+		gap: 10px;
+	}
+
+}

@@ -2,36 +2,39 @@
 <header id="knowy-navbar"
 		th:fragment="knowy-navbar(username, avatar)">
 	<div class="__profile-container">
-		<img alt="" class="__logo" src="https://placehold.co/100x40"/>
+		<div class="__logo">
+			<img alt="" src="/images/logoWoutText.png"/>
+			<span class="--text">KNOWY</span>
+		</div>
 
+		<div class="__links">
+			<a th:href="${'/home'}">Inicio</a>
+			<a th:href="${'/my-courses'}">Mis Cursos</a>
+			<a th:href="${'/store'}">Explorar Contenido</a>
+		</div>
 
 		<div class="kn-dropdown __dropdown">
 			<input id="navbar-profile-dropdown" type="checkbox">
 
-			<label class="__profile" for="navbar-profile-dropdown"> <span th:text="${username}">Username</span>
+			<label class="__profile" for="navbar-profile-dropdown">
+				<span class="--text" th:text="${username}">Username</span>
 				<img alt="" class="avatar" th:src="${avatar}"/>
 			</label>
 
-			<label class="__profile-menu" for="navbar-profile-dropdown"> <span th:text="${username}">Username</span>
+			<label class="__profile-menu" for="navbar-profile-dropdown">
+				<span class="--text" th:text="${username}">Username</span>
 				<img alt="" class="avatar" th:src="${avatar}"/>
 			</label>
 
 			<nav class="__menu">
-				<a class="__menu-item">Editar Perfil</a>
-				<a class="__menu-item">Membresia</a>
+				<a th:href="${'/home'}" class="__menu-item __menu-item--visibility">Inicio</a>
+				<a th:href="${'/my-courses'}" class="__menu-item __menu-item--visibility">Mis Cursos</a>
+				<a th:href="${'/store'}" class="__menu-item __menu-item--visibility">Explorar Contenido</a>
+				<a th:href="${'/user-profile'}" class="__menu-item">Ajustes</a>
 				<div>
-					<a class="__menu-item __menu-item-home">Home</a>
-					<a class="__menu-item __menu-item-logout">Logout</a>
+					<a th:href="${'/logout'}" class="__menu-item __menu-item-logout">Cerrar Sessión</a>
 				</div>
 			</nav>
 		</div>
 	</div>
-
-	<div class="__links">
-		<a href="/">Home</a>
-		<a href="/about">About</a>
-		<a href="/contact">Contact</a>
-	</div>
 </header>
-
-

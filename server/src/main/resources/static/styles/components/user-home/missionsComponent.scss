@@ -1,0 +1,131 @@
+@use "../../global-vars" as *;
+
+.missions-container {
+	font-family: excalifont, serif;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
+	padding: 20px;
+	border-radius: $radius-25;
+	background-color: $primary-100;
+	box-shadow: $card-shadow;
+	gap: 0.8rem;
+}
+
+.missions__missions-title {
+	font-size: 1.5em;
+	font-weight: bold;
+	text-align: left;
+	color: $neutral-900;
+}
+
+.mission-container__mission-instance {
+	display: flex;
+	flex-direction: column;
+	padding: 8px;
+	border-radius: $radius-25;
+	background-color: $primary-100;
+	box-shadow: $card-shadow;
+	gap: 5px;
+}
+
+.mission-instance__details {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-left: 5px;
+	padding: 0 2px;
+}
+
+.mission-container__description {
+	font-weight: bold;
+	margin-top: 3px;
+	margin-left: 5px;
+	color: $neutral-900;
+}
+
+.mission-instance__progress-text {
+	font-weight: bold;
+	color: $neutral-700;
+}
+
+
+.mission-instance__progress-bar-background {
+	overflow: hidden;
+	width: 95%;
+	height: 0.6rem;
+	margin-bottom: 5px;
+	margin-left: 5px;
+	border: 1px solid $neutral-500;
+	border-radius: 25px;
+	background-color: $neutral-300;
+}
+
+.progress-bar-background__progress-bar-foreground {
+	height: 100%;
+	transition: width 0.3s ease-in-out;
+	border-radius: 25px 0 0 25px;
+	background-color: $secundary-500;
+
+}
+
+.actions-footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+/*.actions-footer__language-selector-container {
+	flex-grow: 0.5;
+}
+
+.language-selector-container__language-dropdown {
+	background-color: $primary;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	padding: 10px 15px;
+	font-size: 1em;
+	font-weight: bold;
+	cursor: pointer;
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E");
+	background-repeat: no-repeat;
+	background-position: right 10px center;
+	background-size: 12px;
+	padding-right: 35px;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.language-selector-container__language-dropdown__language-dropdown option {
+	background-color: $neutral-100;
+	color: black;
+}
+
+.language-selector-container__language-dropdown__language-dropdown:focus {
+	outline: none;
+	box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.5); /* Focus ring */
+
+
+.actions-footer__quick-match-button {
+	font-weight: bold;
+	flex-grow: 1;
+	max-height: 2rem;
+	padding: 0.5rem;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+	text-align: center;
+	color: $neutral-100;
+	border: none;
+	border-radius: $radius-25;
+	background-color: $primary-500;
+}
+
+
+.actions-footer__quick-match-button:hover {
+	background-color: rgba($primary-500, 0.95);
+}
