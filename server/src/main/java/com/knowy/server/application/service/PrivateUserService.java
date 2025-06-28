@@ -1,13 +1,17 @@
 package com.knowy.server.application.service;
 
-import com.knowy.server.application.domain.error.KnowyException;
 import com.knowy.server.application.domain.PrivateUser;
+import com.knowy.server.application.domain.error.IllegalKnowyEmailException;
+import com.knowy.server.application.domain.error.IllegalKnowyPasswordException;
+import com.knowy.server.application.domain.error.KnowyException;
 import com.knowy.server.application.port.gateway.MessageGateway;
 import com.knowy.server.application.port.persistence.KnowyUserNotFoundException;
 import com.knowy.server.application.port.persistence.PrivateUserRepository;
 import com.knowy.server.application.port.security.TokenMapper;
-import com.knowy.server.application.domain.error.IllegalKnowyPasswordException;
-import com.knowy.server.application.service.usecase.login.*;
+import com.knowy.server.application.service.usecase.login.KnowyUserLoginException;
+import com.knowy.server.application.service.usecase.login.LoginCommand;
+import com.knowy.server.application.service.usecase.login.LoginResult;
+import com.knowy.server.application.service.usecase.login.LoginUseCase;
 import com.knowy.server.application.service.usecase.update.email.KnowyUserEmailUpdateException;
 import com.knowy.server.application.service.usecase.update.email.UpdateUserEmailCommand;
 import com.knowy.server.application.service.usecase.update.email.UpdateUserEmailUseCase;
@@ -61,7 +65,9 @@ public class PrivateUserService {
 		return privateUserRepository.findByToken(token).isPresent();
 	}
 
-	public Void updateEmail(String email, String newEmail, String currentPassword) throws IllegalKnowyPasswordException, KnowyUserEmailUpdateException {
+	public Void updateEmail(String email, String newEmail, String currentPassword)
+		throws IllegalKnowyEmailException, IllegalKnowyPasswordException, KnowyUserEmailUpdateException {
+
 		return updateUserEmailUseCase.execute(new UpdateUserEmailCommand(email, newEmail,
 			currentPassword));
 	}

@@ -3,10 +3,21 @@ package com.knowy.server.application.domain;
 import com.knowy.server.application.domain.error.IllegalKnowyEmailException;
 import com.knowy.server.application.domain.error.IllegalKnowyPasswordException;
 import com.knowy.server.application.domain.error.InvalidKnowyEmailFormatException;
+import com.knowy.server.application.domain.validation.GenericValidator;
 
 import java.util.Objects;
 
-public record Email(String value) {
+public record Email(String value) implements ValueObject<String> {
+
+	private static final GenericValidator<String, Email, IllegalKnowyEmailException> EMAIL_VALIDATOR =
+		new GenericValidator<>(
+			"email",
+			"An email must match the expression <user>@<domain>",
+			emailValue -> emailValue != null && emailValue.chars()
+				.filter(ch -> ch == '@')
+				.count() == 1,
+			IllegalKnowyEmailException::new
+		);
 
 	public Email {
 		Objects.requireNonNull(value, "An email value can't be null");
@@ -15,68 +26,48 @@ public record Email(String value) {
 		}
 	}
 
-	public static void assertValid(String password) throws IllegalKnowyPasswordException {
-		if (!isValid(password)) {
-			throw new IllegalKnowyPasswordException("The minimum length of a password is 8 characters");
-		}
+	public static void assertValid(String email) throws IllegalKnowyEmailException {
+		EMAIL_VALIDATOR.assertValid(email);
 	}
 
 	public static boolean isValid(String emailValue) {
-		return emailValue != null && emailValue.chars()
-			.filter(ch -> ch == '@')
-			.count() == 1;
+		return EMAIL_VALIDATOR.isValid(emailValue);
 	}
 
-	public static void assertEquals(Email expected, Email candidate) throws IllegalKnowyPasswordException {
-		if (!equals(expected, candidate)) {
-			throw new IllegalKnowyPasswordException(
-				"The checked email doesn't match the value of the expected one"
-			);
-		}
+	public static void assertEquals(Email expected, Email candidate) throws IllegalKnowyEmailException {
+		EMAIL_VALIDATOR.assertEquals(expected, candidate);
 	}
 
 	public static boolean equals(Email expected, Email candidate) {
-		Objects.requireNonNull(expected, "The expected email can't be null");
-		return Objects.equals(expected, candidate);
+		return EMAIL_VALIDATOR.equals(expected, candidate);
 	}
 
-	public static void assertEquals(Email expected, String candidate) throws IllegalKnowyPasswordException {
-		if (!equals(expected, candidate)) {
-			throw new IllegalKnowyPasswordException(
-				"The checked email doesn't match the value of the expected one"
-			);
-		}
+	public static void assertEquals(Email expected, String candidate) throws IllegalKnowyEmailException {
+		EMAIL_VALIDATOR.assertEquals(expected, candidate);
 	}
 
 	public static boolean equals(Email expected, String candidate) {
-		Objects.requireNonNull(expected, "You need a non null email if you want to check another one");
-		return equals(expected.value(), candidate);
+		return EMAIL_VALIDATOR.equals(expected, candidate);
 	}
 
 	public static void assertEquals(String expected, String candidate) throws IllegalKnowyPasswordException {
-		if (!equals(expected, candidate)) {
-			throw new IllegalKnowyPasswordException(
-				"The checked email doesn't match with the expected one"
-			);
-		}
+		EMAIL_VALIDATOR.assertEquals(expected, candidate);
 	}
 
 	public static boolean equals(String expected, String candidate) {
-		Objects.requireNonNull(expected, "You need a non null email if you want to check another one");
-		return Objects.equals(expected, candidate);
+		return EMAIL_VALIDATOR.equals(expected, candidate);
 	}
 
-	public void assertEquals(Email password) throws IllegalKnowyEmailException {
-		assertEquals(password.value());
+	public void assertEquals(Email other) throws IllegalKnowyEmailException {
+		assertEquals(this, other);
 	}
 
-	public void assertEquals(String candidate) throws IllegalKnowyEmailException {
-		if (!hasValue(candidate)) {
-			throw new IllegalKnowyEmailException("The checked password doesn't match with this one");
-		}
+	public void assertEquals(String other) throws IllegalKnowyEmailException {
+		assertEquals(this, other);
 	}
 
-	public boolean hasValue(String testedValue) {
-		return Objects.equals(this.value, testedValue);
+	@Override
+	public boolean hasValue(String expected) {
+		return equals(this.value(), expected);
 	}
 }

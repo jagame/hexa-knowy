@@ -2,10 +2,19 @@ package com.knowy.server.application.domain;
 
 import com.knowy.server.application.domain.error.IllegalKnowyPasswordException;
 import com.knowy.server.application.domain.error.InvalidKnowyPasswordFormatException;
+import com.knowy.server.application.domain.validation.GenericValidator;
 
 import java.util.Objects;
 
-public record Password(String value) {
+public record Password(String value) implements ValueObject<String> {
+
+	private static final GenericValidator<String, Password, IllegalKnowyPasswordException> PASSWORD_VALIDATOR =
+		new GenericValidator<>(
+			"password",
+			"The minimum length of a password is 8 characters",
+			passwordValue -> passwordValue != null && passwordValue.length() >= 8,
+			IllegalKnowyPasswordException::new
+		);
 
 	public Password {
 		Objects.requireNonNull(value, "A password value can't be null");
@@ -15,66 +24,46 @@ public record Password(String value) {
 	}
 
 	public static void assertValid(String password) throws IllegalKnowyPasswordException {
-		if (!isValid(password)) {
-			throw new IllegalKnowyPasswordException("The minimum length of a password is 8 characters");
-		}
+		PASSWORD_VALIDATOR.assertValid(password);
 	}
 
 	public static boolean isValid(String passwordValue) {
-		return passwordValue != null && passwordValue.length() >= 8;
+		return PASSWORD_VALIDATOR.isValid(passwordValue);
 	}
 
 	public static void assertEquals(Password expected, Password candidate) throws IllegalKnowyPasswordException {
-		if (!equals(expected, candidate)) {
-			throw new IllegalKnowyPasswordException(
-				"The checked password doesn't match the value of the expected one"
-			);
-		}
+		PASSWORD_VALIDATOR.assertEquals(expected, candidate);
 	}
 
 	public static boolean equals(Password expected, Password candidate) {
-		Objects.requireNonNull(expected, "The expected password can't be null");
-		return Objects.equals(expected, candidate);
+		return PASSWORD_VALIDATOR.equals(expected, candidate);
 	}
 
 	public static void assertEquals(Password expected, String candidate) throws IllegalKnowyPasswordException {
-		if (!equals(expected, candidate)) {
-			throw new IllegalKnowyPasswordException(
-				"The checked password doesn't match the value of the expected one"
-			);
-		}
+		PASSWORD_VALIDATOR.assertEquals(expected, candidate);
 	}
 
 	public static boolean equals(Password expected, String candidate) {
-		Objects.requireNonNull(expected, "You need a non null password if you want to check another one");
-		return equals(expected.value(), candidate);
+		return PASSWORD_VALIDATOR.equals(expected, candidate);
 	}
 
 	public static void assertEquals(String expected, String candidate) throws IllegalKnowyPasswordException {
-		if (!equals(expected, candidate)) {
-			throw new IllegalKnowyPasswordException(
-				"The checked password doesn't match with the expected one"
-			);
-		}
+		PASSWORD_VALIDATOR.assertEquals(expected, candidate);
 	}
 
 	public static boolean equals(String expected, String candidate) {
-		Objects.requireNonNull(expected, "You need a non null password if you want to check another one");
-		return Objects.equals(expected, candidate);
+		return PASSWORD_VALIDATOR.equals(expected, candidate);
 	}
 
-	public void assertEquals(Password password) throws IllegalKnowyPasswordException {
-		assertEquals(password.value());
+	public void assertEquals(Password other) throws IllegalKnowyPasswordException {
+		assertEquals(this, other);
 	}
 
-	public void assertEquals(String candidate) throws IllegalKnowyPasswordException {
-		if (!hasValue(candidate)) {
-			throw new IllegalKnowyPasswordException(
-				"The checked password doesn't match with this one"
-			);
-		}
+	public void assertEquals(String other) throws IllegalKnowyPasswordException {
+		assertEquals(this, other);
 	}
 
+	@Override
 	public boolean hasValue(String testedValue) {
 		return Objects.equals(this.value, testedValue);
 	}

@@ -3,6 +3,7 @@ package com.knowy.server.application.service.usecase.update.email;
 import com.knowy.server.application.domain.Email;
 import com.knowy.server.application.domain.Password;
 import com.knowy.server.application.domain.PrivateUser;
+import com.knowy.server.application.domain.error.IllegalKnowyEmailException;
 import com.knowy.server.application.domain.error.IllegalKnowyPasswordException;
 import com.knowy.server.application.port.persistence.KnowyPersistenceException;
 import com.knowy.server.application.port.persistence.PrivateUserRepository;
@@ -17,7 +18,9 @@ public class UpdateUserEmailUseCase implements KnowyUseCase<UpdateUserEmailComma
 	}
 
 	@Override
-	public Void execute(UpdateUserEmailCommand userEmailUpdate) throws KnowyUserEmailUpdateException, IllegalKnowyPasswordException {
+	public Void execute(UpdateUserEmailCommand userEmailUpdate)
+		throws IllegalKnowyEmailException, IllegalKnowyPasswordException, KnowyUserEmailUpdateException {
+
 		try {
 			PrivateUser user = privateUserRepository.getByEmail(userEmailUpdate.currentEmail());
 
