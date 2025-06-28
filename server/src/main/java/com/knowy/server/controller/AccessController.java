@@ -68,26 +68,9 @@ public class AccessController {
 		}
 	}
 
-	// LOGOUT SIN QUE DESTRUYA LA COOKIE
-//	@GetMapping("/logout")
-//	public String logout(HttpSession session) {
-//		session.invalidate(); // Invalida la sesión actual (cierra sesión)
-//		return "redirect:/"; // Redirige a la página de inicio
-//	}
-
 	@GetMapping("/logout")
-	public String logout(HttpServletRequest request, HttpServletResponse response) {
-		HttpSession session = request.getSession(false);
-		if (session != null) {
-			session.invalidate();
-		}
-
-		// Eliminar cookie JSESSIONID del navegador
-		Cookie cookie = new Cookie("JSESSIONID", null);
-		cookie.setPath("/");
-		cookie.setMaxAge(0);
-		response.addCookie(cookie);
-
+	public String logout(HttpSession session) {
+		session.invalidate();
 		return "redirect:/";
 	}
 
