@@ -1,32 +1,60 @@
 package com.knowy.server.service;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.knowy.server.entity.PrivateUserEntity;
+import com.knowy.server.entity.PublicUserEntity;
+import com.knowy.server.repository.JpaPrivateUserRepository;
+import com.knowy.server.repository.JpaPublicUserRepository;
 import org.springframework.stereotype.Service;
 
-@Getter
-@Setter
+import java.util.Optional;
+
+
 @Service
 public class UserService {
-	private String username = "usuario123";
-	private String privateUsername = "usuario@Privado123";
-	private String email = "usuario123@gmail.com";
-	private String password = "12345aA@";
+	private final JpaPrivateUserRepository jpaPrivateUserRepository;
+	private final JpaPublicUserRepository jpaPublicUserRepository;
 
-	public boolean validatePrivateUsername(String newPrivateUsername){
-		return !(newPrivateUsername.equals(this.privateUsername));
+
+	public UserService(JpaPrivateUserRepository jpaPrivateUserRepository, JpaPublicUserRepository jpaPublicUserRepository) {
+		this.jpaPrivateUserRepository = jpaPrivateUserRepository;
+		this.jpaPublicUserRepository = jpaPublicUserRepository;
 	}
 
-	public boolean validateCurrentPassword(String pass){
-		return this.password.equals(pass);
+	public Optional<PublicUserEntity> findPublicUserById(Integer id) {
+		return jpaPublicUserRepository.findUserById(id);
 	}
 
-	public boolean validateEqualEmail(String email){
-		return !(this.email.equals(email));
+	public Optional<PrivateUserEntity> findPrivateUserByEmail(String email){
+		return jpaPrivateUserRepository.findByEmail(email);
 	}
 
+	private boolean isCurrentNickname(String newNickname, PublicUserEntity user){
+		return (user.getNickname().equals(newNickname));
+	}
 
+	private boolean isCurrentEmail(String newEmail, PrivateUserEntity privateUser){
+		return (privateUser.getEmail().equals(newEmail));
+	}
 
+	private boolean isValidPassword(String currentPassword, PrivateUserEntity privateUser){
+		return privateUser.getPassword().equals(currentPassword);
+	}
 
+	public boolean updateNickname(String newNickname, Integer id){
+		Optional<PublicUserEntity> publicUser = findPublicUserById(id);
+		if(publicUser.isPresent() && !isCurrentNickname(newNickname, publicUser.get())){
+			jpaPublicUserRepository.updateNickname(newNickname, id);
+			return true;
+		}
+		return false;
+	}
 
+	public boolean updateEmail(String email,  String newEmail, String currentPassword){
+		Optional<PrivateUserEntity> privateUser = findPrivateUserByEmail(email);
+		if(privateUser.isPresent() && !isCurrentEmail(newEmail, privateUser.get()) && isValidPassword(currentPassword, privateUser.get())){
+			jpaPrivateUserRepository.updateEmail(email, newEmail);
+			return true;
+		}
+		return false;
+	}
 }
