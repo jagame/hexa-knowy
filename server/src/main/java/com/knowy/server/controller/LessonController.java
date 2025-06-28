@@ -2,6 +2,7 @@ package com.knowy.server.controller;
 
 
 import com.knowy.server.controller.model.LessonDto;
+import com.knowy.server.controller.model.LinkType;
 import com.knowy.server.controller.model.LinksLessonDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,20 +21,43 @@ public class LessonController {
 
 
 
-		// Array de Links de ¿cada lección?
+		// Array of links from each lesson?
 		List<LinksLessonDto> LinksLessonList = new ArrayList<>();
-		LinksLessonDto url1 = new LinksLessonDto();
-		url1.setLinkTitle("Ecosia");
-		url1.setLinkUrl("https://www.ecosia.org");
 
-		LinksLessonDto url2 = new LinksLessonDto();
-		url2.setLinkTitle("Wikipedia");
-		url2.setLinkUrl("https://es.wikipedia.org");
+		//External links
+		LinksLessonList.add(new LinksLessonDto(
+			"Ecosia - Buscador ecológico",
+			"https://www.ecosia.org",
+			LinkType.EXTERNAL, ""
+		));
 
-		LinksLessonList.add(url1);
-		LinksLessonList.add(url2);
+		LinksLessonList.add(new LinksLessonDto(
+			"Wikipedia - Enciclopedia libre",
+			"https://es.wikipedia.org",
+			LinkType.EXTERNAL, ""
+		));
+
+		LinksLessonList.add(new LinksLessonDto(
+			"MDN Web Docs - JavaScript",
+			"https://developer.mozilla.org/es/docs/Web/JavaScript",
+			LinkType.EXTERNAL, ""
+		));
+
+		//Downloadable documents
+		LinksLessonList.add(new LinksLessonDto(
+			"Guía de JavaScript ES6+",
+			"/documents/javascript-es6-guide.pdf",
+			LinkType.DOCUMENT, "javascript-es6-guide.pdf"
+		));
+
+		LinksLessonList.add(new LinksLessonDto(
+			"Ejercicios prácticos",
+			"/documents/javascript-exercises.zip",
+			LinkType.DOCUMENT, "javascript-exercises.zip"
+		));
+
+
 		model.addAttribute("LinksLessonList", LinksLessonList);
-
 
 		return "pages/lesson-explanation";
 

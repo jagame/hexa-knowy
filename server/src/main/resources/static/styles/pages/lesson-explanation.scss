@@ -1,5 +1,5 @@
 @use "../global-vars" as *;
-@use "../components/lesson/documents-links";
+@use "../components/lesson/documents-links" as *;
 
 body {
 	box-sizing: border-box;

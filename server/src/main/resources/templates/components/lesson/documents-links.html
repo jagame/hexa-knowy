@@ -1,15 +1,43 @@
-
 <div class="documentContainer" th:fragment="documentLinkComponent(LinksList)">
-	<div class="documentHeader">Documentos</div>
-	<div class="documentContainerPadding">
+	<div class="accordion" id="documentContainer">
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="documentSection">
+				<button class="accordion-button" type="button"
+						data-bs-toggle="collapse"
+						data-bs-target="#collapseOne"
+						aria-expanded="false"
+						aria-controls="collapseOne">
+					Documentos
+				</button>
+			</h2>
+			<div id="collapseOne" class="accordion-collapse collapse "
+				 aria-labelledby="documentSection"
+				 data-bs-parent="#documentContainer">
+				<div class="accordion-body">
+					<div class="documents-list">
+						<div th:each="link : ${LinksList}">
 
-		<!--Botones de cada enlace externos -->
-		<div class="documentButton">
-			<div th:each="link : ${LinksList}">
-				<a th:href="${link.getLinkUrl()}" th:text="'🔗 ' + ${link.getLinkTitle()}" target="_blank"></a>
+							<a th:if="${link.type.name() == 'DOCUMENT'}"
+							   th:href="${link.getLinkUrl()}"
+							   th:download="${link.getFileName()}"
+							   class="document-link download">
+								<i class="bi bi-download"></i>
+								<span class="title-link download" th:text="${link.getLinkTitle()}">Título del documento</span>
+							</a>
+
+							<a th:if="${link.type.name() == 'EXTERNAL'}"
+							   th:href="${link.getLinkUrl()}"
+							   target="_blank"
+							   rel="noopener noreferrer"
+							   class="document-link external">
+								<i class="bi bi-box-arrow-up-right"></i>
+								<span class="title-link" th:text="${link.getLinkTitle()}">Título del enlace</span>
+							</a>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
-
 	</div>
 </div>
 

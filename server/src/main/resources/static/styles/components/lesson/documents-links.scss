@@ -1,60 +1,99 @@
 @use '../../_global-vars' as *;
+@use '../../font' as *;
+@use '../../global' as *;
 
-
-
-body {
-	font-family: 'Excalifont', sans-serif; 			/* Fuente principal Excalifont */
-	background-color: #f4f4f4;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100vh;
-}
-
-.documentContainer {								/*Contenedor grande*/
-	border: 2px solid #5b92c2;
+.accordion{
+	border: 3px solid $info-500;
 	border-radius: $radius-8;
-	width: 500px;
-	background-color: #f3f3f3;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	background-color: $neutral-100;
+	box-shadow: $card-shadow;
+	overflow: hidden;
 }
 
-.documentHeader {
-	font-family: 'Caveat Brush', cursive;  			/* Fuente cabecera Caveat Brush */
-	background-color: #1993ff;
-	padding: 10px;
-	border-bottom: 2px solid #5b92c2;
-	border-top-left-radius: 3px;
-	border-top-right-radius: 3px;
-	text-align: left;
-	color: white;
-	font-size: 24px;
+.accordion .accordion-button{
+	font-family: "caveat-brush", cursive;
+	background-color: $info-600;
+	color: $neutral-100;
+	font-size:24px;
+	padding: 1rem 1.25rem;
+	outline: none;
+	box-shadow: none;
+}
+.accordion-button:not(.collapsed)::after {
+	filter: brightness(0) invert(1); // Esto hace la flecha blanca
 }
 
-.documentContainerPadding {  					/*Padding con cabecera contenedor*/
-	padding: 15px;
+.accordion .accordion-item{
+	border:none;
+	background:transparent;
 }
 
-.documentButton {                   		 	  /* Botones */
+.accordion-body{
+	background-color: $neutral-100;
+	padding: 1.5rem;
+}
+
+.documents-list{
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
-	margin-bottom: 15px;
+	gap: 1rem;
 }
 
-.documentButton a {								/* Estilo botones "a"*/
-	border: 2px solid #5b92c2;
+.accordion .document-link{
+	display: flex;
+	gap: 1rem;
+	align-items: center;
+	padding: 0.6rem 1rem;
+	border: 3px solid $info-500;
+	border-radius: $radius-8;
+	background-color: $neutral-100;
+	color: $neutral-700;
 	text-decoration: none;
-	background-color: #ffffff;
-	color: black;
-	padding: 10px;
-	text-align: center;
-	border-radius: 4px;
-	font-weight: bold;
-	transition: background-color 0.3s;
-	font-family: 'Inter', sans-serif;
+	font-family: "inter", sans-serif;
+	font-size: 17px;
+	transition: $transition-speed;
+	cursor: pointer;
 }
 
-.documentButton a:hover {							/* Sombra botones "a"*/
-	background-color: #c4e3ff;
+.document-link:hover{
+	transform: translateY(-2px);
+	transition: $transition-speed;
+	box-shadow: $card-shadow;
+	text-decoration: none;
 }
+
+.document-link.download:hover{
+	background-color: $secundary-100;
+	border-color: $secundary-500;
+	color: $secundary-700;
+}
+.document-link.download:hover .title-link {
+	color: $secundary-700;
+}
+
+.document-link.external:hover{
+	background-color: $primary-100;
+	border-color: $primary-500;
+	color: $primary-700;
+}
+.document-link.external:hover .title-link {
+	color: $primary-700;
+}
+
+.title-link{
+	flex-grow:1;
+	font-size: 18px;
+	font-family: "caveat-brush", cursive;
+	color: $neutral-900;
+}
+
+
+
+.document-url{
+	font-family: "inter", sans-serif;
+	font-size: 13px;
+	color: $secundary-300;
+
+}
+
+
