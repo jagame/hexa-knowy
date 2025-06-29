@@ -4,10 +4,10 @@ import com.knowy.server.controller.dto.AuthResultDto;
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.repository.PrivateUserRepository;
 import com.knowy.server.service.exception.AccessException;
-import com.knowy.server.util.TokenService;
+import com.knowy.server.util.EmailClientService;
+import com.knowy.server.util.JwtService;
 import com.knowy.server.util.exception.MailDispatchException;
 import com.knowy.server.util.exception.UserNotFoundException;
-import com.knowy.server.util.EmailClientService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,12 +15,12 @@ import java.util.Optional;
 @Service
 public class AccessService {
 
-	private final TokenService tokenService;
+	private final JwtService jwtService;
 	private final EmailClientService emailClientService;
 	private final PrivateUserRepository privateUserRepository;
 
-	public AccessService(TokenService tokenService, EmailClientService emailClientService, PrivateUserRepository privateUserRepository) {
-		this.tokenService = tokenService;
+	public AccessService(JwtService jwtService, EmailClientService emailClientService, PrivateUserRepository privateUserRepository) {
+		this.jwtService = jwtService;
 		this.emailClientService = emailClientService;
 		this.privateUserRepository = privateUserRepository;
 	}
@@ -55,7 +55,7 @@ public class AccessService {
 	}
 
 	private void updateUserToken(PrivateUserEntity user) {
-		String newToken = tokenService.generatePasswordResetToken(user.getEmail(), user.getId());
+		String newToken = jwtService.generatePasswordResetToken(user.getEmail(), user.getId());
 		user.setToken(newToken);
 		privateUserRepository.update(user);
 	}
@@ -109,7 +109,7 @@ public class AccessService {
 		if (foundUser.isPresent()) {
 			PrivateUserEntity user = foundUser.get();
 			if (user.getPassword().equals(password)) {
-				String token = tokenService.createLoginToken(user.getEmail(), user.getId());
+				String token = jwtService.createLoginToken(user.getEmail(), user.getId());
 				return Optional.of(new AuthResultDto(user, token));
 			}
 		}

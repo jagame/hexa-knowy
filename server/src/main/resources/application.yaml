@@ -1,4 +1,6 @@
 spring:
+    config:
+        import: "file:.env[.properties]"
     application:
         name: knowy-server
     datasource:
@@ -25,4 +27,4 @@ server:
 
 knowy:
     jwt:
-        phrase: ${JWT_SECRET_KEY}
+        key: ${JWT_SECRET_KEY}
