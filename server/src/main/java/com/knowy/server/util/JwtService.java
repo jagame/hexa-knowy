@@ -2,7 +2,9 @@ package com.knowy.server.util;
 
 import com.knowy.server.util.exception.JsonKnowyException;
 import com.knowy.server.util.exception.JwtKnowyException;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,9 +40,8 @@ public class JwtService {
 	/**
 	 * Encodes the given object as a signed JWT string.
 	 * <p>
-	 * The object is added to the token's claims under the key {@code "data"},
-	 * and the token is signed using the initialized HMAC key.
-	 * The generated token has a default expiration time of 1 hour.
+	 * The object is added to the token's claims under the key {@code "data"}, and the token is signed using the
+	 * initialized HMAC key. The generated token has a default expiration time of 1 hour.
 	 *
 	 * @param obj the object to encode into the JWT payload
 	 * @param <T> the type of the object being encoded
@@ -60,31 +61,39 @@ public class JwtService {
 	}
 
 	/**
-	 * Decodes the given JWT token and extracts the embedded object of the specified type.
+	 * Decodes the given JWT token and deserializes the {@code "data"} claim into the specified object type.
 	 * <p>
-	 * The method verifies the token's signature using the pre-configured key, parses the payload,
-	 * and retrieves the {@code "data"} claim, which is expected to contain the serialized object.
-	 * The data is then converted into the target class using the application's JSON serialization service.
+	 * This method verifies the token's signature using the configured HMAC key, extracts the {@code "data"} claim
+	 * from the token payload, and converts it into an instance of the specified class using the application's
+	 * JSON serialization service.
 	 *
-	 * @param token the JWT token to decode
-	 * @param clazz the target class to convert the embedded data into
-	 * @param <T> the type of the object expected from the token
-	 * @return the object extracted from the JWT payload
-	 * @throws JwtKnowyException if the token is invalid or if deserialization fails
+	 * @param token the signed JWT token containing the encoded object
+	 * @param clazz the target class to deserialize the {@code "data"} claim into
+	 * @param <T>   the type of object expected from the decoded token
+	 * @return the deserialized object extracted from the token's {@code "data"} claim
+	 * @throws JwtKnowyException if the token is invalid, the signature cannot be verified, or deserialization fails
 	 */
 	public <T> T decode(String token, Class<T> clazz) {
 		try {
-			JwtParser parser = Jwts.parser()
-				.verifyWith(key)
-				.build();
+			Claims claims = parseToken(token);
+			Map<?, ?> dataMap = extractDataClaim(claims);
 
-			Claims claims = parser.parseSignedClaims(token).getPayload();
-			Map<?, ?> objJson = claims.get("data", Map.class);
-
-			return jsonSerializationService.fromJson(objJson, clazz);
+			return jsonSerializationService.fromJson(dataMap, clazz);
 		} catch (JwtException | JsonKnowyException e) {
 			throw new JwtKnowyException("Failed to decode claims", e);
 		}
+	}
+
+	private Claims parseToken(String token) {
+		return Jwts.parser()
+			.verifyWith(key)
+			.build()
+			.parseSignedClaims(token)
+			.getPayload();
+	}
+
+	private Map<?, ?> extractDataClaim(Claims claims) {
+		return claims.get("data", Map.class);
 	}
 
 	public String generatePasswordResetToken(String email, int userId) {
