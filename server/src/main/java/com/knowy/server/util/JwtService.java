@@ -96,9 +96,25 @@ public class JwtService {
 		return claims.get("data", Map.class);
 	}
 
-	public String generatePasswordResetToken(String email, int userId) {
-		// TODO - Borrar
-		return UUID.randomUUID().toString();
+	/**
+	 * Validates whether the provided JWT token is valid.
+	 * This method verifies the token's signature and integrity using the configured key.
+	 * Returns {@code true} if the token is valid and untampered, {@code false} otherwise,
+	 * including cases where the token is malformed, expired, or has an invalid signature.
+	 *
+	 * @param token the JWT token string to be validated
+	 * @return {@code true} if the token is valid; {@code false} if the token is invalid or malformed
+	 */
+	public boolean isValidToken(String token) {
+		try {
+			Jwts.parser()
+				.verifyWith(key)
+				.build()
+				.parseSignedClaims(token);
+			return true;
+		} catch (JwtException | IllegalArgumentException e) {
+			return false;
+		}
 	}
 
 	public String createLoginToken(String email, int userId) {

@@ -129,7 +129,7 @@ public class AccessController {
 		@RequestParam String token,
 		Model model
 	) {
-		if (accessService.isTokenRegistered(token)) {
+		if (accessService.isValidToken(token)) {
 			model.addAttribute("token", token);
 			model.addAttribute("passwordForm", new UserPasswordFormDto());
 			return "pages/access/password-change";
@@ -149,7 +149,7 @@ public class AccessController {
 		@RequestParam String token,
 		@ModelAttribute("passwordForm") UserPasswordFormDto userPasswordFormDto
 	) {
-		if (accessService.isTokenRegistered(token)) {
+		if (accessService.isValidToken(token)) {
 			accessService.updateUserPassword(
 				token,
 				userPasswordFormDto.getPassword(),

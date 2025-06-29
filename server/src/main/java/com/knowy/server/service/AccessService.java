@@ -4,6 +4,8 @@ import com.knowy.server.controller.dto.AuthResultDto;
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.repository.PrivateUserRepository;
 import com.knowy.server.service.exception.AccessException;
+import com.knowy.server.service.model.PasswordResetJwt;
+import com.knowy.server.service.model.TokenTypeJwt;
 import com.knowy.server.util.EmailClientService;
 import com.knowy.server.util.JwtService;
 import com.knowy.server.util.exception.MailDispatchException;
@@ -55,9 +57,8 @@ public class AccessService {
 	}
 
 	private void updateUserToken(PrivateUserEntity user) {
-		String newToken = jwtService.generatePasswordResetToken(user.getEmail(), user.getId());
+		String newToken = jwtService.encode(new PasswordResetJwt(user.getId(), user.getEmail(), TokenTypeJwt.PASSWORD_RESET));
 		user.setToken(newToken);
-		privateUserRepository.update(user);
 	}
 
 	public void sendRecoveryToken(PrivateUserEntity user, String appUrl) throws MailDispatchException {
@@ -94,9 +95,8 @@ public class AccessService {
 	 * @param token the token to check
 	 * @return true if the token exists and matches a registered token, false otherwise
 	 */
-	public boolean isTokenRegistered(String token) {
-		String privateUserToken = privateUserRepository.findByToken(token).getToken();
-		return token.equals(privateUserToken);
+	public boolean isValidToken(String token) {
+		return jwtService.isValidToken(token);
 	}
 
 	public void updateUserPassword(String token, String oldPassword, String newPassword) {
