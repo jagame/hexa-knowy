@@ -1,4 +1,4 @@
-package com.knowy.server.service.exception;
+package com.knowy.server.util.exception;
 
 public class MailDispatchException extends Exception {
 	public MailDispatchException(String message) {

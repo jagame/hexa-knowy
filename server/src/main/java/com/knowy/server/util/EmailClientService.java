@@ -1,13 +1,11 @@
-package com.knowy.server.service;
+package com.knowy.server.util;
 
-import com.knowy.server.service.exception.MailDispatchException;
+import com.knowy.server.util.exception.MailDispatchException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-
-import java.net.http.HttpHeaders;
 
 @Slf4j
 @Service

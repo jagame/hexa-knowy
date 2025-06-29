@@ -40,6 +40,6 @@ public class CoursePage {
 		course.setLessons(lessons);
 		model.addAttribute("course", course);
 		model.addAttribute("lastLesson", lastLesson);
-		return "/pages/course-page";
+		return "pages/course-page";
 	}
 }

@@ -45,7 +45,7 @@ public class PresentationController {
 		solutions.add(new SolutionDto("Tarjeta 3: Python", "Pregunta tarjeta 3", "Solución tarjeta 3"));
 		interfaceScreen.addAttribute("solutions", solutions);
 
-		return "/pages/landing-page";
+		return "pages/landing-page";
 	}
 
 	@GetMapping("/example")

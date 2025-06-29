@@ -4,8 +4,6 @@ import com.knowy.server.controller.dto.*;
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.service.AccessService;
 import com.knowy.server.service.exception.AccessException;
-import com.knowy.server.service.exception.MailDispatchException;
-import com.knowy.server.service.exception.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;

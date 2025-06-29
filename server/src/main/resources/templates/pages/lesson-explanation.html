@@ -15,19 +15,19 @@
 
 <main layout:fragment="main-content" class="main-content">
 
-	<img class="img-head" th:src="${lesson.image}" alt="Imagen">
+<!--	<img alt="Imagen" class="img-head" th:src="${lesson.image}">
 	<div class="container-flex mt-3">
 		<div>
 			<h4 class="title" th:text="${lesson.title}">Título de la lección</h4>
 			<p class="icon"><i class="bi bi-clock-fill m-1"></i>
 				<span class="duration" th:text="${lesson.duration}">Duración de la lección</span></p>
 		</div>
-		<a th:href="${lesson.link}" class="btn btn-lesson">Iniciar lección</a>
+		<a class="btn btn-lesson" th:href="${lesson.link}">Iniciar lección</a>
 	</div>
 	<p class="info-course">Información del curso</p>
 	<div class="theory"><p th:text="${lesson.theory}">Teoría del curso</p></div>
 	<div th:replace="~{components/lesson/feedbackModal :: feedbackModal}"></div>
-	<button onclick="openModal()">Abrir modal</button>
+	<button onclick="openModal()">Abrir modal</button>-->
 </main>
 
 </body>

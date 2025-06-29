@@ -4,8 +4,10 @@ import com.knowy.server.controller.dto.AuthResultDto;
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.repository.PrivateUserRepository;
 import com.knowy.server.service.exception.AccessException;
-import com.knowy.server.service.exception.MailDispatchException;
-import com.knowy.server.service.exception.UserNotFoundException;
+import com.knowy.server.util.TokenService;
+import com.knowy.server.util.exception.MailDispatchException;
+import com.knowy.server.util.exception.UserNotFoundException;
+import com.knowy.server.util.EmailClientService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

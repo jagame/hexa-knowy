@@ -22,3 +22,7 @@ spring:
                         enable: false
 server:
     port: 8080
+
+knowy:
+    jwt:
+        phrase: ${JWT_SECRET_KEY}
