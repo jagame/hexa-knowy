@@ -10,24 +10,43 @@
 	<link rel="stylesheet"
 		  href="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/css/tabler.min.css"/>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+	<link rel="stylesheet" th:href="@{/styles/pages/course-page.css}">
 </head>
 <body>
+<aside class="kn-aside" layout:fragment="sidebar">
+	<div class="lessons-component">
+		<div class="course-title">
+			<h2 th:text="${course.name}">Nombre del Curso</h2>
+			<div class="course-title__progressbar">
+				<span class="course-title__percentage" th:text="${course.percentageCompleted + '% completado'}"></span>
+
+				<div class="progress-bar">
+					<div class="progress" th:style="'width:' + ${course.percentageCompleted} + '%'"></div>
+				</div>
+				<a class="introduction-btn--purple">Introducción al curso</a>
+			</div>
+		</div>
+		<div th:replace="~{components/lessonscard ::lessonscard(${course})}"></div>
+	</div>
+</aside>
 
 	<main layout:fragment="main-content" class="main-content">
 
-	<img class="img-head" th:src="${lesson.image}" alt="Imagen">
+<!--	<img class="img-head" th:src="${lesson.image}" alt="Imagen">-->
 	<div class="container-flex mt-3">
 		<div>
-			<h4 class="title" th:text="${lesson.title}">Título de la lección</h4>
+			<h4 class="title" th:text="${lesson.name}">Título de la lección</h4>
 			<p class="icon"><i class="bi bi-clock-fill m-1"></i>
-				<span class="duration" th:text="${lesson.duration}">Duración de la lección</span></p>
+<!--				<span class="duration" th:text="${lesson.duration}">Duración de la lección</span></p>-->
 		</div>
-		<a th:href="${lesson.link}" class="btn btn-lesson">Iniciar lección</a>
+		<a href="#" class="btn btn-lesson">Iniciar lección</a>
 	</div>
 	<p class="info-course">Información del curso</p>
-	<div class="theory"><p th:text="${lesson.theory}">Teoría del curso</p></div>
-	<div th:replace="~{components/lesson/feedbackModal :: feedbackModal}"></div>
-	<button onclick="openModal()">Abrir modal</button>
+
+
+
+
+
 </main>
 
 </body>
