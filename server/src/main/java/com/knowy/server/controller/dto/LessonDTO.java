@@ -11,6 +11,7 @@ public class LessonDTO {
 	private int number;
 	private String name;
 	private LessonStatus status; //depende de ENUM LessonStatus
+	private String image;
 
 	public enum LessonStatus {
 		COMPLETE,
