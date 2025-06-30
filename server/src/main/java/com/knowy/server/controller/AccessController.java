@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 @Slf4j
 @Controller
 public class AccessController {
+
 	AccessService accessService;
 
 	public AccessController(AccessService accessService) {
@@ -68,6 +68,12 @@ public class AccessController {
 			model.addAttribute("loginForm", new LoginFormDto());
 			return "pages/access/login";
 		}
+	}
+
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "redirect:/";
 	}
 
 	/**

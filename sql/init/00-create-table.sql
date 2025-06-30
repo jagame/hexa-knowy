@@ -1,7 +1,8 @@
 CREATE TABLE IF NOT EXISTS public.public_user
 (
-	id       serial      NOT NULL,
-	nickname varchar(50) NOT NULL UNIQUE,
+	id               serial      NOT NULL,
+	id_profile_image integer NOT NULL,
+	nickname         varchar(50) NOT NULL UNIQUE,
 	PRIMARY KEY (id)
 );
 
@@ -84,6 +85,18 @@ CREATE TABLE IF NOT EXISTS public.public_user_option
 	rate           numeric   NOT NULL DEFAULT 0,
 	PRIMARY KEY (id_public_user, id_option)
 );
+
+CREATE TABLE IF NOT EXISTS public.profile_image
+(
+	id       serial NOT NULL,
+	url      text   NOT NULL,
+	PRIMARY KEY (id)
+);
+
+-- FK public_user
+ALTER TABLE IF EXISTS public.public_user
+	ADD FOREIGN KEY (id_profile_image)
+	REFERENCES public.profile_image (id);
 
 -- FK private_user
 ALTER TABLE IF EXISTS public.private_user
