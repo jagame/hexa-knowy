@@ -1,10 +1,10 @@
 package com.knowy.server.repository;
 
-import com.knowy.server.entity.PublicUser;
-
+import com.knowy.server.entity.PublicUserEntity;
 import java.util.Optional;
 
+
 public interface PublicUserRepository {
-	Optional<PublicUser> findByNickname(String nickname);
-	PublicUser save(PublicUser publicUser);
+	Optional<PublicUserEntity> findUserById(Integer id);
+	void updateNickname(String nickname, int id);
 }

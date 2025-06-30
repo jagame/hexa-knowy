@@ -1,10 +1,12 @@
 @use "../global-vars" as *;
-@use "../components/lesson/feedbackModal";
+@use "../components/lesson/documents-links" as *;
+
 body {
 	box-sizing: border-box;
 	font-family: Arial;
 	background-color: $neutral-300;
 }
+
 .img-head {
 	height: 300px;
 	width: 100%;
@@ -30,10 +32,7 @@ body {
 
 .btn-lesson {
 	font-size: 20px;
-	margin-right: 60px;
-	padding: 20px;
-	border-radius: $card-radius;
-	box-shadow: $card-shadow;
+	font-family: caveat-brush;
 	background-color: $primary-500;
 	color:$neutral-100;
 }
@@ -55,10 +54,6 @@ body {
 
 .theory {
 	margin-top: 30px;
-	margin-left: 10px;
-}
-
-.icon {
 	margin-left: 10px;
 }
 

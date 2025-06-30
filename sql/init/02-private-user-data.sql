@@ -1,2 +1,0 @@
-INSERT INTO public.private_user (id, email, password) VALUES (1, 'morenito@kn.com', '12345678');
-INSERT INTO public.private_user (id, email, password) VALUES (2, 'princesa@kn.com', '12345678');

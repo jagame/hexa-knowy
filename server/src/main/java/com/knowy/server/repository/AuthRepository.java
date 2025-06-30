@@ -4,10 +4,6 @@ import com.knowy.server.entity.PrivateUserEntity;
 
 import java.util.Optional;
 
-
-public interface PrivateUserRepository {
+public interface AuthRepository {
 	Optional<PrivateUserEntity> findByEmail(String email);
-	void updateEmail(String email, String newEmail);
-
-
 }

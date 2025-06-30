@@ -2,25 +2,24 @@
 
 /*Footer styles*/
 
-.footer{
-	padding: 0 clamp(15px, 3vw, 30px);
-	margin: 0 auto;
+.kn-footer{
+	padding: 0 0.5rem;
+	margin-top: auto;
 	width: 100%;
-	background-color: $neutral-300;
 }
-.footer > a{
+.kn-footer > a{
 	color: $primary-500;
 	transition:color $transition-speed;
 	padding: clamp(8px, 1.5vw, 15px) 0;
 }
 
-.footer > a:hover{
+.kn-footer > a:hover{
 	color: $primary-700;
 }
 /* Global styles for social media icons */
 
 /* Base style for all icons */
-.footer > .bi {
+.kn-footer > .bi {
 	display: inline-block;
 	vertical-align: -0.125em;
 	transition: transform 0.2s ease;

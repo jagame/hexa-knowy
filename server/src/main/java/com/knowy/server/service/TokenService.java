@@ -11,4 +11,9 @@ public class TokenService {
 		// TODO - Implementar JWT
 		return UUID.randomUUID().toString();
 	}
+
+	public String createLoginToken(String email, Long userId) {
+		// TODO - Reemplazar por JWT más adelante
+		return UUID.randomUUID().toString();
+	}
 }
