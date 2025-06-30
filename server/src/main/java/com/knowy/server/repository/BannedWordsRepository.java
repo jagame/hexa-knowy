@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface BannedWordsRepository extends JpaRepository<BannedWordsEntity, Long> {
+public interface BannedWordsRepository {
 	List<BannedWordsEntity> findAll();
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -27,8 +28,9 @@ public class PublicUserEntity {
 	@JoinColumn(name = "id_profile_image", referencedColumnName = "id")
 	private ProfileImageEntity profileImage;
 
-	private String profilePicture;
-	private List<String> favouriteLanguages;
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name="public_user_language")
+	private Set<LanguageEntity> languages;
 
 	@OneToOne(mappedBy = "publicUserEntity")
 	private PrivateUserEntity privateUserEntity;

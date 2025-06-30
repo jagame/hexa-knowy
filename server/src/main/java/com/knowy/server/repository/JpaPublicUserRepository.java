@@ -19,4 +19,15 @@ public interface JpaPublicUserRepository extends PublicUserRepository, JpaReposi
 			save(user);
 		});
 	}
+
+	//TODO AÑADIR EXCEPCION?
+	@Override
+	default Optional<PublicUserEntity> findByUsername(String username) {
+		return findByUsername(username);
+	}
+
+	@Override
+	default boolean existsByUsername(String username) {
+		return false;
+	}
 }

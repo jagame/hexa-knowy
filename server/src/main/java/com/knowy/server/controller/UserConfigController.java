@@ -135,11 +135,11 @@ public class UserConfigController {
 			return "pages/user-management/user-profile";
 
 		} else {
-			userService.updateFavLanguages(userProfileDTO.getUsername(), userProfileDTO.getLanguages());
+			userService.updateUserLanguages(userProfileDTO.getUsername(), userProfileDTO.getLanguages());
 
 			model.addAttribute("success", "Perfil actualizado correctamente");
 			model.addAttribute("username", userProfileDTO.getUsername());
-			model.addAttribute("profilePicture", userProfileDTO.getProfilePicture());
+//			model.addAttribute("profilePicture", userProfileDTO.getProfilePicture());
 			model.addAttribute("languages", userProfileDTO.getLanguages());
 
 		}
