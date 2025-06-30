@@ -1,61 +1,63 @@
 package com.knowy.server.application.domain;
 
+import com.knowy.server.application.domain.assertion.Assert;
+import com.knowy.server.application.domain.assertion.ValueObjectComparator;
 import com.knowy.server.application.domain.error.IllegalKnowyEmailException;
-import com.knowy.server.application.domain.error.IllegalKnowyPasswordException;
 import com.knowy.server.application.domain.error.InvalidKnowyEmailFormatException;
-import com.knowy.server.application.domain.validation.GenericValidator;
 
 import java.util.Objects;
 
 public record Email(String value) implements ValueObject<String> {
 
-	private static final GenericValidator<String, Email, IllegalKnowyEmailException> EMAIL_VALIDATOR =
-		new GenericValidator<>(
+	private static final String VALIDATION_ERROR_MESSAGE = "An email must match the expression <user>@<domain>";
+	private static final Assert.AssertionBuilder<String> ASSERT_IS_VALID_EMAIL = Assert.that(Email::isValid);
+	private static final ValueObjectComparator<String, Email, IllegalKnowyEmailException> EMAIL_COMPARATOR =
+		new ValueObjectComparator<>(
 			"email",
-			"An email must match the expression <user>@<domain>",
-			emailValue -> emailValue != null && emailValue.chars()
-				.filter(ch -> ch == '@')
-				.count() == 1,
 			IllegalKnowyEmailException::new
 		);
 
 	public Email {
 		Objects.requireNonNull(value, "An email value can't be null");
-		if (!isValid(value)) {
-			throw new InvalidKnowyEmailFormatException("An email must match the expression <user>@<domain>");
-		}
-	}
-
-	public static void assertValid(String email) throws IllegalKnowyEmailException {
-		EMAIL_VALIDATOR.assertValid(email);
+		ASSERT_IS_VALID_EMAIL
+			.orElseThrow(() -> new InvalidKnowyEmailFormatException(VALIDATION_ERROR_MESSAGE))
+			.value(value);
 	}
 
 	public static boolean isValid(String emailValue) {
-		return EMAIL_VALIDATOR.isValid(emailValue);
+		return emailValue != null && emailValue.chars()
+			.filter(ch -> ch == '@')
+			.count() == 1;
+	}
+
+	public static void assertValid(String email) throws IllegalKnowyEmailException {
+		ASSERT_IS_VALID_EMAIL
+			.orElseThrow(() -> new IllegalKnowyEmailException(VALIDATION_ERROR_MESSAGE))
+			.value(email);
 	}
 
 	public static void assertEquals(Email expected, Email candidate) throws IllegalKnowyEmailException {
-		EMAIL_VALIDATOR.assertEquals(expected, candidate);
+		EMAIL_COMPARATOR.assertEquals(expected, candidate);
 	}
 
 	public static boolean equals(Email expected, Email candidate) {
-		return EMAIL_VALIDATOR.equals(expected, candidate);
+		return EMAIL_COMPARATOR.equals(expected, candidate);
 	}
 
 	public static void assertEquals(Email expected, String candidate) throws IllegalKnowyEmailException {
-		EMAIL_VALIDATOR.assertEquals(expected, candidate);
+		EMAIL_COMPARATOR.assertEquals(expected, candidate);
 	}
 
 	public static boolean equals(Email expected, String candidate) {
-		return EMAIL_VALIDATOR.equals(expected, candidate);
+		return EMAIL_COMPARATOR.equals(expected, candidate);
 	}
 
-	public static void assertEquals(String expected, String candidate) throws IllegalKnowyPasswordException {
-		EMAIL_VALIDATOR.assertEquals(expected, candidate);
+	public static void assertEquals(String expected, String candidate) throws IllegalKnowyEmailException {
+		EMAIL_COMPARATOR.assertEquals(expected, candidate);
 	}
 
 	public static boolean equals(String expected, String candidate) {
-		return EMAIL_VALIDATOR.equals(expected, candidate);
+		return EMAIL_COMPARATOR.equals(expected, candidate);
 	}
 
 	public void assertEquals(Email other) throws IllegalKnowyEmailException {
