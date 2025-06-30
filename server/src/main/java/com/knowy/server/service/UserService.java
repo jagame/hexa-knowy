@@ -2,13 +2,10 @@ package com.knowy.server.service;
 
 import com.knowy.server.entity.LanguageEntity;
 import com.knowy.server.entity.PublicUserEntity;
-import com.knowy.server.repository.BannedWordsRepository;
-import com.knowy.server.repository.JpaLanguageRepository;
+import com.knowy.server.repository.*;
 import lombok.Getter;
 import lombok.Setter;
 import com.knowy.server.entity.PrivateUserEntity;
-import com.knowy.server.repository.JpaPrivateUserRepository;
-import com.knowy.server.repository.JpaPublicUserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -23,14 +20,14 @@ import java.util.stream.Collectors;
 public class UserService {
 	private final JpaPrivateUserRepository jpaPrivateUserRepository;
 	private final JpaPublicUserRepository jpaPublicUserRepository;
-	private final BannedWordsRepository bannedWordsRepo;
+	private final JpaBannedWordsRepository jpaBannedWordsRepo;
 	private final JpaLanguageRepository jpaLanguageRepository;
 
 
-	public UserService(JpaPrivateUserRepository jpaPrivateUserRepository, JpaPublicUserRepository jpaPublicUserRepository, BannedWordsRepository bannedWordsRepo, JpaLanguageRepository jpaLanguageRepository) {
+	public UserService(JpaPrivateUserRepository jpaPrivateUserRepository, JpaPublicUserRepository jpaPublicUserRepository, JpaBannedWordsRepository jpaBannedWordsRepo, JpaLanguageRepository jpaLanguageRepository) {
 		this.jpaPrivateUserRepository = jpaPrivateUserRepository;
 		this.jpaPublicUserRepository = jpaPublicUserRepository;
-		this.bannedWordsRepo = bannedWordsRepo;
+		this.jpaBannedWordsRepo = jpaBannedWordsRepo;
 		this.jpaLanguageRepository = jpaLanguageRepository;
 	}
 
@@ -73,7 +70,7 @@ public class UserService {
 		//method to check if the new username contains any of the banned words
 		public boolean isInappropriateName(String username) {
 			String lowerCaseUsername = username.toLowerCase();
-			return bannedWordsRepo.findAll().stream().map(bw -> bw.getWord().toLowerCase()).anyMatch(lowerCaseUsername::contains);
+			return jpaBannedWordsRepo.findAll().stream().map(bw -> bw.getWord().toLowerCase()).anyMatch(lowerCaseUsername::contains);
 		}
 
 		//method to check if the username already exists
