@@ -55,24 +55,23 @@ public class AccessService {
 			PrivateUserEntity user = privateUserRepository.findByEmail(email)
 				.orElseThrow(() -> new UserNotFoundException(String.format("The user with email %s was not found", email)));
 
-			updateUserToken(user);
+			String token = createUserToken(user);
 
-			sendRecoveryToken(user, recoveryBaseUrl);
+			sendRecoveryToken(user, token, recoveryBaseUrl);
 		} catch (UserNotFoundException | MailDispatchException | JwtKnowyException e) {
 			throw new AccessException("Failed to send the password reset url to the user's email", e);
 		}
 	}
 
-	private void updateUserToken(PrivateUserEntity user) throws JwtKnowyException {
+	private String createUserToken(PrivateUserEntity user) throws JwtKnowyException {
 		PasswordResetJwt passwordResetJwt = new PasswordResetJwt(user.getId(), user.getEmail(), TokenTypeJwt.PASSWORD_RESET);
-		String newToken = jwtService.encode(passwordResetJwt, user.getPassword());
-		user.setToken(newToken);
+		return jwtService.encode(passwordResetJwt, user.getPassword());
 	}
 
-	private void sendRecoveryToken(PrivateUserEntity user, String appUrl) throws MailDispatchException {
+	private void sendRecoveryToken(PrivateUserEntity user, String token, String appUrl) throws MailDispatchException {
 		String to = user.getEmail();
 		String subject = "Tu enlace para recuperar la cuenta de Knowy está aquí";
-		String body = tokenBody(user.getToken(), appUrl);
+		String body = tokenBody(token, appUrl);
 
 		emailClientService.sendEmail(to, subject, body);
 	}
@@ -130,7 +129,7 @@ public class AccessService {
 			jwtService.decode(privateUser.getPassword(), token, PasswordResetJwt.class);
 
 			privateUser.setPassword(password);
-			privateUserRepository.update(privateUser);
+			privateUserRepository.save(privateUser);
 		} catch (JwtKnowyException e) {
 			throw new AccessException("Failed to decode and verify token", e);
 		}

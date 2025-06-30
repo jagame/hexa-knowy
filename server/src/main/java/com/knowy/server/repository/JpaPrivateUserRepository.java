@@ -2,6 +2,7 @@ package com.knowy.server.repository;
 
 import com.knowy.server.entity.PrivateUserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -21,12 +22,8 @@ public interface JpaPrivateUserRepository extends PrivateUserRepository, JpaRepo
 	}
 
 	@Override
-	default void update(PrivateUserEntity user) {
-		save(user);
-	}
-
-	@Override
-	PrivateUserEntity findByToken(String token);
+	@NonNull
+	<S extends PrivateUserEntity> S save(@NonNull S user);
 
 	@Override
 	PrivateUserEntity findById(int id);

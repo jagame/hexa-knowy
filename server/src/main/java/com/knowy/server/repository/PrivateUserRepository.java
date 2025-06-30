@@ -10,9 +10,7 @@ public interface PrivateUserRepository {
 
 	void updateEmail(String email, String newEmail);
 
-	void update(PrivateUserEntity user);
-
-	PrivateUserEntity findByToken(String token);
+	<S extends PrivateUserEntity> S save(S user);
 
 	PrivateUserEntity findById(int id);
 }
