@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 @Slf4j
@@ -84,7 +85,7 @@ public class AccessController {
 	/**
 	 * Handles the POST request to initiate a password change by sending a recovery email.
 	 *
-	 * @param email the form object containing the user's email address
+	 * @param email              the form object containing the user's email address
 	 * @param redirectAttributes attributes used to pass flash messages during redirect
 	 * @param httpServletRequest the HTTP servlet request object, used to build the password change URL
 	 * @return a redirect string to either the login page on success or back to the email form on failure
@@ -129,33 +130,37 @@ public class AccessController {
 		@RequestParam String token,
 		Model model
 	) {
-		if (accessService.isValidToken(token)) {
-			model.addAttribute("token", token);
-			model.addAttribute("passwordForm", new UserPasswordFormDto());
-			return "pages/access/password-change";
-		}
-		return "redirect:/";
+		model.addAttribute("token", token);
+		model.addAttribute("passwordForm", new UserPasswordFormDto());
+		return "pages/access/password-change";
 	}
 
 	/**
-	 * Handles POST requests to update the user's password if the token is valid.
+	 * TODO - Handles POST requests to update the user's password if the token is valid.
 	 *
-	 * @param token the token used to verify the password change request
+	 * @param token               the token used to verify the password change request
 	 * @param userPasswordFormDto the form object containing the new password and its confirmation
 	 * @return a redirect string to the login page after updating the password
 	 */
 	@PostMapping("/password-change")
 	public String passwordChange(
-		@RequestParam String token,
-		@ModelAttribute("passwordForm") UserPasswordFormDto userPasswordFormDto
+		@RequestParam("token") String token,
+		@ModelAttribute("passwordForm") UserPasswordFormDto userPasswordFormDto,
+		RedirectAttributes redirectAttributes
 	) {
-		if (accessService.isValidToken(token)) {
+		try {
 			accessService.updateUserPassword(
 				token,
 				userPasswordFormDto.getPassword(),
 				userPasswordFormDto.getConfirmPassword()
 			);
+			log.info("User password updated");
+			return "redirect:/login";
+		} catch (AccessException e) {
+			// TODO - Añadir el error correspondiente.
+			redirectAttributes.addAttribute("error", "");
+			log.error("Failed to update user password", e);
+			return "redirect:/login";
 		}
-		return "redirect:/login";
 	}
 }

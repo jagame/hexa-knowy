@@ -17,14 +17,12 @@ spring:
         port: 1025
         properties:
             mail:
-                debug: true
+                debug: false
                 smtp:
                     auth: false
                     starttls:
                         enable: false
-server:
-    port: 8080
-
-knowy:
     jwt:
         key: ${JWT_SECRET_KEY}
+server:
+    port: 8080

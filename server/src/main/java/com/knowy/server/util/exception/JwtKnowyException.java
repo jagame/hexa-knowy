@@ -1,6 +1,6 @@
 package com.knowy.server.util.exception;
 
-public class JwtKnowyException extends RuntimeException {
+public class JwtKnowyException extends Exception {
 	public JwtKnowyException(String message) {
 		super(message);
 	}

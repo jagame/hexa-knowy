@@ -13,4 +13,6 @@ public interface PrivateUserRepository {
 	void update(PrivateUserEntity user);
 
 	PrivateUserEntity findByToken(String token);
+
+	PrivateUserEntity findById(int id);
 }

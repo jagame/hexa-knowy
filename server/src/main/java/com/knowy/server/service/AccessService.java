@@ -8,6 +8,7 @@ import com.knowy.server.service.model.PasswordResetJwt;
 import com.knowy.server.service.model.TokenTypeJwt;
 import com.knowy.server.util.EmailClientService;
 import com.knowy.server.util.JwtService;
+import com.knowy.server.util.exception.JwtKnowyException;
 import com.knowy.server.util.exception.MailDispatchException;
 import com.knowy.server.util.exception.UserNotFoundException;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,13 @@ public class AccessService {
 	private final EmailClientService emailClientService;
 	private final PrivateUserRepository privateUserRepository;
 
+	/**
+	 * The constructor
+	 *
+	 * @param jwtService            the jwtService
+	 * @param emailClientService    the emailClientService
+	 * @param privateUserRepository the privateUserRepository
+	 */
 	public AccessService(JwtService jwtService, EmailClientService emailClientService, PrivateUserRepository privateUserRepository) {
 		this.jwtService = jwtService;
 		this.emailClientService = emailClientService;
@@ -51,17 +59,18 @@ public class AccessService {
 			updateUserToken(user);
 
 			sendRecoveryToken(user, recoveryBaseUrl);
-		} catch (UserNotFoundException | MailDispatchException e) {
+		} catch (UserNotFoundException | MailDispatchException | JwtKnowyException e) {
 			throw new AccessException("Failed to send the password reset url to the user's email", e);
 		}
 	}
 
-	private void updateUserToken(PrivateUserEntity user) {
-		String newToken = jwtService.encode(new PasswordResetJwt(user.getId(), user.getEmail(), TokenTypeJwt.PASSWORD_RESET));
+	private void updateUserToken(PrivateUserEntity user) throws JwtKnowyException {
+		PasswordResetJwt passwordResetJwt = new PasswordResetJwt(user.getId(), user.getEmail(), TokenTypeJwt.PASSWORD_RESET);
+		String newToken = jwtService.encode(passwordResetJwt, user.getPassword());
 		user.setToken(newToken);
 	}
 
-	public void sendRecoveryToken(PrivateUserEntity user, String appUrl) throws MailDispatchException {
+	private void sendRecoveryToken(PrivateUserEntity user, String appUrl) throws MailDispatchException {
 		String to = user.getEmail();
 		String subject = "Tu enlace para recuperar la cuenta de Knowy está aquí";
 		String body = tokenBody(user.getToken(), appUrl);
@@ -72,9 +81,9 @@ public class AccessService {
 	private String tokenBody(String token, String appUrl) {
 		String url = "%s?token=%s".formatted(appUrl, token);
 		return """
-			¡Hola, talentoso desarrollador! 👋
+			¡Hola, talentoso %%$@€#&%%$%%! 👋
 			
-			Sabemos que tu camino como programador es importante, por eso te ayudamos a recuperar tu acceso. \s
+			Sabemos que tu camino como $%%$@%%&€#@&$ es importante, por eso te ayudamos a recuperar tu acceso. \s
 			Haz clic en el siguiente enlace para restablecer tu contraseña:
 			
 			%s
@@ -89,18 +98,26 @@ public class AccessService {
 			""".formatted(url);
 	}
 
-	/**
-	 * Checks if the given token is registered in the private user repository.
-	 *
-	 * @param token the token to check
-	 * @return true if the token exists and matches a registered token, false otherwise
-	 */
-	public boolean isValidToken(String token) {
-		return jwtService.isValidToken(token);
-	}
+	//TODO
+	public void updateUserPassword(String token, String password, String confirmPassword) throws AccessException {
+		try {
+			if (!password.equals(confirmPassword)) {
+				throw new JwtKnowyException("Passwords do not match");
+			}
 
-	public void updateUserPassword(String token, String oldPassword, String newPassword) {
-		//TODO - Implementar descrifrado de Token y verificar datos ocultos para cambiar los datos vía AccessRepository
+			PasswordResetJwt passwordResetJwt = jwtService.decodeUnverified(token, PasswordResetJwt.class);
+			PrivateUserEntity privateUser = privateUserRepository.findById(passwordResetJwt.getUserId());
+			jwtService.decode(privateUser.getPassword(), token, PasswordResetJwt.class);
+
+			if (password.equals(privateUser.getPassword())) {
+				throw new JwtKnowyException("Passwords can be equal to old password");
+			}
+
+			privateUser.setPassword(password);
+			privateUserRepository.update(privateUser);
+		} catch (JwtKnowyException e) {
+			throw new AccessException("", e);
+		}
 	}
 
 	public Optional<AuthResultDto> authenticateUser(String email, String password) {

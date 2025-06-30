@@ -27,4 +27,7 @@ public interface JpaPrivateUserRepository extends PrivateUserRepository, JpaRepo
 
 	@Override
 	PrivateUserEntity findByToken(String token);
+
+	@Override
+	PrivateUserEntity findById(int id);
 }
