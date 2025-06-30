@@ -5,7 +5,6 @@ import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.repository.PrivateUserRepository;
 import com.knowy.server.service.exception.AccessException;
 import com.knowy.server.service.model.PasswordResetJwt;
-import com.knowy.server.service.model.TokenTypeJwt;
 import com.knowy.server.util.EmailClientService;
 import com.knowy.server.util.JwtService;
 import com.knowy.server.util.PasswordCheker;
@@ -64,7 +63,7 @@ public class AccessService {
 	}
 
 	private String createUserToken(PrivateUserEntity user) throws JwtKnowyException {
-		PasswordResetJwt passwordResetJwt = new PasswordResetJwt(user.getId(), user.getEmail(), TokenTypeJwt.PASSWORD_RESET);
+		PasswordResetJwt passwordResetJwt = new PasswordResetJwt(user.getId(), user.getEmail());
 		return jwtService.encode(passwordResetJwt, user.getPassword());
 	}
 
@@ -162,14 +161,13 @@ public class AccessService {
 		}
 	}
 
-	public Optional<AuthResultDto> authenticateUser(String email, String password) {
+	public Optional<PrivateUserEntity> authenticateUser(String email, String password) {
 		Optional<PrivateUserEntity> foundUser = privateUserRepository.findByEmail(email);
 
 		if (foundUser.isPresent()) {
 			PrivateUserEntity user = foundUser.get();
 			if (user.getPassword().equals(password)) {
-				String token = jwtService.createLoginToken(user.getEmail(), user.getId());
-				return Optional.of(new AuthResultDto(user, token));
+				return Optional.of(user);
 			}
 		}
 		return Optional.empty();

@@ -12,5 +12,4 @@ import lombok.Setter;
 public class PasswordResetJwt {
 	private int userId;
 	private String email;
-	private TokenTypeJwt type;
 }

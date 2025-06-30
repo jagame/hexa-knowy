@@ -159,9 +159,4 @@ public class JwtService {
 	private <T> T jsonDataToClass(JsonNode jsonData, Class<T> clazz) throws JsonProcessingException {
 		return objectMapper.treeToValue(jsonData, clazz);
 	}
-
-	public String createLoginToken(String email, int userId) {
-		// TODO - Reemplazar por JWT más adelante
-		return UUID.randomUUID().toString();
-	}
 }

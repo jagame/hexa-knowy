@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS public.private_user
 	id       integer      NOT NULL,
 	email    varchar(100) NOT NULL UNIQUE,
 	password varchar(100) NOT NULL,
-	token    text         NOT NULL UNIQUE,
 	PRIMARY KEY (id)
 );
 

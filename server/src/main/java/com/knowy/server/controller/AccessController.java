@@ -22,6 +22,8 @@ import java.util.Optional;
 @Controller
 public class AccessController {
 
+	public static final String SESSION_LOGGED_USER = "loggedUser";
+
 	AccessService accessService;
 
 	public AccessController(AccessService accessService) {
@@ -53,16 +55,15 @@ public class AccessController {
 	}
 
 	@PostMapping("/login")
-	public String postLogin(@ModelAttribute("loginForm") LoginFormDto login, Model model, HttpSession session) {
-		Optional<AuthResultDto> authResult = accessService.authenticateUser(login.getEmail(), login.getPassword());
+	public String postLogin(
+		@ModelAttribute("loginForm") LoginFormDto login,
+		Model model,
+		HttpSession session
+	) {
+		Optional<PrivateUserEntity> optUser = accessService.authenticateUser(login.getEmail(), login.getPassword());
 
-		if (authResult.isPresent()) {
-			PrivateUserEntity user = authResult.get().getUser();
-			String token = authResult.get().getToken();
-
-			session.setAttribute("loggedUser", user);
-			session.setAttribute("authToken", token);
-			System.out.println("Login correcto. Token generado: " + token);
+		if (optUser.isPresent()) {
+			session.setAttribute(SESSION_LOGGED_USER, new SessionUser(optUser.get()));
 			return "redirect:/home";
 		} else {
 			model.addAttribute("loginError", "¡Las credenciales son incorrectas!");
