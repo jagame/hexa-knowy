@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es"
+	  layout:decorate="~{layouts/content-sidebar-layout}"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+
+	<link rel="stylesheet" th:href="@{/styles/pages/user-management.css}">
+	<title>User profile</title>
+</head>
+
+<body>
+
+<aside layout:fragment="sidebar" class="kn-aside user-sidebar">
+	<div class="user-info text-center mb-4">
+		<h3 class="mt-3 username-title" th:text="${username}">Usuario</h3>
+	</div>
+	<div class="sidebar-menu">
+		<a th:href="@{/user-profile}" class="sidebar-link"  data-sidebar-toggler="">Editar Perfil</a>
+		<button  class="sidebar-link" data-sidebar-toggler="" th:classappend="active">Gestión de la Cuenta</button>
+	</div>
+</aside>
+
+<main layout:fragment="main-content">
+	<form id="deleteProfileForm">
+		<div class="user-management-container_main ">
+			<div class="description-card">
+				<h1 class="title-management">Eliminar Cuenta</h1>
+				<p class="description-management">Configura tus preferencias en cuanto a lenguajes de programación, editar tu nombre de usuario y tu imágen de perfil.
+					Recuerda mantener la privacidad de tus datos personales. Cualquier usuario podrá ver la información que introduzcas en esta página.
+				</p>
+			</div>
+
+			<div class="row user-information">
+				<div class="delete-warning">
+					<h3 class="title-delete">⚠️ Advertencia ⚠️</h3>
+					<p>Estás a punto de desactivar tu cuenta en Knowy. A partir de realizar este proceso contarás con el plazo de un mes para poder recuperarla.</p>
+					<p><strong>¿Desea continuar?</strong></p>
+				</div>
+			</div>
+			<div class="buttons-form-content">
+				<a th:href="@{/user-account}" class="btn btn-inferior">Cancelar</a>
+				<a th:href="@{/delete-account-end}" class="btn btn-delete">Continuar</a>
+			</div>
+		</div>
+	</form>
+</main>
+
+
+
+</body>
+</html>

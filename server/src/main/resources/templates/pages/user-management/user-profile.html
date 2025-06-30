@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es"
+	  layout:decorate="~{layouts/content-sidebar-layout}"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const languagesSelect = document.getElementById('languages');
+			const chooseButton = document.getElementById('chooseLanguage');
+			const removeButton = document.getElementById('removeLanguage');
+			const selectedDiv = document.getElementById('selectedLanguages');
+
+			const selectedLanguages = new Set();
+
+			chooseButton.addEventListener('click', function () {
+				const selectedOptions = Array.from(languagesSelect.options)
+					.filter(option => option.selected);
+
+				selectedOptions.forEach(option => {
+					if (!selectedLanguages.has(option.value.trim())) {
+						selectedLanguages.add(option.value.trim());
+
+						const div = document.createElement('div');
+						div.className = 'language-item badge badge-info mr-1 mb-1';
+						div.textContent = option.text;
+						div.dataset.value = option.value.trim();
+
+						div.addEventListener('click', function () {
+							div.classList.toggle('selected-language');
+						});
+
+						selectedDiv.appendChild(div);
+					}
+				});
+
+				for (let option of languagesSelect.options) {
+					option.selected = false;
+				}
+			});
+
+			removeButton.addEventListener('click', function () {
+				const toRemove = selectedDiv.querySelectorAll('.selected-language');
+				toRemove.forEach(el => {
+					selectedLanguages.delete(el.dataset.value);
+					el.remove();
+				});
+			});
+		});
+	</script>
+
+	<link rel="stylesheet" th:href="@{/styles/pages/user-management.css}">
+	<title>User profile</title>
+</head>
+
+<body>
+
+<aside layout:fragment="sidebar" class="kn-aside user-sidebar">
+	<div class="user-info text-center mb-4">
+		<h3 class="mt-3 username-title" th:text="${username}">Usuario</h3>
+	</div>
+	<div class="sidebar-menu">
+		<button  class="sidebar-link"  data-sidebar-toggler="" th:classappend="active" >Editar Perfil</button>
+		<a th:href="@{/user-account}" class="sidebar-link"  >Gestión de la Cuenta</a>
+	</div>
+</aside>
+
+<main layout:fragment="main-content">
+	<form id="profileForm">
+		<div class="user-management-container_main ">
+			<div class="description-card">
+				<h1 class="title-management">Editar Perfil</h1>
+				<p class="description-management">Configura tus preferencias en cuanto a lenguajes de programación, editar tu nombre de usuario y tu imágen de perfil.
+					Recuerda mantener la privacidad de tus datos personales. Cualquier usuario podrá ver la información que introduzcas en esta página. </p>
+			</div>
+
+			<div class="row user-information">
+				<div class="picture-edit-container col-lg-3">
+					<img src="https://placehold.co/50x50" alt="User Avatar" class="edit-avatar" id="profilePicture">
+					<label for="profilePicEdit" class="edit-pic-btn">
+						<i class="bi bi-person-bounding-box"></i>
+					</label>
+					<input type="file" id="profilePicEdit" name="profilePicture" class="file-input-overlay" accept="image/*">
+				</div>
+
+				<div class="information-edit-container col-lg-9">
+					<h6 class="section-title">Nombre de Usuario: 👤</h6>
+					<input type="text" class="user-name form-control" required th:value="${username}">
+					<br>
+					<h6 class="section-title">Lenguajes de Programación favoritos ⭐</h6>
+					<select name="languages" id="languages" class="form-control" multiple>
+						<option value="JAVASCRIPT">JavaScript</option>
+						<option value="JAVA">Java</option>
+						<option value="HTML">HTML</option>
+						<option value="CSS">CSS</option>
+						<option value="PYTHON">Python</option>
+						<option value="PHP">PHP</option>
+						<option value="C">#C</option>
+						<option value="TYPESCRIPT">TypeScript</option>
+						<option value="	RUBY">Ruby</option>
+						<option value="SWIFT">Swift</option>
+					</select>
+					<button type="button" id="chooseLanguage" class="btn btn-save">Escoger lenguaje</button>
+					<button type="button" id="removeLanguage" class="btn btn-delete">Eliminar lenguaje</button>
+					<div id="selectedLanguages" class="mt-2"></div>
+
+				</div>
+			</div>
+			<div class="buttons-form-content">
+				<button type="reset" class="btn btn-inferior">Restablecer</button>
+				<button type="submit" class="btn btn-save">Guardar Cambios</button>
+			</div>
+		</div>
+	</form>
+</main>
+</body>
+</html>

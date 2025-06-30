@@ -1,0 +1,35 @@
+services:
+    postgres:
+        image: postgres:17
+        container_name: kn-postgres17
+        environment:
+            POSTGRES_USER: knowy
+            POSTGRES_PASSWORD: knowy
+            POSTGRES_DB: knowydb
+        ports:
+            - "5434:5432"
+        networks:
+            - knowy_net
+        volumes:
+            - kn_db_data:/var/lib/postgresql/data
+            - ./sql/init:/docker-entrypoint-initdb.d
+    pgadmin:
+        image: dpage/pgadmin4:9.4
+        container_name: kn-pgadmin4
+        environment:
+            PGADMIN_DEFAULT_EMAIL: kn@kn.com
+            PGADMIN_DEFAULT_PASSWORD: kn
+        ports:
+            - "5054:80"
+        networks:
+            - knowy_net
+        depends_on:
+            - postgres
+        volumes:
+            - ./sql:/var/lib/pgadmin/storage
+
+volumes:
+    kn_db_data:
+
+networks:
+    knowy_net:

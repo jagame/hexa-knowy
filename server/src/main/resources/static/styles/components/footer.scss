@@ -1,0 +1,58 @@
+@use "../global-vars" as *;
+
+/*Footer styles*/
+
+.kn-footer{
+	padding: 0 0.5rem;
+	margin-top: auto;
+	width: 100%;
+}
+.kn-footer > a{
+	color: $primary-500;
+	transition:color $transition-speed;
+	padding: clamp(8px, 1.5vw, 15px) 0;
+}
+
+.kn-footer > a:hover{
+	color: $primary-700;
+}
+/* Global styles for social media icons */
+
+/* Base style for all icons */
+.kn-footer > .bi {
+	display: inline-block;
+	vertical-align: -0.125em;
+	transition: transform 0.2s ease;
+}
+
+/* Colours for specific icons */
+.bi-instagram {
+	color: #e1306c; /* Instagram colour */
+	transition: color 0.3s ease;
+}
+
+.bi-facebook {
+	color: #1877f2; /* Facebook colour */
+	transition: color 0.3s ease;
+}
+
+.bi-twitter-x{
+	color: #000000; /* Colour of X*/
+	transition: color 0.3s ease;
+}
+
+/* Hover effects */
+a:hover > .bi-instagram {
+	color: #c13584;
+	transform: scale(1.1);
+}
+
+a:hover > .bi-facebook {
+	color: #0d65d9;
+	transform: scale(1.1);
+}
+
+a:hover > .bi-twitter-x{
+	color: #333333;
+	transform: scale(1.1);
+}

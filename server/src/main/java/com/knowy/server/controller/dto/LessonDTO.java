@@ -1,4 +1,4 @@
-package com.knowy.server.controller.model;
+package com.knowy.server.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,10 @@ import lombok.Setter;
 @Setter
 public class LessonDTO {
 	private int number;
-	private String name;
-	private LessonStatus status; //depende de ENUM EstadoLeccion
+	private String title;
+	private String image;
+	private int duration;
+	private LessonStatus status; //depende de ENUM LessonStatus
 
 	public enum LessonStatus {
 		COMPLETE,

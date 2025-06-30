@@ -1,6 +1,6 @@
-package com.knowy.server.controller.model;
+package com.knowy.server.controller.dto;
 
-public class LoginForm {
+public class LoginFormDto {
 	private String email;
 	private String password;
 

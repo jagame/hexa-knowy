@@ -1,5 +1,6 @@
 @use '../global' as *;
 @use '../components/navbar' as navbar;
+@use '../components/cards-questionnaire/options-quiz';
 
 html, body {
 	width: 100%;
@@ -15,7 +16,7 @@ body {
 .layout-body {
 	display: flex;
 	flex-direction: column;
-	height: calc(100% - #{navbar.$navbar-height});
+	height: 100%;
 	overflow: auto;
 }
 

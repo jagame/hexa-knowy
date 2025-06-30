@@ -1,17 +1,16 @@
 @use "../global-vars" as *;
 
-$navbar-height: 12vh;
 $dropdown-label-height: 180px;
 
 #knowy-navbar {
-	position: sticky;
+	position: fixed;
 	z-index: 90;
 	top: 0;
 	display: grid;
 	width: 100%;
-	height: $navbar-height;
+	height: fit-content;
 	grid-template-columns: 1fr;
-	grid-template-rows: 65% 35%;
+	grid-template-rows: 100%;
 }
 
 /* Knowy navbar style */
@@ -21,18 +20,15 @@ $dropdown-label-height: 180px;
 }
 
 /* Links */
-#knowy-navbar > .__links {
-	font-weight: bold;
+#knowy-navbar > .__profile-container > .__links {
+	font-family: 'caveat-brush';
+	font-size: 1.2rem;
+	font-weight: normal;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	gap: 1rem;
-}
-
-/* Links Style */
-#knowy-navbar > .__links {
-	border-top: 1px solid $neutral-500;
-	background: $primary-500;
+	color: $neutral-100;
+	gap: 1.25rem;
 
 	> a {
 		text-decoration: none;
@@ -47,15 +43,28 @@ $dropdown-label-height: 180px;
 /* Profile container */
 #knowy-navbar > .__profile-container {
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-columns: 20% auto 28%;
 
 	> .__logo {
+		display: flex;
+		align-items: center;
 		align-self: center;
-		height: 100%;
-		padding: 4px 10px;
-		grid-column: 2;
+		flex-direction: row;
+		justify-content: center;
+		grid-column: 1;
 		justify-self: center;
-		object-fit: contain;
+
+		> .--text {
+			font-family: 'caveat-brush';
+			font-size: 1.5rem;
+			color: $neutral-100;
+		}
+
+		> img {
+			width: 5rem;
+			height: 5rem;
+			object-fit: contain;
+		}
 	}
 }
 
@@ -69,22 +78,41 @@ $dropdown-label-height: 180px;
 	}
 
 	> label {
-		font-weight: bold;
+		font-weight: normal;
 		display: flex;
 		align-items: center;
 		justify-content: flex-end;
 		height: 100%;
-		padding: 0 10px;
+		padding: 0.75rem 0.5rem 0.75rem 0;
 		cursor: pointer;
 		user-select: none;
 		gap: 0.5rem;
+		width: fit-content;
+		margin-left: auto;
 	}
 
 	> label > img {
-		height: 90%;
+		height: 100%;
 		border-radius: 50%;
 		aspect-ratio: 1;
 		object-fit: cover;
+	}
+
+	> label > span {
+		font-family: 'caveat-brush';
+		display: block;
+		color: $neutral-100;
+	}
+
+	> .__profile {
+		> .--text {
+			font-size: 1.2rem;
+			overflow: hidden;
+			max-width: 150px;
+			text-align: right;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
 	}
 
 	> .__profile-menu {
@@ -92,24 +120,31 @@ $dropdown-label-height: 180px;
 		right: 0;
 		display: none;
 		flex-direction: column-reverse;
-		width: 70vw;
+		width: 60vw;
 		max-width: 500px;
 		height: $dropdown-label-height;
 		padding-top: 0.5rem;
 		transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
+		pointer-events: none;
 		opacity: 0;
 		border-top-left-radius: 10px;
-		pointer-events: none;
+	}
+
+	> .__profile-menu > .--text {
+		font-family: 'caveat-brush';
+		font-size: 1.1rem;
 	}
 
 	> .__menu {
+		font-family: 'caveat-brush';
 		position: absolute;
 		z-index: 100;
 		right: 0;
 		display: flex;
 		visibility: hidden;
 		flex-direction: column;
-		width: 30vw;
+		width: 225px;
+		max-width: 225px;
 		transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
 		opacity: 0;
 	}
@@ -144,44 +179,49 @@ $dropdown-label-height: 180px;
 		color: $neutral-100;
 	}
 
-	> label > span {
-		padding-bottom: 0.5rem;
-	}
-
 	> label > img {
 		border: 2px solid $neutral-100;
+		width: 5rem;
+		height: 5rem;
 	}
 
 	> .__menu {
 		border: 1px solid $neutral-500;
-		border-bottom-right-radius: 10px;
-		border-bottom-left-radius: 10px;
+		border-bottom-right-radius: $radius-10;
+		border-bottom-left-radius: $radius-10;
 		background: $neutral-100;
 		box-shadow: 8px 0 12px rgba(0, 0, 0, 0.1), 0 8px 12px rgba(0, 0, 0, 0.1);
 
 		& .__menu-item {
-			font-size: large;
+			font-size: 1.1rem;
 			font-weight: 600;
+			padding: 0.25rem;
 			cursor: pointer;
 			text-align: center;
 			text-decoration: none;
-			color: $primary-500
+			color: $primary-500;
+		}
+
+		& .__menu-item--visibility {
+			display: none;
 		}
 
 		> .__menu-item:hover {
 			text-decoration: underline;
 			color: $primary-500;
-			background: $neutral-500;
+			background: $neutral-300;
 		}
 
 		> div {
 			display: flex;
-			border-bottom-right-radius: 10px;
-			border-bottom-left-radius: 10px;
+			border-bottom: $radius-10;
+			border-bottom-right-radius: $radius-10;
+			border-bottom-left-radius: $radius-10;
 			background: $primary-500;
 		}
 
 		> div > .__menu-item {
+			font-size: 1.1rem;
 			font-weight: bold;
 			text-decoration: none;
 			color: $neutral-100;
@@ -191,12 +231,10 @@ $dropdown-label-height: 180px;
 			background: $primary-700;
 		}
 
-		> div > .__menu-item-home {
-			border-bottom-left-radius: 10px;
-		}
-
 		> div > .__menu-item-logout {
-			border-bottom-right-radius: 10px;
+			font-size: 1.1rem;
+			border-bottom-right-radius: $radius-10;
+			border-bottom-left-radius: $radius-10;
 		}
 	}
 }
@@ -204,11 +242,10 @@ $dropdown-label-height: 180px;
 /* Responsive */
 @media (max-width: 768px) {
 	#knowy-navbar {
-		height: 80px;
 		grid-template-rows: 100%;
 	}
 
-	#knowy-navbar > .__links {
+	#knowy-navbar > .__profile-container > .__links {
 		display: none;
 	}
 
@@ -225,7 +262,6 @@ $dropdown-label-height: 180px;
 		z-index: 100;
 		grid-column: 2;
 
-
 		> input:checked + label {
 			display: none;
 		}
@@ -235,8 +271,10 @@ $dropdown-label-height: 180px;
 		> .__profile-menu {
 			position: fixed;
 			display: flex;
-			box-shadow: -8px 0 12px rgba(0, 0, 0, 0.2);
+			height: $dropdown-label-height;
 			pointer-events: none;
+			padding: 0.75rem;
+			box-shadow: -8px 0 12px rgba(0, 0, 0, 0.2);
 		}
 
 		> .__profile-menu img {
@@ -249,21 +287,27 @@ $dropdown-label-height: 180px;
 			align-self: start;
 			content: "✖";
 			cursor: pointer;
-			color: $neutral-900;
+			color: $neutral-300;
 		}
 
 		> input:checked ~ .__profile-menu {
 			transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
-			opacity: 1;
 			pointer-events: visible;
+			opacity: 1;
 		}
 
 		> .__menu {
+			font-size: 1.1rem;
+			position: fixed;
 			top: $dropdown-label-height;
 			right: 0;
-			width: 70vw;
+			width: 60vw;
 			max-width: 500px;
 			height: calc(100vh - $dropdown-label-height);
+
+			> .__menu-item-logout {
+				font-size: 1.5rem;
+			}
 		}
 
 		> input:checked ~ .__menu {
@@ -278,10 +322,15 @@ $dropdown-label-height: 180px;
 			box-shadow: -8px 0 10px rgba(0, 0, 0, 0.2);
 
 			& .__menu-item {
+				font-size: 1.5rem;
 				padding: 1rem 0;
 				cursor: pointer;
 				text-align: center;
 				text-decoration: none;
+			}
+
+			& .__menu-item--visibility {
+				display: block;
 			}
 
 			> div {
@@ -296,6 +345,10 @@ $dropdown-label-height: 180px;
 		&:hover {
 			text-decoration: underline;
 			text-decoration-color: $neutral-100;
+		}
+
+		> .__profile {
+			padding: 0.75rem;
 		}
 
 		> .__profile-menu {
@@ -313,6 +366,14 @@ $dropdown-label-height: 180px;
 
 		> div > .__menu-item:hover {
 			text-decoration: underline;
+		}
+	}
+}
+
+@media (max-width: 576px) {
+	#knowy-navbar > .__profile-container > .__dropdown {
+		> .__profile > .--text {
+			display: none;
 		}
 	}
 }
