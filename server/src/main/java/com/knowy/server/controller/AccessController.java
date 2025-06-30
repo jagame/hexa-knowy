@@ -136,17 +136,27 @@ public class AccessController {
 		@RequestParam String token,
 		Model model
 	) {
-		model.addAttribute("token", token);
-		model.addAttribute("passwordForm", new UserPasswordFormDto());
-		return "pages/access/password-change";
+		if (accessService.isValidToken(token)) {
+			model.addAttribute("token", token);
+			model.addAttribute("passwordForm", new UserPasswordFormDto());
+			return "pages/access/password-change";
+		}
+		return "redirect:/";
 	}
 
 	/**
-	 * TODO - Handles POST requests to update the user's password if the token is valid.
+	 * Handles POST requests to update a user's password as part of a password reset flow.
 	 *
-	 * @param token               the token used to verify the password change request
-	 * @param userPasswordFormDto the form object containing the new password and its confirmation
-	 * @return a redirect string to the login page after updating the password
+	 * <p>This endpoint expects a valid JWT token and a form containing the new password and its confirmation.
+	 * If the token is valid and all validations pass, the user's password is updated and the user is redirected to the login page.</p>
+	 *
+	 * <p>In case of failure (e.g., invalid token, mismatched passwords, or attempt to reuse the old password),
+	 * the user is still redirected to the login page, and an error message can be passed via {@link RedirectAttributes}.</p>
+	 *
+	 * @param token                the JWT token used to authorize the password change request
+	 * @param userPasswordFormDto the form DTO containing the new password and its confirmation
+	 * @param redirectAttributes  attributes used to pass query parameters or flash messages during redirection
+	 * @return a redirect string to the login page, whether the operation succeeds or fails
 	 */
 	@PostMapping("/password-change")
 	public String passwordChange(

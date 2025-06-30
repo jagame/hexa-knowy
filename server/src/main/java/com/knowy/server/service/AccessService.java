@@ -98,7 +98,27 @@ public class AccessService {
 			""".formatted(url);
 	}
 
-	//TODO
+	/**
+	 * Updates a user's password using a JWT token for verification.
+	 *
+	 * <p>This method performs several checks before updating the password:
+	 * <ul>
+	 *     <li>Ensures the new password and its confirmation match.</li>
+	 *     <li>Decodes the provided JWT token to extract the user ID.</li>
+	 *     <li>Validates the token using the user's current password as the secret.</li>
+	 *     <li>Prevents reusing the current password.</li>
+	 * </ul>
+	 *
+	 * <p>Once all validations pass, the user's password is updated in the system.</p>
+	 *
+	 * @param token           the JWT token used to authorize the password reset.
+	 *                        This token must contain the user ID and be verifiable using the user's current password.
+	 * @param password        the new password to set
+	 * @param confirmPassword the confirmation of the new password; must match {@code password}
+	 *
+	 * @throws AccessException if any validation fails, the token is invalid or malformed,
+	 *                         or the password update cannot be completed
+	 */
 	public void updateUserPassword(String token, String password, String confirmPassword) throws AccessException {
 		try {
 			if (!password.equals(confirmPassword)) {
@@ -117,6 +137,33 @@ public class AccessService {
 			privateUserRepository.update(privateUser);
 		} catch (JwtKnowyException e) {
 			throw new AccessException("", e);
+		}
+	}
+
+	/**
+	 * Validates a password reset JWT token by decoding and verifying its signature.
+	 *
+	 * <p>The method performs the following steps:
+	 * <ul>
+	 *     <li>Decodes the token without verifying the signature to extract the user ID.</li>
+	 *     <li>Fetches the corresponding user from the database using the extracted ID.</li>
+	 *     <li>Verifies the token's signature using the user's current password as the secret key.</li>
+	 * </ul>
+	 *
+	 * <p>If all steps succeed, the token is considered valid. Otherwise, the method returns {@code false}.</p>
+	 *
+	 * @param token the JWT token to validate
+	 * @return {@code true} if the token is well-formed, matches a known user, and its signature is valid;
+	 *         {@code false} otherwise
+	 */
+	public boolean isValidToken(String token) {
+		try {
+			PasswordResetJwt passwordResetJwt = jwtService.decodeUnverified(token, PasswordResetJwt.class);
+			PrivateUserEntity privateUser = privateUserRepository.findById(passwordResetJwt.getUserId());
+			jwtService.decode(privateUser.getPassword(), token, PasswordResetJwt.class);
+			return true;
+		} catch (JwtKnowyException e) {
+			return false;
 		}
 	}
 
