@@ -2,6 +2,9 @@
 @use '../../font' as *;
 @use '../../global' as *;
 
+.documentContainer{
+	padding: 1rem;
+}
 .accordion{
 	border: 3px solid $info-500;
 	border-radius: $radius-8;
@@ -31,6 +34,7 @@
 .accordion-body{
 	background-color: $neutral-100;
 	padding: 1.5rem;
+	margin-top:0.5rem;
 }
 
 .documents-list{
