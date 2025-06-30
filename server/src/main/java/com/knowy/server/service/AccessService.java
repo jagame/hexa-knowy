@@ -8,9 +8,8 @@ import com.knowy.server.service.model.PasswordResetJwt;
 import com.knowy.server.service.model.TokenTypeJwt;
 import com.knowy.server.util.EmailClientService;
 import com.knowy.server.util.JwtService;
-import com.knowy.server.util.exception.JwtKnowyException;
-import com.knowy.server.util.exception.MailDispatchException;
-import com.knowy.server.util.exception.UserNotFoundException;
+import com.knowy.server.util.PasswordCheker;
+import com.knowy.server.util.exception.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -119,8 +118,9 @@ public class AccessService {
 	 * @throws AccessException if any validation fails, the token is invalid or malformed,
 	 *                         or the password update cannot be completed
 	 */
-	public void updateUserPassword(String token, String password, String confirmPassword) throws AccessException {
+	public void updateUserPassword(String token, String password, String confirmPassword) throws AccessException, PasswordFormatException {
 		try {
+			PasswordCheker.assertPasswordFormatIsRight(password);
 			if (!password.equals(confirmPassword)) {
 				throw new JwtKnowyException("Passwords do not match");
 			}
@@ -129,14 +129,10 @@ public class AccessService {
 			PrivateUserEntity privateUser = privateUserRepository.findById(passwordResetJwt.getUserId());
 			jwtService.decode(privateUser.getPassword(), token, PasswordResetJwt.class);
 
-			if (password.equals(privateUser.getPassword())) {
-				throw new JwtKnowyException("Passwords can be equal to old password");
-			}
-
 			privateUser.setPassword(password);
 			privateUserRepository.update(privateUser);
 		} catch (JwtKnowyException e) {
-			throw new AccessException("", e);
+			throw new AccessException("Failed to decode and verify token", e);
 		}
 	}
 

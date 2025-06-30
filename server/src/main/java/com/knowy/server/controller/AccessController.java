@@ -4,6 +4,7 @@ import com.knowy.server.controller.dto.*;
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.service.AccessService;
 import com.knowy.server.service.exception.AccessException;
+import com.knowy.server.util.exception.PasswordFormatException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -148,12 +149,14 @@ public class AccessController {
 	 * Handles POST requests to update a user's password as part of a password reset flow.
 	 *
 	 * <p>This endpoint expects a valid JWT token and a form containing the new password and its confirmation.
-	 * If the token is valid and all validations pass, the user's password is updated and the user is redirected to the login page.</p>
+	 * If the token is valid and all validations pass, the user's password is updated and the user is redirected to the
+	 * login page.</p>
 	 *
 	 * <p>In case of failure (e.g., invalid token, mismatched passwords, or attempt to reuse the old password),
-	 * the user is still redirected to the login page, and an error message can be passed via {@link RedirectAttributes}.</p>
+	 * the user is still redirected to the login page, and an error message can be passed via
+	 * {@link RedirectAttributes}.</p>
 	 *
-	 * @param token                the JWT token used to authorize the password change request
+	 * @param token               the JWT token used to authorize the password change request
 	 * @param userPasswordFormDto the form DTO containing the new password and its confirmation
 	 * @param redirectAttributes  attributes used to pass query parameters or flash messages during redirection
 	 * @return a redirect string to the login page, whether the operation succeeds or fails
@@ -173,10 +176,19 @@ public class AccessController {
 			log.info("User password updated");
 			return "redirect:/login";
 		} catch (AccessException e) {
-			// TODO - Añadir el error correspondiente.
-			redirectAttributes.addAttribute("error", "");
+			redirectAttributes.addAttribute("error", "Se ha producido un error al actualizar la contraseña");
 			log.error("Failed to update user password", e);
 			return "redirect:/login";
+		} catch (PasswordFormatException e) {
+			redirectAttributes.addAttribute("error", """
+				Formato de contraseña inválido. Debe tener al menos:
+				- 8 caracteres
+				- 1 mayúscula, 1 minúscula
+				- 1 número y 1 símbolo
+				- Sin espacios
+				""");
+			log.error("Invalid password format", e);
+			return "redirect:/password-change?token=" + token;
 		}
 	}
 }
