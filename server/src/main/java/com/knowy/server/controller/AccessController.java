@@ -3,6 +3,9 @@ package com.knowy.server.controller;
 import com.knowy.server.controller.dto.*;
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.service.AccessService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,6 +66,12 @@ public class AccessController {
 			model.addAttribute("loginForm", new LoginFormDto());
 			return "pages/access/login";
 		}
+	}
+
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "redirect:/";
 	}
 
 	@GetMapping("/password-change/email")

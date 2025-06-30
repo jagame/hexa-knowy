@@ -23,6 +23,10 @@ public class PublicUserEntity {
 	@Column(name = "nickname", nullable = false, length = 50)
 	private String nickname;
 
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_profile_image", referencedColumnName = "id")
+	private ProfileImageEntity profileImage;
+
 	private String profilePicture;
 	private List<String> favouriteLanguages;
 
