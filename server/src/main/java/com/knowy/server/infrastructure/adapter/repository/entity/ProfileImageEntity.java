@@ -11,18 +11,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "public_user")
-public class PublicUserEntity {
+@Table(name = "profile_image")
+public class ProfileImageEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
 	private Integer id;
 
-	@Column(name = "nickname", nullable = false, length = 50)
-	private String nickname;
-
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id_profile_image", referencedColumnName = "id")
-	private ProfileImageEntity profileImage;
+	@Column(name = "url", nullable = false, length = Integer.MAX_VALUE)
+	private String url;
 
 }

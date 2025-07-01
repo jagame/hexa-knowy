@@ -7,16 +7,16 @@ public class PrivateUser extends PublicUser {
 	private Email email;
 	private Password password;
 
-	public PrivateUser(Integer id, String nickname, String email, String password) {
-		this(id, nickname, new Email(email), new Password(password));
+	public PrivateUser(Integer id, String nickname, ProfileImage profileImage, String email, String password) {
+		this(id, nickname, profileImage, new Email(email), new Password(password));
 	}
 
-	public PrivateUser(Integer id, String nickname, Email email, Password password) {
-		this(new PublicUser(id, nickname), email, password);
+	public PrivateUser(Integer id, String nickname, ProfileImage profileImage, Email email, Password password) {
+		this(new PublicUser(id, nickname, profileImage), email, password);
 	}
 
 	public PrivateUser(PublicUser publicUser, Email email, Password password) {
-		super(publicUser.id(), publicUser.nickname());
+		super(publicUser.id(), publicUser.nickname(), publicUser.profileImage());
 		this.email = Objects.requireNonNull(email, "An email is required");
 		this.password = Objects.requireNonNull(password, "An password is required");
 	}
@@ -37,4 +37,16 @@ public class PrivateUser extends PublicUser {
 		this.password = password;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+		PrivateUser user = (PrivateUser) o;
+		return Objects.equals(email, user.email) && Objects.equals(password, user.password);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), email, password);
+	}
 }

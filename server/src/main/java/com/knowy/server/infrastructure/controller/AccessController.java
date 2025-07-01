@@ -73,6 +73,12 @@ public class AccessController {
 		return "pages/access/login";
 	}
 
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "redirect:/";
+	}
+
 	@GetMapping("/password-change/email")
 	public String passwordChangeEmail(Model model) {
 		model.addAttribute("emailForm", new UserEmailFormDto());

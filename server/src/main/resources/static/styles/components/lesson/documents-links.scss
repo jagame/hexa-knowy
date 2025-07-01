@@ -1,0 +1,99 @@
+@use '../../_global-vars' as *;
+@use '../../font' as *;
+@use '../../global' as *;
+
+.accordion{
+	border: 3px solid $info-500;
+	border-radius: $radius-8;
+	background-color: $neutral-100;
+	box-shadow: $card-shadow;
+	overflow: hidden;
+}
+
+.accordion .accordion-button{
+	font-family: "caveat-brush", cursive;
+	background-color: $info-600;
+	color: $neutral-100;
+	font-size:24px;
+	padding: 1rem 1.25rem;
+	outline: none;
+	box-shadow: none;
+}
+.accordion-button:not(.collapsed)::after {
+	filter: brightness(0) invert(1);
+}
+
+.accordion .accordion-item{
+	border:none;
+	background:transparent;
+}
+
+.accordion-body{
+	background-color: $neutral-100;
+	padding: 1.5rem;
+}
+
+.documents-list{
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.accordion .document-link{
+	display: flex;
+	gap: 1rem;
+	align-items: center;
+	padding: 0.6rem 1rem;
+	border: 3px solid $info-500;
+	border-radius: $radius-8;
+	background-color: $neutral-100;
+	color: $neutral-700;
+	text-decoration: none;
+	font-family: "inter", sans-serif;
+	font-size: 17px;
+	transition: $transition-speed;
+	cursor: pointer;
+}
+
+.document-link:hover{
+	transform: translateY(-2px);
+	transition: $transition-speed;
+	box-shadow: $card-shadow;
+	text-decoration: none;
+}
+
+.document-link.download:hover{
+	background-color: $secundary-100;
+	border-color: $secundary-500;
+	color: $secundary-700;
+}
+.document-link.download:hover .title-link {
+	color: $secundary-700;
+}
+
+.document-link.external:hover{
+	background-color: $primary-100;
+	border-color: $primary-500;
+	color: $primary-700;
+}
+.document-link.external:hover .title-link {
+	color: $primary-700;
+}
+
+.title-link{
+	flex-grow:1;
+	font-size: 18px;
+	font-family: "caveat-brush", cursive;
+	color: $neutral-900;
+}
+
+
+
+.document-url{
+	font-family: "inter", sans-serif;
+	font-size: 13px;
+	color: $secundary-300;
+
+}
+
+
