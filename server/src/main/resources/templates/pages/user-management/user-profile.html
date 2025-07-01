@@ -66,7 +66,7 @@
 </aside>
 
 <main layout:fragment="main-content">
-	<form id="profileForm" th:action="@{/update-user-profile}" th:object="${profileDto}" method="post">
+	<form id="profileForm" th:action="@{/update-user-profile}" method="post">
 		<div class="user-management-container_main ">
 			<div class="description-card">
 				<h1 class="title-management">Editar Perfil</h1>
@@ -89,7 +89,7 @@
 
 				<div class="information-edit-container col-lg-9">
 					<h6 class="section-title">Nombre de Usuario: 👤</h6>
-					<input type="text" name="username" class="user-name form-control" required th:value="${username}">
+					<input type="text" name="nickname" class="user-name form-control" required th:value="${profileDto.nickname}">
 					<br>
 					<h6 class="section-title">Lenguajes de Programación favoritos ⭐</h6>
 					<select name="languages" id="languages" class="form-control" multiple>

@@ -18,5 +18,5 @@ public class UserProfileDTO {
 	private Integer id;
 	private String nickname;
 //	private String profilePicture;
-	private Set<LanguageEntity> languages;
+	private Set<String> languages;
 }
