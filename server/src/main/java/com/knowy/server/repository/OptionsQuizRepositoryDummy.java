@@ -1,7 +1,7 @@
 package com.knowy.server.repository;
 
 
-import com.knowy.server.controller.model.OptionQuizDTO;
+import com.knowy.server.controller.dto.OptionQuizDTO;
 import org.springframework.stereotype.Repository;
 
 
@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @Repository
-public class OptionsQuizRepository {
+public class OptionsQuizRepositoryDummy {
 	public List<OptionQuizDTO> findOptionsByQuizId(int quizID){
 		//Simulating the data, we will connect the DDBB in the near future.
 		return Arrays.asList(

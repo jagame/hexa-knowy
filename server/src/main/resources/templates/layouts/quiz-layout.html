@@ -37,36 +37,7 @@
 
 <div class="layout-body">
 	<main layout:fragment="main-content">
-		<!--CARD LAYOUT HEADER-->
-		<div th:replace="~{components/cards-quiz/quiz-header :: quiz-header}"></div>
 
-		<!--PROBLEM DEFINITION-->
-		<div class="question-container">
-			<div th:replace="~{components/cards-quiz/question-component :: question-component}"></div>
-		</div>
-
-		<!--POSSIBLE ANSWERS COMPONENT-->
-		<div class="answers-container">
-			<div th:replace="~{components/cards-quiz/options-quiz :: options-quiz}"></div>
-		</div>
-
-		<!--NAVIGATION BUTTONS-->
-		<div layout:fragment="quiz-navigation-buttons">
-			<div class="answer-button">
-				<button type="submit" class="answer-button__element">Responder</button>
-			</div>
-
-			<div class="navigation-buttons">
-				<a href="#">
-					<button class="navigation-buttons__element">← Anterior</button>
-				</a>
-
-				<a href="#">
-					<button class="navigation-buttons__element">Siguiente →</button>
-				</a>
-
-			</div>
-		</div>
 	</main>
 
 	<footer th:replace="~{components/footer :: footer}"></footer>

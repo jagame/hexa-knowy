@@ -1,4 +1,4 @@
-package com.knowy.server.controller.model;
+package com.knowy.server.controller.dto;
 
 
 import lombok.AllArgsConstructor;
