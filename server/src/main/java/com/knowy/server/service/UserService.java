@@ -44,7 +44,7 @@ public class UserService {
 		return jpaPrivateUserRepository.findByEmail(email);
 	}
 
-		//method to update username and profilePic
+		//method to update username
 		public PublicUserEntity updateProfile(String currentUsername, String newUsername) {
 			Optional<PublicUserEntity> optUserEntity = jpaPublicUserRepository.findByUsername(currentUsername);
 			if (optUserEntity.isEmpty()) {

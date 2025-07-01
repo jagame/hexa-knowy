@@ -113,17 +113,17 @@ CREATE TABLE IF NOT EXISTS public.public_user_languages
 	PRIMARY KEY		(id_public_user, id_language)
 );
 
--- FK public_user
-ALTER TABLE IF EXISTS public.public_user
-	ADD FOREIGN KEY (id_profile_image)
-	REFERENCES public.profile_image (id);
-
 CREATE TABLE IF NOT EXISTS public.banned_words
 (
 	id			serial 		NOT NULL,
 	word		varchar(40) NOT NULL,
 	PRIMARY KEY (id)
 );
+
+-- FK public_user
+ALTER TABLE IF EXISTS public.public_user
+	ADD FOREIGN KEY (id_profile_image)
+	REFERENCES public.profile_image (id);
 
 -- FK private_user
 ALTER TABLE IF EXISTS public.private_user
