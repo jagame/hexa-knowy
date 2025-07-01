@@ -5,83 +5,34 @@
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
 	<title>Explicación de la lección</title>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-	<link rel="stylesheet"
-		  href="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/css/tabler.min.css"/>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/css/tabler.min.css"
+		  rel="stylesheet"/>
+	<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" rel="stylesheet"/>
 	<link rel="stylesheet" th:href="@{/styles/pages/lesson-explanation.css}">
-<!--	<link rel="stylesheet" th:href="@{/styles/pages/course-page.css}">-->
 </head>
 <body>
-<aside class="kn-aside" layout:fragment="sidebar">
-	<div class="lessons-component">
-		<div class="course-title">
-			<h2 th:text="${course.name}">Nombre del Curso</h2>
-			<div class="course-title__progressbar">
-				<span class="course-title__percentage" th:text="${course.percentageCompleted + '% completado'}"></span>
 
-				<div class="progress-bar">
-					<div class="progress" th:style="'width:' + ${course.percentageCompleted} + '%'"></div>
+<main class="main-content" layout:fragment="main-content">
+
+	<img alt="Imagen" class="img-head" th:src="${lesson.image}">
+
+	<div class="pe-2">
+		<div class="container-flex mt-3">
+			<div>
+				<h4 class="title" th:text="${lesson.title}">Título de la lección</h4>
+				<div class="container-flex icon ms-1">
+					<i class="bi bi-clock-fill m-1"></i>
+					<span class="duration" th:text="${lesson.duration}">Duración de la lección</span>
 				</div>
-				<a class="introduction-btn--purple">Introducción al curso</a>
 			</div>
+			<a class="btn btn-lesson me-2">Iniciar lección</a>
 		</div>
-		<div th:replace="~{components/lessonscard ::lessonscard(${course})}"></div>
+		<p class="info-course">Información del curso</p>
+		<div class="theory">Teoría del curso</div>
+
+		<div th:replace="~{components/lesson/documents-links :: documentLinkComponent(${LinksLessonList})}"></div>
 	</div>
-</aside>
-
-	<main layout:fragment="main-content" class="main-content">
-
-	<img class="img-head" src="https://picsum.photos/id/0/1280/720" alt="Imagen">
-	<div class="container-flex mt-3">
-		<div class="info-group">
-			<h4 class="title" th:text="${course.getName()}"> Nombre curso</h4>
-			<div class="meta-row">
-				<span class="icon">
-					<i class="bi bi-clock-fill"></i>
-					<span class="duration" >200h</span>
-				</span>
-				<span class="meta">Nivel: Intermedio</span>
-				<span class="meta">Categoría</span>
-			</div>
-		</div>
-
-		<a href="#" class="btn btn-lesson">
-			<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-player-play"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 4v16l13 -8z" /></svg>
-			Seguir curso</a>
-	</div>
-
-	<h2 class="info-course" th:text="${course.getLessons[7].getName()}">Nombre lección</h2>
-	<div class="lesson-content">
-		<p>En <strong>Java</strong>, un arreglo es una estructura de datos que permite <strong>almacenar múltiples elementos del mismo tipo</strong> en una sola variable.
-
-			Los arreglos tienen <strong>tamaño fijo</strong> (no se pueden expandir una vez creados) y cada elemento se accede mediante un <strong>índice que empieza en 0</strong>.
-
-			Se declaran y crean así:
-		</p>
-		<h6>
-			int[] numeros = new int[5]; // arreglo de 5 enteros
-		</h6>
-		<p>
-			o con valores definidos:
-		</p>
-		<h6>
-			String[] nombres = {"Ana", "Luis", "Pedro"};
-		</h6>
-	</div>
-
-		<div class="component" th:replace="~{components/lesson/solutions-component ::solutions-component(${solutions})}">Soluciones</div>
-
-		<div class="component" th:replace="~{components/lesson/documents-links ::documentLinkComponent(${LinksList})}">Documentos</div>
-
-
-
-
-
-
-
-
-
 </main>
 
 </body>
