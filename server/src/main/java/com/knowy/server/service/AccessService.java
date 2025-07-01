@@ -13,16 +13,6 @@ import java.util.UUID;
 @Service
 public class AccessService {
 
-//	AccessRepository accessRepository;
-//	TokenService tokenService;
-//	EmailClientService emailClientService;
-
-//	public AccessService(AccessRepository accessRepository, TokenService tokenService, EmailClientService emailClientService) {
-//		this.accessRepository = accessRepository;
-//		this.tokenService = tokenService;
-//		this.emailClientService = emailClientService;
-//	}
-
 	private PrivateUserRepository privateUserRepository;
 	private PublicUserRepository publicUserRepository;
 

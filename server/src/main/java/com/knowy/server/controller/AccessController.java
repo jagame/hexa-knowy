@@ -1,9 +1,7 @@
 package com.knowy.server.controller;
 
-import com.knowy.server.controller.dto.LoginForm;
+import com.knowy.server.controller.dto.LoginFormDto;
 import com.knowy.server.controller.dto.UserDto;
-import com.knowy.server.controller.dto.UserEmailFormDto;
-import com.knowy.server.controller.dto.UserPasswordFormDto;
 import com.knowy.server.service.AccessService;
 import com.knowy.server.service.exception.InvalidUserException;
 import jakarta.validation.Valid;
@@ -13,7 +11,6 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class AccessController {
@@ -31,13 +28,12 @@ public class AccessController {
 	}
 
 	@PostMapping("/register")
-	public String procesarFormulario(@Valid @ModelAttribute UserDto user, Model model,
-									 Errors errors) {
-		if (errors.hasErrors()){
+	public String procesarFormulario(@Valid @ModelAttribute UserDto user, Model model, Errors errors) {
+		if (errors.hasErrors()) {
 			return "pages/access/register";
 		}
 
-		try{
+		try {
 			accessService.registerNewUser(user);
 			return "redirect:/home";
 		} catch (InvalidUserException e) {
@@ -49,13 +45,13 @@ public class AccessController {
 
 	@GetMapping("/login")
 	public String viewLogin(Model model) {
-		LoginForm loginForm = new LoginForm();
+		LoginFormDto loginForm = new LoginFormDto();
 		model.addAttribute("loginForm", loginForm);
 		return "pages/access/login";
 	}
 
 	@PostMapping("/login")
-	public String postLogin(@ModelAttribute("loginForm") LoginForm login, Model model) {
+	public String postLogin(@ModelAttribute("loginForm") LoginFormDto login, Model model) {
 		System.out.println("Email: " + login.getEmail() + " Password: " + login.getPassword() + "");
 		model.addAttribute("loginForm", login);
 		return "pages/access/login";
