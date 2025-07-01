@@ -15,6 +15,8 @@ public interface PublicUserRepository {
 		);
 	}
 
+	Optional<PublicUser> findByNickname(String nickname) throws KnowyPublicUserPersistenceException;
+
 	void update(PublicUser publicUser) throws KnowyPublicUserPersistenceException;
 
 	class KnowyPublicUserPersistenceException extends KnowyPersistenceException {

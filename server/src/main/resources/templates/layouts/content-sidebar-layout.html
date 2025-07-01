@@ -37,7 +37,7 @@
 </head>
 <body>
 
-<header th:replace="~{components/navbar :: knowy-navbar(username=${username}, avatar=${avatar})}"></header>
+<header th:replace="~{components/navbar :: knowy-navbar(username=${nickname}, avatar=${profileImageUrl})}"></header>
 
 <div class="layout-body">
 	<aside class="kn-aside" layout:fragment="sidebar"></aside>

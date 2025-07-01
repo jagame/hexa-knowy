@@ -6,6 +6,9 @@ import java.util.Optional;
 
 
 public interface PrivateUserRepository {
+
+	Optional<PrivateUser> findById(int id) throws KnowyPrivateUserPersistenceException;
+
 	Optional<PrivateUser> findByEmail(String email) throws KnowyPrivateUserPersistenceException;
 
 	/**

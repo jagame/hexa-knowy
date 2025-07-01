@@ -1,20 +1,21 @@
 package com.knowy.server.application.service.usecase.login;
 
+import com.knowy.server.application.domain.PrivateUser;
 import com.knowy.server.application.domain.PublicUser;
 
 import java.util.Objects;
 
 public final class LoginResult {
-	private final PublicUser publicUser;
+	private final PrivateUser privateUser;
 	private final String generatedToken;
 
-	public LoginResult(PublicUser publicUser, String generatedToken) {
-		this.publicUser = publicUser;
+	public LoginResult(PrivateUser privateUser, String generatedToken) {
+		this.privateUser = privateUser;
 		this.generatedToken = generatedToken;
 	}
 
-	public PublicUser publicUser() {
-		return publicUser;
+	public PublicUser privateUser() {
+		return privateUser;
 	}
 
 	public String generatedToken() {
@@ -26,19 +27,19 @@ public final class LoginResult {
 		if (obj == this) return true;
 		if (obj == null || obj.getClass() != this.getClass()) return false;
 		var that = (LoginResult) obj;
-		return Objects.equals(this.publicUser, that.publicUser) &&
+		return Objects.equals(this.privateUser, that.privateUser) &&
 			Objects.equals(this.generatedToken, that.generatedToken);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(publicUser, generatedToken);
+		return Objects.hash(privateUser, generatedToken);
 	}
 
 	@Override
 	public String toString() {
 		return "LoginResult[" +
-			"publicUser=" + publicUser + ", " +
+			"privateUser=" + privateUser + ", " +
 			"generatedToken=" + generatedToken + ']';
 	}
 
