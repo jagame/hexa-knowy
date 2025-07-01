@@ -1,10 +1,10 @@
 package com.knowy.server.repository;
 
+import com.knowy.server.entity.PrivateUser;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Repository
 public class AccessDummyRepositoryImpl implements AccessRepository {
@@ -15,6 +15,7 @@ public class AccessDummyRepositoryImpl implements AccessRepository {
 		tokenMap.put("kn@gmail.com", "access_token");
 	}
 
+
 	@Override
 	public boolean isEmailRegistered(String email) {
 		return tokenMap.containsKey(email);
@@ -24,7 +25,7 @@ public class AccessDummyRepositoryImpl implements AccessRepository {
 //	public PrivateUser findUserByEmail(String email) {
 //		PrivateUser privateUser = new PrivateUser();
 //		privateUser.setId(2L);
-//		privateUser.setUsername("ImATest");
+////		publisetUsername("ImATest");
 //		privateUser.setEmail(email);
 //		return privateUser;
 //	}
@@ -34,8 +35,8 @@ public class AccessDummyRepositoryImpl implements AccessRepository {
 		return tokenMap.containsValue(token);
 	}
 
-//	@Override
-//	public void saveToken(PrivateUser privateUser) {
-//		tokenMap.put(privateUser.getEmail(), privateUser.getToken());
-//	}
+	@Override
+	public void saveToken(PrivateUser privateUser) {
+		tokenMap.put(privateUser.getEmail(), privateUser.getToken());
+	}
 }
