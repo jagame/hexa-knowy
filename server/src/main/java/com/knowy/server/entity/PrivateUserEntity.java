@@ -24,7 +24,8 @@ public class PrivateUserEntity {
 	@Column(name = "password", length = 100, nullable = false)
 	private String password;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne
+	@MapsId
 	@JoinColumn(name = "id")
 	private PublicUserEntity publicUserEntity;
 }

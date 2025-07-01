@@ -61,7 +61,7 @@ public class AccessService {
 
         PublicUserEntity publicUser = new PublicUserEntity();
         publicUser.setNickname(userDto.getUsername());
-		publicUser.setProfileImage(profileImageRepository.findById(1));
+		publicUser.setProfileImage(profileImageRepository.findById(1).orElseThrow());
 
         privateUser.setPublicUserEntity(publicUser);
         publicUser.setPrivateUserEntity(privateUser);
