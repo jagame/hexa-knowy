@@ -8,8 +8,11 @@ import com.knowy.server.util.exception.PasswordFormatException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import com.knowy.server.service.exception.InvalidUserException;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,15 +39,20 @@ public class AccessController {
 		return "pages/access/register";
 	}
 
-	@PostMapping("/resultado")
-	public String procesarFormulario(@ModelAttribute UserDto user, Model model) {
-		System.out.println("Usuario recibido: " + user.getUsername());
-		System.out.println("Email recibido: " + user.getEmail());
-		System.out.println("Contraseña recibida: " + user.getPassword());
+	@PostMapping("/register")
+	public String procesarFormulario(@Valid @ModelAttribute UserDto user, Model model, Errors errors) {
+		if (errors.hasErrors()) {
+			return "pages/access/register";
+		}
 
-		model.addAttribute("user", new UserDto());
-
-		return "pages/access/register";
+		try {
+			accessService.registerNewUser(user);
+			return "redirect:/home";
+		} catch (InvalidUserException e) {
+			model.addAttribute("user", user);
+			model.addAttribute("error", e.getMessage());
+			return "pages/access/register";
+		}
 	}
 
 	@GetMapping("/login")

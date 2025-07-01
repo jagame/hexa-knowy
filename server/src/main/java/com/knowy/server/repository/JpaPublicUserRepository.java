@@ -1,6 +1,8 @@
 package com.knowy.server.repository;
+
 import com.knowy.server.entity.PublicUserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -12,8 +14,9 @@ public interface JpaPublicUserRepository extends PublicUserRepository, JpaReposi
 	default Optional<PublicUserEntity> findUserById(Integer id) {
 		return findById(id);
 	}
+
 	@Override
-	default void updateNickname(String nickname, int id){
+	default void updateNickname(String nickname, int id) {
 		findUserById(id).ifPresent(user -> {
 			user.setNickname(nickname);
 			save(user);
@@ -21,8 +24,6 @@ public interface JpaPublicUserRepository extends PublicUserRepository, JpaReposi
 	}
 
 	@Override
-	Optional<PublicUserEntity> findByNickname(String nickname);
-
-	@Override
-	boolean existsByNickname(String nickname);
+	@NonNull
+	<S extends PublicUserEntity> S save(@NonNull S user);
 }

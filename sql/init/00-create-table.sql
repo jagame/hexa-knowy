@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS public.public_user
 (
 	id               serial      NOT NULL,
-	id_profile_image integer NOT NULL,
+	id_profile_image integer NOT NULL DEFAULT 1,
 	nickname         varchar(50) NOT NULL UNIQUE,
 	PRIMARY KEY (id)
 );
