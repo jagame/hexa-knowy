@@ -25,6 +25,6 @@ public class PublicUserEntity {
 	@JoinColumn(name = "id_profile_image", referencedColumnName = "id")
 	private ProfileImageEntity profileImage;
 
-	@OneToOne(mappedBy = "publicUserEntity")
+	@OneToOne(mappedBy = "publicUserEntity", cascade = CascadeType.ALL, orphanRemoval = true)
 	private PrivateUserEntity privateUserEntity;
 }
