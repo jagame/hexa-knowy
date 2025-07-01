@@ -30,42 +30,42 @@ public class LessonController {
 		model.addAttribute("lesson", lesson);
 
 		// Array of links from each lesson?
-		List<LinksLessonDto> LinksLessonList = new ArrayList<>();
+		List<LinksLessonDto> linksLessonList = new ArrayList<>();
 
 		//External links
-		LinksLessonList.add(new LinksLessonDto(
+		linksLessonList.add(new LinksLessonDto(
 			"Ecosia - Buscador ecológico",
 			"https://www.ecosia.org",
 			LinksLessonDto.LinkType.EXTERNAL, ""
 		));
 
-		LinksLessonList.add(new LinksLessonDto(
+		linksLessonList.add(new LinksLessonDto(
 			"Wikipedia - Enciclopedia libre",
 			"https://es.wikipedia.org",
 			LinksLessonDto.LinkType.EXTERNAL, ""
 		));
 
-		LinksLessonList.add(new LinksLessonDto(
+		linksLessonList.add(new LinksLessonDto(
 			"MDN Web Docs - JavaScript",
 			"https://developer.mozilla.org/es/docs/Web/JavaScript",
 			LinksLessonDto.LinkType.EXTERNAL, ""
 		));
 
 		//Downloadable documents
-		LinksLessonList.add(new LinksLessonDto(
+		linksLessonList.add(new LinksLessonDto(
 			"Guía de JavaScript ES6+",
 			"/documents/javascript-es6-guide.pdf",
 			LinksLessonDto.LinkType.DOCUMENT, "javascript-es6-guide.pdf"
 		));
 
-		LinksLessonList.add(new LinksLessonDto(
+		linksLessonList.add(new LinksLessonDto(
 			"Ejercicios prácticos",
 			"/documents/javascript-exercises.zip",
 			LinksLessonDto.LinkType.DOCUMENT, "javascript-exercises.zip"
 		));
 
 
-		model.addAttribute("LinksLessonList", LinksLessonList);
+		model.addAttribute("LinksLessonList", linksLessonList);
 
 		return "pages/lesson-explanation";
 	}
