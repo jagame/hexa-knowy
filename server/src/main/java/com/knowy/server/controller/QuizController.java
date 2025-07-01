@@ -1,6 +1,5 @@
 package com.knowy.server.controller;
 
-
 import com.knowy.server.controller.dto.OptionQuizDTO;
 import com.knowy.server.controller.dto.QuestionDTO;
 import com.knowy.server.controller.dto.QuizLayoutDTO;
@@ -10,9 +9,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
+import java.util.Arrays;
 import java.util.List;
-
 
 @Controller
 public class QuizController {
@@ -45,6 +43,6 @@ public class QuizController {
 		model.addAttribute("questionText", questionDTO.getQuestionText());
 		model.addAttribute("imgPath", questionDTO.getImgPath());
 
-		return "/pages/tests";
+		return "pages/tests";
 	}
 }
