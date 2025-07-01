@@ -1,10 +1,8 @@
 package com.knowy.server.service;
 
 import com.knowy.server.controller.dto.UserDto;
-import com.knowy.server.entity.PrivateUser;
-import com.knowy.server.entity.PublicUser;
-import com.knowy.server.repository.JPAPrivateUserRepository;
-import com.knowy.server.repository.JPAPublicUserRepository;
+import com.knowy.server.entity.PrivateUserEntity;
+import com.knowy.server.entity.PublicUserEntity;
 import com.knowy.server.repository.PrivateUserRepository;
 import com.knowy.server.repository.PublicUserRepository;
 import com.knowy.server.service.exception.InvalidUserException;
@@ -33,7 +31,7 @@ public class AccessService {
 		this.publicUserRepository = publicUserRepository;
 	}
 
-	public PublicUser registerNewUser(UserDto userDto) throws InvalidUserException {
+	public PublicUserEntity registerNewUser(UserDto userDto) throws InvalidUserException {
 		if (publicUserRepository.findByNickname(userDto.getUsername()).isPresent()){
 			throw new InvalidUserException("El nombre de usuario ya existe.");
 		}
@@ -42,17 +40,15 @@ public class AccessService {
 			throw new InvalidUserException("El email ya está en uso.");
 		}
 
-		PrivateUser privateUser = new PrivateUser();
+		PrivateUserEntity privateUser = new PrivateUserEntity();
 		privateUser.setEmail(userDto.getEmail());
 		privateUser.setPassword(userDto.getPassword());
 		// TODO - Change to token service
-		privateUser.setToken(String.valueOf(UUID.randomUUID()));
-
-		PublicUser publicUser = new PublicUser();
+		PublicUserEntity publicUser = new PublicUserEntity();
 		publicUser.setNickname(userDto.getUsername());
 
-		privateUser.setPublicUser(publicUser);
-		publicUser.setPrivateUser(privateUser);
+		privateUser.setPublicUserEntity(publicUser);
+		publicUser.setPrivateUserEntity(privateUser);
 
 //		privateUserRepository.save(privateUser);
 		publicUser = publicUserRepository.save(publicUser);

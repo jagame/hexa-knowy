@@ -6,8 +6,16 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface JPAPrivateUserRepository extends JpaRepository<PrivateUserEntity, Integer>, PrivateUserRepository{
+public interface JpaPrivateUserRepository extends JpaRepository<PrivateUserEntity, Integer>, PrivateUserRepository{
 	@Override
-	@Query("SELECT p from PrivateUser p where p.email=:email")
+	@Query("SELECT p from PrivateUserEntity p where p.email=:email")
 	Optional<PrivateUserEntity> findByEmail(String email);
+
+	@Override
+	default void updateEmail(String email, String newEmail) {
+		findByEmail(email).ifPresent(user -> {
+			user.setEmail(newEmail);
+			save(user);
+		});
+	}
 }
