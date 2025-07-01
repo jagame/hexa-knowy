@@ -1,10 +1,18 @@
 @use "../../global-vars" as *;
 
+
 /*Options-questionnaire*/
 
+
 .options-quiz{
-	width: 70%;
+	width: 80%;
+
+	@media (max-width: 768px) {
+		width: 80%;
+		padding: 0 1rem;
+	}
 }
+
 
 .quiz-option{
 	width: 100%;
@@ -31,4 +39,5 @@
 	color: $neutral-100;
 	border-color: $danger-500;
 }
+
 

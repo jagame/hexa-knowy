@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @Repository
-public class OptionsQuizRepository {
+public class OptionsQuizRepositoryDummy {
 	public List<OptionQuizDTO> findOptionsByQuizId(int quizID){
 		//Simulating the data, we will connect the DDBB in the near future.
 		return Arrays.asList(

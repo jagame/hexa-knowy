@@ -1,26 +1,39 @@
 @use '../../global-vars' as *;
 
+.curso-header{
+	display:flex;
+	justify-content:center;
+	flex-direction:column;
+	width:100%;
+}
 .curso-banner {
 	background-color: $primary-500;
 	color: white;
 	text-align: center;
 	border-radius: 30px;
-	width:80%;
-	margin:1em auto 1em auto;
-	padding:0.5em 1em;
+	margin:7em 2em 0 2em;
+	padding:0.5em 5em;
 	align-content: center;
 	font-weight: bold;
 	font-size: 1.2rem;
 	font-family:caveat-brush;
-}
+	align-self: center;
+	width:80%;
 
+}
 
 .info-panel {
 	display: flex;
-	justify-content: space-between;
-	width:75%;
-	margin: 1.5rem auto 0 auto;
+	flex-direction:row;
+	margin:1em;
+	justify-content: center;
+	width:80%;
+	align-self:center;
+	gap:6rem;
 
+	@media (max-width: 768px){
+		gap:1em;
+	}
 
 	.info-panel__element {
 		text-align:center;
@@ -35,9 +48,11 @@
 		}
 
 		@media (max-width: 768px){
-			text-align:center;
-			font-weight:normal;
-			border:none;
+			flex-wrap: nowrap;
+			font-size: 0.7rem;
+			font-weight: normal;
+			border: none;
+			padding: 0.25rem;
 		}
 	}
 }

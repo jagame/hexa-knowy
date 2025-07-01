@@ -10,4 +10,7 @@ public interface PrivateUserRepository {
 
 	void updateEmail(String email, String newEmail);
 
+	<S extends PrivateUserEntity> S save(S user);
+
+	PrivateUserEntity findById(int id);
 }

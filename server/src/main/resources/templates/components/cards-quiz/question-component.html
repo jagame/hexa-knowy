@@ -1,0 +1,20 @@
+<div th:fragment="question-component" class="question-component-container">
+
+	<div class="enunciado-container">
+		<div class="enunciado-container__enunciado-header">
+			<p th:text="${'Pregunta ' + questionNumber}" class="enunciado-header__text"></p>
+			<button class="toggle-button" id="toggleEnunciado">
+				<i class="fas fa-chevron-down toggle-icon"></i> </button>
+		</div>
+		<div class="enunciado-container__enunciado-content" id="enunciadoContent">
+			<p th:text="${questionText}" id="enunciadoText" class="enunciado-content__text">
+			</p>
+		</div>
+	</div>
+
+	<div class="media-container">
+		<img th:src="${imgPath}" alt="Imagen o Video de la Lección" class="lesson-media">
+	</div>
+
+
+</div>
