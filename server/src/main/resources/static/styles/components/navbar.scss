@@ -61,8 +61,7 @@ $dropdown-label-height: 180px;
 		}
 
 		> img {
-			width: 5rem;
-			height: 5rem;
+			height: 10vh;
 			object-fit: contain;
 		}
 	}
@@ -92,8 +91,7 @@ $dropdown-label-height: 180px;
 	}
 
 	> label > img {
-		height: 100%;
-		max-height: 4rem;
+		height: 7vh;
 		border-radius: 50%;
 		aspect-ratio: 1;
 		object-fit: cover;
@@ -181,8 +179,6 @@ $dropdown-label-height: 180px;
 	}
 
 	> label > img {
-		width: 5rem;
-		height: 5rem;
 		border: 2px solid $neutral-100;
 	}
 
@@ -377,8 +373,4 @@ $dropdown-label-height: 180px;
 			display: none;
 		}
 	}
-}
-
-.avatar {
-	max-height: 4rem;
 }
