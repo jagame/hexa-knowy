@@ -23,6 +23,6 @@ public class QuizController {
 			new OptionQuizDTO(1, 2, 3, "D.", "Esta respuesta te traerá dolores de cabeza.", false)
 		);
 		model.addAttribute("options", options);
-		return "/pages/testOptionsQuiz";
+		return "pages/testOptionsQuiz";
 	}
 }

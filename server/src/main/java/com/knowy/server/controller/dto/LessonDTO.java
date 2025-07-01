@@ -11,7 +11,9 @@ import lombok.Setter;
 @Setter
 public class LessonDTO {
 	private int number;
-	private String name;
+	private String title;
+	private String image;
+	private int duration;
 	private LessonStatus status; //depende de ENUM LessonStatus
 
 	public enum LessonStatus {

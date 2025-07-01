@@ -7,7 +7,10 @@ import java.util.Optional;
 
 public interface PrivateUserRepository {
 	Optional<PrivateUserEntity> findByEmail(String email);
+
 	void updateEmail(String email, String newEmail);
 
+	<S extends PrivateUserEntity> S save(S user);
 
+	PrivateUserEntity findById(int id);
 }

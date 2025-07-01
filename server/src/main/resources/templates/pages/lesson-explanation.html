@@ -10,7 +10,6 @@
 		  href="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/css/tabler.min.css"/>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
 	<link rel="stylesheet" th:href="@{/styles/pages/lesson-explanation.css}">
-<!--	<link rel="stylesheet" th:href="@{/styles/pages/course-page.css}">-->
 </head>
 <body>
 <aside class="kn-aside" layout:fragment="sidebar">
@@ -30,7 +29,7 @@
 	</div>
 </aside>
 
-	<main layout:fragment="main-content" class="main-content">
+<main class="main-content" layout:fragment="main-content">
 
 	<img class="img-head" src="https://picsum.photos/id/0/1280/720" alt="Imagen">
 	<div class="container-flex mt-3">
@@ -44,6 +43,7 @@
 				<span class="meta">Nivel: Intermedio</span>
 				<span class="meta">Categoría</span>
 			</div>
+			<a th:href="${lesson.link}" class="btn btn-lesson">Iniciar lección</a>
 		</div>
 
 		<a href="#" class="btn btn-lesson">
@@ -53,37 +53,13 @@
 
 	<h2 class="info-course" th:text="${course.getLessons[7].getName()}">Nombre lección</h2>
 	<div class="lesson-content">
-		<p>En <strong>Java</strong>, un arreglo es una estructura de datos que permite <strong>almacenar múltiples elementos del mismo tipo</strong> en una sola variable.
-
-			Los arreglos tienen <strong>tamaño fijo</strong> (no se pueden expandir una vez creados) y cada elemento se accede mediante un <strong>índice que empieza en 0</strong>.
-
-			Se declaran y crean así:
-		</p>
-		<h6>
-			int[] numeros = new int[5]; // arreglo de 5 enteros
-		</h6>
-		<p>
-			o con valores definidos:
-		</p>
-		<h6>
-			String[] nombres = {"Ana", "Luis", "Pedro"};
-		</h6>
+		<!-- TODO - Texto metido por th -->
 	</div>
 
-		<div class="component" th:replace="~{components/lesson/solutions-component ::solutions-component(${solutions})}">Soluciones</div>
+	<div class="component" th:replace="~{components/lesson/solutions-component ::solutions-component(${solutions})}">Soluciones</div>
 
-		<div class="component" th:replace="~{components/lesson/documents-links ::documentLinkComponent(${LinksList})}">Documentos</div>
-
-
-
-
-
-
-
-
-
+	<div class="component" th:replace="~{components/lesson/documents-links ::documentLinkComponent(${LinksList})}">Documentos</div>
 </main>
-
 </body>
 </html>
 
