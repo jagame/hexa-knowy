@@ -16,4 +16,5 @@ public interface JpaLanguageRepository extends LanguageRepository, JpaRepository
 	Optional<LanguageEntity> findByName(String name);
 
 
+	Set<LanguageEntity> findByNameIn(Collection<String> names);
 }

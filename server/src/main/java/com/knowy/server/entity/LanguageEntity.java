@@ -20,7 +20,7 @@ public class LanguageEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column (name="id", nullable=false)
 	private Integer id;
-	@Column (name="name", nullable=false, length=20)
+	@Column (name="name", nullable=false, unique = true, length=20)
 	private String name;
 
 	@ManyToMany(fetch = FetchType.LAZY)

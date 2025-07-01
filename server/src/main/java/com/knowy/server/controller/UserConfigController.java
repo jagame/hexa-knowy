@@ -123,26 +123,31 @@ public class UserConfigController {
 	@PostMapping("/update-user-profile")
 	public String updateUserProfile(@ModelAttribute("profileDto") UserProfileDTO userProfileDTO, Model model) {
 
+		Optional<PublicUserEntity> optUser = userService.findPublicUserById(userProfileDTO.getId());
+		if (optUser.isEmpty()) {
+			model.addAttribute("error", "Usuario no encontrado");
+			return "pages/user-management/user-profile";
+		}
+		PublicUserEntity publicUser = optUser.get();
 		//check if username is already taken
-		if(userService.isTakenUsername(userProfileDTO.getUsername())) {
+		if(userService.isTakenUsername(userProfileDTO.getNickname())) {
 			model.addAttribute("error", "Ese nombre de usuario ya existe");
 			return "pages/user-management/user-profile";
 		}
 
 		//check if username contains banned words
-		if (userService.isInappropriateName(userProfileDTO.getUsername())) {
+		if (userService.isInappropriateName(userProfileDTO.getNickname())) {
 			model.addAttribute("error", "El nombre de usuario contiene palabras inapropiadas");
 			return "pages/user-management/user-profile";
 
 		} else {
-			userService.updateUserLanguages(userProfileDTO.getUsername(), userProfileDTO.getLanguages());
+			PublicUserEntity updatedUser = userService.updateUserProfile(userProfileDTO.getId(), userProfileDTO.getNickname(), userProfileDTO.getLanguages());
 
 			model.addAttribute("success", "Perfil actualizado correctamente");
-			model.addAttribute("username", userProfileDTO.getUsername());
+			model.addAttribute("username", userProfileDTO.getNickname());
 //			model.addAttribute("profilePicture", userProfileDTO.getProfilePicture());
 			model.addAttribute("languages", userProfileDTO.getLanguages());
-
+			return "pages/user-management/user-profile";
 		}
-		return "pages/user-management/user-profile";
 	}
 }

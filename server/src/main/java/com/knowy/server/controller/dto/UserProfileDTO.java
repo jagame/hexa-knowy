@@ -15,8 +15,8 @@ import java.util.Set;
 @NoArgsConstructor
 public class UserProfileDTO {
 
-
-	private String username;
+	private Integer id;
+	private String nickname;
 //	private String profilePicture;
 	private Set<LanguageEntity> languages;
 }

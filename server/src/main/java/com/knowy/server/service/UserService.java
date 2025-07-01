@@ -9,7 +9,6 @@ import com.knowy.server.entity.PrivateUserEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -44,38 +43,40 @@ public class UserService {
 		return jpaPrivateUserRepository.findByEmail(email);
 	}
 
-		//method to update username
-		public PublicUserEntity updateProfile(String currentUsername, String newUsername) {
-			Optional<PublicUserEntity> optUserEntity = jpaPublicUserRepository.findByUsername(currentUsername);
-			if (optUserEntity.isEmpty()) {
-				return null;
-			}
-			PublicUserEntity publicUserEntity = optUserEntity.get();
-			publicUserEntity.setNickname(newUsername);
-			return jpaPublicUserRepository.save(publicUserEntity);
-			}
-
 
 		//method to update favourite languages
-		public PublicUserEntity updateUserLanguages(String username, Set<LanguageEntity> languages) {
-			Optional <PublicUserEntity> optUser = jpaPublicUserRepository.findByUsername(username);
+		public PublicUserEntity updateUserProfile(Integer userId, String newNickname, Set<LanguageEntity> languages) {
+			Optional <PublicUserEntity> optUser = jpaPublicUserRepository.findUserById(userId);
 			if (optUser.isEmpty()) {
 				return null;
 			}
 			PublicUserEntity publicUserEntity = optUser.get();
-			publicUserEntity.setLanguages(languages);
+			if (newNickname != null && !newNickname.equals(publicUserEntity.getNickname())) {
+				if (isTakenUsername(newNickname)) {
+					return null;
+				}
+				if (isInappropriateName(newNickname)) {
+					return null;
+				}
+				publicUserEntity.setNickname(newNickname);
+			}
+			if (languages != null && !languages.isEmpty()) {
+				Set<String> languagesNames = languages.stream().map(LanguageEntity::getName).collect(Collectors.toSet());
+				Set<LanguageEntity> newLanguages = new HashSet<>(jpaLanguageRepository.findByNameIn(languagesNames));
+				publicUserEntity.setLanguages(newLanguages);
+			}
 			return jpaPublicUserRepository.save(publicUserEntity);
 		}
 
 		//method to check if the new username contains any of the banned words
-		public boolean isInappropriateName(String username) {
-			String lowerCaseUsername = username.toLowerCase();
-			return jpaBannedWordsRepo.findAll().stream().map(bw -> bw.getWord().toLowerCase()).anyMatch(lowerCaseUsername::contains);
+		public boolean isInappropriateName(String nickname) {
+			String lowerCaseNickname = nickname.toLowerCase();
+			return jpaBannedWordsRepo.findAll().stream().map(bw -> bw.getWord().toLowerCase()).anyMatch(lowerCaseNickname::contains);
 		}
 
 		//method to check if the username already exists
-		public boolean isTakenUsername(String username) {
-			return jpaPublicUserRepository.existsByUsername(username);
+		public boolean isTakenUsername(String nickname) {
+			return jpaPublicUserRepository.existsByNickname(nickname);
 		}
 
 

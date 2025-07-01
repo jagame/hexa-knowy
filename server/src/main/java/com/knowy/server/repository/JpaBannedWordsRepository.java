@@ -10,7 +10,5 @@ import java.util.List;
 public interface JpaBannedWordsRepository extends BannedWordsRepository, JpaRepository<BannedWordsEntity, Integer> {
 
 	@Override
-	public default List<BannedWordsEntity> findAll() {
-		return List.of();
-	}
+	List<BannedWordsEntity> findAll();
 }

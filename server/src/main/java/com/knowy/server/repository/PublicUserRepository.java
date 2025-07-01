@@ -7,6 +7,6 @@ import java.util.Optional;
 public interface PublicUserRepository {
 	Optional<PublicUserEntity> findUserById(Integer id);
 	void updateNickname(String nickname, int id);
-	Optional<PublicUserEntity> findByUsername(String username);
-	boolean existsByUsername(String username);
+	Optional<PublicUserEntity> findByNickname(String nickname);
+	boolean existsByNickname(String nickname);
 }
