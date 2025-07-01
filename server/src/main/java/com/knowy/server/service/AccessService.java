@@ -2,8 +2,10 @@ package com.knowy.server.service;
 
 import com.knowy.server.controller.dto.UserDto;
 import com.knowy.server.entity.PrivateUserEntity;
+import com.knowy.server.entity.ProfileImageEntity;
 import com.knowy.server.entity.PublicUserEntity;
 import com.knowy.server.repository.PrivateUserRepository;
+import com.knowy.server.repository.ProfileImageRepository;
 import com.knowy.server.repository.PublicUserRepository;
 import com.knowy.server.service.exception.AccessException;
 import com.knowy.server.service.exception.InvalidUserException;
@@ -26,6 +28,7 @@ public class AccessService {
     private final EmailClientService emailClientService;
     private final PrivateUserRepository privateUserRepository;
     private final PublicUserRepository publicUserRepository;
+	private final ProfileImageRepository profileImageRepository;
 
     /**
      * The constructor
@@ -34,12 +37,13 @@ public class AccessService {
      * @param emailClientService    the emailClientService
      * @param privateUserRepository the privateUserRepository
      */
-    public AccessService(JwtService jwtService, EmailClientService emailClientService, PrivateUserRepository privateUserRepository, PublicUserRepository publicUserRepository) {
+    public AccessService(JwtService jwtService, EmailClientService emailClientService, PrivateUserRepository privateUserRepository, PublicUserRepository publicUserRepository, ProfileImageRepository profileImageRepository) {
         this.jwtService = jwtService;
         this.emailClientService = emailClientService;
         this.privateUserRepository = privateUserRepository;
         this.publicUserRepository = publicUserRepository;
-    }
+		this.profileImageRepository = profileImageRepository;
+	}
 
     // TODO - Change to HttpSession
     public PublicUserEntity registerNewUser(UserDto userDto) throws InvalidUserException {
@@ -54,13 +58,14 @@ public class AccessService {
         PrivateUserEntity privateUser = new PrivateUserEntity();
         privateUser.setEmail(userDto.getEmail());
         privateUser.setPassword(userDto.getPassword());
+
         PublicUserEntity publicUser = new PublicUserEntity();
         publicUser.setNickname(userDto.getUsername());
+		publicUser.setProfileImage(profileImageRepository.findById(1));
 
         privateUser.setPublicUserEntity(publicUser);
         publicUser.setPrivateUserEntity(privateUser);
 
-		// FIXME - privateUserRepository.save(privateUser);
         publicUser = publicUserRepository.save(publicUser);
 
         return publicUser;

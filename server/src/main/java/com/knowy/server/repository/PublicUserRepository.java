@@ -1,7 +1,6 @@
 package com.knowy.server.repository;
 
 import com.knowy.server.entity.PublicUserEntity;
-import org.springframework.lang.NonNullApi;
 
 import java.util.Optional;
 
