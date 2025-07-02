@@ -11,9 +11,9 @@ public class LinksLessonDto {
 	private LinkType type;
 	private String fileName;
 
-	public enum LinkType {
+	public enum LinkType{
 		EXTERNAL,
-		DOCUMENT;
+		DOCUMENT
 	}
 }
 

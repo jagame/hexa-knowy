@@ -12,9 +12,9 @@
 				</div>
 				<div class="lesson-item__lesson-info">
 					<span class="lesson-info__lesson-number" th:text="'Lección ' + ${lesson.number}"></span>
-					<span class="lesson-info__lesson-name" th:text="${lesson.name}"></span>
+					<span class="lesson-info__lesson-name" th:text="${lesson.title}"></span>
 				</div>
-				<button th:if="${lesson.number == lastLesson+1}" class="show-sidebar-btn" data-sidebar-toggler=""> >️ </button>
+				<button th:if="${lesson.number == lastLesson}" class="show-sidebar-btn" data-sidebar-toggler=""> >️ </button>
 			</a>
 		</div>
 	</div>

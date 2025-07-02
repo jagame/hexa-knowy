@@ -1,9 +1,11 @@
 @use "../global-vars" as *;
 @use "../components/lesson/documents-links" as *;
+@use "../pages/course-page" as *;
+@use "../font" as *;
+
 
 body {
 	box-sizing: border-box;
-	font-family: Arial;
 	background-color: $neutral-300;
 }
 
@@ -22,6 +24,7 @@ body {
 }
 
 .info-course {
+	font-family: "caveat-brush", cursive;
 	color: #2F9E44;
 	font-size: 20px;
 	margin-top: 30px;
@@ -29,10 +32,30 @@ body {
 	font-weight: 600;
 
 }
+.container-flex{
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	margin-top: 1.5rem;
+	font-family: "caveat-brush", cursive;
+}
+
+.info-group{
+	display:flex;
+	flex-direction: column;
+}
 
 .btn-lesson {
-	font-size: 20px;
-	font-family: caveat-brush;
+	font-family: "Excalifont", sans-serif;
+	font-size: 1.3em;
+	margin-right: 60px;
+	padding: 0.4em 1.5em;
+	display: inline-flex;
+	align-items: center;
+	cursor: pointer;
+	transition: $transition-speed;
+	border-radius: $card-radius;
+	box-shadow: $card-shadow;
 	background-color: $primary-500;
 	color:$neutral-100;
 }
@@ -47,14 +70,37 @@ body {
 }
 
 .title {
-	font-size: 35px;
-	margin: 10px;
+	color: $primary-500;
+	font-size: 2rem;
 	font-weight: bold;
+	margin: 0.2em;
+}
+.meta-row{
+	display: flex;
+	align-items: center;
+	gap: 5em;
+	font-size: 1.1rem;
+	margin-top: 1rem;
+
 }
 
 .theory {
 	margin-top: 30px;
 	margin-left: 10px;
+}
+
+.icon {
+	display: flex;
+	align-items: center;
+	gap: 0.3em;
+}
+.duration {
+	margin-left: 0.2em;
+}
+
+.lesson-content{
+	font-family: "inter", sans-serif;
+	padding-bottom: 1rem;
 }
 
 @media (min-width: 600px) {
