@@ -16,7 +16,7 @@ public class CustomErrorController implements ErrorController {
 
 		if (status != null) {
 			int statusCode = Integer.parseInt(status.toString());
-			model.addAttribute("statusCode", statusCode); // se lo pasas al HTML
+			model.addAttribute("statusCode", statusCode);
 
 			switch (statusCode) {
 				case 403: return "error/403";
@@ -26,7 +26,6 @@ public class CustomErrorController implements ErrorController {
 			}
 		}
 
-		model.addAttribute("statusCode", "Desconocido");
 		return "error/error";
 	}
 }
