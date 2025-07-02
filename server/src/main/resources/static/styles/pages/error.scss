@@ -1,0 +1,67 @@
+@use '../global-vars' as *;
+
+body {
+	font-family: 'Segoe UI', sans-serif;
+	background-color: $primary-100;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	margin: 0;
+}
+
+.error-card {
+	background: $bg;
+	padding: 40px 30px;
+	border-radius: $radius-25;
+	box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+	max-width: 560px;
+	width: 100%;
+	text-align: center;
+}
+
+.logo-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	margin-bottom: 30px;
+}
+
+.logo-container img {
+	width: 180px;
+	height: auto;
+}
+
+.logo-container span .kn-logo--text {
+	font-family: 'caveat-brush';
+	color: $primary-700;
+}
+
+.error-title {
+	color: $danger-500;
+	font-family: 'excalifont';
+	margin-bottom: 12px;
+}
+
+.error-message {
+	color: $neutral-700;
+	font-family: 'excalifont';
+	margin-bottom: 28px;
+}
+
+.error-btn {
+	background-color: $secundary-500;
+	color: white;
+	border: none;
+	padding: 16px 28px;
+	font-size: 20px;
+	font-family: 'excalifont';
+	border-radius: $radius-8;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.error-btn:hover {
+	background-color: $secundary-700;
+}
