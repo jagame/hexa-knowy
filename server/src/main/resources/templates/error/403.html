@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>Acceso denegado - Error 403</title>
+	<title>Acceso denegado</title>
 	<style>
 		body {
 			font-family: Arial, sans-serif;
@@ -30,12 +30,7 @@
 <p>No tienes permisos para acceder a esta página.</p>
 
 <div>
-	<a th:if="${#httpSession.getAttribute('LOGGED_USER')} != null" th:href="@{/home}">
-		<button>Volver a tu inicio</button>
-	</a>
-	<a th:if="${#httpSession.getAttribute('LOGGED_USER')} == null" th:href="@{/static}">
-		<button>Volver a la página principal</button>
-	</a>
+	<button onclick="history.back()">Volver a la página anterior</button>
 </div>
 </body>
 </html>

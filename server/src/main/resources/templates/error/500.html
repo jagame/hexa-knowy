@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>Error del servidor - Error 500</title>
+	<title>Error del servidor</title>
 	<style>
 		body {
 			font-family: Arial, sans-serif;
@@ -30,12 +30,7 @@
 <p>Algo salió mal en el servidor. Estamos trabajando para solucionarlo.</p>
 
 <div>
-	<a th:if="${#httpSession.getAttribute('LOGGED_USER')} != null" th:href="@{/home}">
-		<button>Volver a tu inicio</button>
-	</a>
-	<a th:if="${#httpSession.getAttribute('LOGGED_USER')} == null" th:href="@{/static}">
-		<button>Volver a la página principal</button>
-	</a>
+	<button onclick="history.back()">Volver a la página anterior</button>
 </div>
 </body>
 </html>

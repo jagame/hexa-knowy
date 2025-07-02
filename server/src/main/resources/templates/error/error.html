@@ -30,12 +30,7 @@
 <p th:text="'Código de error: ' + ${statusCode}"></p>
 
 <div>
-	<a th:if="${#httpSession.getAttribute('LOGGED_USER')} != null" th:href="@{/home}">
-		<button>Volver a tu inicio</button>
-	</a>
-	<a th:if="${#httpSession.getAttribute('LOGGED_USER')} == null" th:href="@{/static}">
-		<button>Volver a la página principal</button>
-	</a>
+	<button onclick="history.back()">Volver a la página anterior</button>
 </div>
 </body>
 </html>
