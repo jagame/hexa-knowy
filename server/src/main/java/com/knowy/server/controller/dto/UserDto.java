@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 
 
 public class UserDto {
-	@NotBlank(message = "El nickname no pueede estar vacío")
+	@NotBlank(message = "El nickname no puede estar vacío")
 	private String username;
 
 	@NotBlank(message = "El email no puede estar vacío")

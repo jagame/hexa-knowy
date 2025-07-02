@@ -1,11 +1,13 @@
 package com.knowy.server.repository;
 
+import com.knowy.server.entity.LanguageEntity;
 import com.knowy.server.entity.PublicUserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.Set;
 
 
 @Repository
@@ -26,4 +28,8 @@ public interface JpaPublicUserRepository extends PublicUserRepository, JpaReposi
 	@Override
 	@NonNull
 	<S extends PublicUserEntity> S save(@NonNull S user);
+
+	boolean existsByNickname(String nickname);
+
+
 }

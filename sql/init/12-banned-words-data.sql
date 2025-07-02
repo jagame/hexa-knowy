@@ -1,2 +1,21 @@
-INSERT INTO public.banned_words (word) VALUES ('insulto'); -- id = 1
-INSERT INTO public.banned_words (word) VALUES ('tonto'); -- id = 2
+INSERT INTO public.banned_word (word) VALUES ('puta');
+INSERT INTO public.banned_word (word) VALUES ('puto');
+INSERT INTO public.banned_word (word) VALUES ('mierda');
+INSERT INTO public.banned_word (word) VALUES ('gilipollas');
+INSERT INTO public.banned_word (word) VALUES ('cabron');
+INSERT INTO public.banned_word (word) VALUES ('cabrona');
+INSERT INTO public.banned_word (word) VALUES ('coño');
+INSERT INTO public.banned_word (word) VALUES ('pene');
+INSERT INTO public.banned_word (word) VALUES ('vagina');
+INSERT INTO public.banned_word (word) VALUES ('culo');
+INSERT INTO public.banned_word (word) VALUES ('pedo');
+INSERT INTO public.banned_word (word) VALUES ('verga');
+INSERT INTO public.banned_word (word) VALUES ('chingar');
+INSERT INTO public.banned_word (word) VALUES ('chingado');
+INSERT INTO public.banned_word (word) VALUES ('zorra');
+INSERT INTO public.banned_word (word) VALUES ('marica');
+INSERT INTO public.banned_word (word) VALUES ('joto');
+INSERT INTO public.banned_word (word) VALUES ('mierder');
+INSERT INTO public.banned_word (word) VALUES ('nazi');
+INSERT INTO public.banned_word (word) VALUES ('hitler');
+INSERT INTO public.banned_word (word) VALUES ('tonto');

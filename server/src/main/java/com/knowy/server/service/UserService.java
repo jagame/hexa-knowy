@@ -6,6 +6,7 @@ import com.knowy.server.repository.*;
 import lombok.Getter;
 import lombok.Setter;
 import com.knowy.server.entity.PrivateUserEntity;
+import org.hibernate.mapping.List;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -43,34 +44,80 @@ public class UserService {
 		return jpaPrivateUserRepository.findByEmail(email);
 	}
 
+	private boolean isCurrentNickname(String newNickname, PublicUserEntity user){
+		return (user.getNickname().equals(newNickname));
+	}
+
+	private boolean isCurrentEmail(String newEmail, PrivateUserEntity privateUser){
+		return (privateUser.getEmail().equals(newEmail));
+	}
+
+	private boolean isValidPassword(String currentPassword, PrivateUserEntity privateUser){
+		return privateUser.getPassword().equals(currentPassword);
+	}
+
+	public boolean updateNickname(String newNickname, Integer id){
+		Optional<PublicUserEntity> publicUser = findPublicUserById(id);
+		if(publicUser.isPresent() && !isCurrentNickname(newNickname, publicUser.get())){
+			jpaPublicUserRepository.updateNickname(newNickname, id);
+			return true;
+		}
+		return false;
+	}
+
+
+
 
 		//method to update favourite languages
-		public PublicUserEntity updateUserProfile(Integer userId, String newNickname, Set<LanguageEntity> languages) {
-			Optional <PublicUserEntity> optUser = jpaPublicUserRepository.findUserById(userId);
-			if (optUser.isEmpty()) {
+//		public PublicUserEntity updateUserProfile(Integer userId, String newNickname, Set<LanguageEntity> languages) {
+//			Optional <PublicUserEntity> optUser = jpaPublicUserRepository.findUserById(userId);
+//			if (optUser.isEmpty()) {
+//				return null;
+//			}
+//			PublicUserEntity publicUserEntity = optUser.get();
+//			if (newNickname != null && !newNickname.equals(publicUserEntity.getNickname())) {
+//				if (isTakenUsername(newNickname)) {
+//					return null;
+//				}
+//				if (isInappropriateName(newNickname)) {
+//					return null;
+//				}
+//				publicUserEntity.setNickname(newNickname);
+//			}
+//			if (languages != null && !languages.isEmpty()) {
+//				Set<String> languagesNames = languages.stream().map(LanguageEntity::getName).collect(Collectors.toSet());
+//				Set<LanguageEntity> newLanguages = new HashSet<>(jpaLanguageRepository.findByNameIn(languagesNames));
+//				publicUserEntity.setLanguages(newLanguages);
+//			}
+//			return jpaPublicUserRepository.save(publicUserEntity);
+//		}
+
+	public PublicUserEntity updateUserProfile(Integer userId, String newNickname, Set<String> languages) {
+		Optional <PublicUserEntity> optUser = jpaPublicUserRepository.findUserById(userId);
+		if (optUser.isEmpty()) {
+			return null;
+		}
+		PublicUserEntity publicUserEntity = optUser.get();
+		if (newNickname != null && !newNickname.equals(publicUserEntity.getNickname())) {
+			if (isTakenUsername(newNickname)) {
 				return null;
 			}
-			PublicUserEntity publicUserEntity = optUser.get();
-			if (newNickname != null && !newNickname.equals(publicUserEntity.getNickname())) {
-				if (isTakenUsername(newNickname)) {
-					return null;
-				}
-				if (isInappropriateName(newNickname)) {
-					return null;
-				}
-				publicUserEntity.setNickname(newNickname);
+			if (isInappropriateName(newNickname)) {
+				return null;
 			}
-			if (languages != null && !languages.isEmpty()) {
-				Set<String> languagesNames = languages.stream().map(LanguageEntity::getName).collect(Collectors.toSet());
-				Set<LanguageEntity> newLanguages = new HashSet<>(jpaLanguageRepository.findByNameIn(languagesNames));
-				publicUserEntity.setLanguages(newLanguages);
-			}
-			return jpaPublicUserRepository.save(publicUserEntity);
+			publicUserEntity.setNickname(newNickname);
 		}
+		if (languages != null && !languages.isEmpty()) {
+			Set<LanguageEntity> newLanguages = jpaLanguageRepository.findByNameIn(languages);
+			publicUserEntity.setLanguages(newLanguages);
+		}
+		return jpaPublicUserRepository.save(publicUserEntity);
+	}
 
 		//method to check if the new username contains any of the banned words
 		public boolean isInappropriateName(String nickname) {
 			String lowerCaseNickname = nickname.toLowerCase();
+			// FIXME - Cambiar a LIKE en BBDD
 			return jpaBannedWordsRepo.findAll().stream().map(bw -> bw.getWord().toLowerCase()).anyMatch(lowerCaseNickname::contains);
 		}
 
@@ -88,4 +135,5 @@ public class UserService {
 		}
 		return false;
 	}
+
 }

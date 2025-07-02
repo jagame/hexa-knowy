@@ -11,11 +11,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "banned_words")
+@Table(name = "banned_word")
 public class BannedWordsEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Integer id;
+
+	@Column
 	private String word;
 }

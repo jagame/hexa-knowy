@@ -13,6 +13,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
 @Table(name= "language")
 public class LanguageEntity {
 
@@ -24,6 +25,9 @@ public class LanguageEntity {
 	private String name;
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name="public_user_language")
-	private List<PublicUserEntity> publicUser;
+	@JoinTable(
+		name = "public_user_language",
+		joinColumns = @JoinColumn(name = "id_language"),
+		inverseJoinColumns = @JoinColumn(name = "id_public_user"))
+	private List<PublicUserEntity> publicUsers;
 }

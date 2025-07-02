@@ -28,8 +28,7 @@ public class PublicUserEntity {
 	@JoinColumn(name = "id_profile_image", referencedColumnName = "id")
 	private ProfileImageEntity profileImage;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name="public_user_language")
+	@ManyToMany(mappedBy = "publicUsers", fetch = FetchType.LAZY)
 	private Set<LanguageEntity> languages;
 
 	@OneToOne(mappedBy = "publicUserEntity")

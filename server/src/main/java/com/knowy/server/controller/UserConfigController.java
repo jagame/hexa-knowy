@@ -1,9 +1,11 @@
 package com.knowy.server.controller;
 
+import com.knowy.server.controller.dto.SessionUser;
 import com.knowy.server.controller.dto.UserConfigSessionDTO;
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.entity.PublicUserEntity;
 import com.knowy.server.controller.dto.UserProfileDTO;
+import com.knowy.server.repository.JpaLanguageRepository;
 import com.knowy.server.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
+
+import static com.knowy.server.controller.AccessController.SESSION_LOGGED_USER;
 
 @Controller
 public class UserConfigController {
@@ -24,6 +28,7 @@ public class UserConfigController {
 	}
 
 	String username = "usuario123";
+
 	//User-Profile
 	@GetMapping("/user-profile")
 	public String viewUserProfile(Model model) {
@@ -55,7 +60,7 @@ public class UserConfigController {
 		return "pages/user-management/user-account";
 	}
 
-	private String getCurrentEmail(HttpSession session){
+	private String getCurrentEmail(HttpSession session) {
 		String email = (String) session.getAttribute("email");
 		if (email == null) {
 			email = "usuario123@correo.com";
@@ -64,10 +69,11 @@ public class UserConfigController {
 		}
 		return email;
 	}
+
 	//Method available for use on the other pages of UserConfig
-	private String getCurrentNickname(HttpSession session){
+	private String getCurrentNickname(HttpSession session) {
 		String nickname = (String) session.getAttribute("nickname");
-		if(nickname == null) {
+		if (nickname == null) {
 			// FixMe: Changing the way we get UserById in the future
 			Optional<PublicUserEntity> publicUser = userService.findPublicUserById(3);
 			publicUser.ifPresent(publicUserEntity -> session.setAttribute("nickname", publicUserEntity.getNickname()));
@@ -79,10 +85,10 @@ public class UserConfigController {
 	public String updateNickname(String newNickname, Integer id,
 								 RedirectAttributes redirectAttributes,
 								 HttpSession session) {
-		if(userService.updateNickname(newNickname, id)) {
+		if (userService.updateNickname(newNickname, id)) {
 			session.setAttribute("nickname", newNickname);
 			redirectAttributes.addFlashAttribute("success", "Nombre de usuario actualizado");
-		}else{
+		} else {
 			redirectAttributes.addFlashAttribute("error", "Nombre no valido");
 		}
 		return "redirect:/user-account";
@@ -90,13 +96,13 @@ public class UserConfigController {
 
 	@PostMapping("/update-email")
 	public String updateEmail(@ModelAttribute UserConfigSessionDTO userConfigSessionDTO,
-							  RedirectAttributes redirectAttributes, HttpSession session){
-		if(userService.updateEmail(userConfigSessionDTO.getEmail(),
+							  RedirectAttributes redirectAttributes, HttpSession session) {
+		if (userService.updateEmail(userConfigSessionDTO.getEmail(),
 			userConfigSessionDTO.getNewEmail(),
-			userConfigSessionDTO.getCurrentPassword())){
+			userConfigSessionDTO.getCurrentPassword())) {
 			session.setAttribute("email", userConfigSessionDTO.getNewEmail());
 			redirectAttributes.addFlashAttribute("successEmail", "Email actualizado");
-		}else{
+		} else {
 			redirectAttributes.addFlashAttribute("errorEmail", "Algo salió mal");
 		}
 		return "redirect:/user-account";
@@ -110,27 +116,21 @@ public class UserConfigController {
 	}
 
 	//Delete-Account-End (Finally deleting Account)
-	@GetMapping ("/delete-account-end")
+	@GetMapping("/delete-account-end")
 	public String deleteAccountEnd(ModelMap interfaceScreen, HttpSession session) {
 		interfaceScreen.addAttribute("username", username);
 		return "pages/user-management/delete-account-end";
 	}
 
 
-
-
 	//Update User-profile
 	@PostMapping("/update-user-profile")
-	public String updateUserProfile(@ModelAttribute("profileDto") UserProfileDTO userProfileDTO, Model model) {
+	public String updateUserProfile(@ModelAttribute("profileDto") UserProfileDTO userProfileDTO, Model model, HttpSession session) {
+		SessionUser loggedUser = (SessionUser) session.getAttribute(SESSION_LOGGED_USER);
 
-		Optional<PublicUserEntity> optUser = userService.findPublicUserById(userProfileDTO.getId());
-		if (optUser.isEmpty()) {
-			model.addAttribute("error", "Usuario no encontrado");
-			return "pages/user-management/user-profile";
-		}
-		PublicUserEntity publicUser = optUser.get();
-		//check if username is already taken
-		if(userService.isTakenUsername(userProfileDTO.getNickname())) {
+
+		//check 	if username is already taken
+		if (userService.isTakenUsername(userProfileDTO.getNickname())) {
 			model.addAttribute("error", "Ese nombre de usuario ya existe");
 			return "pages/user-management/user-profile";
 		}
@@ -140,14 +140,14 @@ public class UserConfigController {
 			model.addAttribute("error", "El nombre de usuario contiene palabras inapropiadas");
 			return "pages/user-management/user-profile";
 
-		} else {
-			PublicUserEntity updatedUser = userService.updateUserProfile(userProfileDTO.getId(), userProfileDTO.getNickname(), userProfileDTO.getLanguages());
-
-			model.addAttribute("success", "Perfil actualizado correctamente");
-			model.addAttribute("username", userProfileDTO.getNickname());
-//			model.addAttribute("profilePicture", userProfileDTO.getProfilePicture());
-			model.addAttribute("languages", userProfileDTO.getLanguages());
-			return "pages/user-management/user-profile";
 		}
+		userService.updateUserProfile(loggedUser.id(), userProfileDTO.getNickname(), userProfileDTO.getLanguages());
+
+		model.addAttribute("success", "Perfil actualizado correctamente");
+		model.addAttribute("username", userProfileDTO.getNickname());
+//			model.addAttribute("profilePicture", userProfileDTO.getProfilePicture());
+		model.addAttribute("languages", userProfileDTO.getLanguages());
+		return "pages/user-management/user-profile";
+
 	}
 }
