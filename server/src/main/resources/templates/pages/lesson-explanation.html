@@ -42,7 +42,7 @@
 						<i class="bi bi-clock-fill"></i>
 						<span class="duration" th:text="${lesson.duration}">Duración de la lección</span>
 					  </span>
-					<span class="meta">Nivel: Intermedio</span>
+					<span class="meta" th:text="'Nivel: '+${level}">Nivel: Intermedio</span>
 					<span class="meta">Categoría</span>
 				</div>
 
@@ -52,12 +52,13 @@
 		<p class="info-course">Información del curso</p>
 		<div class="theory" th:utext="${lessonContent}">Teoría del curso</div>
 
-		<div th:replace="~{components/lesson/documents-links :: documentLinkComponent(${LinksLessonList})}"></div>
+
 	</div>
 
 	<div class="component" th:replace="~{components/lesson/solutions-component ::solutions-component(${solutions})}">Soluciones</div>
 
-	<div class="component" th:replace="~{components/lesson/documents-links ::documentLinkComponent(${LinksList})}">Documentos</div>
+<!--	<div class="component" th:replace="~{components/lesson/documents-links ::documentLinkComponent(${LinksList})}">Documentos</div>-->
+	<div th:replace="~{components/lesson/documents-links :: documentLinkComponent(${LinksLessonList})}"></div>
 </main>
 </body>
 </html>

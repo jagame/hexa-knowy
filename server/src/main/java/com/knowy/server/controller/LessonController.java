@@ -17,12 +17,12 @@ import java.util.List;
 
 @Controller
 public class LessonController {
-	private static int valoracion;
+	private int valoration;
 
 	@GetMapping("/lesson")
 	public String showLesson(Model model) {
 
-		LessonDTO lesson = new LessonDTO(2, "¿Qué es Java y cómo funciona?", "https://placehold.co/1200x800", 20,
+		LessonDTO lesson = new LessonDTO(2, "¿Qué es Java y cómo funciona?", "https://picsum.photos/id/0/1280/720", "20min",
 			LessonDTO.LessonStatus.COMPLETE);
 		model.addAttribute("lesson", lesson);
 
@@ -32,34 +32,40 @@ public class LessonController {
 
 		List<LessonDTO> lessons = List.of(
 			new LessonDTO(1, "Introducción", "https://picsum.photos/seed/picsum/200/300",
-				2, LessonDTO.LessonStatus.COMPLETE),
+				"20min", LessonDTO.LessonStatus.COMPLETE),
 			new LessonDTO(2, "¿Qué es Java y cómo funciona?", "https://picsum.photos/seed/picsum/200/300",
-				2, LessonDTO.LessonStatus.COMPLETE),
+				"20min", LessonDTO.LessonStatus.COMPLETE),
 			new LessonDTO(3, "Tipos de datos y variables", "https://picsum.photos/seed/picsum/200/300",
-				2, LessonDTO.LessonStatus.COMPLETE),
+				"20min", LessonDTO.LessonStatus.COMPLETE),
 			new LessonDTO(4, "Estructuras de control", "https://picsum.photos/seed/picsum/200/300",
-				2, LessonDTO.LessonStatus.COMPLETE),
-			new LessonDTO(5, "Bucles", "https://picsum.photos/seed/picsum/200/300", 2, LessonDTO.LessonStatus.COMPLETE),
+				"20min", LessonDTO.LessonStatus.COMPLETE),
+			new LessonDTO(5, "Bucles", "https://picsum.photos/seed/picsum/200/300", "20min", LessonDTO.LessonStatus.COMPLETE),
 			new LessonDTO(6, "Métodos (funciones)", "https://picsum.photos/seed/picsum/200/300",
-				2, LessonDTO.LessonStatus.COMPLETE),
+				"20min", LessonDTO.LessonStatus.COMPLETE),
 			new LessonDTO(7, "Arreglos (arrays)", "https://picsum.photos/seed/picsum/200/300",
-				2, LessonDTO.LessonStatus.NEXT_LESSON),
+				"20min", LessonDTO.LessonStatus.NEXT_LESSON),
 			new LessonDTO(8, "Introducción a la Programación Orientada a Objetos", "https://picsum" +
-				".photos/seed/picsum/200/300", 2, LessonDTO.LessonStatus.BLOCKED),
+				".photos/seed/picsum/200/300", "20min", LessonDTO.LessonStatus.BLOCKED),
 			new LessonDTO(9, "Introducción a la Programación Orientada a Objetos", "https://picsum" +
-				".photos/seed/picsum/200/300", 2, LessonDTO.LessonStatus.BLOCKED),
+				".photos/seed/picsum/200/300", "20min", LessonDTO.LessonStatus.BLOCKED),
 			new LessonDTO(10, "Introducción a la Programación Orientada a Objetos", "https://picsum" +
-				".photos/seed/picsum/200/300", 2, LessonDTO.LessonStatus.BLOCKED)
+				".photos/seed/picsum/200/300", "20min", LessonDTO.LessonStatus.BLOCKED)
 		);
 
-		int lastLesson = -1;
-		for(int i = 0; i < lessons.size(); i++) {
-			if(lessons.get(i).getStatus() == LessonDTO.LessonStatus.COMPLETE) {
-				lastLesson = i;
-			}
-		}
+//		int lastLessonCompleted = -1; // We save the last lesson (as if it were a memory).
+//		for (int i = 0; i < lessons.size(); i++) { // lesson.size() -> Look at the size of the "lessons" list, starting from 0. i = 0
+//			if (lessons.get(i).getStatus() == LessonDTO.LessonStatus.COMPLETE) {
+//				lastLessonCompleted = lessons.get(i).getNumber();
+//			}
+//		}
 
-		String lessonContent= "<p>En <strong>Java</strong>, un arreglo es una estructura de datos que permite "
+		int nextLesson = lessons.stream()
+			.filter(le -> le.getStatus() == LessonDTO.LessonStatus.NEXT_LESSON)
+			.findFirst()
+			.orElseThrow()
+			.getNumber();
+
+		String lessonContent = "<p>En <strong>Java</strong>, un arreglo es una estructura de datos que permite "
 			+ "<strong>almacenar múltiples elementos del mismo tipo</strong> en una sola variable.</p>\n"
 			+ "<p>Los arreglos tienen <strong>tamaño fijo</strong> (no se pueden expandir una vez creados) "
 			+ "y cada elemento se accede mediante un <strong>índice que empieza en 0</strong>.</p>\n"
@@ -70,8 +76,9 @@ public class LessonController {
 
 		course.setLessons(lessons);
 		model.addAttribute("course", course);
-		model.addAttribute("lastLesson", lastLesson);
+		model.addAttribute("lastLesson", nextLesson);
 		model.addAttribute("lessonContent", lessonContent);
+		model.addAttribute("level", "Intermedio");
 
 		//---------------------------------------------------------
 		List<SolutionDto> solutions = new ArrayList<>();
@@ -83,54 +90,52 @@ public class LessonController {
 		//--------------------
 
 
-
-
-
 		// Array of links from each lesson?
-		List<LinksLessonDto> linksLessonList = new ArrayList<>();
+		List<LinksLessonDto> LinksLessonList = new ArrayList<>();
 
 		//External links
-		linksLessonList.add(new LinksLessonDto(
+		LinksLessonList.add(new LinksLessonDto(
 			"Ecosia - Buscador ecológico",
 			"https://www.ecosia.org",
 			LinksLessonDto.LinkType.EXTERNAL, ""
 		));
 
-		linksLessonList.add(new LinksLessonDto(
+		LinksLessonList.add(new LinksLessonDto(
 			"Wikipedia - Enciclopedia libre",
 			"https://es.wikipedia.org",
 			LinksLessonDto.LinkType.EXTERNAL, ""
 		));
 
-		linksLessonList.add(new LinksLessonDto(
+		LinksLessonList.add(new LinksLessonDto(
 			"MDN Web Docs - JavaScript",
 			"https://developer.mozilla.org/es/docs/Web/JavaScript",
 			LinksLessonDto.LinkType.EXTERNAL, ""
 		));
 
 		//Downloadable documents
-		linksLessonList.add(new LinksLessonDto(
+		LinksLessonList.add(new LinksLessonDto(
 			"Guía de JavaScript ES6+",
 			"/documents/javascript-es6-guide.pdf",
 			LinksLessonDto.LinkType.DOCUMENT, "javascript-es6-guide.pdf"
 		));
 
-		linksLessonList.add(new LinksLessonDto(
+		LinksLessonList.add(new LinksLessonDto(
 			"Ejercicios prácticos",
 			"/documents/javascript-exercises.zip",
 			LinksLessonDto.LinkType.DOCUMENT, "javascript-exercises.zip"
 		));
 
-		model.addAttribute("LinksList", linksLessonList);
+
+		model.addAttribute("LinksLessonList", LinksLessonList);
 
 		return "pages/lesson-explanation";
 	}
 
-	@PostMapping("/feedback/submit")
 	//he usado este controller porque estaba relacionado, si hace falta lo meto en otra pantalla
+	@PostMapping("/feedback/submit")
 	public String submitEval(@RequestParam("dificultad") String dificultad, RedirectAttributes redirectAttributes) {
 		System.out.println("Dificultad seleccionada por el usuario: " + dificultad);
-		valoracion = Integer.parseInt(dificultad); //aquí invocaríamos un metodo de cada pregunta para guardar el feedback y luego procesarlo. Debería hacer dto? yo creo que debería ser el dto de la tarjeta guardada.
+		valoration = Integer.parseInt(dificultad); //aquí invocaríamos un metodo de cada pregunta para guardar el feedback y luego procesarlo. Debería hacer dto? yo creo que debería ser el dto de la tarjeta guardada.
 		redirectAttributes.addFlashAttribute("mensajeFeedback", "Gracias por tu feedback: " + dificultad);
 		return "redirect:/"; //este redirect irá a la próxima tarjeta de la lección.
 	}
