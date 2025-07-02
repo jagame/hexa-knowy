@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Acceso denegado - Error 403</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #fff3cd;
+			text-align: center;
+			padding: 50px;
+		}
+		h1 { color: #856404; }
+		p { font-size: 18px; }
+		button {
+			padding: 10px 20px;
+			background-color: #856404;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			margin-top: 20px;
+		}
+		button:hover {
+			background-color: #6c5002;
+		}
+	</style>
+</head>
+<body>
+<h1>Error 403 - Acceso denegado</h1>
+<p>No tienes permisos para acceder a esta página.</p>
+
+<div>
+	<a th:if="${#httpSession.getAttribute('LOGGED_USER')} != null" th:href="@{/home}">
+		<button>Volver a tu inicio</button>
+	</a>
+	<a th:if="${#httpSession.getAttribute('LOGGED_USER')} == null" th:href="@{/}">
+		<button>Volver a la página principal</button>
+	</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Error del servidor - Error 500</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f5c6cb;
+			text-align: center;
+			padding: 50px;
+		}
+		h1 { color: #721c24; }
+		p { font-size: 18px; }
+		button {
+			padding: 10px 20px;
+			background-color: #721c24;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			margin-top: 20px;
+		}
+		button:hover {
+			background-color: #501418;
+		}
+	</style>
+</head>
+<body>
+<h1>Error 500 - Error interno del servidor</h1>
+<p>Algo salió mal en el servidor. Estamos trabajando para solucionarlo.</p>
+
+<div>
+	<a th:if="${#httpSession.getAttribute('LOGGED_USER')} != null" th:href="@{/home}">
+		<button>Volver a tu inicio</button>
+	</a>
+	<a th:if="${#httpSession.getAttribute('LOGGED_USER')} == null" th:href="@{/}">
+		<button>Volver a la página principal</button>
+	</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Página no encontrada - Error 404</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f8f9fa;
+			text-align: center;
+			padding: 50px;
+		}
+		h1 { color: #dc3545; }
+		p { font-size: 18px; }
+		button {
+			padding: 10px 20px;
+			background-color: #dc3545;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			margin-top: 20px;
+		}
+		button:hover {
+			background-color: #c82333;
+		}
+	</style>
+</head>
+<body>
+<h1>Error 404 - Página no encontrada</h1>
+<p>La página que estás buscando no existe o ha sido movida.</p>
+
+<div>
+	<a th:if="${#httpSession.getAttribute('LOGGED_USER')} != null" th:href="@{/home}">
+		<button>Volver a tu inicio</button>
+	</a>
+	<a th:if="${#httpSession.getAttribute('LOGGED_USER')} == null" th:href="@{/}">
+		<button>Volver a la página principal</button>
+	</a>
+</div>
+</body>
+</html>
