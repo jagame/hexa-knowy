@@ -21,15 +21,20 @@
 		<div class="container-flex mt-3">
 			<div>
 				<h4 class="title" th:text="${lesson.title}">Título de la lección</h4>
-				<div class="container-flex icon ms-1">
-					<i class="bi bi-clock-fill m-1"></i>
-					<span class="duration" th:text="${lesson.duration}">Duración de la lección</span>
+				<div class="meta-row">
+					<span class="icon">
+						<i class="bi bi-clock-fill"></i>
+						<span class="duration" th:text="${lesson.duration}">Duración de la lección</span>
+					  </span>
+					<span class="meta">Nivel: Intermedio</span>
+					<span class="meta">Categoría</span>
 				</div>
+
 			</div>
 			<a class="btn btn-lesson me-2">Iniciar lección</a>
 		</div>
 		<p class="info-course">Información del curso</p>
-		<div class="theory">Teoría del curso</div>
+		<div class="theory" th:utext="${lessonContent}">Teoría del curso</div>
 
 		<div th:replace="~{components/lesson/documents-links :: documentLinkComponent(${LinksLessonList})}"></div>
 	</div>
