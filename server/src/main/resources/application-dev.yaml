@@ -3,3 +3,9 @@ spring:
         url: jdbc:postgresql://localhost:5434/knowydb
         username: knowy
         password: knowy
+    mail:
+        host: localhost
+        port: 1025
+        properties:
+            mail:
+                debug: true

@@ -13,10 +13,11 @@ spring:
         hibernate:
             ddl-auto: validate
     mail:
-        host: localhost
+        host: mailpit
         port: 1025
         properties:
             mail:
+                protocol: smtp
                 debug: false
                 smtp:
                     auth: false
