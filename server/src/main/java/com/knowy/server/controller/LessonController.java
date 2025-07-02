@@ -22,13 +22,8 @@ public class LessonController {
 	@GetMapping("/lesson")
 	public String showLesson(Model model) {
 
-		LessonDTO lesson = new LessonDTO(
-			1,
-			"JavaScript moderno",
-			"https://picsum.photos/seed/picsum/1000/1000",
-			2,
-			LessonDTO.LessonStatus.BLOCKED
-		);
+		LessonDTO lesson = new LessonDTO(2, "¿Qué es Java y cómo funciona?", "https://placehold.co/1200x800", 20,
+			LessonDTO.LessonStatus.COMPLETE);
 		model.addAttribute("lesson", lesson);
 
 		CourseDTO course = new CourseDTO();
@@ -72,7 +67,7 @@ public class LessonController {
 			+ "<h6>int[] numeros = new int[5]; // arreglo de 5 enteros</h6>\n"
 			+ "<p>o con valores definidos:</p>\n"
 			+ "<h6>String[] nombres = {\"Ana\", \"Luis\", \"Pedro\"};</h6>";
-		
+
 		course.setLessons(lessons);
 		model.addAttribute("course", course);
 		model.addAttribute("lastLesson", lastLesson);
@@ -92,42 +87,41 @@ public class LessonController {
 
 
 		// Array of links from each lesson?
-		List<LinksLessonDto> LinksLessonList = new ArrayList<>();
+		List<LinksLessonDto> linksLessonList = new ArrayList<>();
 
 		//External links
-		LinksLessonList.add(new LinksLessonDto(
+		linksLessonList.add(new LinksLessonDto(
 			"Ecosia - Buscador ecológico",
 			"https://www.ecosia.org",
 			LinksLessonDto.LinkType.EXTERNAL, ""
 		));
 
-		LinksLessonList.add(new LinksLessonDto(
+		linksLessonList.add(new LinksLessonDto(
 			"Wikipedia - Enciclopedia libre",
 			"https://es.wikipedia.org",
 			LinksLessonDto.LinkType.EXTERNAL, ""
 		));
 
-		LinksLessonList.add(new LinksLessonDto(
+		linksLessonList.add(new LinksLessonDto(
 			"MDN Web Docs - JavaScript",
 			"https://developer.mozilla.org/es/docs/Web/JavaScript",
 			LinksLessonDto.LinkType.EXTERNAL, ""
 		));
 
 		//Downloadable documents
-		LinksLessonList.add(new LinksLessonDto(
+		linksLessonList.add(new LinksLessonDto(
 			"Guía de JavaScript ES6+",
 			"/documents/javascript-es6-guide.pdf",
 			LinksLessonDto.LinkType.DOCUMENT, "javascript-es6-guide.pdf"
 		));
 
-		LinksLessonList.add(new LinksLessonDto(
+		linksLessonList.add(new LinksLessonDto(
 			"Ejercicios prácticos",
 			"/documents/javascript-exercises.zip",
 			LinksLessonDto.LinkType.DOCUMENT, "javascript-exercises.zip"
 		));
 
-
-		model.addAttribute("LinksLessonList", LinksLessonList);
+		model.addAttribute("LinksList", linksLessonList);
 
 		return "pages/lesson-explanation";
 	}

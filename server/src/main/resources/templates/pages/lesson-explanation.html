@@ -5,13 +5,29 @@
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
 	<title>Explicación de la lección</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
-	<link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/css/tabler.min.css"
-		  rel="stylesheet"/>
-	<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" rel="stylesheet"/>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+	<link rel="stylesheet"
+		  href="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/css/tabler.min.css"/>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
 	<link rel="stylesheet" th:href="@{/styles/pages/lesson-explanation.css}">
 </head>
 <body>
+<aside class="kn-aside" layout:fragment="sidebar">
+	<div class="lessons-component">
+		<div class="course-title">
+			<h2 th:text="${course.name}">Nombre del Curso</h2>
+			<div class="course-title__progressbar">
+				<span class="course-title__percentage" th:text="${course.percentageCompleted + '% completado'}"></span>
+
+				<div class="progress-bar">
+					<div class="progress" th:style="'width:' + ${course.percentageCompleted} + '%'"></div>
+				</div>
+				<a class="introduction-btn--purple">Introducción al curso</a>
+			</div>
+		</div>
+		<div th:replace="~{components/lessonscard ::lessonscard(${course})}"></div>
+	</div>
+</aside>
 
 <main class="main-content" layout:fragment="main-content">
 
@@ -38,8 +54,11 @@
 
 		<div th:replace="~{components/lesson/documents-links :: documentLinkComponent(${LinksLessonList})}"></div>
 	</div>
-</main>
 
+	<div class="component" th:replace="~{components/lesson/solutions-component ::solutions-component(${solutions})}">Soluciones</div>
+
+	<div class="component" th:replace="~{components/lesson/documents-links ::documentLinkComponent(${LinksList})}">Documentos</div>
+</main>
 </body>
 </html>
 
