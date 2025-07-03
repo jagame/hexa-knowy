@@ -3,21 +3,19 @@
 body {
 	font-family: 'Segoe UI', sans-serif;
 	background-color: $primary-100;
-	display: flex;
-	justify-content: center;
-	align-items: center;
 	min-height: 100vh;
 	margin: 0;
 }
 
 .error-card {
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	flex-direction: column;
 	padding: clamp(1.5rem, 2vw, 2.5rem) clamp(1.5rem, 2vw, 1.875rem);
 	max-width: clamp(36rem, 80vw, 42rem);
 	width: 100%;
+	margin: 0 auto; /* centrado horizontal por si acaso */
 	text-align: center;
 }
 

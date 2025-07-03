@@ -19,7 +19,9 @@
 </head>
 <body>
 
-<header th:replace="~{components/navbar :: knowy-navbar(username=${nickname}, avatar=${profileImageUrl})}"></header>
+<div th:if="${nickname != null}">
+	<header th:replace="~{components/navbar :: knowy-navbar(username=${nickname}, avatar=${profileImageUrl})}"></header>
+</div>
 
 <div class="layout-body">
 	<main layout:fragment="main-content"></main>
