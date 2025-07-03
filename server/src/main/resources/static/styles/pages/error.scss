@@ -62,6 +62,7 @@ body {
 	font-size: clamp(1rem, 2vw, 1.125rem);
 	font-family: 'excalifont';
 	border-radius: $radius-8;
+	text-decoration: none;
 	cursor: pointer;
 	margin: clamp(1rem, 2vw, 1.25rem) 0;
 	transition: background-color 0.3s ease;
