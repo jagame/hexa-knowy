@@ -1,36 +1,53 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es"
+	  layout:decorate="~{layouts/user-postlogin-layout}"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org"
+>
 <head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1.0" name="viewport">
 	<title>Acceso denegado</title>
-	<style>
-		body {
-			font-family: Arial, sans-serif;
-			background-color: #fff3cd;
-			text-align: center;
-			padding: 50px;
-		}
-		h1 { color: #856404; }
-		p { font-size: 18px; }
-		button {
-			padding: 10px 20px;
-			background-color: #856404;
-			color: white;
-			border: none;
-			border-radius: 5px;
-			cursor: pointer;
-			margin-top: 20px;
-		}
-		button:hover {
-			background-color: #6c5002;
-		}
-	</style>
+	<link rel="stylesheet" th:href="@{/styles/pages/error.css}">
 </head>
-<body>
-<h1>Error 403 - Acceso denegado</h1>
-<p>No tienes permisos para acceder a esta página.</p>
+<body layout:fragment="main-content">
+	<main class="error-card">
+		<section class="logo-container">
+			<img src="/images/logoWoutText.png" alt="Logo Knowy">
+			<span class="kn-logo--text">KNOWY</span>
+		</section>
 
-<div>
-	<button onclick="history.back()">Volver a la página anterior</button>
-</div>
+		<h2 class="error-title">
+			Error 403 - Acceso denegado
+			<svg xmlns="http://www.w3.org/2000/svg"  width="42"  height="42"  viewBox="0 0 24 24"  fill="none"
+				 stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"
+				 class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad-dizzy">
+				<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+				<path d="M14.5 16.05a3.5 3.5 0 0 0 -5 0" /><path d="M8 9l2 2" /><path d="M10 9l-2 2" />
+				<path d="M14 9l2 2" /><path d="M16 9l-2 2" />
+			</svg>
+		</h2>
+
+		<h5 class="error-message">No tienes permisos para acceder a esta página.</h5>
+
+		<a th:if="${nickname != null}" th:href="@{/home}" class="error-btn">
+			<!-- ícono -->
+			<svg xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"
+				 stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"
+				 class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left">
+				<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" />
+				<path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
+			Ir a Inicio
+		</a>
+
+		<a th:if="${nickname == null}" th:href="@{/}" class="error-btn">
+			<svg xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"
+				 stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"
+				 class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left">
+				<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" />
+				<path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
+			Ir a Página Principal
+		</a>
+	</main>
 </body>
 </html>
