@@ -1,20 +1,28 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es"
+	  layout:decorate="~{layouts/basic-layout}"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org">
 <head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1.0" name="viewport">
 	<title>Error 404 - Página no encontrada</title>
 	<link rel="stylesheet" th:href="@{/styles/pages/error.css}">
 </head>
-<body>
-<div class="error-card">
-	<div class="logo-container">
+<body layout:fragment="body-content">
+<main class="error-card">
+	<section class="logo-container">
 		<img src="/images/logoWoutText.png" alt="Logo Knowy">
 		<span class="kn-logo--text">KNOWY</span>
-	</div>
+	</section>
 
-	<h1 class="error-title">Error 404 - Página no encontrada</h1>
-	<h4 class="error-message">La página que buscas no existe, ha sido eliminada o movida.</h4>
+	<h2 class="error-title">Error 404 - Página no encontrada :(</h2>
+	<h5 class="error-message">La página que buscas no existe, ha sido eliminada o movida.</h5>
 
-	<button class="error-btn" onclick="history.back()">Volver a la página anterior</button>
-</div>
+	<button class="error-btn" onclick="history.back()">
+		<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
+		Volver
+	</button>
+</main>
 </body>
 </html>

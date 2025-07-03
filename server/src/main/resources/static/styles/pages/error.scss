@@ -11,11 +11,12 @@ body {
 }
 
 .error-card {
-	background: $bg;
-	padding: 40px 30px;
-	border-radius: $radius-25;
-	box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
-	max-width: 560px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	padding: clamp(1.5rem, 2vw, 2.5rem) clamp(1.5rem, 2vw, 1.875rem);
+	max-width: clamp(36rem, 80vw, 42rem);
 	width: 100%;
 	text-align: center;
 }
@@ -24,44 +25,50 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	gap: 12px;
-	margin-bottom: 30px;
+	margin-bottom: clamp(2rem, 4vw, 3.125rem);
 }
 
 .logo-container img {
-	width: 180px;
+	width: clamp(10rem, 18vw, 12.5rem);
 	height: auto;
 }
 
-.logo-container span .kn-logo--text {
+.logo-container .kn-logo--text {
 	font-family: 'caveat-brush';
 	color: $primary-700;
+	font-size: clamp(2.5rem, 5vw, 3.375rem);
 }
 
 .error-title {
 	color: $danger-500;
-	font-family: 'excalifont';
-	margin-bottom: 12px;
+	font-family: 'caveat-brush';
+	margin: clamp(1.5rem, 3vw, 1.875rem) 0;
+	font-size: clamp(1.5rem, 4vw, 2rem);
 }
 
 .error-message {
-	color: $neutral-700;
+	color: black;
 	font-family: 'excalifont';
-	margin-bottom: 28px;
+	margin: clamp(1.25rem, 2vw, 1.5625rem) 0;
 }
 
 .error-btn {
-	background-color: $secundary-500;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: clamp(0.25rem, 1vw, 0.5rem);
+	background-color: $primary-500;
 	color: white;
 	border: none;
-	padding: 16px 28px;
-	font-size: 20px;
+	padding: clamp(0.625rem, 1.5vw, 0.75rem);
+	font-size: clamp(1rem, 2vw, 1.125rem);
 	font-family: 'excalifont';
 	border-radius: $radius-8;
 	cursor: pointer;
+	margin: clamp(1rem, 2vw, 1.25rem) 0;
 	transition: background-color 0.3s ease;
 }
 
 .error-btn:hover {
-	background-color: $secundary-700;
+	background-color: $primary-700;
 }
