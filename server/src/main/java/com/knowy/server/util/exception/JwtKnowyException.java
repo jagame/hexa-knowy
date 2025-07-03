@@ -1,6 +1,8 @@
 package com.knowy.server.util.exception;
 
-public class JwtKnowyException extends Exception {
+import com.knowy.server.application.domain.error.KnowySecurityException;
+
+public class JwtKnowyException extends KnowySecurityException {
 	public JwtKnowyException(String message) {
 		super(message);
 	}

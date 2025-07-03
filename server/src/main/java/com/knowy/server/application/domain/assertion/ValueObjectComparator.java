@@ -12,29 +12,24 @@ public class ValueObjectComparator<V extends Comparable<V>, T extends ValueObjec
 	implements Comparator<T>
 {
 
-	private static final String OBJECT_COMPARE_ERROR_MSG = "The checked %s doesn't match the value of the expected one";
 	private static final String VALUE_COMPARE_ERROR_MSG = "The checked %s doesn't match with the expected one";
 	private static final String UNEXPECTED_NULL_ERROR_MSG = "You need a non null %s if you want to check another one";
 
 	private final String dataName;
-	private final Assert.GenericAssertionBuilder<E> assertElseThrowObjectError;
-	private final Assert.GenericAssertionBuilder<E> assertElseThrowValueError;
+	private final Assert.GenericAssertionBuilder<E> assertElseThrowError;
 
 	public ValueObjectComparator(
 		String dataName,
 		Function<String, E> exceptionFactory
 	) {
 		this.dataName = dataName;
-		this.assertElseThrowObjectError = Assert.orElseThrow(() ->
-			exceptionFactory.apply(String.format(OBJECT_COMPARE_ERROR_MSG, dataName))
-		);
-		this.assertElseThrowValueError = Assert.orElseThrow(() ->
+		this.assertElseThrowError = Assert.orElseThrow(() ->
 			exceptionFactory.apply(String.format(VALUE_COMPARE_ERROR_MSG, dataName))
 		);
 	}
 
 	public void assertEquals(T expected, T candidate) throws E {
-		assertElseThrowObjectError
+		assertElseThrowError
 			.<T, T>that(this::equals)
 			.values(expected, candidate);
 	}
@@ -53,7 +48,7 @@ public class ValueObjectComparator<V extends Comparable<V>, T extends ValueObjec
 	}
 
 	public void assertEquals(T expected, V candidate) throws E {
-		assertElseThrowObjectError
+		assertElseThrowError
 			.<T, V>that(this::equals)
 			.values(expected, candidate);
 	}
@@ -69,7 +64,7 @@ public class ValueObjectComparator<V extends Comparable<V>, T extends ValueObjec
 	}
 
 	public void assertEquals(V expected, V candidate) throws E {
-		assertElseThrowValueError
+		assertElseThrowError
 			.<V, V>that(this::equals)
 			.values(expected, candidate);
 	}

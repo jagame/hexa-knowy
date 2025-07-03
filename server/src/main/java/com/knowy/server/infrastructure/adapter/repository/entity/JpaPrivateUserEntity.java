@@ -11,14 +11,20 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "profile_image")
-public class ProfileImageEntity {
+@Table(name = "private_user")
+public class JpaPrivateUserEntity {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
 	private Integer id;
 
-	@Column(name = "url", nullable = false, length = Integer.MAX_VALUE)
-	private String url;
+	@Column(name = "email", length = 100, nullable = false)
+	private String email;
 
+	@Column(name = "plainPassword", length = 100, nullable = false)
+	private String password;
+
+	@OneToOne
+	@MapsId
+	@JoinColumn(name = "id")
+	private JpaPublicUserEntity publicUserEntity;
 }

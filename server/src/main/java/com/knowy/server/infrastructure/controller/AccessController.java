@@ -1,19 +1,27 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.server.application.service.AccessService;
+import com.knowy.server.application.domain.Email;
+import com.knowy.server.application.domain.PrivateUser;
+import com.knowy.server.application.domain.ProfileImage;
+import com.knowy.server.application.domain.error.IllegalKnowyEmailException;
+import com.knowy.server.application.domain.error.IllegalKnowyPasswordException;
+import com.knowy.server.application.domain.error.KnowyException;
+import com.knowy.server.application.port.persistence.KnowyPersistenceException;
+import com.knowy.server.application.port.persistence.KnowyUserNotFoundException;
+import com.knowy.server.application.port.security.TokenMapper;
 import com.knowy.server.application.service.PrivateUserService;
-import com.knowy.server.application.service.exception.AccessException;
-import com.knowy.server.application.service.usecase.login.LoginResult;
+import com.knowy.server.application.service.exception.InvalidUserException;
+import com.knowy.server.application.service.usecase.login.KnowyUserLoginException;
 import com.knowy.server.application.service.usecase.login.LoginCommand;
-import com.knowy.server.infrastructure.controller.dto.SessionUser;
-import com.knowy.server.infrastructure.controller.dto.LoginFormDto;
-import com.knowy.server.infrastructure.controller.dto.UserEmailFormDto;
-import com.knowy.server.infrastructure.controller.dto.UserPasswordFormDto;
-import jakarta.servlet.http.HttpSession;
-import lombok.extern.slf4j.Slf4j;
-import com.knowy.server.util.exception.PasswordFormatException;
+import com.knowy.server.application.service.usecase.recovery.SendPasswordRecoveryMessageCommand;
+import com.knowy.server.application.service.usecase.register.UserSignUpCommand;
+import com.knowy.server.application.service.usecase.update.password.KnowyUserPasswordUpdateException;
+import com.knowy.server.application.service.usecase.update.password.UpdateUserPasswordCommand;
+import com.knowy.server.infrastructure.controller.dto.*;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -23,190 +31,254 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.net.URI;
+
 
 @Controller
 @Slf4j
 public class AccessController {
 
-	public static final String SESSION_LOGGED_USER = "loggedUser";
+    public static final String SESSION_LOGGED_USER = "loggedUser";
+    private static final String ERROR_ATTRIBUTE = "error";
+    private final PrivateUserService privateUserService;
+    private final TokenMapper tokenMapper;
 
-	private final PrivateUserService privateUserService;
-//	FIXME Migrate all of AccessService required methods to PrivateUserService
-//	private final AccessService accessService;
+    public AccessController(PrivateUserService privateUserService, TokenMapper tokenMapper) {
+        this.privateUserService = privateUserService;
+        this.tokenMapper = tokenMapper;
+    }
 
-	public AccessController(PrivateUserService privateUserService) {
-		this.privateUserService = privateUserService;
-	}
+    @GetMapping(Endpoint.REGISTER)
+    public String register(Model model) {
+        model.addAttribute("user", new UserDto());
+        return Template.REGISTER;
+    }
 
-	@GetMapping("/register")
-	public String register(Model model) {
-		model.addAttribute("user", new UserDto());
-		return "pages/access/register";
-	}
+    @PostMapping(Endpoint.REGISTER)
+    public String procesarFormulario(@Valid @ModelAttribute UserDto user, Model model, Errors errors) {
+        if (errors.hasErrors()) {
+            return Template.REGISTER;
+        }
 
-	@PostMapping("/register")
-	public String procesarFormulario(@Valid @ModelAttribute UserDto user, Model model, Errors errors) {
-		if (errors.hasErrors()) {
-			return "pages/access/register";
-		}
+        try {
+            privateUserService.signUpUser(new UserSignUpCommand(
+                    user.getUsername(),
+                    ProfileImage.DEFAULT,
+                    user.getEmail(),
+                    user.getPassword()
+            ));
 
-		try {
-			accessService.registerNewUser(user);
-			return "redirect:/home";
-		} catch (InvalidUserException e) {
-			model.addAttribute("user", user);
-			model.addAttribute("error", e.getMessage());
-			return "pages/access/register";
-		}
-	}
+            return Redirect.TO_HOME;
+        } catch (InvalidUserException | IllegalKnowyPasswordException | IllegalKnowyEmailException e) {
+            model.addAttribute("user", user);
+            model.addAttribute(ERROR_ATTRIBUTE, e.getMessage());
 
-	@GetMapping("/login")
-	public String viewLogin(Model model) {
-		LoginFormDto loginForm = new LoginFormDto();
-		model.addAttribute("loginForm", loginForm);
-		return "pages/access/login";
-	}
+            return Template.REGISTER;
+        } catch (KnowyPersistenceException e) {
+            model.addAttribute("user", user);
+            model.addAttribute(ERROR_ATTRIBUTE,
+                    "An unexpected error occurs. The error UUID was %s".formatted(e.errorUUID()));
 
-	@PostMapping("/login")
-	public String postLogin(@ModelAttribute("loginForm") LoginFormDto login, Model model, HttpSession session) {
-		var userLogin = new LoginCommand(login.getEmail(), login.getPassword());
+            return Template.REGISTER;
+        }
+    }
 
-		return privateUserService.doLogin(userLogin)
-			.map(loginResult -> loginSuccess(session, loginResult))
-			.orElseGet(() -> loginError(model));
-	}
+    @GetMapping(Endpoint.LOGIN)
+    public String viewLogin(Model model) {
+        LoginFormDto loginForm = new LoginFormDto();
+        model.addAttribute("loginForm", loginForm);
 
-	private String loginSuccess(HttpSession session, LoginResult loginResult) {
-		session.setAttribute(SESSION_LOGGED_USER, new SessionUser(loginResult.privateUser());
-		log.info("Login correcto, se añade a la sesión el token {}", loginResult.generatedToken());
+        return Template.LOGIN;
+    }
 
-		return "redirect:/home";
-	}
+    @PostMapping(Endpoint.LOGIN)
+    public String postLogin(@ModelAttribute("loginForm") LoginFormDto login, Model model, HttpSession session) {
+        var userLogin = new LoginCommand(login.getEmail(), login.getPassword());
 
-	private String loginError(Model model) {
-		model.addAttribute("loginError", "¡Las credenciales son incorrectas!");
-		model.addAttribute("loginForm", new LoginFormDto());
-		return "pages/access/login";
-	}
+        try {
+            PrivateUser user = privateUserService.doLogin(userLogin);
 
-	@GetMapping("/logout")
-	public String logout(HttpSession session) {
-		session.invalidate();
-		return "redirect:/";
-	}
+            return loginSuccess(session, user);
+        } catch (KnowyUserNotFoundException | IllegalKnowyEmailException e) {
+            return loginError(model, "No user with email %s was found".formatted(login.getEmail()));
+        } catch (IllegalKnowyPasswordException e) {
+            return loginError(model, "Invalid password for user %s".formatted(login.getEmail()));
+        } catch (KnowyUserLoginException e) {
+            return loginError(model,
+                    "Unexpected error trying to login. The error UUID was %s".formatted(e.errorUUID()));
+        }
+    }
 
-	/**
-	 * Handles GET requests to display the password change email form.
-	 *
-	 * @param model the model to which the email form DTO is added
-	 * @return the name of the view for the password change email page
-	 */
-	@GetMapping("/password-change/email")
-	public String passwordChangeEmail(Model model) {
-		model.addAttribute("emailForm", new UserEmailFormDto());
-		return "pages/access/password-change-email";
-	}
+    private String loginSuccess(HttpSession session, PrivateUser user) {
+        session.setAttribute(SESSION_LOGGED_USER, new SessionUser(user));
+        log.info("Login de usuario {} correcto", user.id());
 
-	/**
-	 * Handles the POST request to initiate a password change by sending a recovery email.
-	 *
-	 * @param email              the form object containing the user's email address
-	 * @param redirectAttributes attributes used to pass flash messages during redirect
-	 * @param httpServletRequest the HTTP servlet request object, used to build the password change URL
-	 * @return a redirect string to either the login page on success or back to the email form on failure
-	 */
-	@PostMapping("/password-change/email")
-	public String passwordChangeEmail(
-		@ModelAttribute("emailForm") UserEmailFormDto email,
-		RedirectAttributes redirectAttributes,
-		HttpServletRequest httpServletRequest
-	) {
-		try {
-			accessService.sendRecoveryPasswordEmail(email.getEmail(), getPasswordChangeUrl(httpServletRequest));
-			return "redirect:/login";
-		} catch (AccessException e) {
-			redirectAttributes.addFlashAttribute("error", e.getMessage());
-			return "redirect:/password-change/email";
-		}
-	}
+        return Redirect.TO_HOME;
+    }
+
+    private String loginError(Model model, String errorMessage) {
+        model.addAttribute("loginError", errorMessage);
+        model.addAttribute("loginForm", new LoginFormDto());
+
+        return Template.LOGIN;
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+
+        return Redirect.TO_ROOT;
+    }
+
+    /**
+     * Handles GET requests to display the plainPassword change email form.
+     *
+     * @param model the model to which the email form DTO is added
+     * @return the name of the view for the plainPassword change email page
+     */
+    @GetMapping(Endpoint.PASSWORD_CHANGE_EMAIL)
+    public String passwordChangeEmail(Model model) {
+        model.addAttribute("emailForm", new UserEmailFormDto());
+
+        return Template.PASSWORD_CHANGE_EMAIL;
+    }
+
+    /**
+     * Handles the POST request to initiate a plainPassword change by sending a recovery email.
+     *
+     * @param emailDto           the form object containing the user's email address
+     * @param redirectAttributes attributes used to pass flash messages during redirect
+     * @param httpServletRequest the HTTP servlet request object, used to build the plainPassword change URL
+     * @return a redirect string to either the login page on success or back to the email form on failure
+     */
+    @PostMapping(Endpoint.PASSWORD_CHANGE_EMAIL)
+    public String passwordChangeEmail(
+            @ModelAttribute("emailForm") UserEmailFormDto emailDto,
+            RedirectAttributes redirectAttributes,
+            HttpServletRequest httpServletRequest
+    ) {
+        try {
+            var email = new Email(emailDto.getEmail());
+            privateUserService.launchRecoveryPasswordProcess(new SendPasswordRecoveryMessageCommand(
+                    email, getPasswordChangeURI(httpServletRequest))
+            );
+
+            return Redirect.TO_LOGIN;
+        } catch (KnowyException e) {
+            redirectAttributes.addFlashAttribute(ERROR_ATTRIBUTE, e.getMessage());
+
+            return Redirect.TO_PASSWORD_CHANGE_EMAIL;
+        }
+    }
 
 
-	private String getPasswordChangeUrl(HttpServletRequest httpServletRequest) {
-		return getDomainUrl(httpServletRequest) + "/password-change";
-	}
+    private URI getPasswordChangeURI(HttpServletRequest httpServletRequest) {
+        return URI.create(getDomainUrl(httpServletRequest) + Endpoint.PASSWORD_CHANGE);
+    }
 
-	private String getDomainUrl(HttpServletRequest request) {
-		String scheme = request.getScheme();
-		String serverName = request.getServerName();
-		int serverPort = request.getServerPort();
+    private String getDomainUrl(HttpServletRequest request) {
+        String scheme = request.getScheme();
+        String serverName = request.getServerName();
+        int serverPort = request.getServerPort();
 
-		return scheme + "://" + serverName + ":" + serverPort;
-	}
+        return scheme + "://" + serverName + ":" + serverPort;
+    }
 
-	/**
-	 * Handles GET requests to display the password change form if the token is valid.
-	 *
-	 * @param token the token used to verify the password change request
-	 * @param model the model to which the token and password form DTO are added
-	 * @return the name of the password change view if the token is registered, otherwise redirects to the home page
-	 */
-	@GetMapping("/password-change")
-	public String passwordChange(
-		@RequestParam String token,
-		Model model
-	) {
-		if (privateUserService.isValidToken(token)) {
-			model.addAttribute("token", token);
-			model.addAttribute("passwordForm", new UserPasswordFormDto());
-			return "pages/access/password-change";
-		}
-		return "redirect:/";
-	}
+    /**
+     * Handles GET requests to display the plainPassword change form if the token is valid.
+     *
+     * @param token the token used to verify the plainPassword change request
+     * @param model the model to which the token and plainPassword form DTO are added
+     * @return the name of the plainPassword change view if the token is registered, otherwise redirects to the home
+     * page
+     */
+    @GetMapping(Endpoint.PASSWORD_CHANGE)
+    public String passwordChange(@RequestParam String token, Model model) {
+        if (!tokenMapper.isValid(token)) {
+            return Redirect.TO_ROOT;
+        }
 
-	/**
-	 * Handles POST requests to update a user's password as part of a password reset flow.
-	 *
-	 * <p>This endpoint expects a valid JWT token and a form containing the new password and its confirmation.
-	 * If the token is valid and all validations pass, the user's password is updated and the user is redirected to the
-	 * login page.</p>
-	 *
-	 * <p>In case of failure (e.g., invalid token, mismatched passwords, or attempt to reuse the old password),
-	 * the user is still redirected to the login page, and an error message can be passed via
-	 * {@link RedirectAttributes}.</p>
-	 *
-	 * @param token               the JWT token used to authorize the password change request
-	 * @param userPasswordFormDto the form DTO containing the new password and its confirmation
-	 * @param redirectAttributes  attributes used to pass query parameters or flash messages during redirection
-	 * @return a redirect string to the login page, whether the operation succeeds or fails
-	 */
-	@PostMapping("/password-change")
-	public String passwordChange(
-		@RequestParam("token") String token,
-		@ModelAttribute("passwordForm") UserPasswordFormDto userPasswordFormDto,
-		RedirectAttributes redirectAttributes
-	) {
-		try {
-			privateUserService.updateUserPassword(
-				token,
-				userPasswordFormDto.getPassword(),
-				userPasswordFormDto.getConfirmPassword()
-			);
-			log.info("User password updated");
-			return "redirect:/login";
-		} catch (AccessException e) {
-			redirectAttributes.addAttribute("error", "Se ha producido un error al actualizar la contraseña");
-			log.error("Failed to update user password", e);
-			return "redirect:/login";
-		} catch (PasswordFormatException e) {
-			redirectAttributes.addAttribute("error", """
-				Formato de contraseña inválido. Debe tener al menos:
-				- 8 caracteres
-				- 1 mayúscula, 1 minúscula
-				- 1 número y 1 símbolo
-				- Sin espacios
-				""");
-			log.error("Invalid password format", e);
-			return "redirect:/password-change?token=" + token;
-		}
-	}
+        model.addAttribute("token", token);
+        model.addAttribute("passwordForm", new UserPasswordFormDto());
+
+        return Template.PASSWORD_CHANGE;
+
+    }
+
+    /**
+     * Handles POST requests to update a user's plainPassword as part of a plainPassword reset flow.
+     *
+     * <p>This endpoint expects a valid JWT token and a form containing the new plainPassword and its confirmation.
+     * If the token is valid and all validations pass, the user's plainPassword is updated and the user is redirected
+     * to the
+     * login page.</p>
+     *
+     * <p>In case of failure (e.g., invalid token, mismatched passwords, or attempt to reuse the old plainPassword),
+     * the user is still redirected to the login page, and an error message can be passed via
+     * {@link RedirectAttributes}.</p>
+     *
+     * @param token               the JWT token used to authorize the plainPassword change request
+     * @param userPasswordFormDto the form DTO containing the new plainPassword and its confirmation
+     * @param redirectAttributes  attributes used to pass query parameters or flash messages during redirection
+     * @return a redirect string to the login page, whether the operation succeeds or fails
+     */
+    @PostMapping(Endpoint.PASSWORD_CHANGE)
+    public String passwordChange(
+            @RequestParam("token") String token,
+            @ModelAttribute("passwordForm") UserPasswordFormDto userPasswordFormDto,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            privateUserService.updateUserPassword(
+                    new UpdateUserPasswordCommand(userPasswordFormDto.getPassword(), token)
+            );
+            log.info("User plainPassword updated");
+
+            return Redirect.TO_LOGIN;
+        } catch (KnowyUserPasswordUpdateException | KnowyPersistenceException e) {
+            redirectAttributes.addAttribute(ERROR_ATTRIBUTE, "Se ha producido un error al actualizar la contraseña");
+            log.error("Failed to update user plainPassword", e);
+
+            return Redirect.TO_LOGIN;
+        } catch (IllegalKnowyPasswordException e) {
+            redirectAttributes.addAttribute(ERROR_ATTRIBUTE, """
+                    Formato de contraseña inválido. Debe tener al menos:
+                    - 8 caracteres
+                    - 1 mayúscula, 1 minúscula
+                    - 1 número y 1 símbolo
+                    - Sin espacios
+                    """);
+            log.error("Invalid plainPassword format", e);
+
+            return Redirect.TO_PASSWORD_CHANGE + "?token=" + token;
+        }
+    }
+
+    private static class Endpoint {
+        private static final String HOME = "/home";
+        private static final String LOGIN = "/login";
+        private static final String PASSWORD_CHANGE = "/plainPassword-change";
+        private static final String PASSWORD_CHANGE_EMAIL = "/plainPassword-change/email";
+        private static final String REGISTER = "/register";
+        private static final String ROOT = "/";
+    }
+
+    private static class Redirect {
+        private static final String TO_HOME = to(Endpoint.HOME);
+        private static final String TO_LOGIN = to(Endpoint.LOGIN);
+        private static final String TO_PASSWORD_CHANGE = to(Endpoint.PASSWORD_CHANGE);
+        private static final String TO_PASSWORD_CHANGE_EMAIL = to(Endpoint.PASSWORD_CHANGE_EMAIL);
+        private static final String TO_ROOT = to(Endpoint.ROOT);
+
+        private static String to(String endpoint) {
+            return "redirect:%s".formatted(endpoint);
+        }
+    }
+
+    private static class Template {
+        private static final String PASSWORD_CHANGE = "pages/access/plainPassword-change";
+        private static final String PASSWORD_CHANGE_EMAIL = "pages/access/plainPassword-change-email";
+        private static final String REGISTER = "pages/access/register";
+        private static final String LOGIN = "pages/access/login";
+    }
 }

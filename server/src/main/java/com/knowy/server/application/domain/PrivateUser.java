@@ -18,7 +18,7 @@ public class PrivateUser extends PublicUser {
 	public PrivateUser(PublicUser publicUser, Email email, Password password) {
 		super(publicUser.id(), publicUser.nickname(), publicUser.profileImage());
 		this.email = Objects.requireNonNull(email, "An email is required");
-		this.password = Objects.requireNonNull(password, "An password is required");
+		this.password = Objects.requireNonNull(password, "An plainPassword is required");
 	}
 
 	public Email email() {

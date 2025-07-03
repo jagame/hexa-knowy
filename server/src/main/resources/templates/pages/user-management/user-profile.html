@@ -57,7 +57,7 @@
 
 <aside layout:fragment="sidebar" class="kn-aside user-sidebar">
 	<div class="user-info text-center mb-4">
-		<h3 class="mt-3 username-title" th:text="${username}">Usuario</h3>
+		<h3 class="mt-3 username-title" th:text="${session.loggedUser.nickname()}">Usuario</h3>
 	</div>
 	<div class="sidebar-menu">
 		<button  class="sidebar-link"  data-sidebar-toggler="" th:classappend="active" >Editar Perfil</button>
@@ -85,7 +85,7 @@
 
 				<div class="information-edit-container col-lg-9">
 					<h6 class="section-title">Nombre de Usuario: 👤</h6>
-					<input type="text" class="user-name form-control" required th:value="${username}">
+					<input type="text" class="user-name form-control" value="${session.loggedUser.nickname()}" required>
 					<br>
 					<h6 class="section-title">Lenguajes de Programación favoritos ⭐</h6>
 					<select name="languages" id="languages" class="form-control" multiple>

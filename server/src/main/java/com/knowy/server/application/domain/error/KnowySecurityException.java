@@ -1,6 +1,4 @@
-package com.knowy.server.application.port.security;
-
-import com.knowy.server.application.domain.error.KnowyException;
+package com.knowy.server.application.domain.error;
 
 public class KnowySecurityException extends KnowyException {
 	public KnowySecurityException(String message) {

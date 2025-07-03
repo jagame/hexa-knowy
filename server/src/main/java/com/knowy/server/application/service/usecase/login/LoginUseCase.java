@@ -1,7 +1,9 @@
 package com.knowy.server.application.service.usecase.login;
 
+import com.knowy.server.application.domain.Email;
 import com.knowy.server.application.domain.Password;
 import com.knowy.server.application.domain.PrivateUser;
+import com.knowy.server.application.domain.error.IllegalKnowyEmailException;
 import com.knowy.server.application.domain.error.IllegalKnowyPasswordException;
 import com.knowy.server.application.port.persistence.KnowyUserNotFoundException;
 import com.knowy.server.application.port.persistence.PrivateUserRepository;
@@ -9,7 +11,7 @@ import com.knowy.server.application.port.persistence.PrivateUserRepository.Knowy
 import com.knowy.server.application.port.security.TokenMapper;
 import com.knowy.server.application.service.usecase.KnowyUseCase;
 
-public class LoginUseCase implements KnowyUseCase<LoginCommand, LoginResult> {
+public class LoginUseCase implements KnowyUseCase<LoginCommand, PrivateUser> {
 
 	private final PrivateUserRepository privateUserRepository;
 	private final TokenMapper tokenMapper;
@@ -26,17 +28,20 @@ public class LoginUseCase implements KnowyUseCase<LoginCommand, LoginResult> {
 	 * @param loginCommand The user login command
 	 * @return The login result, which includes bot the logged-in user and his session token
 	 * @throws KnowyUserNotFoundException    If no user is found with the specified email
-	 * @throws IllegalKnowyPasswordException If the specified password doesn't match with the expected one
+	 * @throws IllegalKnowyEmailException    If the specified plainEmail doesn't match with one
+	 * @throws IllegalKnowyPasswordException If the specified plainPassword doesn't match with the expected one
 	 * @throws KnowyUserLoginException       If an error occurs while finding the user
 	 */
 	@Override
-	public LoginResult execute(LoginCommand loginCommand)
-		throws KnowyUserNotFoundException, IllegalKnowyPasswordException, KnowyUserLoginException {
+	public PrivateUser execute(LoginCommand loginCommand)
+		throws KnowyUserNotFoundException, IllegalKnowyPasswordException, IllegalKnowyEmailException,
+		KnowyUserLoginException {
 
 		try {
-			PrivateUser user = privateUserRepository.getByEmail(loginCommand.email());
+			Email.assertValid(loginCommand.email());
+			PrivateUser user = privateUserRepository.getByEmail(new Email(loginCommand.email()));
 			Password.assertEquals(user.password(), loginCommand.password());
-			return new LoginResult(user, tokenMapper.generate(user));
+			return user;
 		} catch (KnowyPrivateUserPersistenceException e) {
 			throw new KnowyUserLoginException(e);
 		}

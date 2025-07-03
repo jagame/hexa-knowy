@@ -26,7 +26,7 @@ public class UpdateUserEmailUseCase implements KnowyUseCase<UpdateUserEmailComma
 
 			Email.assertValid(userEmailUpdate.newEmail());
 			Email.assertEquals(user.email(), userEmailUpdate.newEmail());
-			Password.assertEquals(user.password(), userEmailUpdate.password());
+			Password.assertEquals(user.password(), userEmailUpdate.plainPassword());
 
 			user.setEmail(new Email(userEmailUpdate.newEmail()));
 			privateUserRepository.update(user);

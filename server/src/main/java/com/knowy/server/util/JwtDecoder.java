@@ -1,41 +1,37 @@
 package com.knowy.server.util;
 
 import com.knowy.server.util.exception.JwtKnowyException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.jackson.io.JacksonDeserializer;
+import io.jsonwebtoken.*;
 
 import javax.crypto.SecretKey;
-import java.util.Map;
 
-public class JwtDecoder<T> {
+public class JwtDecoder {
 
-	private final Class<T> dataClass;
 	private final JwtParser jwtParser;
 
-	public JwtDecoder(SecretKey key, Class<T> dataClass) {
-		this.dataClass = dataClass;
+	public JwtDecoder(SecretKey key) {
 		this.jwtParser = Jwts.parser()
 			.verifyWith(key)
-			.json(new JacksonDeserializer<>(Map.of("data", dataClass)))
 			.build();
 	}
 
-	public JwtDecoder(Class<T> dataClass) {
-		this.dataClass = dataClass;
-		this.jwtParser = Jwts.parser()
-			.build();
-	}
-
-	public Claims parseToken(String token) {
-		return jwtParser
-			.parseSignedClaims(token)
+	public Claims parseToken(String token) throws JwtKnowyException {
+		return verify(token)
 			.getPayload();
 	}
 
-	public T extractDataClaim(Claims claims) {
-		return claims.get("data", dataClass);
+	/**
+	 * @param token the token to verify
+	 * @return The jws result of parse the token, when valid
+	 * @throws JwtKnowyException if the jwt string cannot be parsed or validated as required.
+	 */
+	public Jws<Claims> verify(String token) throws JwtKnowyException {
+		try {
+			return jwtParser
+				.parseSignedClaims(token);
+		} catch (JwtException e) {
+			throw new JwtKnowyException("Invalid token", e);
+		}
 	}
 
 }

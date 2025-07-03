@@ -6,26 +6,28 @@ import com.knowy.server.application.domain.error.IllegalKnowyPasswordException;
 import com.knowy.server.application.domain.error.InvalidKnowyPasswordFormatException;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public record Password(String value) implements ValueObject<String> {
 
-	private static final String VALIDATION_ERROR_MESSAGE = "The minimum length of a password is 8 characters";
+	private static final String VALIDATION_ERROR_MESSAGE = "The minimum length of a plainPassword is 8 characters";
 	private static final Assert.AssertionBuilder<String> ASSERT_IS_VALID_PASSWORD = Assert.that(Password::isValid);
 	private static final ValueObjectComparator<String, Password, IllegalKnowyPasswordException> PASSWORD_COMPARATOR =
 		new ValueObjectComparator<>(
-			"password",
+			"plainPassword",
 			IllegalKnowyPasswordException::new
 		);
 
 	public Password {
-		Objects.requireNonNull(value, "A password value can't be null");
+		Objects.requireNonNull(value, "A plainPassword value can't be null");
 		ASSERT_IS_VALID_PASSWORD
 			.orElseThrow(() -> new InvalidKnowyPasswordFormatException(VALIDATION_ERROR_MESSAGE))
 			.value(value);
 	}
 
 	public static boolean isValid(String passwordValue) {
-		return passwordValue != null && passwordValue.length() >= 8;
+		String regex = "^(?=.*\\d)(?=.*[!-/:-@])(?=.*[A-Z])(?=.*[a-z])\\S{8,}$";
+		return Pattern.matches(regex, passwordValue);
 	}
 
 	public static void assertValid(String password) throws IllegalKnowyPasswordException {

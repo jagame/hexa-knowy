@@ -1,5 +1,6 @@
 package com.knowy.server.application.port.persistence;
 
+import com.knowy.server.application.domain.ProfileImage;
 import com.knowy.server.application.domain.PublicUser;
 
 import java.util.Optional;
@@ -7,9 +8,9 @@ import java.util.Optional;
 
 public interface PublicUserRepository {
 
-	Optional<PublicUser> findById(Integer id) throws KnowyPublicUserPersistenceException;
+	Optional<PublicUser> findById(int id) throws KnowyPublicUserPersistenceException;
 
-	default PublicUser getById(Integer id) throws KnowyPublicUserPersistenceException, KnowyUserNotFoundException {
+	default PublicUser getById(int id) throws KnowyPublicUserPersistenceException, KnowyUserNotFoundException {
 		return findById(id).orElseThrow(() ->
 			new KnowyUserNotFoundException(String.format("No user with id %d was found", id))
 		);
@@ -18,6 +19,8 @@ public interface PublicUserRepository {
 	Optional<PublicUser> findByNickname(String nickname) throws KnowyPublicUserPersistenceException;
 
 	void update(PublicUser publicUser) throws KnowyPublicUserPersistenceException;
+
+	Optional<ProfileImage> findProfileImageById(int id) throws KnowyPublicUserPersistenceException;
 
 	class KnowyPublicUserPersistenceException extends KnowyPersistenceException {
 

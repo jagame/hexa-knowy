@@ -1,6 +1,8 @@
 package com.knowy.server.application.service.exception;
 
-public class AccessException extends Exception {
+import com.knowy.server.application.domain.error.KnowySecurityException;
+
+public class AccessException extends KnowySecurityException {
 	public AccessException(String message) {
 		super(message);
 	}

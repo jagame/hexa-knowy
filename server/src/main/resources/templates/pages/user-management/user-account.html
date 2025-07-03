@@ -25,18 +25,16 @@
 		<div class="description-card">
 			<h1 class="title-management">Gestión de la Cuenta</h1>
 		</div>
-<!--		TODO-->
-		<form id="accountForm" method="post" th:object="${UserConfigSessionDTO}" th:action="@{/update-Nickname}">
+
+		<form id="accountForm" method="post" th:action="@{/update-Nickname}">
 			<div class="row user-information">
 				<div class="form-fields">
 					<label class="section-title" for="newNickname">Nombre de Usuario 👤</label>
-					<input class="form-control" id="newNickname" name="newNickname" required
-						   th:placeholder="${publicUser.getNickname()}" type="text">
-					<input id="idFormNickname" type="hidden" th:value="${publicUser.getId()}" name="id">
+					<input id="newNickname" name="newNickname" type="text" class="form-control"
+						   value="${session.loggedUser.nickname()}" required>
 					<span class="advice-success" th:if="${success}" th:text="${success}"></span>
 					<span class="advice-error" th:if="${error}" th:text="${error}"></span>
 				</div>
-
 			</div>
 			<div class="buttons-form-content">
 				<button class="btn btn-inferior" type="reset">Restablecer</button>
@@ -58,8 +56,8 @@
 				<span class="advice-success" th:if="${successEmail}" th:text="${successEmail}"></span>
 				<span class="advice-error" th:if="${errorEmail}" th:text="${errorEmail}"></span>
 			</p>
-
 		</div>
+
 		<div class="user-account-section">
 			<div class="description-card delete">
 				<h3 class="user-account-tittle-section">Cambiar contraseña 🔑</h3>
@@ -69,6 +67,7 @@
 			<br>
 			<a class="btn btn-inferior" th:href="@{/password-change/email}">Cambiar contraseña</a>
 		</div>
+
 		<div class="user-account-section">
 			<div class="description-card delete">
 				<h3 class="title-delete">Desactivación y eliminación de la cuenta</h3>
@@ -76,7 +75,6 @@
 			<p class="description-management">Elimina permanentemente tus datos y todo lo asociado con tu cuenta.</p>
 			<br>
 			<a class="btn btn-delete" th:href="@{/delete-account}">Eliminar cuenta</a>
-
 		</div>
 	</div>
 </main>
@@ -90,14 +88,14 @@
 					<h5 class="modal-title" id="emailLabel">Modificar correo electrónico 📧</h5>
 					<button aria-label="Cerrar" class="btn-close" data-bs-dismiss="modal" type="button"></button>
 				</div>
+
 				<div class="modal-body">
-					<form id="emailChangeForm" method="post" th:action="@{/update-email}" th:object="${userConfigSessionDTO}">
+					<form id="emailChangeForm" method="post" th:action="@{/update-email}">
 						<label for="email">Correo Electrónico</label>
-						<input class="form-control" id="email" name="newEmail" required th:placeholder="${userConfigSessionDTO.getEmail()}"
-							   type="email">
+						<input id="email" name="newEmail" class="form-control" type="email"
+							   value="${session.loggedUser.email()}" required>
 						<label for="currentPassword">Contraseña actual 🔑</label>
-						<input class="form-control" id="currentPassword" name="currentPassword" type="password">
-						<input type="hidden" th:value="${userConfigSessionDTO.getEmail()}" name="email">
+						<input id="currentPassword" name="currentPassword" type="password" class="form-control">
 						<div class="modal-footer">
 							<button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cerrar</button>
 							<button class="btn btn-primary" form="emailChangeForm" type="submit">Guardar</button>

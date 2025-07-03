@@ -1,12 +1,13 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.server.application.domain.error.IllegalKnowyPasswordException;
-import com.knowy.server.application.domain.error.KnowyException;
+import com.knowy.server.application.domain.Email;
+import com.knowy.server.application.domain.error.*;
 import com.knowy.server.application.domain.PrivateUser;
 import com.knowy.server.application.domain.PublicUser;
 import com.knowy.server.application.service.PrivateUserService;
 import com.knowy.server.application.service.PublicUserService;
 import com.knowy.server.application.service.usecase.update.email.KnowyUserEmailUpdateException;
+import com.knowy.server.infrastructure.controller.dto.SessionUser;
 import com.knowy.server.infrastructure.controller.dto.UserConfigSessionDTO;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -35,69 +36,21 @@ public class UserConfigController {
 
 	//User-Profile
 	@GetMapping("/user-profile")
-	public String viewUserProfile(Model model) {
-		model.addAttribute("username", username);
+	public String viewUserProfile() {
 		return "pages/user-management/user-profile";
 	}
 
 	//User-Account
 	@GetMapping("/user-account")
-	public String viewUserAccount(Model model, HttpSession session) {
-		String email = getCurrentEmail(session);
-
-		Optional<PrivateUser> privateUser;
-		try {
-			privateUser = privateUserService.findPrivateUserByEmail(email);
-		} catch (KnowyException e) {
-			log.error("An error occurs while finding user information", e);
-			model.addAttribute("error", "An error occur while finding user information");
-			return "pages/user-management/user-account";
-		}
-
-		if (privateUser.isEmpty()) {
-			// Manejo de error: usuario no encontrado
-			model.addAttribute("error", "User information could not be uploaded.");
-			return "pages/user-management/user-account";
-		}
-
-		model.addAttribute("privateUser", privateUser.get());
-		model.addAttribute("publicUser", privateUser.get());
-		session.setAttribute("nickName", privateUser.get().nickname());
-
-		UserConfigSessionDTO userConfigSessionDTO = new UserConfigSessionDTO();
-		userConfigSessionDTO.setEmail(privateUser.get().email());
-		model.addAttribute("userConfigSessionDTO", userConfigSessionDTO);
+	public String viewUserAccount() {
 		return "pages/user-management/user-account";
 	}
 
-	private String getCurrentEmail(HttpSession session) {
-		String email = (String) session.getAttribute("email");
-		if (email == null) {
-			email = "usuario123@correo.com";
-			session.setAttribute("email", email);
-			// FixMe: Changing the way we get email in the future
-		}
-		return email;
-	}
-
-	//Method available for use on the other pages of UserConfig
-	private String getCurrentNickname(HttpSession session) throws KnowyException {
-		String nickname = (String) session.getAttribute("nickname");
-		if (nickname == null) {
-			// FixMe: Changing the way we get UserById in the future
-			Optional<PublicUser> publicUser = publicUserService.findPublicUserById(3);
-			publicUser.ifPresent(publicUserEntity -> session.setAttribute("nickname", publicUserEntity.nickname()));
-		}
-		return nickname;
-	}
-
 	@PostMapping("/update-Nickname")
-	public String updateNickname(String newNickname, Integer id,
-								 RedirectAttributes redirectAttributes,
-								 HttpSession session) {
+	public String updateNickname(String newNickname, RedirectAttributes redirectAttributes, HttpSession session) {
 		try {
-			if (publicUserService.updateNickname(newNickname, id)) {
-				session.setAttribute("nickname", newNickname);
+			SessionUser sessionUser = (SessionUser) session.getAttribute(AccessController.SESSION_LOGGED_USER);
+			if (publicUserService.updateNickname(newNickname, sessionUser.id())) {
 				redirectAttributes.addFlashAttribute("success", "Nombre de usuario actualizado");
 			} else {
 				redirectAttributes.addFlashAttribute("error", "Nombre no valido");
@@ -114,14 +67,15 @@ public class UserConfigController {
 	public String updateEmail(@ModelAttribute UserConfigSessionDTO userConfigSessionDTO,
 							  RedirectAttributes redirectAttributes, HttpSession session) {
 		try {
+			SessionUser sessionUser = (SessionUser) session.getAttribute(AccessController.SESSION_LOGGED_USER);
 			privateUserService.updateEmail(
-				userConfigSessionDTO.getEmail(),
+				new Email(sessionUser.email()),
 				userConfigSessionDTO.getNewEmail(),
 				userConfigSessionDTO.getCurrentPassword()
 			);
 			session.setAttribute("email", userConfigSessionDTO.getNewEmail());
 			redirectAttributes.addFlashAttribute("successEmail", "Email actualizado");
-		} catch (IllegalKnowyPasswordException | KnowyUserEmailUpdateException e) {
+		} catch (IllegalKnowyPasswordException | KnowyUserEmailUpdateException | IllegalKnowyEmailException e) {
 			log.error("Error updating email", e);
 			redirectAttributes.addFlashAttribute("errorEmail", e.getMessage());;
 		}

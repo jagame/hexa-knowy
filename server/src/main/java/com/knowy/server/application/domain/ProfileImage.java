@@ -1,8 +1,11 @@
 package com.knowy.server.application.domain;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class ProfileImage {
+public class ProfileImage implements Serializable {
+
+	public static final ProfileImage DEFAULT = new ProfileImage(1, "/images/profile/profile_image_test1.webp");
 
 	private Integer id;
 	private String url;

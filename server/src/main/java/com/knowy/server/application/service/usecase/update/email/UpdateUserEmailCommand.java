@@ -1,4 +1,6 @@
 package com.knowy.server.application.service.usecase.update.email;
 
-public record UpdateUserEmailCommand(String currentEmail, String newEmail, String password) {
+import com.knowy.server.application.domain.Email;
+
+public record UpdateUserEmailCommand(Email currentEmail, String newEmail, String plainPassword) {
 }

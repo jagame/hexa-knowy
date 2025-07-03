@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "public_user")
-public class PublicUserEntity {
+public class JpaPublicUserEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
@@ -23,6 +23,6 @@ public class PublicUserEntity {
 
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_profile_image", referencedColumnName = "id")
-	private ProfileImageEntity profileImage;
+	private JpaProfileImageEntity profileImage;
 
 }

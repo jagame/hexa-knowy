@@ -1,8 +1,9 @@
 package com.knowy.server.application.domain;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class PublicUser {
+public class PublicUser implements Serializable {
 	private Integer id;
 	private String nickname;
 	private ProfileImage profileImage;

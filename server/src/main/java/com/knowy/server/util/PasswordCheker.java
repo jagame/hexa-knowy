@@ -1,6 +1,6 @@
 package com.knowy.server.util;
 
-import com.knowy.server.entity.PrivateUserEntity;
+import com.knowy.server.application.domain.PrivateUser;
 import com.knowy.server.util.exception.PasswordFormatException;
 import com.knowy.server.util.exception.WrongPasswordException;
 
@@ -11,7 +11,7 @@ public class PasswordCheker {
 
 	public static void assertPasswordFormatIsRight(String password) throws PasswordFormatException {
 		if (!isRightPasswordFormat(password)) {
-			throw new PasswordFormatException("Invalid password format");
+			throw new PasswordFormatException("Invalid plainPassword format");
 		}
 	}
 
@@ -20,15 +20,15 @@ public class PasswordCheker {
 		return Pattern.matches(regex, password);
 	}
 
-	public static void assertHasPassword(PrivateUserEntity user, String password) throws WrongPasswordException {
+	public static void assertHasPassword(PrivateUser user, String password) throws WrongPasswordException {
 		if (!hasPassword(user, password)) {
-			throw new WrongPasswordException("Wrong password for user with id: " + user.getId());
+			throw new WrongPasswordException("Wrong plainPassword for user with id: " + user.id());
 		}
 	}
 
-	public static boolean hasPassword(PrivateUserEntity user, String password) {
-		Objects.requireNonNull(user, "Can't check user password of null user");
-		return user.getPassword().equals(password);
+	public static boolean hasPassword(PrivateUser user, String password) {
+		Objects.requireNonNull(user, "Can't check user plainPassword of null user");
+		return user.password().hasValue(password);
 	}
 
 }

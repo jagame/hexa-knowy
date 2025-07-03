@@ -1,5 +1,6 @@
 package com.knowy.server.application.port.persistence;
 
+import com.knowy.server.application.domain.Email;
 import com.knowy.server.application.domain.PrivateUser;
 
 import java.util.Optional;
@@ -9,7 +10,7 @@ public interface PrivateUserRepository {
 
 	Optional<PrivateUser> findById(int id) throws KnowyPrivateUserPersistenceException;
 
-	Optional<PrivateUser> findByEmail(String email) throws KnowyPrivateUserPersistenceException;
+	Optional<PrivateUser> findByEmail(Email email) throws KnowyPrivateUserPersistenceException;
 
 	/**
 	 * Find the private data of the user whose email matches the specified one.
@@ -19,10 +20,10 @@ public interface PrivateUserRepository {
 	 * @throws KnowyUserNotFoundException    If no user with specified email is found
 	 * @throws KnowyPrivateUserPersistenceException If an error occurs while finding the user
 	 */
-	default PrivateUser getByEmail(String email) throws KnowyPrivateUserPersistenceException, KnowyUserNotFoundException {
+	default PrivateUser getByEmail(Email email) throws KnowyPrivateUserPersistenceException, KnowyUserNotFoundException {
 		return findByEmail(email)
 			.orElseThrow(() -> new KnowyUserNotFoundException(
-				String.format("No user with email <%s> was found", email)
+				"No user with email <%s> was found".formatted(email)
 			));
 	}
 

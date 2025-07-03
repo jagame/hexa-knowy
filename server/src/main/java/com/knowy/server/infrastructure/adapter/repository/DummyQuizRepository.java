@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @Repository
-public class OptionsQuizRepositoryDummy implements QuizRepository {
+public class DummyQuizRepository implements QuizRepository {
 	@Override
 	public List<OptionQuizDTO> findOptionsByQuizId(int quizID) {
 		//Simulating the data, we will connect the DDBB in the near future.
