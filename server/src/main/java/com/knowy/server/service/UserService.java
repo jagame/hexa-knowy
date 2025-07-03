@@ -109,10 +109,10 @@ public class UserService {
 			}
 			publicUserEntity.setNickname(newNickname);
 		}
-		if (languages != null && !languages.isEmpty()) {
-			Set<LanguageEntity> newLanguages = jpaLanguageRepository.findByNameIn(languages);
+//		if (languages != null && !languages.isEmpty()) {
+			Set<LanguageEntity> newLanguages = jpaLanguageRepository.findByNameInIgnoreCase(languages);
 			publicUserEntity.setLanguages(newLanguages);
-		}
+//		}
 		return jpaPublicUserRepository.save(publicUserEntity);
 	}
 

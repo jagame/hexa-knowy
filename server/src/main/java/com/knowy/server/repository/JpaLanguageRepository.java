@@ -2,6 +2,7 @@ package com.knowy.server.repository;
 
 import com.knowy.server.entity.LanguageEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -15,6 +16,10 @@ public interface JpaLanguageRepository extends LanguageRepository, JpaRepository
 	@Override
 	Optional<LanguageEntity> findByName(String name);
 
+	@Query (value = """
+		SELECT id, name FROM language WHERE (language.name) ILIKE ANY (language.name)
+""", nativeQuery = true)
+	Set<LanguageEntity> findByNameInIgnoreCase(Set<String> names);
 
-	Set<LanguageEntity> findByNameIn(Collection<String> names);
+	Set<LanguageEntity> findByNameIn(Set<String> names);
 }

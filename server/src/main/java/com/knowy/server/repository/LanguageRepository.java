@@ -9,4 +9,6 @@ import java.util.Set;
 public interface LanguageRepository {
 
 	Optional<LanguageEntity> findByName(String name);
+
+	Set<LanguageEntity> findByNameIn(Set<String> names);
 }
