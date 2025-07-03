@@ -1,0 +1,11 @@
+@use "../global-vars" as *;
+
+.toast {
+	min-width: 250px;
+	max-width: 350px;
+	margin-bottom: 1rem;
+	&.bg-success { background-color: $primary-500 !important; }
+	&.bg-danger { background-color: $danger-500 !important; }
+	&.bg-warning { background-color: #ff9800 !important; }
+	&.bg-info { background-color: $info-500 !important; }
+}

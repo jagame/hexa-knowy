@@ -1,10 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+<div th:fragment="toast(title, message, type, duration=5000)">
+	<div class="toast show"
+		 th:classappend="' bg-' + ${type}"
+		 role="alert"
+		 aria-live="assertive"
+		 aria-atomic="true"
+		 th:attr="data-bs-delay=${duration}">
+		<div class="toast-header">
+			<strong class="me-auto" th:text="${title}">Título</strong>
+			<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+		</div>
+		<div class="toast-body" th:text="${message}">
+			Mensaje
+		</div>
+	</div>
+</div>
