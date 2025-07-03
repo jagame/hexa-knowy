@@ -8,16 +8,21 @@ import com.knowy.server.controller.dto.UserProfileDTO;
 import com.knowy.server.repository.JpaLanguageRepository;
 import com.knowy.server.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.knowy.server.controller.AccessController.SESSION_LOGGED_USER;
 
+@Slf4j
 @Controller
 public class UserConfigController {
 
@@ -125,18 +130,19 @@ public class UserConfigController {
 
 	//Update User-profile
 	@PostMapping("/update-user-profile")
-	public String updateUserProfile(@ModelAttribute("profileDto") UserProfileDTO userProfileDTO, Model model, HttpSession session) {
+	public String updateUserProfile(@RequestParam("languages") Set<String> languages, @ModelAttribute("profileDto") UserProfileDTO userProfileDTO, Model model, HttpSession session) {
 		SessionUser loggedUser = (SessionUser) session.getAttribute(SESSION_LOGGED_USER);
+		userProfileDTO.setLanguages(languages);
+		log.warn(userProfileDTO.toString());
 
-
-		//check 	if username is already taken
+		//check if username is already taken
 		if (userService.isTakenUsername(userProfileDTO.getNickname())) {
 			model.addAttribute("error", "Ese nombre de usuario ya existe");
 			return "pages/user-management/user-profile";
 		}
 
 		//check if username contains banned words
-		if (userService.isInappropriateName(userProfileDTO.getNickname())) {
+		if (userService.isNicknameBanned(userProfileDTO.getNickname())) {
 			model.addAttribute("error", "El nombre de usuario contiene palabras inapropiadas");
 			return "pages/user-management/user-profile";
 

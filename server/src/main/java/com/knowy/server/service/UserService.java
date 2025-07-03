@@ -1,15 +1,17 @@
 package com.knowy.server.service;
 
+import com.knowy.server.entity.BannedWordsEntity;
 import com.knowy.server.entity.LanguageEntity;
 import com.knowy.server.entity.PublicUserEntity;
 import com.knowy.server.repository.*;
 import lombok.Getter;
 import lombok.Setter;
 import com.knowy.server.entity.PrivateUserEntity;
-import org.hibernate.mapping.List;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -102,7 +104,7 @@ public class UserService {
 			if (isTakenUsername(newNickname)) {
 				return null;
 			}
-			if (isInappropriateName(newNickname)) {
+			if (isNicknameBanned(newNickname)) {
 				return null;
 			}
 			publicUserEntity.setNickname(newNickname);
@@ -115,10 +117,8 @@ public class UserService {
 	}
 
 		//method to check if the new username contains any of the banned words
-		public boolean isInappropriateName(String nickname) {
-			String lowerCaseNickname = nickname.toLowerCase();
-			// FIXME - Cambiar a LIKE en BBDD
-			return jpaBannedWordsRepo.findAll().stream().map(bw -> bw.getWord().toLowerCase()).anyMatch(lowerCaseNickname::contains);
+		public boolean isNicknameBanned(String nickname) {
+			return jpaBannedWordsRepo.isWordBanned(nickname);
 		}
 
 		//method to check if the username already exists

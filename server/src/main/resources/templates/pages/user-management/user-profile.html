@@ -18,20 +18,28 @@
 					.filter(option => option.selected);
 
 				selectedOptions.forEach(option => {
-					if (!selectedLanguages.has(option.value.trim())) {
-						selectedLanguages.add(option.value.trim());
+					const language = option.value.trim()
 
-						const div = document.createElement('div');
-						div.className = 'language-item badge badge-info mr-1 mb-1';
-						div.textContent = option.text;
-						div.dataset.value = option.value.trim();
-
-						div.addEventListener('click', function () {
-							div.classList.toggle('selected-language');
-						});
-
-						selectedDiv.appendChild(div);
+					if (!language) {
+						return;
 					}
+					selectedLanguages.add(language);
+
+					const span = document.createElement('span');
+					span.className = 'badge badge-info mr-1 mb-1';
+					span.textContent = language;
+
+					const input = document.createElement('input');
+					input.type = 'hidden';
+					input.name = 'languages';
+					input.value = language;
+
+					input.addEventListener('click', function () {
+						input.classList.toggle('selected-language');
+					});
+
+					selectedDiv.appendChild(span);
+					selectedDiv.appendChild(input);
 				});
 
 				for (let option of languagesSelect.options) {
@@ -60,8 +68,8 @@
 		<h3 class="mt-3 username-title" th:text="${username}">Usuario</h3>
 	</div>
 	<div class="sidebar-menu">
-		<button  class="sidebar-link"  data-sidebar-toggler="" th:classappend="active" >Editar Perfil</button>
-		<a th:href="@{/user-account}" class="sidebar-link"  >Gestión de la Cuenta</a>
+		<button class="sidebar-link" data-sidebar-toggler="" th:classappend="active">Editar Perfil</button>
+		<a th:href="@{/user-account}" class="sidebar-link">Gestión de la Cuenta</a>
 	</div>
 </aside>
 
@@ -70,8 +78,10 @@
 		<div class="user-management-container_main ">
 			<div class="description-card">
 				<h1 class="title-management">Editar Perfil</h1>
-				<p class="description-management">Configura tus preferencias en cuanto a lenguajes de programación, editar tu nombre de usuario y tu imágen de perfil.
-					Recuerda mantener la privacidad de tus datos personales. Cualquier usuario podrá ver la información que introduzcas en esta página. </p>
+				<p class="description-management">Configura tus preferencias en cuanto a lenguajes de programación,
+					editar tu nombre de usuario y tu imágen de perfil.
+					Recuerda mantener la privacidad de tus datos personales. Cualquier usuario podrá ver la información
+					que introduzcas en esta página. </p>
 			</div>
 
 			<!--messages for username update-->
@@ -84,7 +94,8 @@
 					<label for="profilePicEdit" class="edit-pic-btn">
 						<i class="bi bi-person-bounding-box"></i>
 					</label>
-					<input type="file" id="profilePicEdit" name="profilePicture" class="file-input-overlay" accept="image/*">
+					<input type="file" id="profilePicEdit" name="profilePicture" class="file-input-overlay"
+						   accept="image/*">
 				</div>
 
 				<div class="information-edit-container col-lg-9">
