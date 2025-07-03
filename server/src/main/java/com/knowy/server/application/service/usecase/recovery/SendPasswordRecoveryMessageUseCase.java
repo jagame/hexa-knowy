@@ -40,7 +40,7 @@ public class SendPasswordRecoveryMessageUseCase implements KnowyUseCase<SendPass
 
 			String token = tokenMapper.generate(user);
 			String messageBody = buildMessageBody(param.passwordRecoveryUri(), token);
-			messageDispatcher.sendMessage(user.email(), token, messageBody);
+			messageDispatcher.sendMessage(user, "password recovery", messageBody);
 
 			return null;
 		} catch (UserNotFoundException | KnowyTokenGenerationException | KnowyMessageDispatchException e) {

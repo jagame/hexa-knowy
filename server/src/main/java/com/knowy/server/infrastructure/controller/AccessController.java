@@ -75,6 +75,7 @@ public class AccessController {
 
             return Template.REGISTER;
         } catch (KnowyPersistenceException e) {
+			log.error("Error registering user", e);
             model.addAttribute("user", user);
             model.addAttribute(ERROR_ATTRIBUTE,
                     "An unexpected error occurs. The error UUID was %s".formatted(e.errorUUID()));

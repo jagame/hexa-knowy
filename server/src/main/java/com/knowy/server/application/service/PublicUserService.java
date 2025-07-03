@@ -11,7 +11,6 @@ import java.util.Optional;
 import static java.util.function.Predicate.not;
 
 
-@Service
 public class PublicUserService {
 	private final PublicUserRepository publicUserRepository;
 
