@@ -4,58 +4,7 @@
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
-	<script>
-		document.addEventListener('DOMContentLoaded', function () {
-			const languagesSelect = document.getElementById('languages');
-			const chooseButton = document.getElementById('chooseLanguage');
-			const removeButton = document.getElementById('removeLanguage');
-			const selectedDiv = document.getElementById('selectedLanguages');
-
-			const selectedLanguages = new Set();
-
-			chooseButton.addEventListener('click', function () {
-				const selectedOptions = Array.from(languagesSelect.options)
-					.filter(option => option.selected);
-
-				selectedOptions.forEach(option => {
-					const language = option.value.trim()
-
-					if (!language) {
-						return;
-					}
-					selectedLanguages.add(language);
-
-					const span = document.createElement('span');
-					span.className = 'badge badge-info mr-1 mb-1';
-					span.textContent = language;
-
-					const input = document.createElement('input');
-					input.type = 'hidden';
-					input.name = 'languages';
-					input.value = language;
-
-					input.addEventListener('click', function () {
-						input.classList.toggle('selected-language');
-					});
-
-					selectedDiv.appendChild(span);
-					selectedDiv.appendChild(input);
-				});
-
-				for (let option of languagesSelect.options) {
-					option.selected = false;
-				}
-			});
-
-			removeButton.addEventListener('click', function () {
-				const toRemove = selectedDiv.querySelectorAll('.selected-language');
-				toRemove.forEach(el => {
-					selectedLanguages.delete(el.dataset.value);
-					el.remove();
-				});
-			});
-		});
-	</script>
+	<script src="/script/user-profile.js"></script>
 
 	<link rel="stylesheet" th:href="@{/styles/pages/user-management.css}">
 	<title>User profile</title>
@@ -63,18 +12,18 @@
 
 <body>
 
-<aside layout:fragment="sidebar" class="kn-aside user-sidebar">
+<aside class="kn-aside user-sidebar" layout:fragment="sidebar">
 	<div class="user-info text-center mb-4">
 		<h3 class="mt-3 username-title" th:text="${username}">Usuario</h3>
 	</div>
 	<div class="sidebar-menu">
 		<button class="sidebar-link" data-sidebar-toggler="" th:classappend="active">Editar Perfil</button>
-		<a th:href="@{/user-account}" class="sidebar-link">Gestión de la Cuenta</a>
+		<a class="sidebar-link" th:href="@{/user-account}">Gestión de la Cuenta</a>
 	</div>
 </aside>
 
 <main layout:fragment="main-content">
-	<form id="profileForm" th:action="@{/update-user-profile}" method="post">
+	<form id="profileForm" method="post" th:action="@{/update-user-profile}">
 		<div class="user-management-container_main ">
 			<div class="description-card">
 				<h1 class="title-management">Editar Perfil</h1>
@@ -85,25 +34,25 @@
 			</div>
 
 			<!--messages for username update-->
-			<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-			<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+			<div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+			<div class="alert alert-success" th:if="${success}" th:text="${success}"></div>
 
 			<div class="row user-information">
 				<div class="picture-edit-container col-lg-3">
-					<img src="https://placehold.co/50x50" alt="User Avatar" class="edit-avatar" id="profilePicture">
-					<label for="profilePicEdit" class="edit-pic-btn">
+					<img alt="User Avatar" class="edit-avatar" id="profilePicture" src="https://placehold.co/50x50">
+					<label class="edit-pic-btn" for="profilePicEdit">
 						<i class="bi bi-person-bounding-box"></i>
 					</label>
-					<input type="file" id="profilePicEdit" name="profilePicture" class="file-input-overlay"
-						   accept="image/*">
+					<input accept="image/*" class="file-input-overlay" id="profilePicEdit" name="profilePicture"
+						   type="file">
 				</div>
 
 				<div class="information-edit-container col-lg-9">
 					<h6 class="section-title">Nombre de Usuario: 👤</h6>
-					<input type="text" name="nickname" class="user-name form-control" required th:value="${nickname}">
+					<input class="user-name form-control" name="nickname" required th:value="${nickname}" type="text">
 					<br>
 					<h6 class="section-title">Lenguajes de Programación favoritos ⭐</h6>
-					<select name="languages" id="languages" class="form-control" multiple>
+					<select class="form-control" id="languages" multiple name="languages">
 						<option value="JAVASCRIPT">JavaScript</option>
 						<option value="JAVA">Java</option>
 						<option value="HTML">HTML</option>
@@ -115,15 +64,15 @@
 						<option value="	RUBY">Ruby</option>
 						<option value="SWIFT">Swift</option>
 					</select>
-					<button type="button" id="chooseLanguage" class="btn btn-save">Escoger lenguaje</button>
-					<button type="button" id="removeLanguage" class="btn btn-delete">Eliminar lenguaje</button>
-					<div id="selectedLanguages" class="mt-2"></div>
+					<button class="btn btn-save" id="chooseLanguage" type="button">Escoger lenguaje</button>
+					<button class="btn btn-delete" id="removeLanguage" type="button">Eliminar lenguaje</button>
+					<div class="mt-2" id="selectedLanguages"></div>
 
 				</div>
 			</div>
 			<div class="buttons-form-content">
-				<button type="reset" class="btn btn-inferior">Restablecer</button>
-				<button type="submit" class="btn btn-save">Guardar Cambios</button>
+				<button class="btn btn-inferior" type="reset">Restablecer</button>
+				<button class="btn btn-save" type="submit">Guardar Cambios</button>
 			</div>
 		</div>
 	</form>
