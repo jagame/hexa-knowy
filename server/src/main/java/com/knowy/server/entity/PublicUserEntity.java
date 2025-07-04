@@ -28,7 +28,11 @@ public class PublicUserEntity {
 	@JoinColumn(name = "id_profile_image", referencedColumnName = "id")
 	private ProfileImageEntity profileImage;
 
-	@ManyToMany(mappedBy = "publicUsers", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+		name = "public_user_language",
+		joinColumns = @JoinColumn(name = "id_public_user"),
+		inverseJoinColumns = @JoinColumn(name = "id_language"))
 	private Set<LanguageEntity> languages;
 
 	@OneToOne(mappedBy = "publicUserEntity")

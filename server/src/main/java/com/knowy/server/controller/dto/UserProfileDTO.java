@@ -13,5 +13,5 @@ public class UserProfileDTO {
 
 	private String nickname;
 //	private String profilePicture;
-	private Set<String> languages;
+	private String[] languages;
 }

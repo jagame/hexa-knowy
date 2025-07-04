@@ -14,20 +14,16 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 
-@Table(name= "language")
+@Table(name = "language")
 public class LanguageEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column (name="id", nullable=false)
+	@Column(name = "id", nullable = false)
 	private Integer id;
-	@Column (name="name", nullable=false, unique = true, length=20)
+	@Column(name = "name", nullable = false, unique = true, length = 20)
 	private String name;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(
-		name = "public_user_language",
-		joinColumns = @JoinColumn(name = "id_language"),
-		inverseJoinColumns = @JoinColumn(name = "id_public_user"))
+	@ManyToMany(mappedBy = "languages", fetch = FetchType.LAZY)
 	private List<PublicUserEntity> publicUsers;
 }

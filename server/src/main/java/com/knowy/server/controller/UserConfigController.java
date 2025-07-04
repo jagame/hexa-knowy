@@ -130,10 +130,9 @@ public class UserConfigController {
 
 	//Update User-profile
 	@PostMapping("/update-user-profile")
-	public String updateUserProfile(@RequestParam("languages") Set<String> languages, @ModelAttribute("profileDto") UserProfileDTO userProfileDTO, Model model, HttpSession session) {
+	public String updateUserProfile(@ModelAttribute("profileDto") UserProfileDTO userProfileDTO, Model model, HttpSession session) {
 		SessionUser loggedUser = (SessionUser) session.getAttribute(SESSION_LOGGED_USER);
-		userProfileDTO.setLanguages(languages);
-		log.warn(userProfileDTO.toString());
+		log.info(userProfileDTO.toString()); //Eventualmente lo quitaremos
 
 		//check if username is already taken
 		if (userService.isTakenUsername(userProfileDTO.getNickname())) {
