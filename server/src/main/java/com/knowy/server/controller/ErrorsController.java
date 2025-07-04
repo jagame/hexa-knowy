@@ -13,22 +13,11 @@ import static com.knowy.server.controller.AccessController.SESSION_LOGGED_USER;
 @ControllerAdvice
 public class ErrorsController {
 
-	// Error 404 - Página no encontrada
 	@ExceptionHandler(NoResourceFoundException.class)
 	public ModelAndView handleNotFound(NoResourceFoundException ex, HttpSession session) {
 		ModelAndView mv = new ModelAndView("error/404");
 		mv.setStatus(HttpStatus.NOT_FOUND);
 		mv.addObject("statusCode", 404);
-		mv.addObject("errorMessage", "La página que buscas no fue encontrada.");
-		addSessionUserAttributes(session, mv);
-		return mv;
-	}
-
-	@ExceptionHandler(IllegalArgumentException.class)
-	public ModelAndView handleBadRequest(IllegalArgumentException ex, HttpSession session) {
-		ModelAndView mv = new ModelAndView("error/error");
-		mv.setStatus(HttpStatus.BAD_REQUEST);
-		mv.addObject("statusCode", 400);
 		mv.addObject("errorMessage", ex.getMessage());
 		addSessionUserAttributes(session, mv);
 		return mv;
