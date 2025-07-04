@@ -4,7 +4,7 @@
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
-	<script src="/script/user-profile.js"></script>
+	<script src="/scripts/user-profile.js"></script>
 
 	<link rel="stylesheet" th:href="@{/styles/pages/user-management.css}">
 	<title>User profile</title>
@@ -39,15 +39,14 @@
 
 			<div class="row user-information">
 				<!--PHOTO-->
-				<div class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+				<div class="picture-edit-container col-lg-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
 					<img alt="User Avatar" class="edit-avatar" id="profilePicture" src="https://placehold.co/50x50">
 
-					<label class="edit-pic-btn" for="profilePicEdit">
+					<label class="edit-pic-btn" for="profile-pic-path">
 						<i class="bi bi-person-bounding-box"></i>
 					</label>
 
-					<input accept="image/*" class="file-input-overlay" id="profilePicEdit" name="profilePicture"
-						   type="file">
+					<input type="hidden" id="profile-pic-id" name="profilePictureId" class="file-input-overlay">
 				</div>
 
 				<div class="information-edit-container col-lg-9">
@@ -97,13 +96,25 @@
 				<div class="modal-body d-flex flex-wrap justify-content-evenly">
 					<img src="/images/profile/knowylogo.svg" alt="Avatar 1"
 						 class="avatar-selectable rounded-circle img-fluid me-2"
-						 width="80" height="80" data-bs-dismiss="modal"/>
+						 width="80" height="80"
+						 data-bs-dismiss="modal"
+						 data-avatar-src-path="/images/profile/knowylogo.svg"
+						 data-avatar-id="1"
+					/>
 					<img src="/images/profile/knowylogo_red.svg" alt="Avatar 2"
 						 class="avatar-selectable rounded-circle img-fluid me-2"
-						 width="80" height="80" data-bs-dismiss="modal"/>
+						 width="80" height="80"
+						 data-bs-dismiss="modal"
+						 data-avatar-src-path="/images/profile/knowylogo_red.svg"
+						 data-avatar-id="2"
+					/>
 					<img src="/images/profile/knowylogo_blue.svg" alt="Avatar 3"
-						 class="avatar-selectable rounded-circle img-fluid" width="80"
-						 height="80" data-bs-dismiss="modal"/>
+						 class="avatar-selectable rounded-circle img-fluid"
+						 width="80" height="80"
+						 data-bs-dismiss="modal"
+						 data-avatar-src-path="/images/profile/knowylogo_blue.svg"
+						 data-avatar-id="3"
+					/>
 				</div>
 			</div>
 		</div>

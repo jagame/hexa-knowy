@@ -59,4 +59,12 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 		selectedLanguagesSet.clear()
 	}
+
+	const profilePicId = document.getElementById('profile-pic-id');
+	const profilePicture = document.getElementById('profilePicture');
+	document.querySelectorAll('.avatar-selectable')
+		.forEach(avatar => avatar.addEventListener('click', event => {
+			profilePicId.value = event.target.dataset.avatarId
+			profilePicture.src = event.target.src
+		}))
 });
