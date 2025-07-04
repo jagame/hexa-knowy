@@ -27,3 +27,8 @@ spring:
         key: ${JWT_SECRET_KEY}
 server:
     port: 8080
+    error:
+        whitelabel:
+            enabled: false
+        path: /error
+
