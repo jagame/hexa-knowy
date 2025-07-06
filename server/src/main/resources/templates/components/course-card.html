@@ -21,6 +21,16 @@
 		<div class="course-card__course-name">
 			<h5 th:text="${courseItem.getName()}"></h5>
 		</div>
-		<a class="course-card__button-action" th:text="${courseItem.getAction()}"></a>
+<!--		<a class="course-card__button-action" th:text="${courseItem.getAction()}"></a>-->
+
+		<div th:if="${courseItem.getAction() == 'Adquirir curso'}">
+			<form th:action="@{/courses/subscribe}" method="post">
+				<input type="hidden" name="courseId" th:value="${courseItem.getId()}"/>
+				<button type="submit" class="course-card__button-action">🛒 Adquirir curso</button>
+			</form>
+		</div>
+		<div th:unless="${courseItem.getAction() == 'Adquirir curso'}">
+			<a class="course-card__button-action" th:text="'▷ '+${courseItem.getAction()}"></a>
+		</div>
 	</div>
 </div>

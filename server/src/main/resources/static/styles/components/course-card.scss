@@ -41,7 +41,7 @@ body{
 }
 
 .course-card-bar-progress__progress{
-	font-family: inter;
+	font-family: inter, sans-serif;
 	color:$secundary-500;
 	margin-top: 0.5em;
 	padding: 0.313em;
@@ -71,7 +71,7 @@ body{
 }
 
 .course-card__course-creator{
-	font-family: excalifont;
+	font-family: excalifont, sans-serif;
 	color:$secundary-700;
 	margin-top:1em;
 	padding: 0.313px;
@@ -79,14 +79,19 @@ body{
 }
 
 .course-card__course-name{
-	font-family: excalifont;
+	font-family: excalifont, sans-serif;
 	color: $neutral-900;
 	padding: 0.313px;
 	margin-left: 1.2em;
 }
 
-.course-card__button-action{
+.course-card__button-action,
+.course-card__button-action:visited,
+.course-card__button-action:active{
+	border: none;
+	outline: none;
 	display: block;
+	width: calc(100% - 2.4em);
 	background-color: $primary-500;
 	color: $neutral-100;
 	border-radius: $radius-25;
@@ -97,9 +102,23 @@ body{
 	text-align:center;
 	padding: 0.8em 0;
 	margin: 1.5em 1.2em 0 1.2em;
+	box-sizing: border-box;
 }
 
-.course-card__button-action:hover{
+.course-card__button-action:hover,
+.course-card__button-action:focus {
 	background-color: $primary-700;
 	color: $secundary-700;
+	outline: none;
+	text-decoration: none;
+	box-shadow: $card-shadow;
+}
+
+.course-card__button-action:active {
+	transform: translateY(1px);
+}
+
+.course-card_course-description form {
+	margin: 0;
+	padding: 0;
 }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CourseCardDTO {
+	private Integer id;
 	private String name;
 	private String creator;
 	private int progress;
