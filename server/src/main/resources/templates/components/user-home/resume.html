@@ -3,7 +3,7 @@
 		 th:fragment="example-card-component(username, greeting, streak, fractionProgress, fractionNum, fractionDen)">
 
 	<section class="home-resume__presentation-streak">
-		<h2 th:text="${greeting} + ', ' + ${username}"></h2>
+		<h2 class="username" th:text="${greeting} + ', ' + ${username}"></h2>
 		<div class="streak">
 			<span class="streak__text">Racha</span>
 			<div class="streak__days">
