@@ -155,20 +155,15 @@
 
 	</div>
 
-	<div th:replace="components/toast :: toast('Éxito', 'Operación completada correctamente.', 'success', 5000)"></div>
-	<div th:replace="components/toast :: toast('Error', 'Ha ocurrido un error.', 'danger', 5000)"></div>
-	<div th:replace="components/toast :: toast('Advertencia', 'Revisa los datos ingresados.', 'warning', 5000)"></div>
-	<div th:replace="components/toast :: toast('Información', 'Este es un mensaje informativo.', 'info', 5000)"></div>
+	<div th:replace="components/toast :: toast('Éxito', 'Operación completada correctamente.', 'success')"></div>
+	<div th:replace="components/toast :: toast('Error', 'Ha ocurrido un error.', 'error')"></div>
+	<div th:replace="components/toast :: toast('Advertencia', 'Revisa los datos ingresados.', 'warning')"></div>
+	<div th:replace="components/toast :: toast('Información', 'Este es un mensaje informativo.', 'info')"></div>
 
 	<script>
-		document.addEventListener("DOMContentLoaded", () => {
-			const toggleBtn = document.querySelector(".toggle-filtros");
-			const filtros = document.querySelector(".filtros-container");
-
-			toggleBtn.addEventListener("click", () => {
-				filtros.classList.toggle("visible");
-			});
-		});
+		document.querySelectorAll('.toast').forEach(el =>
+			new bootstrap.Toast(el, { autohide: false }).show()
+		);
 	</script>
 </main>
 
