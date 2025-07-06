@@ -1,24 +1,17 @@
 <div th:fragment="toast(status, message, type)">
-	<div aria-live="polite"
-		 aria-atomic="true"
-		 class="position-fixed bottom-0 end-0 p-3"
-		 style="z-index: 1055;">
-
-		<div class="toast show mb-2"
-			 th:classappend="${
+	<div class="toast show"
+		 data-bs-autohide="false"
+		 th:classappend="${
            type == 'success' ? ' toast-success'
            : (type == 'error'   ? ' toast-error'
            : (type == 'warning' ? ' toast-warning'
                                 : ' toast-info'))
          }">
-			<div class="toast-header">
-				<strong class="me-auto" th:text="${status}">Estado</strong>
-				<button type="button" class="btn-close"
-						data-bs-dismiss="toast"
-						aria-label="Close"></button>
-			</div>
-			<div class="toast-body" th:text="${message}">Mensaje</div>
+		<div class="toast-header">
+			<strong class="me-auto" th:text="${status}">Estado</strong>
+			<button type="button" class="btn-close"
+					data-bs-dismiss="toast" aria-label="Close"></button>
 		</div>
-
+		<div class="toast-body" th:text="${message}">Mensaje</div>
 	</div>
 </div>

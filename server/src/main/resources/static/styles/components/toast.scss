@@ -1,21 +1,14 @@
 @use "../global-vars" as *;
 
-.toast-success {
-	background-color: $primary-300 !important;
-	color: white;
+.toast-success { background-color: $primary-500 !important; color: #fff; }
+.toast-error   { background-color: $danger-500 !important; color: #fff; }
+.toast-warning { background-color: #ff9800 !important; color: #fff; }
+.toast-info    { background-color: $info-500 !important; color: #fff; }
+
+.position-fixed.bottom-0.end-0.p-3.d-flex {
+	pointer-events: none;
 }
 
-.toast-error {
-	background-color: $danger-500 !important;
-	color: white;
-}
-
-.toast-info {
-	background-color: $info-500 !important;
-	color: white;
-}
-
-.toast-warning {
-	background-color: #ff9800 !important;
-	color: white;
+.position-fixed.bottom-0.end-0.p-3.d-flex .toast {
+	pointer-events: auto;
 }

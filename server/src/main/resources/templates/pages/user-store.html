@@ -154,17 +154,6 @@
 		</div>
 
 	</div>
-
-	<div th:replace="components/toast :: toast('Éxito', 'Operación completada correctamente.', 'success')"></div>
-	<div th:replace="components/toast :: toast('Error', 'Ha ocurrido un error.', 'error')"></div>
-	<div th:replace="components/toast :: toast('Advertencia', 'Revisa los datos ingresados.', 'warning')"></div>
-	<div th:replace="components/toast :: toast('Información', 'Este es un mensaje informativo.', 'info')"></div>
-
-	<script>
-		document.querySelectorAll('.toast').forEach(el =>
-			new bootstrap.Toast(el, { autohide: false }).show()
-		);
-	</script>
 </main>
 
 </body>
