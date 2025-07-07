@@ -9,3 +9,8 @@ spring:
         properties:
             mail:
                 debug: true
+logging:
+    level:
+        org:
+            springframework:
+                security: debug

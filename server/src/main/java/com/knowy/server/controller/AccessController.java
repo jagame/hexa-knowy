@@ -1,15 +1,17 @@
 package com.knowy.server.controller;
 
-import com.knowy.server.controller.dto.*;
-import com.knowy.server.entity.PrivateUserEntity;
+import com.knowy.server.controller.dto.LoginFormDto;
+import com.knowy.server.controller.dto.UserDto;
+import com.knowy.server.controller.dto.UserEmailFormDto;
+import com.knowy.server.controller.dto.UserPasswordFormDto;
 import com.knowy.server.service.AccessService;
 import com.knowy.server.service.exception.AccessException;
+import com.knowy.server.service.exception.InvalidUserException;
 import com.knowy.server.util.exception.PasswordFormatException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import lombok.extern.slf4j.Slf4j;
-import com.knowy.server.service.exception.InvalidUserException;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -18,8 +20,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -57,33 +57,8 @@ public class AccessController {
 
 	@GetMapping("/login")
 	public String viewLogin(Model model) {
-		LoginFormDto loginForm = new LoginFormDto();
-		model.addAttribute("loginForm", loginForm);
+		model.addAttribute("loginForm", new LoginFormDto());
 		return "pages/access/login";
-	}
-
-	@PostMapping("/login")
-	public String postLogin(
-		@ModelAttribute("loginForm") LoginFormDto login,
-		Model model,
-		HttpSession session
-	) {
-		Optional<PrivateUserEntity> optUser = accessService.authenticateUser(login.getEmail(), login.getPassword());
-
-		if (optUser.isPresent()) {
-			session.setAttribute(SESSION_LOGGED_USER, new SessionUser(optUser.get()));
-			return "redirect:/home";
-		} else {
-			model.addAttribute("loginError", "¡Las credenciales son incorrectas!");
-			model.addAttribute("loginForm", new LoginFormDto());
-			return "pages/access/login";
-		}
-	}
-
-	@GetMapping("/logout")
-	public String logout(HttpSession session) {
-		session.invalidate();
-		return "redirect:/";
 	}
 
 	/**
