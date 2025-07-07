@@ -24,6 +24,9 @@ public class PrivateUserEntity {
 	@Column(name = "password", length = 100, nullable = false)
 	private String password;
 
+	@Column(name = "active", nullable = false)
+	private boolean active = true;
+
 	@OneToOne
 	@MapsId
 	@JoinColumn(name = "id")

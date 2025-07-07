@@ -115,5 +115,22 @@ public class UserConfigController {
 		return "pages/user-management/delete-account-end";
 	}
 
+	@PostMapping("/delete-account-end")
+	public String deleteAccount (@RequestParam String currentPassword, @RequestParam String confirmPassword, ModelMap interfaceScreen, HttpSession session) {
+		String email = getCurrentEmail(session);
+		Optional<PrivateUserEntity> privateUser = userService.findPrivateUserByEmail(email);
+		if (privateUser.isEmpty()) {
+			interfaceScreen.addAttribute("error", "Usuario no encontrado");
+			return "pages/user-management/delete-account-end";
+		}
+		PrivateUserEntity privateUserEntity = privateUser.get();
+		if (!privateUserEntity.getPassword().equals(currentPassword) || !currentPassword.equals(confirmPassword)) {
+			interfaceScreen.addAttribute("error", "La contraseña es incorrecta o no coincide");
+			return "pages/user-management/delete-account-end";
+		}
+		//generar token
+		return "pages/user-management/delete-account-end";
+	}
+
 
 }
