@@ -1,6 +1,7 @@
 <div th:fragment="toast(status, message, type)">
 	<div class="toast show"
-		 data-bs-autohide="false"
+		 data-bs-autohide="true"
+		 data-bs-delay="10000"
 		 th:classappend="${
            type == 'success' ? ' toast-success'
            : (type == 'error'   ? ' toast-error'
