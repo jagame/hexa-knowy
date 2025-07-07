@@ -1,9 +1,9 @@
 @use "../global-vars" as *;
 
-.toast-success { background-color: $primary-500 !important; color: #fff; }
-.toast-error   { background-color: $danger-500 !important; color: #fff; }
-.toast-warning { background-color: #ff9800 !important; color: #fff; }
-.toast-info    { background-color: $info-500 !important; color: #fff; }
+.toast-success { background-color: $primary-500 !important; color: $neutral-100; }
+.toast-error   { background-color: $danger-500 !important; color: $neutral-100; }
+.toast-warning { background-color: $warning-500 !important; color: $neutral-100; }
+.toast-info    { background-color: $info-500 !important; color: $neutral-100; }
 
 .position-fixed.bottom-0.end-0.p-3.d-flex {
 	pointer-events: none;
