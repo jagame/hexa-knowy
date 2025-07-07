@@ -20,23 +20,7 @@
 
 <header th:replace="~{components/navbar :: knowy-navbar(username=${nickname}, avatar=${profileImageUrl})}"></header>
 
-<div class="position-fixed bottom-0 end-0 p-3 d-flex flex-column-reverse gap-2"
-	 style="z-index: 1055;">
-<!--	 th:if="${toasts != null}"-->
-
-	<div th:replace="components/toast :: toast('Éxito', 'Operación completada correctamente.', 'success')"></div>
-	<div th:replace="components/toast :: toast('Error', 'Ha ocurrido un error.', 'error')"></div>
-	<div th:replace="components/toast :: toast('Advertencia', 'Revisa los datos ingresados.', 'warning')"></div>
-	<div th:replace="components/toast :: toast('Información', 'Este es un mensaje informativo.', 'info')"></div>
-
-<!--	<div th:each="toast : ${toasts}"-->
-<!--		 th:replace="components/toast :: toast(-->
-<!--          ${toast.status},-->
-<!--          ${toast.message},-->
-<!--          ${toast.type.name().toLowerCase()}-->
-<!--       )">-->
-<!--	</div>-->
-</div>
+<div th:replace="components/toast-wrapper :: wrapper(${toasts})"></div>
 
 <div class="layout-body">
 	<main layout:fragment="main-content"></main>

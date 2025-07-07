@@ -22,20 +22,7 @@
 
 <header th:replace="~{components/navbar :: knowy-navbar('username-test', 'https://placehold.co/50x50')}"></header>
 
-<div class="position-fixed bottom-0 end-0 p-3 d-flex flex-column-reverse gap-2"
-	 style="z-index: 1055;"
-	 th:if="${toasts != null}"
->
-
-	<div th:each="toast : ${toasts}"
-		 th:replace="components/toast :: toast(
-	         ${toast.status},
-	         ${toast.message},
-	         ${toast.type.name().toLowerCase()}
-	      )">
-	</div>
-</div>
-
+<div th:replace="components/toast-wrapper :: wrapper(${toasts})"></div>
 
 <div class="layout-body">
 	<main layout:fragment="main-content">

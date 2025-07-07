@@ -1,0 +1,35 @@
+<!--<div th:fragment="wrapper(toasts)">-->
+<!--	<div class="position-fixed bottom-0 end-0 p-3 d-flex flex-column-reverse gap-2"-->
+<!--		 style="z-index: 1055;"-->
+<!--		 th:if="${toasts != null}"-->
+<!--	>-->
+<!--		<div th:each="toast : ${toasts}"-->
+<!--			 th:replace="components/toast :: toast(-->
+<!--	         ${toast.status},-->
+<!--	         ${toast.message},-->
+<!--	         ${toast.type.name().toLowerCase()}-->
+<!--	      )">-->
+<!--		</div>-->
+<!--	</div>-->
+<!--</div>-->
+
+<!--TODO: esto es solo para ver que funciona, esto se quita y se deja el de arriba-->
+<div th:fragment="wrapper(toasts)">
+	<div class="position-fixed bottom-0 end-0 p-3 d-flex flex-column-reverse gap-2"
+		 style="z-index: 1055;">
+		<!--	 th:if="${toasts != null}"-->
+
+		<div th:replace="components/toast :: toast('Éxito', 'Operación completada correctamente.', 'success')"></div>
+		<div th:replace="components/toast :: toast('Error', 'Ha ocurrido un error.', 'error')"></div>
+		<div th:replace="components/toast :: toast('Advertencia', 'Revisa los datos ingresados.', 'warning')"></div>
+		<div th:replace="components/toast :: toast('Información', 'Este es un mensaje informativo.', 'info')"></div>
+
+		<!--	<div th:each="toast : ${toasts}"-->
+		<!--		 th:replace="components/toast :: toast(-->
+		<!--          ${toast.status},-->
+		<!--          ${toast.message},-->
+		<!--          ${toast.type.name().toLowerCase()}-->
+		<!--       )">-->
+		<!--	</div>-->
+	</div>
+</div>
