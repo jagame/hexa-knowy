@@ -1,25 +1,25 @@
 package com.knowy.server.controller.dto;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 
-public class UserDto {
+public class UserRegisterFormDto {
 	@NotBlank(message = "El nickname no pueede estar vacío")
-	private String username;
+	private String nickname;
 
 	@NotBlank(message = "El email no puede estar vacío")
 	@Email(message = "Formato de email inválido")
 	private String email;
 
-
 	private String password;
 
-	public String getUsername() {
-		return username;
+	public String getNickname() {
+		return nickname;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 	public String getEmail() {

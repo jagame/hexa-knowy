@@ -1,8 +1,6 @@
 package com.knowy.server.service;
 
-import com.knowy.server.controller.dto.UserDto;
 import com.knowy.server.entity.PrivateUserEntity;
-import com.knowy.server.entity.ProfileImageEntity;
 import com.knowy.server.entity.PublicUserEntity;
 import com.knowy.server.repository.PrivateUserRepository;
 import com.knowy.server.repository.ProfileImageRepository;
@@ -17,6 +15,7 @@ import com.knowy.server.util.exception.JwtKnowyException;
 import com.knowy.server.util.exception.MailDispatchException;
 import com.knowy.server.util.exception.PasswordFormatException;
 import com.knowy.server.util.exception.UserNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -29,38 +28,44 @@ public class AccessService {
     private final PrivateUserRepository privateUserRepository;
     private final PublicUserRepository publicUserRepository;
 	private final ProfileImageRepository profileImageRepository;
+	private final PasswordEncoder passwordEncoder;
 
-    /**
+	/**
      * The constructor
      *
      * @param jwtService            the jwtService
      * @param emailClientService    the emailClientService
      * @param privateUserRepository the privateUserRepository
      */
-    public AccessService(JwtService jwtService, EmailClientService emailClientService, PrivateUserRepository privateUserRepository, PublicUserRepository publicUserRepository, ProfileImageRepository profileImageRepository) {
+    public AccessService(JwtService jwtService, EmailClientService emailClientService, PrivateUserRepository privateUserRepository, PublicUserRepository publicUserRepository, ProfileImageRepository profileImageRepository, PasswordEncoder passwordEncoder) {
         this.jwtService = jwtService;
         this.emailClientService = emailClientService;
         this.privateUserRepository = privateUserRepository;
         this.publicUserRepository = publicUserRepository;
 		this.profileImageRepository = profileImageRepository;
+		this.passwordEncoder = passwordEncoder;
 	}
 
     // TODO - Change to HttpSession
-    public PublicUserEntity registerNewUser(UserDto userDto) throws InvalidUserException {
-        if (publicUserRepository.findByNickname(userDto.getUsername()).isPresent()) {
+    public PublicUserEntity registerNewUser(String nickname, String email, String password) throws InvalidUserException {
+        if (publicUserRepository.findByNickname(nickname).isPresent()) {
             throw new InvalidUserException("El nombre de usuario ya existe.");
         }
 
-        if (privateUserRepository.findByEmail(userDto.getEmail()).isPresent()) {
+        if (privateUserRepository.findByEmail(email).isPresent()) {
             throw new InvalidUserException("El email ya está en uso.");
         }
 
+		if (!PasswordCheker.isRightPasswordFormat(password)) {
+			throw  new InvalidUserException("La contraseña no es valida.");
+		}
+
         PrivateUserEntity privateUser = new PrivateUserEntity();
-        privateUser.setEmail(userDto.getEmail());
-        privateUser.setPassword(userDto.getPassword());
+        privateUser.setEmail(email);
+        privateUser.setPassword(passwordEncoder.encode(password));
 
         PublicUserEntity publicUser = new PublicUserEntity();
-        publicUser.setNickname(userDto.getUsername());
+        publicUser.setNickname(nickname);
 		publicUser.setProfileImage(profileImageRepository.findById(1).orElseThrow());
 
         privateUser.setPublicUserEntity(publicUser);

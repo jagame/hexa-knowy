@@ -13,16 +13,36 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
+	/**
+	 * Defines a {@link PasswordEncoder} bean that uses BCrypt hashing algorithm.
+	 * <p>
+	 * This encoder is used by Spring Security to hash passwords securely before storing them and to verify password
+	 * matches during authentication.
+	 * </p>
+	 *
+	 * @return a {@link BCryptPasswordEncoder} instance for password encoding
+	 */
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
+	/**
+	 * Configures the HTTP security settings for the application.
+	 * <p>
+	 * This includes authorization rules, form login, logout, and session management.
+	 * </p>
+	 *
+	 * @param http                       the {@link HttpSecurity} object to configure
+	 * @param userSecurityDetailsService the user details service used for authentication
+	 * @return the configured {@link SecurityFilterChain}
+	 * @throws Exception if an error occurs during configuration
+	 */
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http, UserSecurityDetailsService userSecurityDetailsService) throws Exception {
 		http.authorizeHttpRequests(request -> request
 			.requestMatchers("/fonts/**", "/scripts/**", "/styles/**", "/images/**", "/error/**").permitAll()
-			.requestMatchers("/", "/login", "/register", "password-change/email").permitAll()
+			.requestMatchers("/", "/login", "/register", "password-change/email", "password-change/").permitAll()
 			.anyRequest().authenticated()
 		);
 
@@ -43,10 +63,6 @@ public class SecurityConfiguration {
 
 		http.sessionManagement(session -> session
 			.maximumSessions(1)
-		);
-
-		http.exceptionHandling(exceptions -> exceptions
-			.accessDeniedPage("/403")
 		);
 		return http.build();
 	}

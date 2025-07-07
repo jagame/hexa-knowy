@@ -1,20 +1,22 @@
 package com.knowy.server.controller;
 
 import com.knowy.server.controller.dto.LoginFormDto;
-import com.knowy.server.controller.dto.UserDto;
 import com.knowy.server.controller.dto.UserEmailFormDto;
 import com.knowy.server.controller.dto.UserPasswordFormDto;
+import com.knowy.server.controller.dto.UserRegisterFormDto;
+import com.knowy.server.entity.PublicUserEntity;
 import com.knowy.server.service.AccessService;
+import com.knowy.server.service.UserSecurityDetailsService;
 import com.knowy.server.service.exception.AccessException;
 import com.knowy.server.service.exception.InvalidUserException;
 import com.knowy.server.util.exception.PasswordFormatException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,39 +28,87 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AccessController {
 
 	public static final String SESSION_LOGGED_USER = "loggedUser";
+	private final UserSecurityDetailsService userSecurityDetailsService;
+	private final AccessService accessService;
 
-	AccessService accessService;
-
-	public AccessController(AccessService accessService) {
+	/**
+	 * The constructor
+	 *
+	 * @param accessService              the accessService
+	 * @param userSecurityDetailsService the userSecurityDetailsService
+	 */
+	public AccessController(AccessService accessService, UserSecurityDetailsService userSecurityDetailsService) {
 		this.accessService = accessService;
+		this.userSecurityDetailsService = userSecurityDetailsService;
 	}
 
-	@GetMapping("/register")
-	public String register(Model model) {
-		model.addAttribute("user", new UserDto());
-		return "pages/access/register";
-	}
-
-	@PostMapping("/register")
-	public String procesarFormulario(@Valid @ModelAttribute UserDto user, Model model, Errors errors) {
-		if (errors.hasErrors()) {
-			return "pages/access/register";
-		}
-
-		try {
-			accessService.registerNewUser(user);
-			return "redirect:/home";
-		} catch (InvalidUserException e) {
-			model.addAttribute("user", user);
-			model.addAttribute("error", e.getMessage());
-			return "pages/access/register";
-		}
-	}
-
+	/**
+	 * Handles GET requests for the login page.
+	 * <p>
+	 * Adds an empty {@link LoginFormDto} object to the model, which will be used to bind the login form data in the
+	 * view.
+	 * </p>
+	 *
+	 * @param model the model to which attributes are added for the view rendering
+	 * @return the name of the login view template
+	 */
 	@GetMapping("/login")
 	public String viewLogin(Model model) {
 		model.addAttribute("loginForm", new LoginFormDto());
 		return "pages/access/login";
+	}
+
+	/**
+	 * Handles GET requests for the registration page.
+	 * <p>
+	 * Adds an empty {@link UserRegisterFormDto} object to the model, which will be used to bind the user registration
+	 * form data in the view.
+	 * </p>
+	 *
+	 * @param model the model to which attributes are added for the view rendering
+	 * @return the name of the registration view template
+	 */
+	@GetMapping("/register")
+	public String register(Model model) {
+		model.addAttribute("user", new UserRegisterFormDto());
+		return "pages/access/register";
+	}
+
+	/**
+	 * Processes the user registration form submitted via POST.
+	 * <p>
+	 * Validates the submitted {@link UserRegisterFormDto}, and if validation errors exist, redirects back to the
+	 * registration page with the first error message. If the form is valid, attempts to register a new user and
+	 * performs automatic login. In case of registration failure (e.g., invalid user data), redirects back to the
+	 * registration page with an error message.
+	 * </p>
+	 *
+	 * @param user               the form data bound to {@link UserRegisterFormDto}, validated automatically
+	 * @param redirectAttributes used to pass flash attributes (such as error messages) during redirect
+	 * @param errors             contains validation errors from binding the form data
+	 * @return the redirect URL, either back to registration on error or to home on success
+	 */
+	@PostMapping("/register")
+	public String procesarFormulario(
+		@Valid @ModelAttribute UserRegisterFormDto user,
+		RedirectAttributes redirectAttributes,
+		Errors errors
+	) {
+		FieldError firstError = errors.getFieldError();
+		if (firstError != null && firstError.getDefaultMessage() != null) {
+			redirectAttributes.addFlashAttribute("error", firstError.getDefaultMessage());
+			return "redirect:/register";
+		}
+
+		try {
+			PublicUserEntity publicUser = accessService.registerNewUser(user.getNickname(), user.getEmail(), user.getPassword());
+			userSecurityDetailsService.autoLoginUserByEmail(publicUser.getPrivateUserEntity().getEmail());
+			return "redirect:/home";
+		} catch (InvalidUserException e) {
+			redirectAttributes.addFlashAttribute("user", user);
+			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			return "redirect:/register";
+		}
 	}
 
 	/**
