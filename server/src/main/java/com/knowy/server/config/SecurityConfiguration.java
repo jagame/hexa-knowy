@@ -1,5 +1,6 @@
 package com.knowy.server.config;
 
+import com.knowy.server.service.UserSecurityDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,13 +19,10 @@ public class SecurityConfiguration {
 	}
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain securityFilterChain(HttpSecurity http, UserSecurityDetailsService userSecurityDetailsService) throws Exception {
 		http.authorizeHttpRequests(request -> request
-			// Resources
-			.requestMatchers("/fonts/**", "/scripts/**", "/styles/**", "/images/**").permitAll()
-			// Public Http Routes
+			.requestMatchers("/fonts/**", "/scripts/**", "/styles/**", "/images/**", "/error/**").permitAll()
 			.requestMatchers("/", "/login", "/register", "password-change/email").permitAll()
-			// Login Routes
 			.anyRequest().authenticated()
 		);
 
@@ -40,6 +38,7 @@ public class SecurityConfiguration {
 		http.logout(logout -> logout
 			.logoutUrl("/logout")
 			.logoutSuccessUrl("/")
+			.deleteCookies("JSESSIONID")
 			.permitAll());
 
 		http.sessionManagement(session -> session
