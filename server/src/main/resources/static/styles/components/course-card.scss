@@ -44,8 +44,12 @@ body{
 	font-family: inter, sans-serif;
 	color:$secundary-500;
 	margin-top: 0.5em;
-	padding: 0.313em;
+	padding: 0.25em;
 }
+.course-card-bar-progress__progress[data-progress='100']{
+	color: $primary-500;
+}
+
 
 .course-card-bar-progress__progress-bar{
 	color: $secundary-500;

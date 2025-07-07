@@ -7,7 +7,8 @@
 		<img src="https://picsum.photos/370/200">
 	</div>
 	<div class="course-card__bar-progress">
-		<div class="course-card-bar-progress__progress" th:text="${courseItem.getProgress()} +'% completado'"></div>
+		<div class="course-card-bar-progress__progress" th:text="${courseItem.getProgress()} +'% completado'"
+			 th:data-progress="${courseItem.getProgress()}"></div>
 		<div class="course-card-bar-progress__bar">
 			<div class="home-resume__bar-container">
 				<div class="course-card-bar-progress_bar" th:data-progress="${courseItem.getProgress()}"
@@ -25,7 +26,7 @@
 
 		<div>
 			<form th:if="${courseItem.action.name() == 'ACQUIRE'}"
-				th:action="@{/courses/subscribe}" method="post">
+				th:action="@{/my-courses/subscribe}" method="post">
 				<input type="hidden" name="courseId" th:value="${courseItem.getId()}"/>
 				<button type="submit" class="course-card__button-action">🛒 Adquirir curso</button>
 			</form>

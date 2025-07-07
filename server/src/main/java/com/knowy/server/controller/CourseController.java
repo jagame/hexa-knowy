@@ -14,7 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
-@RequestMapping("/courses")
+@RequestMapping("/my-courses")
 public class CourseController {
 
 	private final CourseSubscriptionService courseSubscriptionService;
@@ -23,7 +23,7 @@ public class CourseController {
 		this.courseSubscriptionService = courseSubscriptionService;
 	}
 
-	@GetMapping("/my")
+	@GetMapping("")
 	public String myCourses (Model model){
 
 		Integer userId = 1; //TODO
@@ -55,7 +55,7 @@ public class CourseController {
 		} else {
 			attrs.addFlashAttribute("error", "Error al adquirir el curso");
 		}
-		return "redirect:/courses/my";
+		return "redirect:/my-courses";
 	}
 
 
