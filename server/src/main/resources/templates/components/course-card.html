@@ -1,7 +1,8 @@
 <div class="course-card" th:fragment="course-card(courseItem)">
 	<div class="course-card__picture-container">
 		<div class="course-card__tags">
-			<span class="course-card-tags__tag" th:each="tag: ${courseItem.getTags()}" th:text="${tag}"></span>
+<!--			<span class="course-card-tags__tag" th:each="tag: ${courseItem.getTags()}" th:text="${tag}"></span>-->
+			<span class="course-card-tags__tag" th:each="language: ${courseItem.languages}" th:text="${language}"></span>
 		</div>
 		<img src="https://picsum.photos/370/200">
 	</div>
@@ -21,16 +22,17 @@
 		<div class="course-card__course-name">
 			<h5 th:text="${courseItem.getName()}"></h5>
 		</div>
-<!--		<a class="course-card__button-action" th:text="${courseItem.getAction()}"></a>-->
 
-		<div th:if="${courseItem.getAction() == 'Adquirir curso'}">
-			<form th:action="@{/courses/subscribe}" method="post">
+		<div>
+			<form th:if="${courseItem.action.name() == 'ACQUIRE'}"
+				th:action="@{/courses/subscribe}" method="post">
 				<input type="hidden" name="courseId" th:value="${courseItem.getId()}"/>
 				<button type="submit" class="course-card__button-action">🛒 Adquirir curso</button>
 			</form>
-		</div>
-		<div th:unless="${courseItem.getAction() == 'Adquirir curso'}">
-			<a class="course-card__button-action" th:text="'▷ '+${courseItem.getAction()}"></a>
+			<a th:if="${courseItem.action.name() == 'START'}"
+				class="course-card__button-action">
+				▷ Empezar curso
+			</a>
 		</div>
 	</div>
 </div>

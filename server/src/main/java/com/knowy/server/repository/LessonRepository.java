@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface LessonRepository {
 
-	List<LessonEntity> findByCourse_Id(Integer courseId);
+	List<LessonEntity> findByCourseId(Integer courseId);
+	int countByCourseId(Integer courseId);
 }

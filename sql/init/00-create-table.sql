@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS public.course
 	id          serial NOT NULL,
 	title       varchar(100),
 	description varchar(250),
+	creator varchar(250),
 	PRIMARY KEY (id)
 );
 
@@ -92,6 +93,18 @@ CREATE TABLE IF NOT EXISTS public.profile_image
 	PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS public.languages (
+	id serial NOT NULL,
+	name VARCHAR(20) NOT NULL UNIQUE,
+	PRIMARY KEY (id)
+	);
+
+CREATE TABLE IF NOT EXISTS public.course_languages (
+	id_course INTEGER NOT NULL,
+	id_language INTEGER NOT NULL,
+	PRIMARY KEY (id_course, id_language)
+	);
+
 -- FK public_user
 ALTER TABLE IF EXISTS public.public_user
 	ADD FOREIGN KEY (id_profile_image)
@@ -147,3 +160,12 @@ ALTER TABLE IF EXISTS public.public_user_option
 ALTER TABLE IF EXISTS public.public_user_option
 	ADD FOREIGN KEY (id_option)
 		REFERENCES public.option (id);
+
+-- FK course_languages
+ALTER TABLE IF EXISTS public.course_languages
+	ADD FOREIGN KEY (id_course)
+	REFERENCES public.course (id);
+
+ALTER TABLE IF EXISTS public.course_languages
+	ADD FOREIGN KEY (id_language)
+	REFERENCES public.languages (id);

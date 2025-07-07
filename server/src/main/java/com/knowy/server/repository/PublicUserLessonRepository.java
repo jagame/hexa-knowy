@@ -11,5 +11,6 @@ public interface PublicUserLessonRepository {
 	List<Integer> findCourseIdsByUserId(Integer userId);
 	boolean existsById(PublicUserLessonIdEntity id);
 	<S extends PublicUserLessonEntity> S save(S entity);
+	int countByUserIdAndCourseIdAndStatus(Integer userId, Integer courseId, String status);
 
 }

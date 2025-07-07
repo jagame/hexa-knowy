@@ -34,5 +34,15 @@ public interface JpaPublicUserLessonRepository extends PublicUserLessonRepositor
 	@NonNull
 	<S extends PublicUserLessonEntity> S save(@NonNull S entity);
 
+	@Override
+	@Query("""
+        SELECT COUNT(pul)
+        FROM PublicUserLessonEntity pul
+        JOIN LessonEntity l ON pul.lessonId = l.id
+        WHERE pul.userId = :userId AND l.course.id = :courseId AND pul.status = :status
+        """)
+	int countByUserIdAndCourseIdAndStatus(@Param("userId") Integer userId,
+										  @Param("courseId") Integer courseId,
+										  @Param("status") String status);
 
 }

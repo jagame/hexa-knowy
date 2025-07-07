@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -24,47 +23,23 @@ public class CourseController {
 		this.courseSubscriptionService = courseSubscriptionService;
 	}
 
-	private CourseCardDTO mapToCardDTO(CourseEntity courseEntity) {
-		CourseCardDTO dto = new CourseCardDTO();
-		dto.setId(courseEntity.getId());
-		dto.setName(courseEntity.getTitle());
-		dto.setCreator("Equipo Knowy");
-		dto.setProgress(0);
-		dto.setAction("Empezar curso");
-		dto.setTags(new ArrayList<>(List.of("Java", "SQL", "Spring")));
-		return dto;
-	}
-
-	private CourseCardDTO mapToRecomendationCardDTO(CourseEntity courseEntity) {
-		CourseCardDTO dto = new CourseCardDTO();
-		dto.setId(courseEntity.getId());
-		dto.setName(courseEntity.getTitle());
-		dto.setCreator("Equipo Knowy");
-		dto.setProgress(0);
-		dto.setAction("Adquirir curso");
-		dto.setTags(new ArrayList<>(List.of("Java", "SQL", "Spring")));
-		return dto;
-	}
-
 	@GetMapping("/my")
 	public String myCourses (Model model){
-		//TODO
-		Integer userId = 1;
+
+		Integer userId = 1; //TODO
 
 		List<CourseEntity> allCourses = courseSubscriptionService.getAllCourses();
-		List<CourseEntity> userCourses = courseSubscriptionService.getCoursesForUser(userId);
-
-		List<CourseEntity> recommendedCourses = allCourses.stream()
-			.filter(course -> !userCourses.contains(course))
-			.toList();
-
-		List<CourseCardDTO>recommendedCoursesCards = recommendedCourses.stream()
-			.map(this::mapToRecomendationCardDTO)
-			.toList();
+		List<CourseEntity> userCourses = courseSubscriptionService.findCoursesByUserId(userId);
 
 		List<CourseCardDTO> courseCards = userCourses.stream()
-			.map(this::mapToCardDTO)
-			.toList();
+			.map(course-> CourseCardDTO.fromEntity(
+				course, courseSubscriptionService.getCourseProgress(userId, course.getId()),
+				courseSubscriptionService.findLanguagesForCourse(course))).toList();
+
+		List<CourseCardDTO> recommendedCoursesCards = allCourses.stream()
+			.filter(course-> !userCourses.contains(course))
+			.map(course-> CourseCardDTO.fromRecommendation(
+				course, courseSubscriptionService.findLanguagesForCourse(course))).toList();
 
 		model.addAttribute("courses", courseCards);
 		model.addAttribute("recommendations", recommendedCoursesCards);
@@ -73,7 +48,7 @@ public class CourseController {
 
 	@PostMapping("/subscribe")
 	public String subscribeToCourse(@RequestParam Integer courseId, RedirectAttributes attrs){
-		Integer userId = 1;
+		Integer userId = 1; //TODO -> change fron users from login
 		boolean success = courseSubscriptionService.subscribeUserToCourse(userId, courseId);
 		if (success) {
 			attrs.addFlashAttribute("success", "¡Te has suscrito correctamente!");

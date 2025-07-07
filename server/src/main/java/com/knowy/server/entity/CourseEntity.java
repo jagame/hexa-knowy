@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -25,5 +27,16 @@ public class CourseEntity {
 
 	@Column(name = "description", length = 250, nullable = false)
 	private String description;
+
+	@Column(name = "creator", length = 250, nullable = false)
+	private String creator;
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+		name = "course_languages",
+		joinColumns = @JoinColumn(name = "id_course"),
+		inverseJoinColumns = @JoinColumn(name = "id_language")
+	)
+	private List<LanguageEntity> languages = new ArrayList<>();
 
 }

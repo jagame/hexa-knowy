@@ -9,7 +9,8 @@ import java.util.List;
 @Repository
 public interface JpaLessonRepository extends LessonRepository, JpaRepository<LessonEntity,Integer> {
 	@Override
-	List<LessonEntity> findByCourse_Id(Integer courseId);
+	List<LessonEntity> findByCourseId(Integer courseId);
 
-
+	@Override
+	int countByCourseId(Integer courseId);
 }

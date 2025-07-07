@@ -1,9 +1,6 @@
 package com.knowy.server.service;
 
-import com.knowy.server.entity.CourseEntity;
-import com.knowy.server.entity.LessonEntity;
-import com.knowy.server.entity.PublicUserLessonEntity;
-import com.knowy.server.entity.PublicUserLessonIdEntity;
+import com.knowy.server.entity.*;
 import com.knowy.server.repository.*;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +21,7 @@ public class CourseSubscriptionService {
 	}
 
 	public boolean subscribeUserToCourse(Integer userId, Integer courseId) {
-		List<LessonEntity> lessons = lessonRepository.findByCourse_Id(courseId);
+		List<LessonEntity> lessons = lessonRepository.findByCourseId(courseId);
 		if(lessons.isEmpty())return false;
 
 		boolean alreadySubscribed = lessons.stream()
@@ -46,7 +43,7 @@ public class CourseSubscriptionService {
 		return true;
 	}
 
-	public List<CourseEntity> getCoursesForUser (Integer userId){
+	public List<CourseEntity> findCoursesByUserId (Integer userId){
 		List<Integer> courseIds = publicUserLessonRepository.findCourseIdsByUserId(userId);
 		if(courseIds.isEmpty()) return List.of();
 		return courseRepository.findByIdIn(courseIds);
@@ -55,5 +52,17 @@ public class CourseSubscriptionService {
 	public List<CourseEntity> getAllCourses(){
 		return courseRepository.findAll();
 	}
+
+	public int getCourseProgress(Integer userId, Integer courseId){
+		int totalLessons = lessonRepository.countByCourseId(courseId);
+		if(totalLessons ==0) return 0;
+		int completedLessons = publicUserLessonRepository.countByUserIdAndCourseIdAndStatus(userId, courseId, "completed");
+		return (int)Math.round((completedLessons*100.0/totalLessons));
+	}
+	 public List<String> findLanguagesForCourse(CourseEntity course){
+		return course.getLanguages().stream()
+			.map(LanguageEntity::getName)
+			.toList();
+	 }
 
 }
