@@ -76,7 +76,7 @@ body {
 		border: none;
 		border-radius: $radius-25;
 		background: $primary-500;
-
+		transition: background-color 0.2s ease;
 
 		&:hover {
 			background: $primary-700;
