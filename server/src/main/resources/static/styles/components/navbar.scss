@@ -72,6 +72,11 @@ $dropdown-label-height: 180px;
 	position: relative;
 	display: inline-block;
 
+	&:hover {
+		text-decoration: underline;
+		text-decoration-color: $neutral-100;
+	}
+
 	> input {
 		display: none;
 	}
@@ -87,11 +92,14 @@ $dropdown-label-height: 180px;
 		padding: 0.75rem 0.5rem 0.75rem 0;
 		cursor: pointer;
 		user-select: none;
+		color: $neutral-100;
 		gap: 0.5rem;
 	}
 
 	> label > img {
 		height: 7vh;
+		transition: height 0.3s ease;
+		border: 2px solid $neutral-100;
 		border-radius: 50%;
 		aspect-ratio: 1;
 		object-fit: cover;
@@ -146,43 +154,6 @@ $dropdown-label-height: 180px;
 		max-width: 225px;
 		transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
 		opacity: 0;
-	}
-
-	> .__menu > div {
-		display: flex;
-		flex-direction: row;
-		width: 100%;
-		margin-top: auto;
-
-		> .__menu-item {
-			flex: 1;
-		}
-	}
-
-	> input:checked ~ .__menu {
-		visibility: visible;
-		transition: opacity 0.3s ease-in-out;
-		opacity: 1;
-	}
-}
-
-/* Dropdown Style */
-#knowy-navbar > .__profile-container > .__dropdown {
-
-	&:hover {
-		text-decoration: underline;
-		text-decoration-color: $neutral-100;
-	}
-
-	> label {
-		color: $neutral-100;
-	}
-
-	> label > img {
-		border: 2px solid $neutral-100;
-	}
-
-	> .__menu {
 		border: 1px solid $neutral-500;
 		border-bottom-right-radius: $radius-10;
 		border-bottom-left-radius: $radius-10;
@@ -208,30 +179,41 @@ $dropdown-label-height: 180px;
 			color: $primary-500;
 			background: $neutral-300;
 		}
+	}
 
-		> div {
-			display: flex;
-			border-bottom: $radius-10;
-			border-bottom-right-radius: $radius-10;
-			border-bottom-left-radius: $radius-10;
-			background: $primary-500;
+	> input:checked ~ .__menu {
+		visibility: visible;
+		transition: opacity 0.3s ease-in-out;
+		opacity: 1;
+	}
+
+	> .__menu > form {
+		display: flex;
+		flex-direction: row;
+		width: 100%;
+		margin-top: auto;
+
+		> .__menu-item {
+			flex: 1;
 		}
+	}
 
-		> div > .__menu-item {
-			font-size: 1.1rem;
-			font-weight: bold;
-			text-decoration: none;
-			color: $neutral-100;
-		}
+	> .__menu .menu-btn-logout {
+		font-size: 1.1rem;
+		font-weight: 600;
+		width: 100%;
+		padding: 0.25rem;
+		cursor: pointer;
+		text-align: center;
+		text-decoration: none;
+		color: $neutral-100;
+		border: none;
+		border-bottom-right-radius: $radius-10;
+		border-bottom-left-radius: $radius-10;
+		background: $primary-500;
 
-		> div > .__menu-item:hover {
+		&:hover {
 			background: $primary-700;
-		}
-
-		> div > .__menu-item-logout {
-			font-size: 1.1rem;
-			border-bottom-right-radius: $radius-10;
-			border-bottom-left-radius: $radius-10;
 		}
 	}
 }
@@ -293,6 +275,14 @@ $dropdown-label-height: 180px;
 			opacity: 1;
 		}
 
+		> input:checked ~ .__profile-menu > img {
+			height: 10vh;
+		}
+
+		> input:checked ~ .__profile-menu > span {
+			font-size: 1.25rem;
+		}
+
 		> .__menu {
 			font-size: 1.1rem;
 			position: fixed;
@@ -302,7 +292,7 @@ $dropdown-label-height: 180px;
 			max-width: 500px;
 			height: calc(100vh - $dropdown-label-height);
 
-			> .__menu-item-logout {
+			> form > .menu-btn-logout {
 				font-size: 1.5rem;
 			}
 		}

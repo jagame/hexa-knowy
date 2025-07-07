@@ -17,23 +17,24 @@
 			<input id="navbar-profile-dropdown" type="checkbox">
 
 			<label class="__profile" for="navbar-profile-dropdown">
-				<span class="--text" th:text="${username}">Username</span>
-				<img alt="" th:src="${avatar}"/>
+				<span class="--text" th:text="${#authentication?.principal?.publicUser?.nickname}">Username</span>
+				<img alt="" th:src="${#authentication?.principal?.publicUser?.profileImage?.url}"/>
 			</label>
 
 			<label class="__profile-menu" for="navbar-profile-dropdown">
-				<span class="--text" th:text="${username}">Username</span>
-				<img alt="" th:src="${avatar}"/>
+				<span class="--text" th:text="${#authentication?.principal?.publicUser?.nickname}">Username</span>
+				<img alt=""  th:src="${#authentication?.principal?.publicUser?.profileImage?.url}"/>
 			</label>
 
 			<nav class="__menu">
-				<a th:href="${'/home'}" class="__menu-item __menu-item--visibility">Inicio</a>
-				<a th:href="${'/my-courses'}" class="__menu-item __menu-item--visibility">Mis Cursos</a>
-				<a th:href="${'/store'}" class="__menu-item __menu-item--visibility">Explorar Contenido</a>
-				<a th:href="${'/user-profile'}" class="__menu-item">Ajustes</a>
-				<div>
-					<a th:href="${'/logout'}" class="__menu-item __menu-item-logout">Cerrar Sessión</a>
-				</div>
+				<a class="__menu-item __menu-item--visibility" th:href="${'/home'}">Inicio</a>
+				<a class="__menu-item __menu-item--visibility" th:href="${'/my-courses'}">Mis Cursos</a>
+				<a class="__menu-item __menu-item--visibility" th:href="${'/store'}">Explorar Contenido</a>
+				<a class="__menu-item" th:href="${'/user-profile'}">Ajustes</a>
+
+				<form method="post" th:action="@{/logout}">
+					<button class="menu-btn-logout" type="submit">Cerrar sesión</button>
+				</form>
 			</nav>
 		</div>
 	</div>

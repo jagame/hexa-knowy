@@ -32,7 +32,7 @@
 			<input class="kn-form--input" type="password" id="password" name="password" placeholder="Escriba su contraseña" th:field="*{password}" required/>
 		</div>
 
-		<h5 th:if="${loginError}" th:text="${loginError}" class="kn-form__error"></h5>
+		<h5 th:if="${param.error}" class="kn-form__error">Nombre de usuario o contraseña incorrectos.</h5>
 
 		<div class="kn-form__footer">
 			<a class="kn-form__footer-links" th:href="@{/password-change/email}">¿Has olvidado la contraseña?</a>
