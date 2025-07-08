@@ -26,4 +26,6 @@ public interface JpaPublicUserRepository extends PublicUserRepository, JpaReposi
 	@Override
 	@NonNull
 	<S extends PublicUserEntity> S save(@NonNull S user);
+
+	boolean existsByNickname(String nickname);
 }

@@ -27,7 +27,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class AccessController {
 
-	public static final String SESSION_LOGGED_USER = "loggedUser";
 	private final UserSecurityDetailsService userSecurityDetailsService;
 	private final AccessService accessService;
 

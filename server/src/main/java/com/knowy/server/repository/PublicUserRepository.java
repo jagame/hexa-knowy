@@ -13,4 +13,6 @@ public interface PublicUserRepository {
 	<S extends PublicUserEntity> S save(S user);
 
 	Optional<PublicUserEntity> findByNickname(String nickname);
+
+	boolean existsByNickname(String nickname);
 }
