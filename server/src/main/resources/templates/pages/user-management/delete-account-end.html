@@ -28,7 +28,7 @@
 				<h1 class="title-management">Eliminar Cuenta</h1>
 				<p class="description-management">Para confirmar la eliminación de su cuenta, por favor, ingrese su contraseña: </p>
 			</div>
-			<form id="DeleteAccountForm">
+			<form th:action="@{delete-account-end}" method="POST" id="DeleteAccountForm">
 				<div class="row user-information">
 					<div class="form-fields">
 						<label for="deletePassword" class="section-title">Contraseña: 🔑</label>
@@ -44,6 +44,8 @@
 					<a th:href="@{/delete-account}" class="btn btn-inferior">Volver</a>
 					<button type="submit" class="btn btn-delete">Eliminar Cuenta</button>
 				</div>
+				<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+				<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
 			</form>
 		</div>
 	</form>
