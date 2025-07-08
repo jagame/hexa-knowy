@@ -77,23 +77,42 @@ public class UserSecurityDetailsService implements UserDetailsService {
 	/**
 	 * Automatically authenticates and logs in a user based on their email address.
 	 * <p>
-	 * This method loads the user details by email, creates an authentication token, sets it in the Spring Security
-	 * context, and synchronizes the security context with the current HTTP session to maintain the authenticated
-	 * state.
+	 * This method performs the following steps:
+	 * <ul>
+	 *   <li>Loads user details by the provided email</li>
+	 *   <li>Creates an authentication token for the user</li>
+	 *   <li>Creates and sets a new {@link org.springframework.security.core.context.SecurityContext} with the authentication</li>
+	 *   <li>Binds the security context to the current HTTP session to maintain the authenticated state</li>
+	 * </ul>
+	 * This allows seamless login without requiring manual input of credentials, commonly used after registration or email verification flows.
 	 * </p>
 	 *
 	 * @param email the email address of the user to be automatically logged in
 	 * @throws UsernameNotFoundException if no user is found with the given email
 	 */
 	public void autoLoginUserByEmail(String email) throws UsernameNotFoundException {
+		UsernamePasswordAuthenticationToken userAuthToken = createAuthTokenFromEmail(email);
+		SecurityContext securityContext = createSecurityContextWithAuth(userAuthToken);
+		bindSecurityContextInSession(securityContext);
+	}
+
+	private UsernamePasswordAuthenticationToken createAuthTokenFromEmail(String email) throws UsernameNotFoundException {
 		UserSecurityDetails updateUserDetails = (UserSecurityDetails) loadUserByUsername(email);
+		return new UsernamePasswordAuthenticationToken(
+			updateUserDetails,
+			null,
+			updateUserDetails.getAuthorities()
+		);
+	}
 
-		UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(updateUserDetails, null, updateUserDetails.getAuthorities());
-
+	private SecurityContext createSecurityContextWithAuth(UsernamePasswordAuthenticationToken authToken) {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
 		securityContext.setAuthentication(authToken);
 		SecurityContextHolder.setContext(securityContext);
+		return securityContext;
+	}
 
+	private void bindSecurityContextInSession(SecurityContext securityContext) {
 		HttpSession session = httpServletRequest.getSession(true);
 		session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
 	}
