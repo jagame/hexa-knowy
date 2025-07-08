@@ -15,14 +15,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
+
 @Slf4j
 @Service
 public class UserSecurityDetailsService implements UserDetailsService {
 
 	private final PrivateUserRepository privateUserRepository;
 	private final HttpServletRequest httpServletRequest;
-
-	// ! TODO - Change Exception to custom exception extends of Exception
 
 	/**
 	 * The constructor
@@ -36,42 +37,50 @@ public class UserSecurityDetailsService implements UserDetailsService {
 	}
 
 	/**
-	 * Loads the user details based on the provided email address.
-	 * <p>
-	 * This method is the implementation of the {@link org.springframework.security.core.userdetails.UserDetailsService}
-	 * interface, used by Spring Security during the authentication process. It searches for the user in the database by
-	 * email, and if found, returns a {@link UserSecurityDetails} object containing the user's information.
-	 * </p>
+	 * Refreshes the current user's authentication by reloading the user details using the current username (typically
+	 * the email).
 	 *
-	 * @param email the email address of the user to authenticate
-	 * @return a {@link UserSecurityDetails} object implementing
-	 * {@link org.springframework.security.core.userdetails.UserDetails}, required for the authentication process in
-	 * Spring Security
-	 * @throws UsernameNotFoundException if no user is found with the given email
+	 * <p>This method is useful when the user's data has changed (e.g., roles, permissions)
+	 * and needs to be reloaded into the security context without requiring the user to log out and log back in.</p>
+	 *
+	 * @throws UsernameNotFoundException if the user cannot be found using the current username
 	 */
-	@Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		PrivateUserEntity privateUser = privateUserRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
-		return new UserSecurityDetails(privateUser);
+	public void refreshUserAuthentication() throws UsernameNotFoundException {
+		refreshAuthentication(user -> (UserSecurityDetails) loadUserByUsername(user.getUsername()));
 	}
 
 	/**
-	 * Refreshes the current user's authentication details in the security context.
-	 * <p>
-	 * This method retrieves the current authenticated user's principal from the {@link SecurityContextHolder}, reloads
-	 * the user details from the data source (to reflect any changes), and updates the authentication token in the
-	 * security context.
-	 * </p>
+	 * Refreshes the current user's authentication by reloading the user details using the internal user ID.
 	 *
-	 * @throws UsernameNotFoundException if the current user's username cannot be found in the data source
+	 * <p>This is a safer alternative to {@link #refreshUserAuthentication()} in cases
+	 * where the username (email) may have changed, ensuring the correct user is reloaded based on a stable
+	 * identifier.</p>
+	 *
+	 * @throws UsernameNotFoundException if the user cannot be found using their internal ID
 	 */
-	public void refreshUserAuthentication() throws UsernameNotFoundException {
+	public void refreshUserAuthenticationById() throws UsernameNotFoundException {
+		refreshAuthentication(user -> (UserSecurityDetails) loadUserById(user.getPublicUser().getId()));
+	}
+
+	private void refreshAuthentication(UnaryOperator<UserSecurityDetails> reloadFunction) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		UserSecurityDetails userDetails = (UserSecurityDetails) authentication.getPrincipal();
+		UserSecurityDetails currentDetails = (UserSecurityDetails) authentication.getPrincipal();
 
-		UserSecurityDetails updateUserDetails = (UserSecurityDetails) loadUserByUsername(userDetails.getUsername());
+		UserSecurityDetails updatedDetails = reloadFunction.apply(currentDetails);
 
-		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(updateUserDetails, authentication.getCredentials(), updateUserDetails.getAuthorities()));
+		Authentication newAuth = new UsernamePasswordAuthenticationToken(
+			updatedDetails,
+			authentication.getCredentials(),
+			updatedDetails.getAuthorities()
+		);
+
+		SecurityContextHolder.getContext().setAuthentication(newAuth);
+	}
+
+	private UserDetails loadUserById(int id) throws UsernameNotFoundException {
+		PrivateUserEntity privateUser = privateUserRepository.findById(id)
+			.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		return new UserSecurityDetails(privateUser);
 	}
 
 	/**
@@ -115,5 +124,26 @@ public class UserSecurityDetailsService implements UserDetailsService {
 	private void bindSecurityContextInSession(SecurityContext securityContext) {
 		HttpSession session = httpServletRequest.getSession(true);
 		session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
+	}
+
+	/**
+	 * Loads the user details based on the provided email address.
+	 * <p>
+	 * This method is the implementation of the {@link org.springframework.security.core.userdetails.UserDetailsService}
+	 * interface, used by Spring Security during the authentication process. It searches for the user in the database by
+	 * email, and if found, returns a {@link UserSecurityDetails} object containing the user's information.
+	 * </p>
+	 *
+	 * @param email the email address of the user to authenticate
+	 * @return a {@link UserSecurityDetails} object implementing
+	 * {@link org.springframework.security.core.userdetails.UserDetails}, required for the authentication process in
+	 * Spring Security
+	 * @throws UsernameNotFoundException if no user is found with the given email
+	 */
+	@Override
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		PrivateUserEntity privateUser = privateUserRepository.findByEmail(email)
+			.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		return new UserSecurityDetails(privateUser);
 	}
 }

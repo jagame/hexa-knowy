@@ -9,6 +9,7 @@ import com.knowy.server.service.exception.UnchangedNicknameException;
 import com.knowy.server.service.exception.UserNotFoundException;
 import com.knowy.server.service.model.UserSecurityDetails;
 import com.knowy.server.util.exception.WrongPasswordException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+@Slf4j
 @Controller
 public class UserConfigController {
 
@@ -73,6 +75,7 @@ public class UserConfigController {
 	public String viewUserAccount(Model model, @AuthenticationPrincipal UserSecurityDetails userDetails) {
 		model.addAttribute("publicUser", userDetails.getPublicUser());
 		model.addAttribute("userConfigChangeEmailFormDto", new UserConfigChangeEmailFormDto());
+
 		return "pages/user-management/user-account";
 	}
 
@@ -102,6 +105,7 @@ public class UserConfigController {
 				userConfigChangeEmailFormDto.getPassword()
 			);
 
+			userSecurityDetailsService.refreshUserAuthenticationById();
 			redirectAttributes.addFlashAttribute("successEmail", "Email actualizado con éxito.");
 		} catch (UserNotFoundException e) {
 			redirectAttributes.addFlashAttribute("errorEmail", "Usuario no encontrado.");
@@ -110,8 +114,6 @@ public class UserConfigController {
 		} catch (WrongPasswordException e) {
 			redirectAttributes.addFlashAttribute("errorEmail", "La contraseña es incorrecta.");
 		}
-
-		userSecurityDetailsService.refreshUserAuthentication(); // ?
 		return "redirect:/user-account";
 	}
 

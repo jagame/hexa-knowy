@@ -23,7 +23,7 @@
 
 			<label class="__profile-menu" for="navbar-profile-dropdown">
 				<span class="--text" th:text="${#authentication?.principal?.publicUser?.nickname}">Username</span>
-				<img alt=""  th:src="${#authentication?.principal?.publicUser?.profileImage?.url}"/>
+				<img alt="" th:src="${#authentication?.principal?.publicUser?.profileImage?.url}"/>
 			</label>
 
 			<nav class="__menu">
