@@ -9,7 +9,6 @@ public class UserStoreController {
 
 	@GetMapping("/store")
 	private String userStore(Model model) {
-
 		return "pages/user-store";
 	}
 }

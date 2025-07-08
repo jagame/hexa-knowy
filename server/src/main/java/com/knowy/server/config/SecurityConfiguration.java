@@ -1,6 +1,5 @@
 package com.knowy.server.config;
 
-import com.knowy.server.service.UserSecurityDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,16 +32,15 @@ public class SecurityConfiguration {
 	 * This includes authorization rules, form login, logout, and session management.
 	 * </p>
 	 *
-	 * @param http                       the {@link HttpSecurity} object to configure
-	 * @param userSecurityDetailsService the user details service used for authentication
+	 * @param http the {@link HttpSecurity} object to configure
 	 * @return the configured {@link SecurityFilterChain}
 	 * @throws Exception if an error occurs during configuration
 	 */
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http, UserSecurityDetailsService userSecurityDetailsService) throws Exception {
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(request -> request
 			.requestMatchers("/fonts/**", "/scripts/**", "/styles/**", "/images/**", "/error/**").permitAll()
-			.requestMatchers("/", "/login", "/register", "password-change/email", "password-change/").permitAll()
+			.requestMatchers("/", "/login", "/register", "/password-change/email", "/password-change").permitAll()
 			.anyRequest().authenticated()
 		);
 

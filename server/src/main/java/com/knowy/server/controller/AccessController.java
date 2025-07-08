@@ -140,7 +140,8 @@ public class AccessController {
 			accessService.sendRecoveryPasswordEmail(email.getEmail(), getPasswordChangeUrl(httpServletRequest));
 			return "redirect:/login";
 		} catch (AccessException e) {
-			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			redirectAttributes.addFlashAttribute("error",
+				"Se ha producido un error al enviar el email. Intente lo más tarde");
 			return "redirect:/password-change/email";
 		}
 	}
@@ -210,7 +211,6 @@ public class AccessController {
 			return "redirect:/login";
 		} catch (AccessException e) {
 			redirectAttributes.addAttribute("error", "Se ha producido un error al actualizar la contraseña");
-			log.error("Failed to update user password", e);
 			return "redirect:/login";
 		} catch (PasswordFormatException e) {
 			redirectAttributes.addAttribute("error", """
@@ -220,7 +220,6 @@ public class AccessController {
 				- 1 número y 1 símbolo
 				- Sin espacios
 				""");
-			log.error("Invalid password format", e);
 			return "redirect:/password-change?token=" + token;
 		}
 	}

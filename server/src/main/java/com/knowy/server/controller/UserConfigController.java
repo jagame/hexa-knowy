@@ -9,7 +9,6 @@ import com.knowy.server.service.exception.UnchangedNicknameException;
 import com.knowy.server.service.exception.UserNotFoundException;
 import com.knowy.server.service.model.UserSecurityDetails;
 import com.knowy.server.util.exception.WrongPasswordException;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -118,14 +117,14 @@ public class UserConfigController {
 
 	// Delete account
 	@GetMapping("/delete-account")
-	public String deleteAccountForm(ModelMap interfaceScreen, HttpSession session) {
+	public String deleteAccountForm(ModelMap interfaceScreen) {
 		interfaceScreen.addAttribute("username", "usuario123");
 		return "pages/user-management/delete-account";
 	}
 
 	//Delete-Account-End (Finally deleting Account)
 	@GetMapping("/delete-account-end")
-	public String deleteAccountEnd(ModelMap interfaceScreen, HttpSession session) {
+	public String deleteAccountEnd(ModelMap interfaceScreen) {
 		interfaceScreen.addAttribute("username", "usuario123");
 		return "pages/user-management/delete-account-end";
 	}
