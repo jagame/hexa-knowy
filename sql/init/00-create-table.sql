@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS public.course
 	id          serial NOT NULL,
 	title       varchar(100),
 	description varchar(250),
-	creator varchar(250),
+	author varchar(250),
 	PRIMARY KEY (id)
 );
 

@@ -28,8 +28,8 @@ public class CourseEntity {
 	@Column(name = "description", length = 250, nullable = false)
 	private String description;
 
-	@Column(name = "creator", length = 250, nullable = false)
-	private String creator;
+	@Column(name = "author", length = 250, nullable = false)
+	private String author;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(

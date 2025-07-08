@@ -28,35 +28,19 @@ public class CourseController {
 
 		Integer userId = 1; //TODO
 
-		List<CourseEntity> allCourses = courseSubscriptionService.getAllCourses();
-		List<CourseEntity> userCourses = courseSubscriptionService.findCoursesByUserId(userId);
-
-		List<CourseCardDTO> courseCards = userCourses.stream()
-			.map(course-> CourseCardDTO.fromEntity(
-				course, courseSubscriptionService.getCourseProgress(userId, course.getId()),
-				courseSubscriptionService.findLanguagesForCourse(course))).toList();
-
-		List<CourseCardDTO> recommendedCoursesCards = allCourses.stream()
-			.filter(course-> !userCourses.contains(course))
-			.map(course-> CourseCardDTO.fromRecommendation(
-				course, courseSubscriptionService.findLanguagesForCourse(course))).toList();
-
-		model.addAttribute("courses", courseCards);
-		model.addAttribute("recommendations", recommendedCoursesCards);
+		model.addAttribute("courses", courseSubscriptionService.getUserCourses(userId));
+		model.addAttribute("recommendations", courseSubscriptionService.getRecommendedCourses(userId));
 		return "pages/my-courses";
 	}
 
 	@PostMapping("/subscribe")
 	public String subscribeToCourse(@RequestParam Integer courseId, RedirectAttributes attrs){
 		Integer userId = 1; //TODO -> change fron users from login
-		boolean success = courseSubscriptionService.subscribeUserToCourse(userId, courseId);
-		if (success) {
-			attrs.addFlashAttribute("success", "¡Te has suscrito correctamente!");
-		} else {
+		if (!courseSubscriptionService.subscribeUserToCourse(userId, courseId)) {
 			attrs.addFlashAttribute("error", "Error al adquirir el curso");
+			return "redirect:/my-courses";
 		}
+		attrs.addFlashAttribute("success", "¡Te has suscrito correctamente!");
 		return "redirect:/my-courses";
 	}
-
-
 }

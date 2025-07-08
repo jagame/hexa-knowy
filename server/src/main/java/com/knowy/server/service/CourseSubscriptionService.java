@@ -1,5 +1,6 @@
 package com.knowy.server.service;
 
+import com.knowy.server.controller.dto.CourseCardDTO;
 import com.knowy.server.entity.*;
 import com.knowy.server.repository.*;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,25 @@ public class CourseSubscriptionService {
 		this.courseRepository = courseRepository;
 		this.lessonRepository = lessonRepository;
 		this.publicUserLessonRepository = publicUserLessonRepository;
+	}
+
+	public List<CourseCardDTO> getUserCourses(Integer userId){
+		List<CourseEntity> userCourses = findCoursesByUserId(userId);
+		return userCourses.stream()
+			.map(course -> CourseCardDTO.fromEntity(
+				course, getCourseProgress(userId, course.getId()),
+				findLanguagesForCourse(course)))
+			.toList();
+	}
+
+	public List<CourseCardDTO> getRecommendedCourses(Integer userId) {
+		List<CourseEntity> allCourses = findAllCourses();
+		List<CourseEntity> userCourses = findCoursesByUserId(userId);
+		return allCourses.stream()
+			.filter(course -> !userCourses.contains(course))
+			.map(course -> CourseCardDTO.fromRecommendation(
+				course, findLanguagesForCourse(course)))
+			.toList();
 	}
 
 	public boolean subscribeUserToCourse(Integer userId, Integer courseId) {
@@ -49,8 +69,14 @@ public class CourseSubscriptionService {
 		return courseRepository.findByIdIn(courseIds);
 	}
 
-	public List<CourseEntity> getAllCourses(){
+	public List<CourseEntity> findAllCourses(){
 		return courseRepository.findAll();
+	}
+
+	public List<String> findLanguagesForCourse(CourseEntity course){
+		return course.getLanguages().stream()
+			.map(LanguageEntity::getName)
+			.toList();
 	}
 
 	public int getCourseProgress(Integer userId, Integer courseId){
@@ -59,10 +85,6 @@ public class CourseSubscriptionService {
 		int completedLessons = publicUserLessonRepository.countByUserIdAndCourseIdAndStatus(userId, courseId, "completed");
 		return (int)Math.round((completedLessons*100.0/totalLessons));
 	}
-	 public List<String> findLanguagesForCourse(CourseEntity course){
-		return course.getLanguages().stream()
-			.map(LanguageEntity::getName)
-			.toList();
-	 }
+
 
 }

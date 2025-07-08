@@ -16,7 +16,7 @@ import java.util.List;
 public class CourseCardDTO {
 	private Integer id;
 	private String name;
-	private String creator;
+	private String author;
 	private int progress;
 	private ActionType action;
 	private ArrayList<String> languages;
@@ -30,7 +30,7 @@ public class CourseCardDTO {
 		CourseCardDTO dto = new CourseCardDTO();
 		dto.setId(course.getId());
 		dto.setName(course.getTitle());
-		dto.setCreator(course.getCreator());
+		dto.setAuthor(course.getAuthor());
 		dto.setProgress(progress);
 		dto.setAction(ActionType.START);
 		dto.setLanguages(new ArrayList<>(languages));
@@ -42,7 +42,7 @@ public class CourseCardDTO {
 		CourseCardDTO dto = new CourseCardDTO();
 		dto.setId(course.getId());
 		dto.setName(course.getTitle());
-		dto.setCreator(course.getCreator());
+		dto.setAuthor(course.getAuthor());
 		dto.setProgress(0);
 		dto.setAction(ActionType.ACQUIRE);
 		dto.setLanguages(new ArrayList<>(languages));
