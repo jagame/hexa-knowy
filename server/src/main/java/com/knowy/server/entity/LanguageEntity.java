@@ -8,12 +8,11 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
+@Entity
 @Table(name = "language")
 public class LanguageEntity {
 
@@ -21,6 +20,7 @@ public class LanguageEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
 	private Integer id;
+
 	@Column(name = "name", nullable = false, unique = true, length = 20)
 	private String name;
 

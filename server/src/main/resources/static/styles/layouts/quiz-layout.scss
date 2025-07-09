@@ -3,6 +3,7 @@
 @use '../components/cards-questionnaire/options-quiz';
 @use '../components/cards-questionnaire/quiz-header';
 @use '../components/cards-questionnaire/questionComponent';
+@use '../components/toast';
 
 html, body {
 	display: grid;

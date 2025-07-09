@@ -1,0 +1,18 @@
+<div th:fragment="toast(status, message, type)">
+	<div class="toast show"
+		 data-bs-autohide="true"
+		 data-bs-delay="10000"
+		 th:classappend="${
+           type == 'success' ? ' toast-success'
+           : (type == 'error'   ? ' toast-error'
+           : (type == 'warning' ? ' toast-warning'
+                                : ' toast-info'))
+         }">
+		<div class="toast-header">
+			<strong class="me-auto" th:text="${status}">Estado</strong>
+			<button type="button" class="btn-close"
+					data-bs-dismiss="toast" aria-label="Close"></button>
+		</div>
+		<div class="toast-body" th:text="${message}">Mensaje</div>
+	</div>
+</div>
