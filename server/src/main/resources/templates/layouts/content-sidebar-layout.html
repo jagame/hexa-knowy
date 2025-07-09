@@ -33,7 +33,7 @@
 </head>
 <body>
 
-<header th:replace="~{components/navbar :: knowy-navbar(username=${nickname}, avatar=${profileImageUrl})}"></header>
+<header th:replace="~{components/navbar :: knowy-navbar()}"></header>
 
 <div th:replace="components/toast-wrapper :: wrapper(${toasts})"></div>
 

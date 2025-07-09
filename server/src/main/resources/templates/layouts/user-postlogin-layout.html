@@ -18,8 +18,8 @@
 </head>
 <body>
 
-<div th:if="${nickname != null}">
-	<header th:replace="~{components/navbar :: knowy-navbar(username=${nickname}, avatar=${profileImageUrl})}"></header>
+<div th:if="${#authentication.authenticated}">
+	<header th:replace="~{components/navbar :: knowy-navbar()}"></header>
 </div>
 
 <div th:replace="components/toast-wrapper :: wrapper(${toasts})"></div>

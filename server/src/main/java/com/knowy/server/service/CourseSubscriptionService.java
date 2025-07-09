@@ -86,5 +86,4 @@ public class CourseSubscriptionService {
 		return (int)Math.round((completedLessons*100.0/totalLessons));
 	}
 
-
 }
