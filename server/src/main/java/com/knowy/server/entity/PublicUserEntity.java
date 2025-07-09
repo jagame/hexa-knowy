@@ -35,6 +35,6 @@ public class PublicUserEntity {
 		inverseJoinColumns = @JoinColumn(name = "id_language"))
 	private Set<LanguageEntity> languages;
 
-	@OneToOne(mappedBy = "publicUserEntity")
+	@OneToOne(mappedBy = "publicUserEntity", cascade = CascadeType.PERSIST)
 	private PrivateUserEntity privateUserEntity;
 }

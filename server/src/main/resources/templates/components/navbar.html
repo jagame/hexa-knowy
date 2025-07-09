@@ -1,6 +1,7 @@
 <!-- templates/components/navbar.html -->
 <header id="knowy-navbar"
-		th:fragment="knowy-navbar()">
+		th:fragment="knowy-navbar()"
+		sec:authorize="isAuthenticated()">
 	<div class="__profile-container">
 		<div class="__logo">
 			<img alt="" src="/images/logoWoutText.png"/>

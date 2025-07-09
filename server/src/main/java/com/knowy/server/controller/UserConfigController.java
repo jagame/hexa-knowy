@@ -29,7 +29,6 @@ public class UserConfigController {
 		this.userSecurityDetailsService = userSecurityDetailsService;
 	}
 
-
 	// FIXME - Rehacer JavaDoc
 	/**
 	 * Handles the request to view the user account page.
@@ -114,7 +113,7 @@ public class UserConfigController {
 		@ModelAttribute("profileDto") UserProfileDTO userProfileDTO,
 		RedirectAttributes redirectAttributes,
 		@AuthenticationPrincipal UserSecurityDetails userDetails
-	) throws UserNotFoundException {
+	) {
 		String newNickname = userProfileDTO.getNickname();
 		if (newNickname != null && !newNickname.isBlank()) {
 			try {
