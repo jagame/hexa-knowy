@@ -1,58 +1,72 @@
 @use "../global-vars" as *;
 
-/*Footer styles*/
-
-.kn-footer{
-	padding: 0 0.5rem;
-	margin-top: auto;
-	width: 100%;
-}
-.kn-footer > a{
-	color: $primary-500;
-	transition:color $transition-speed;
-	padding: clamp(8px, 1.5vw, 15px) 0;
+footer {
+	background-color: $neutral-700;
 }
 
-.kn-footer > a:hover{
-	color: $primary-700;
+.title-logo {
+	font-family: caveat-brush, sans-serif;
+	color: white;
+	margin: 0;
 }
-/* Global styles for social media icons */
 
-/* Base style for all icons */
-.kn-footer > .bi {
+.logo {
+	width: 120px;
+	display: block;
+	margin: 0 auto;
+}
+
+.title-footer{
+	font-family: caveat-brush, sans-serif;
+	color: $secundary-400;
+	margin-bottom: 1rem;
 	display: inline-block;
-	vertical-align: -0.125em;
-	transition: transform 0.2s ease;
+	border-bottom: 2px solid $secundary-400;
+	padding-bottom: 7px;
 }
 
-/* Colours for specific icons */
-.bi-instagram {
-	color: #e1306c; /* Instagram colour */
-	transition: color 0.3s ease;
+.list-unstyled {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	gap: 0.5rem;
+
+	.link-footer {
+		color: white;
+		text-decoration: none;
+	}
+
+	.link-footer:hover {
+		color: $primary-300;
+	}
 }
 
-.bi-facebook {
-	color: #1877f2; /* Facebook colour */
-	transition: color 0.3s ease;
+.social-list {
+	list-style: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 1.5rem;
+	padding: 0;
+	margin: 0 0 0.5rem 0;
+
+	li a {
+		font-size: 1.75rem;
+		color: white;
+		transition: color 0.2s;
+	}
+	li a:hover {
+		color: $primary-300;
+	}
 }
 
-.bi-twitter-x{
-	color: #000000; /* Colour of X*/
-	transition: color 0.3s ease;
+p.mb-0 a i {
+	margin-right: 0.5rem;
+	vertical-align: middle;
 }
 
-/* Hover effects */
-a:hover > .bi-instagram {
-	color: #c13584;
-	transform: scale(1.1);
-}
-
-a:hover > .bi-facebook {
-	color: #0d65d9;
-	transform: scale(1.1);
-}
-
-a:hover > .bi-twitter-x{
-	color: #333333;
-	transform: scale(1.1);
+.copyr {
+	background-color: $primary-700;
+	padding: 0.8rem;
 }
