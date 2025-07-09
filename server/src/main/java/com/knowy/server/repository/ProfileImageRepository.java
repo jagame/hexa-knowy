@@ -8,4 +8,5 @@ public interface ProfileImageRepository {
 
 	Optional<ProfileImageEntity> findById(int id);
 
+
 }

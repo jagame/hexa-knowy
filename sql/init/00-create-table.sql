@@ -93,13 +93,35 @@ CREATE TABLE IF NOT EXISTS public.profile_image
 	PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS public.languages (
-	id serial NOT NULL,
-	name VARCHAR(20) NOT NULL UNIQUE,
+CREATE TABLE IF NOT EXISTS public.banned_word
+(
+	id			serial NOT NULL,
+	word		varchar(50)	NOT NULL UNIQUE,
 	PRIMARY KEY (id)
-	);
+);
 
-CREATE TABLE IF NOT EXISTS public.course_languages (
+CREATE TABLE IF NOT EXISTS public.language
+(
+	id			serial NOT NULL,
+	name		varchar(20) NOT NULL UNIQUE,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS public.public_user_language
+(
+	id_public_user	integer NOT NULL,
+	id_language		integer NOT NULL,
+	PRIMARY KEY		(id_public_user, id_language)
+);
+
+CREATE TABLE IF NOT EXISTS public.banned_word
+(
+	id			serial 		NOT NULL,
+	word		varchar(40) NOT NULL,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS public.course_language (
 	id_course INTEGER NOT NULL,
 	id_language INTEGER NOT NULL,
 	PRIMARY KEY (id_course, id_language)
@@ -161,11 +183,19 @@ ALTER TABLE IF EXISTS public.public_user_option
 	ADD FOREIGN KEY (id_option)
 		REFERENCES public.option (id);
 
--- FK course_languages
-ALTER TABLE IF EXISTS public.course_languages
+--FK public_user_language
+ALTER TABLE IF EXISTS public.public_user_language
+	ADD FOREIGN KEY (id_public_user)
+		REFERENCES 	public.public_user (id);
+
+ALTER TABLE IF EXISTS public.public_user_language
+	ADD FOREIGN KEY	(id_language)
+		REFERENCES	public.language (id);
+-- FK course_language
+ALTER TABLE IF EXISTS public.course_language
 	ADD FOREIGN KEY (id_course)
 	REFERENCES public.course (id);
 
-ALTER TABLE IF EXISTS public.course_languages
+ALTER TABLE IF EXISTS public.course_language
 	ADD FOREIGN KEY (id_language)
-	REFERENCES public.languages (id);
+	REFERENCES public.language (id);
