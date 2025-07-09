@@ -20,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class AccessService {
@@ -212,17 +211,5 @@ public class AccessService {
 		} catch (JwtKnowyException | NoSuchElementException e) {
 			return false;
 		}
-	}
-
-	public Optional<PrivateUserEntity> authenticateUser(String email, String password) {
-		Optional<PrivateUserEntity> foundUser = privateUserRepository.findByEmail(email);
-
-		if (foundUser.isPresent()) {
-			PrivateUserEntity user = foundUser.get();
-			if (user.getPassword().equals(password)) {
-				return Optional.of(user);
-			}
-		}
-		return Optional.empty();
 	}
 }
