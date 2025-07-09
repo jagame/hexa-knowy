@@ -15,6 +15,7 @@ import com.knowy.server.util.PasswordChecker;
 import com.knowy.server.util.exception.JwtKnowyException;
 import com.knowy.server.util.exception.MailDispatchException;
 import com.knowy.server.util.exception.PasswordFormatException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -172,12 +173,15 @@ public class AccessService {
 
 			PasswordResetJwt passwordResetJwt = jwtService.decodeUnverified(token, PasswordResetJwt.class);
 			PrivateUserEntity privateUser = privateUserRepository.findById(passwordResetJwt.getUserId())
-				.orElseThrow();
+				.orElseThrow(() -> new UsernameNotFoundException(String.format("The user with id %s was not found",
+					passwordResetJwt.getUserId()))
+				);
 			jwtService.decode(privateUser.getPassword(), token, PasswordResetJwt.class);
 
-			privateUser.setPassword(password);
+			privateUser.setPassword(passwordEncoder.encode(password));
 			privateUserRepository.save(privateUser);
-		} catch (JwtKnowyException | NoSuchElementException e) {
+
+		} catch (JwtKnowyException | NoSuchElementException | UsernameNotFoundException e) {
 			throw new AccessException("Failed to decode and verify token", e);
 		}
 	}

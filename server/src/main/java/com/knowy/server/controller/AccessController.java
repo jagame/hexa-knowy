@@ -207,7 +207,6 @@ public class AccessController {
 				userPasswordFormDto.getPassword(),
 				userPasswordFormDto.getConfirmPassword()
 			);
-			log.info("User password updated");
 			return "redirect:/login";
 		} catch (AccessException e) {
 			redirectAttributes.addAttribute("error", "Se ha producido un error al actualizar la contraseña");
