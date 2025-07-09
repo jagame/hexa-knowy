@@ -26,13 +26,13 @@
 			<h1 class="title-management">Gestión de la Cuenta</h1>
 		</div>
 		<!--		TODO-->
-		<form id="accountForm" method="post" th:object="${UserConfigSessionDTO}" th:action="@{/update-Nickname}">
+		<form id="accountForm" method="post" th:action="@{/update-Nickname}" th:object="${UserConfigSessionDTO}">
 			<div class="row user-information">
 				<div class="form-fields">
 					<label class="section-title" for="newNickname">Nombre de Usuario 👤</label>
 					<input class="form-control" id="newNickname" name="newNickname" required
-						   th:placeholder="${publicUser.getNickname()}" type="text">
-					<input id="idFormNickname" type="hidden" th:value="${publicUser.getId()}" name="id">
+						   th:placeholder="${publicUser.nickname}" type="text">
+					<input id="idFormNickname" name="id" th:value="${publicUser.id}" type="hidden">
 					<span class="advice-success" th:if="${success}" th:text="${success}"></span>
 					<span class="advice-error" th:if="${error}" th:text="${error}"></span>
 				</div>
@@ -97,11 +97,11 @@
 						  th:object="${userConfigChangeEmailFormDto}">
 
 						<label for="email">📧 Correo Electrónico</label>
-						<input class="form-control" id="email" placeholder="Introduce tu nuevo correo" required
-							   th:field="*{email}" type="email">
+						<input class="form-control" id="email" name="email" placeholder="Introduce tu nuevo correo"
+							   required type="email">
 
 						<label for="password">🔐 Contraseña actual</label>
-						<input class="form-control" id="password" required th:field="*{password}" type="password">
+						<input class="form-control" id="password" name="password" required type="password">
 
 						<div class="modal-footer">
 							<button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cerrar</button>

@@ -5,7 +5,6 @@ import com.knowy.server.entity.PublicUserEntity;
 
 import java.util.Optional;
 
-
 public interface PublicUserRepository {
 	Optional<PublicUserEntity> findUserById(Integer id);
 

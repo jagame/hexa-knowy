@@ -6,6 +6,7 @@ import com.knowy.server.entity.ProfileImageEntity;
 import com.knowy.server.entity.PublicUserEntity;
 import com.knowy.server.repository.*;
 import com.knowy.server.service.exception.*;
+import com.knowy.server.util.PasswordChecker;
 import com.knowy.server.util.exception.WrongPasswordException;
 import jakarta.annotation.Nonnull;
 import org.springframework.stereotype.Service;
@@ -20,17 +21,23 @@ public class UserService {
 	private final BannedWordsRepository bannedWordsRepo;
 	private final LanguageRepository languageRepository;
 	private final ProfileImageRepository profileImageRepository;
+	private final PasswordChecker passwordChecker;
 
 
-	public UserService(PrivateUserRepository privateUserRepository, PublicUserRepository publicUserRepository,
-					   BannedWordsRepository bannedWordsRepo, LanguageRepository jpaLanguageRepository,
-					   ProfileImageRepository profileImageRepository) {
-
+	public UserService(
+		PrivateUserRepository privateUserRepository,
+		PublicUserRepository publicUserRepository,
+		BannedWordsRepository bannedWordsRepo,
+		LanguageRepository jpaLanguageRepository,
+		ProfileImageRepository profileImageRepository,
+		PasswordChecker passwordChecker
+	) {
 		this.privateUserRepository = privateUserRepository;
 		this.publicUserRepository = publicUserRepository;
 		this.bannedWordsRepo = bannedWordsRepo;
 		this.languageRepository = jpaLanguageRepository;
 		this.profileImageRepository = profileImageRepository;
+		this.passwordChecker = passwordChecker;
 	}
 
 	public PublicUserEntity findPublicUserById(Integer id) throws UserNotFoundException {
@@ -40,18 +47,6 @@ public class UserService {
 
 	public Optional<PrivateUserEntity> findPrivateUserByEmail(String email) {
 		return privateUserRepository.findByEmail(email);
-	}
-
-	private boolean isCurrentNickname(String newNickname, PublicUserEntity user) {
-		return (user.getNickname().equals(newNickname));
-	}
-
-	private boolean isCurrentEmail(String newEmail, PrivateUserEntity privateUser) {
-		return (privateUser.getEmail().equals(newEmail));
-	}
-
-	private boolean isValidPassword(String currentPassword, PrivateUserEntity privateUser) {
-		return privateUser.getPassword().equals(currentPassword);
 	}
 
 	/**
@@ -72,7 +67,7 @@ public class UserService {
 	 * @throws UnchangedNicknameException    if the new nickname is the same as the current one
 	 * @throws NicknameAlreadyTakenException if the new nickname is already in use by another user
 	 */
-	public void updateNickname(String newNickname, Integer id) throws UserNotFoundException, UnchangedNicknameException, NicknameAlreadyTakenException {
+	public void updateNickname(String newNickname, @Nonnull Integer id) throws UserNotFoundException, UnchangedNicknameException, NicknameAlreadyTakenException {
 		Optional<PublicUserEntity> publicUser = publicUserRepository.findUserById(id);
 		if (publicUser.isEmpty()) {
 			throw new UserNotFoundException("User not found");
@@ -88,7 +83,7 @@ public class UserService {
 	}
 
 	private boolean isCurrentNickname(String newNickname, PublicUserEntity user) {
-		return (user.getNickname().equals(newNickname));
+		return user.getNickname().equals(newNickname);
 	}
 
 	public void updateProfileImage(Integer newProfileImageId, @Nonnull Integer userId) throws UnchangedImageException, ImageNotFoundException, UserNotFoundException {
@@ -142,6 +137,17 @@ public class UserService {
 					("Profile image with id " + profilePicId + " does not exist.")));
 		}
 		return publicUserRepository.save(publicUserEntity);
+	}
+
+
+	//method to check if the new username contains any of the banned words
+	public boolean isNicknameBanned(String nickname) {
+		return bannedWordsRepo.isWordBanned(nickname);
+	}
+
+	//method to check if the username already exists
+	public boolean isUsernameTaken(String nickname) {
+		return publicUserRepository.existsByNickname(nickname);
 	}
 
 	/**
