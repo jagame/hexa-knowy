@@ -25,7 +25,17 @@
 		<div class="description-card">
 			<h1 class="title-management">Gestión de la Cuenta</h1>
 		</div>
-
+		<!--		TODO-->
+		<form id="accountForm" method="post" th:object="${UserConfigSessionDTO}" th:action="@{/update-Nickname}">
+			<div class="row user-information">
+				<div class="form-fields">
+					<label class="section-title" for="newNickname">Nombre de Usuario 👤</label>
+					<input class="form-control" id="newNickname" name="newNickname" required
+						   th:placeholder="${publicUser.getNickname()}" type="text">
+					<input id="idFormNickname" type="hidden" th:value="${publicUser.getId()}" name="id">
+					<span class="advice-success" th:if="${success}" th:text="${success}"></span>
+					<span class="advice-error" th:if="${error}" th:text="${error}"></span>
+				</div>
 
 			</div>
 			<div class="buttons-form-content">

@@ -12,6 +12,6 @@ import java.util.Set;
 public class UserProfileDTO {
 
 	private String nickname;
-//	private String profilePicture;
+	private Integer profilePictureId;
 	private String[] languages;
 }
