@@ -73,6 +73,6 @@ public class UserHomeController {
 //		languageOptions.add(language3);
 //
 //		interfaceScreen.addAttribute("languageOptions", languageOptions);
-		return "pages/user-home";
+		return "pages/new-user-home";
 	}
 }
