@@ -21,6 +21,7 @@
 	--danger-600: #{$danger-600};
 	--info-500: #{$info-500};
 	--info-600: #{$info-600};
+	--warning-500: #{$warning-500};
 	// Border-radius
 	--radius-25: #{$radius-25};
 	--radius-10: #{$radius-10};
@@ -35,7 +36,7 @@ body {
 	line-height: $line-height-base;
 
 	.kn-logo--text {
-		font-size: 64px;
+		font-size: 54px;
 	}
 	.kn-button {
 		font-size: 28px;
