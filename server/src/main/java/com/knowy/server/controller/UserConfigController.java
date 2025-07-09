@@ -8,6 +8,8 @@ import com.knowy.server.repository.PrivateUserRepository;
 import com.knowy.server.service.AccessService;
 import com.knowy.server.service.UserService;
 import com.knowy.server.util.PasswordCheker;
+import com.knowy.server.util.exception.JwtKnowyException;
+import com.knowy.server.util.exception.MailDispatchException;
 import com.knowy.server.util.exception.WrongPasswordException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -25,11 +27,13 @@ public class UserConfigController {
 	private final UserService userService;
 	private final AccessService accessService;
 	private final JpaPrivateUserRepository jpaPrivateUserRepository;
+	private final PasswordCheker passwordCheker;
 
-	public UserConfigController(UserService userService, AccessService accessService, JpaPrivateUserRepository jpaPrivateUserRepository) {
+	public UserConfigController(UserService userService, AccessService accessService, JpaPrivateUserRepository jpaPrivateUserRepository, PasswordCheker passwordCheker) {
 		this.userService = userService;
 		this.accessService = accessService;
 		this.jpaPrivateUserRepository = jpaPrivateUserRepository;
+		this.passwordCheker = passwordCheker;
 	}
 
 	String username = "usuario123";
@@ -126,33 +130,29 @@ public class UserConfigController {
 	}
 
 	@PostMapping("/delete-account-end")
-	public String deleteAccount (@RequestParam String deletePassword, @RequestParam String confirmPassword, ModelMap interfaceScreen, HttpSession session) throws WrongPasswordException {
+	public String deleteAccount (@RequestParam String deletePassword, @RequestParam String confirmPassword, ModelMap interfaceScreen, HttpSession session) throws WrongPasswordException, JwtKnowyException, MailDispatchException {
+		if (!deletePassword.equals(confirmPassword)) {
+			interfaceScreen.addAttribute("error", "La contraseña es incorrecta o no coincide");
+			return "pages/user-management/delete-account-end";
+		}
 		String email = getCurrentEmail(session);
 		Optional<PrivateUserEntity> optPrivateUser = userService.findPrivateUserByEmail(email);
 		if (optPrivateUser.isEmpty()) {
 			interfaceScreen.addAttribute("error", "Usuario no encontrado");
 			return "pages/user-management/delete-account-end";
 		}
-		PrivateUserEntity privateUserEntity = optPrivateUser.get();
-		if (!deletePassword.equals(confirmPassword) || !privateUserEntity.getPassword().equals(deletePassword)) {
-			interfaceScreen.addAttribute("error", "La contraseña es incorrecta o no coincide");
-			return "pages/user-management/delete-account-end";
-		}
-		try {
-			PasswordCheker.assertHasPassword(privateUserEntity, deletePassword);
-		} catch (WrongPasswordException e) {
-			interfaceScreen.addAttribute("error", "Contraseña incorrecta");
-			return "pages/user-management/delete-account-end";
-		}
-		//crear token
-		String token = null;
-		//mandar correo de recuperacion
 
-		//desactivar cuenta
+		PrivateUserEntity privateUserEntity = optPrivateUser.get();
+		if(PasswordCheker.hasPassword(privateUserEntity, deletePassword)) {
+			interfaceScreen.addAttribute("error", "La contraseña es incorrecta o no coincide");
+		}
+
+
+		accessService.sendDeletedAccountEmail("null", privateUserEntity.getEmail());
+
 		privateUserEntity.setActive(false);
 		jpaPrivateUserRepository.save(privateUserEntity);
-
-
+		interfaceScreen.addAttribute("success", "Tu cuenta ha sido eliminada correctamente. Dispones de 30 días para recuperarla.");
 
 		return "pages/user-management/delete-account-end";
 	}

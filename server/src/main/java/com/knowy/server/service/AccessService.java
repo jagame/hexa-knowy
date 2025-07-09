@@ -2,7 +2,6 @@ package com.knowy.server.service;
 
 import com.knowy.server.controller.dto.UserDto;
 import com.knowy.server.entity.PrivateUserEntity;
-import com.knowy.server.entity.ProfileImageEntity;
 import com.knowy.server.entity.PublicUserEntity;
 import com.knowy.server.repository.PrivateUserRepository;
 import com.knowy.server.repository.ProfileImageRepository;
@@ -211,4 +210,35 @@ public class AccessService {
         }
         return Optional.empty();
     }
+
+	public void sendDeletedAccountEmail(String recoveryBaseUrl, String email) throws JwtKnowyException, MailDispatchException {
+		PrivateUserEntity user = privateUserRepository.findByEmail(email).orElseThrow( () -> new JwtKnowyException("User not found"));
+		String token = createUserToken(user);
+		recoveryBaseUrl = recoveryBaseUrl.replace("/", "");
+		sendRecoveryToken(user, token, recoveryBaseUrl);
+	}
+
+	private void sendReactivationToken(PrivateUserEntity user, String token, String appUrl) throws JwtKnowyException, MailDispatchException {
+		String to = user.getEmail();
+		String subject = "Tu enlace para recuperar tu cuenta de KNOWY esta aquí";
+		String body = reactivationTokenBody(token, appUrl);
+
+		emailClientService.sendEmail(to, subject, body);
+	}
+
+	private String reactivationTokenBody(String token, String appUrl) {
+		String url = "%s?token=%s".formatted(appUrl, token);
+		return """
+			¡Hola, %%$@<UNK>#&%%$%%!
+			
+			Tu cuenta de KNOWY ha sido eliminada correctamente.
+			
+			Dispones de 30 días para recuperarla haciendo click en el siguiente enlace:
+			%s
+			
+			¡Esperamos verte de vuelta!
+			
+			© 2025 KNOWY, Inc
+			""".formatted(url);
+	}
 }
