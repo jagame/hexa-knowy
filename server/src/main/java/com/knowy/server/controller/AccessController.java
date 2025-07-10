@@ -6,9 +6,9 @@ import com.knowy.server.controller.dto.UserPasswordFormDto;
 import com.knowy.server.controller.dto.UserRegisterFormDto;
 import com.knowy.server.entity.PublicUserEntity;
 import com.knowy.server.service.AccessService;
-import com.knowy.server.service.UserSecurityDetailsService;
 import com.knowy.server.service.exception.AccessException;
 import com.knowy.server.service.exception.InvalidUserException;
+import com.knowy.server.util.UserSecurityDetailsHelper;
 import com.knowy.server.util.exception.PasswordFormatException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -27,18 +27,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class AccessController {
 
-	private final UserSecurityDetailsService userSecurityDetailsService;
+	private final UserSecurityDetailsHelper userSecurityDetailsHelper;
 	private final AccessService accessService;
 
 	/**
 	 * The constructor
 	 *
-	 * @param accessService              the accessService
-	 * @param userSecurityDetailsService the userSecurityDetailsService
+	 * @param accessService             the accessService
+	 * @param userSecurityDetailsHelper the userSecurityDetailsService
 	 */
-	public AccessController(AccessService accessService, UserSecurityDetailsService userSecurityDetailsService) {
+	public AccessController(AccessService accessService, UserSecurityDetailsHelper userSecurityDetailsHelper) {
 		this.accessService = accessService;
-		this.userSecurityDetailsService = userSecurityDetailsService;
+		this.userSecurityDetailsHelper = userSecurityDetailsHelper;
 	}
 
 	/**
@@ -48,12 +48,10 @@ public class AccessController {
 	 * view.
 	 * </p>
 	 *
-	 * @param model the model to which attributes are added for the view rendering
 	 * @return the name of the login view template
 	 */
 	@GetMapping("/login")
-	public String viewLogin(Model model) {
-		model.addAttribute("loginForm", new LoginFormDto());
+	public String viewLogin() {
 		return "pages/access/login";
 	}
 
@@ -74,18 +72,19 @@ public class AccessController {
 	}
 
 	/**
-	 * Processes the user registration form submitted via POST.
+	 * Handles the user registration form submission via POST.
 	 * <p>
-	 * Validates the submitted {@link UserRegisterFormDto}, and if validation errors exist, redirects back to the
-	 * registration page with the first error message. If the form is valid, attempts to register a new user and
-	 * performs automatic login. In case of registration failure (e.g., invalid user data), redirects back to the
-	 * registration page with an error message.
+	 * This method validates the submitted {@link UserRegisterFormDto} and checks for binding errors. If validation
+	 * errors are found, it redirects back to the registration page with the first error message. If the form is valid,
+	 * it attempts to register a new user and automatically logs them in. In case of registration failure (e.g., due to
+	 * invalid user data), it redirects back to the registration page with an appropriate error message.
 	 * </p>
 	 *
-	 * @param user               the form data bound to {@link UserRegisterFormDto}, validated automatically
-	 * @param redirectAttributes used to pass flash attributes (such as error messages) during redirect
-	 * @param errors             contains validation errors from binding the form data
-	 * @return the redirect URL, either back to registration on error or to home on success
+	 * @param user               the registration form data bound to {@link UserRegisterFormDto}, validated
+	 *                           automatically
+	 * @param redirectAttributes used to add flash attributes (such as error messages) during redirect
+	 * @param errors             holds validation and binding errors for the submitted form
+	 * @return a redirect URL string: either back to "/register" on error or to "/home" on successful registration
 	 */
 	@PostMapping("/register")
 	public String procesarFormulario(
@@ -93,15 +92,11 @@ public class AccessController {
 		RedirectAttributes redirectAttributes,
 		Errors errors
 	) {
-		FieldError firstError = errors.getFieldError();
-		if (firstError != null && firstError.getDefaultMessage() != null) {
-			redirectAttributes.addFlashAttribute("error", firstError.getDefaultMessage());
-			return "redirect:/register";
-		}
-
 		try {
+			validateFieldErrors(errors);
+
 			PublicUserEntity publicUser = accessService.registerNewUser(user.getNickname(), user.getEmail(), user.getPassword());
-			userSecurityDetailsService.autoLoginUserByEmail(publicUser.getPrivateUserEntity().getEmail());
+			userSecurityDetailsHelper.autoLoginUserByEmail(publicUser.getPrivateUserEntity().getEmail());
 			return "redirect:/home";
 		} catch (InvalidUserException e) {
 			redirectAttributes.addFlashAttribute("user", user);
@@ -110,15 +105,28 @@ public class AccessController {
 		}
 	}
 
+	private void validateFieldErrors(Errors errors) throws InvalidUserException {
+		FieldError firstError = errors.getFieldError();
+		if (firstError == null) {
+			return;
+		}
+
+		String message = firstError.getDefaultMessage();
+		if (message == null || message.isEmpty()) {
+			throw new InvalidUserException("Hubo un problema con la información proporcionada. Por favor, revise los " +
+				"campos y vuelva a intentarlo.");
+		}
+		throw new InvalidUserException(message);
+	}
+
+
 	/**
 	 * Handles GET requests to display the password change email form.
 	 *
-	 * @param model the model to which the email form DTO is added
 	 * @return the name of the view for the password change email page
 	 */
 	@GetMapping("/password-change/email")
-	public String passwordChangeEmail(Model model) {
-		model.addAttribute("emailForm", new UserEmailFormDto());
+	public String passwordChangeEmail() {
 		return "pages/access/password-change-email";
 	}
 
@@ -173,7 +181,6 @@ public class AccessController {
 	) {
 		if (accessService.isValidToken(token)) {
 			model.addAttribute("token", token);
-			model.addAttribute("passwordForm", new UserPasswordFormDto());
 			return "pages/access/password-change";
 		}
 		return "redirect:/";

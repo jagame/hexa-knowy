@@ -2,7 +2,7 @@ package com.knowy.server.controller;
 
 import com.knowy.server.controller.dto.UserConfigChangeEmailFormDto;
 import com.knowy.server.controller.dto.UserProfileDTO;
-import com.knowy.server.service.UserSecurityDetailsService;
+import com.knowy.server.util.UserSecurityDetailsHelper;
 import com.knowy.server.service.UserService;
 import com.knowy.server.service.exception.*;
 import com.knowy.server.service.model.UserSecurityDetails;
@@ -22,11 +22,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class UserConfigController {
 
 	private final UserService userService;
-	private final UserSecurityDetailsService userSecurityDetailsService;
+	private final UserSecurityDetailsHelper userSecurityDetailsHelper;
 
-	public UserConfigController(UserService userService, UserSecurityDetailsService userSecurityDetailsService) {
+	public UserConfigController(UserService userService, UserSecurityDetailsHelper userSecurityDetailsHelper) {
 		this.userService = userService;
-		this.userSecurityDetailsService = userSecurityDetailsService;
+		this.userSecurityDetailsHelper = userSecurityDetailsHelper;
 	}
 
 	// FIXME - Rehacer JavaDoc
@@ -72,7 +72,7 @@ public class UserConfigController {
 				userConfigChangeEmailFormDto.getPassword()
 			);
 
-			userSecurityDetailsService.refreshUserAuthenticationById();
+			userSecurityDetailsHelper.refreshUserAuthenticationById();
 			redirectAttributes.addFlashAttribute("successEmail", "Email actualizado con éxito.");
 		} catch (UserNotFoundException e) {
 			redirectAttributes.addFlashAttribute("errorEmail", "Usuario no encontrado.");

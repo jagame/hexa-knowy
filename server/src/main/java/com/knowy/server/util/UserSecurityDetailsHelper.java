@@ -1,4 +1,4 @@
-package com.knowy.server.service;
+package com.knowy.server.util;
 
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.repository.PrivateUserRepository;
@@ -15,12 +15,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 @Slf4j
 @Service
-public class UserSecurityDetailsService implements UserDetailsService {
+public class UserSecurityDetailsHelper implements UserDetailsService {
 
 	private final PrivateUserRepository privateUserRepository;
 	private final HttpServletRequest httpServletRequest;
@@ -31,7 +30,7 @@ public class UserSecurityDetailsService implements UserDetailsService {
 	 * @param privateUserRepository the privateUserRepository
 	 * @param httpServletRequest    the httpServletRequest
 	 */
-	public UserSecurityDetailsService(PrivateUserRepository privateUserRepository, HttpServletRequest httpServletRequest) {
+	public UserSecurityDetailsHelper(PrivateUserRepository privateUserRepository, HttpServletRequest httpServletRequest) {
 		this.privateUserRepository = privateUserRepository;
 		this.httpServletRequest = httpServletRequest;
 	}
