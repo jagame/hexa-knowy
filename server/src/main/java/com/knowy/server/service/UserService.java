@@ -11,6 +11,7 @@ import com.knowy.server.util.exception.WrongPasswordException;
 import jakarta.annotation.Nonnull;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -140,7 +141,7 @@ public class UserService {
 		throws UserNotFoundException, UnchangedEmailException, WrongPasswordException {
 		PrivateUserEntity privateUser = privateUserRepository.findById(userId)
 			.orElseThrow(() -> new UserNotFoundException("User not found"));
-		if (email.equals(privateUser.getEmail())) {
+		if (Objects.equals(email, privateUser.getEmail())) {
 			throw new UnchangedEmailException("Email must be different from the current one.");
 		}
 		passwordChecker.assertHasPassword(privateUser, password);
