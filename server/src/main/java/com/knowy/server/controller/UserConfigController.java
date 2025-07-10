@@ -11,6 +11,7 @@ import com.knowy.server.util.PasswordCheker;
 import com.knowy.server.util.exception.JwtKnowyException;
 import com.knowy.server.util.exception.MailDispatchException;
 import com.knowy.server.util.exception.WrongPasswordException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -130,7 +131,11 @@ public class UserConfigController {
 	}
 
 	@PostMapping("/delete-account-end")
-	public String deleteAccount (@RequestParam String deletePassword, @RequestParam String confirmPassword, ModelMap interfaceScreen, HttpSession session) throws WrongPasswordException, JwtKnowyException, MailDispatchException {
+	public String deleteAccount (@RequestParam String deletePassword,
+								 @RequestParam String confirmPassword,
+								 ModelMap interfaceScreen,
+								 HttpSession session,
+								 HttpServletRequest request) throws WrongPasswordException, JwtKnowyException, MailDispatchException {
 		if (!deletePassword.equals(confirmPassword)) {
 			interfaceScreen.addAttribute("error", "La contraseña es incorrecta o no coincide");
 			return "pages/user-management/delete-account-end";
@@ -143,18 +148,43 @@ public class UserConfigController {
 		}
 
 		PrivateUserEntity privateUserEntity = optPrivateUser.get();
-		if(PasswordCheker.hasPassword(privateUserEntity, deletePassword)) {
+		if(!PasswordCheker.hasPassword(privateUserEntity, deletePassword)) {
 			interfaceScreen.addAttribute("error", "La contraseña es incorrecta o no coincide");
+			return "pages/user-management/delete-account-end";
 		}
-
-
-		accessService.sendDeletedAccountEmail("null", privateUserEntity.getEmail());
 
 		privateUserEntity.setActive(false);
 		jpaPrivateUserRepository.save(privateUserEntity);
 		interfaceScreen.addAttribute("success", "Tu cuenta ha sido eliminada correctamente. Dispones de 30 días para recuperarla.");
+		session.invalidate();
+
+
+		String domainUrl = getDomainUrl(request);
+		String recoveryBaseUrl = domainUrl + "/reactivate-account";
+		//accessService.sendDeletedAccountEmail(recoveryBaseUrl, privateUserEntity.getEmail());
+		session.invalidate();
 
 		return "pages/user-management/delete-account-end";
+
+	}
+
+	@GetMapping("/reactivate-account")
+	public String reactivateAccount(@RequestParam String token, ModelMap interfaceScreen) {
+		boolean isValidToken = accessService.isValidToken(token);
+		if (!isValidToken) {
+			interfaceScreen.addAttribute("error", "El token ha expirado o no es válido");
+			return "pages/user-management/reactivate-account";
+		}
+		interfaceScreen.addAttribute("success", "Tu cuenta ha sido reactivada correctamente.");
+		return "pages/user-management/reactivate-account";
+	}
+
+	private String getDomainUrl(HttpServletRequest request) {
+		String scheme = request.getScheme();
+		String serverName = request.getServerName();
+		int serverPort = request.getServerPort();
+
+		return scheme + "://" + serverName + ":" + serverPort;
 	}
 
 

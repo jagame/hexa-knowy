@@ -22,7 +22,7 @@
 </aside>
 
 <main layout:fragment="main-content">
-	<form id="profileForm">
+
 		<div class="user-management-container_main ">
 			<div class="description-card">
 				<h1 class="title-management">Eliminar Cuenta</h1>
@@ -40,15 +40,16 @@
 						<input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
 					</div>
 				</div>
+				<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+				<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
 				<div class="buttons-form-content">
 					<a th:href="@{/delete-account}" class="btn btn-inferior">Volver</a>
 					<button type="submit" class="btn btn-delete">Eliminar Cuenta</button>
 				</div>
-				<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-				<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
 			</form>
 		</div>
-	</form>
+
 </main>
 
 

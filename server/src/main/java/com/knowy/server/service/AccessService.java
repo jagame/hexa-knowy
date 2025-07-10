@@ -214,15 +214,13 @@ public class AccessService {
 	public void sendDeletedAccountEmail(String recoveryBaseUrl, String email) throws JwtKnowyException, MailDispatchException {
 		PrivateUserEntity user = privateUserRepository.findByEmail(email).orElseThrow( () -> new JwtKnowyException("User not found"));
 		String token = createUserToken(user);
-		recoveryBaseUrl = recoveryBaseUrl.replace("/", "");
-		sendRecoveryToken(user, token, recoveryBaseUrl);
+		sendReactivationToken(user, token, recoveryBaseUrl);
 	}
 
 	private void sendReactivationToken(PrivateUserEntity user, String token, String appUrl) throws JwtKnowyException, MailDispatchException {
 		String to = user.getEmail();
-		String subject = "Tu enlace para recuperar tu cuenta de KNOWY esta aquí";
+		String subject = "Tu enlace para recuperar tu cuenta de KNOWY esta aquí.";
 		String body = reactivationTokenBody(token, appUrl);
-
 		emailClientService.sendEmail(to, subject, body);
 	}
 
