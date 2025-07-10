@@ -71,7 +71,7 @@ public class UserService {
 	public void updateNickname(String newNickname, @Nonnull Integer id) throws UserNotFoundException, UnchangedNicknameException, NicknameAlreadyTakenException {
 		PublicUserEntity publicUser = publicUserRepository.findUserById(id)
 			.orElseThrow(() -> new UserNotFoundException("User not found"));
-		if (!isCurrentNickname(newNickname, publicUser)) {
+		if (isCurrentNickname(newNickname, publicUser)) {
 			throw new UnchangedNicknameException("Nickname must be different from the current one.");
 		}
 		if (publicUserRepository.existsByNickname(newNickname)) {

@@ -1,9 +1,7 @@
 spring:
     config:
         import: "file:.env[.properties]"
-    application:
-        name: knowy-server
-        datasource:
+    datasource:
         url: jdbc:postgresql://postgres:5432/knowydb
         username: knowy
         password: knowy
