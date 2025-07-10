@@ -68,11 +68,9 @@ public class UserService {
 	 * @throws NicknameAlreadyTakenException if the new nickname is already in use by another user
 	 */
 	public void updateNickname(String newNickname, @Nonnull Integer id) throws UserNotFoundException, UnchangedNicknameException, NicknameAlreadyTakenException {
-		Optional<PublicUserEntity> publicUser = publicUserRepository.findUserById(id);
-		if (publicUser.isEmpty()) {
-			throw new UserNotFoundException("User not found");
-		}
-		if (!isCurrentNickname(newNickname, publicUser.get())) {
+		PublicUserEntity publicUser = publicUserRepository.findUserById(id)
+			.orElseThrow(() -> new UserNotFoundException("User not found"));
+		if (!isCurrentNickname(newNickname, publicUser)) {
 			throw new UnchangedNicknameException("Nickname must be different from the current one.");
 		}
 		if (publicUserRepository.existsByNickname(newNickname)) {
@@ -110,36 +108,6 @@ public class UserService {
 		publicUserRepository.save(user);
 	}
 
-	public PublicUserEntity updateUserProfile(Integer userId, String newNickname, Integer profilePicId, String[] languages) {
-		Optional<PublicUserEntity> optUser = publicUserRepository.findUserById(userId);
-		if (optUser.isEmpty()) {
-			return null;
-		}
-
-		PublicUserEntity publicUserEntity = optUser.get();
-		if (newNickname != null && !newNickname.equals(publicUserEntity.getNickname())) {
-			if (isUsernameTaken(newNickname)) {
-				return null;
-			}
-			if (isNicknameBanned(newNickname)) {
-				return null;
-			}
-			publicUserEntity.setNickname(newNickname);
-		}
-		if (languages != null && languages.length > 0) {
-			Set<LanguageEntity> newLanguages = languageRepository.findByNameInIgnoreCase(languages);
-			publicUserEntity.setLanguages(newLanguages);
-		}
-
-		if (profilePicId != null && (profilePicId >= 1) && (profilePicId <= 3)) {
-			publicUserEntity.setProfileImage(profileImageRepository.findById(profilePicId)
-				.orElseThrow(() -> new IllegalArgumentException
-					("Profile image with id " + profilePicId + " does not exist.")));
-		}
-		return publicUserRepository.save(publicUserEntity);
-	}
-
-
 	//method to check if the new username contains any of the banned words
 	public boolean isNicknameBanned(String nickname) {
 		return bannedWordsRepo.isWordBanned(nickname);
@@ -170,16 +138,14 @@ public class UserService {
 	 */
 	public void updateEmail(String email, int userId, String password)
 		throws UserNotFoundException, UnchangedEmailException, WrongPasswordException {
-		Optional<PrivateUserEntity> privateUser = privateUserRepository.findById(userId);
-		if (privateUser.isEmpty()) {
-			throw new UserNotFoundException("User not found");
-		}
-		if (email.equals(privateUser.get().getEmail())) {
+		PrivateUserEntity privateUser = privateUserRepository.findById(userId)
+			.orElseThrow(() -> new UserNotFoundException("User not found"));
+		if (email.equals(privateUser.getEmail())) {
 			throw new UnchangedEmailException("Email must be different from the current one.");
 		}
-		passwordChecker.assertHasPassword(privateUser.get(), password);
+		passwordChecker.assertHasPassword(privateUser, password);
 
-		privateUserRepository.updateEmail(privateUser.get().getEmail(), email);
+		privateUserRepository.updateEmail(privateUser.getEmail(), email);
 	}
 
 	public String findNicknameById(Integer id) throws UserNotFoundException {
