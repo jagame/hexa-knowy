@@ -9,4 +9,5 @@ public interface JpaProfileImageRepository extends JpaRepository<ProfileImageEnt
 
 	@Override
 	Optional<ProfileImageEntity> findById(int id);
+
 }

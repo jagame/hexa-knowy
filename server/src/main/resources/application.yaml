@@ -1,8 +1,6 @@
 spring:
     config:
         import: "file:.env[.properties]"
-    application:
-        name: knowy-server
     datasource:
         url: jdbc:postgresql://postgres:5432/knowydb
         username: knowy
@@ -27,3 +25,8 @@ spring:
         key: ${JWT_SECRET_KEY}
 server:
     port: 8080
+    error:
+        whitelabel:
+            enabled: false
+
+

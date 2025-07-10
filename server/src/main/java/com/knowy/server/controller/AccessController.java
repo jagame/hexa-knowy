@@ -1,100 +1,132 @@
 package com.knowy.server.controller;
 
-import com.knowy.server.controller.dto.*;
-import com.knowy.server.entity.PrivateUserEntity;
+import com.knowy.server.controller.dto.LoginFormDto;
+import com.knowy.server.controller.dto.UserEmailFormDto;
+import com.knowy.server.controller.dto.UserPasswordFormDto;
+import com.knowy.server.controller.dto.UserRegisterFormDto;
+import com.knowy.server.entity.PublicUserEntity;
 import com.knowy.server.service.AccessService;
 import com.knowy.server.service.exception.AccessException;
+import com.knowy.server.service.exception.InvalidUserException;
+import com.knowy.server.util.UserSecurityDetailsHelper;
 import com.knowy.server.util.exception.PasswordFormatException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import lombok.extern.slf4j.Slf4j;
-import com.knowy.server.service.exception.InvalidUserException;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Optional;
-
 @Slf4j
 @Controller
 public class AccessController {
 
-	public static final String SESSION_LOGGED_USER = "loggedUser";
+	private final UserSecurityDetailsHelper userSecurityDetailsHelper;
+	private final AccessService accessService;
 
-	AccessService accessService;
-
-	public AccessController(AccessService accessService) {
+	/**
+	 * The constructor
+	 *
+	 * @param accessService             the accessService
+	 * @param userSecurityDetailsHelper the userSecurityDetailsService
+	 */
+	public AccessController(AccessService accessService, UserSecurityDetailsHelper userSecurityDetailsHelper) {
 		this.accessService = accessService;
+		this.userSecurityDetailsHelper = userSecurityDetailsHelper;
 	}
 
-	@GetMapping("/register")
-	public String register(Model model) {
-		model.addAttribute("user", new UserDto());
-		return "pages/access/register";
-	}
-
-	@PostMapping("/register")
-	public String procesarFormulario(@Valid @ModelAttribute UserDto user, Model model, Errors errors) {
-		if (errors.hasErrors()) {
-			return "pages/access/register";
-		}
-
-		try {
-			accessService.registerNewUser(user);
-			return "redirect:/home";
-		} catch (InvalidUserException e) {
-			model.addAttribute("user", user);
-			model.addAttribute("error", e.getMessage());
-			return "pages/access/register";
-		}
-	}
-
+	/**
+	 * Handles GET requests for the login page.
+	 * <p>
+	 * Adds an empty {@link LoginFormDto} object to the model, which will be used to bind the login form data in the
+	 * view.
+	 * </p>
+	 *
+	 * @return the name of the login view template
+	 */
 	@GetMapping("/login")
-	public String viewLogin(Model model) {
-		LoginFormDto loginForm = new LoginFormDto();
-		model.addAttribute("loginForm", loginForm);
+	public String viewLogin() {
 		return "pages/access/login";
 	}
 
-	@PostMapping("/login")
-	public String postLogin(
-		@ModelAttribute("loginForm") LoginFormDto login,
-		Model model,
-		HttpSession session
-	) {
-		Optional<PrivateUserEntity> optUser = accessService.authenticateUser(login.getEmail(), login.getPassword());
+	/**
+	 * Handles GET requests for the registration page.
+	 * <p>
+	 * Adds an empty {@link UserRegisterFormDto} object to the model, which will be used to bind the user registration
+	 * form data in the view.
+	 * </p>
+	 *
+	 * @param model the model to which attributes are added for the view rendering
+	 * @return the name of the registration view template
+	 */
+	@GetMapping("/register")
+	public String register(Model model) {
+		model.addAttribute("user", new UserRegisterFormDto());
+		return "pages/access/register";
+	}
 
-		if (optUser.isPresent()) {
-			session.setAttribute(SESSION_LOGGED_USER, new SessionUser(optUser.get()));
+	/**
+	 * Handles the user registration form submission via POST.
+	 * <p>
+	 * This method validates the submitted {@link UserRegisterFormDto} and checks for binding errors. If validation
+	 * errors are found, it redirects back to the registration page with the first error message. If the form is valid,
+	 * it attempts to register a new user and automatically logs them in. In case of registration failure (e.g., due to
+	 * invalid user data), it redirects back to the registration page with an appropriate error message.
+	 * </p>
+	 *
+	 * @param user               the registration form data bound to {@link UserRegisterFormDto}, validated
+	 *                           automatically
+	 * @param redirectAttributes used to add flash attributes (such as error messages) during redirect
+	 * @param errors             holds validation and binding errors for the submitted form
+	 * @return a redirect URL string: either back to "/register" on error or to "/home" on successful registration
+	 */
+	@PostMapping("/register")
+	public String procesarFormulario(
+		@Valid @ModelAttribute UserRegisterFormDto user,
+		RedirectAttributes redirectAttributes,
+		Errors errors
+	) {
+		try {
+			validateFieldErrors(errors);
+
+			PublicUserEntity publicUser = accessService.registerNewUser(user.getNickname(), user.getEmail(), user.getPassword());
+			userSecurityDetailsHelper.autoLoginUserByEmail(publicUser.getPrivateUserEntity().getEmail());
 			return "redirect:/home";
-		} else {
-			model.addAttribute("loginError", "¡Las credenciales son incorrectas!");
-			model.addAttribute("loginForm", new LoginFormDto());
-			return "pages/access/login";
+		} catch (InvalidUserException e) {
+			redirectAttributes.addFlashAttribute("user", user);
+			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			return "redirect:/register";
 		}
 	}
 
-	@GetMapping("/logout")
-	public String logout(HttpSession session) {
-		session.invalidate();
-		return "redirect:/";
+	private void validateFieldErrors(Errors errors) throws InvalidUserException {
+		FieldError firstError = errors.getFieldError();
+		if (firstError == null) {
+			return;
+		}
+
+		String message = firstError.getDefaultMessage();
+		if (message == null || message.isEmpty()) {
+			throw new InvalidUserException("Hubo un problema con la información proporcionada. Por favor, revise los " +
+				"campos y vuelva a intentarlo.");
+		}
+		throw new InvalidUserException(message);
 	}
+
 
 	/**
 	 * Handles GET requests to display the password change email form.
 	 *
-	 * @param model the model to which the email form DTO is added
 	 * @return the name of the view for the password change email page
 	 */
 	@GetMapping("/password-change/email")
-	public String passwordChangeEmail(Model model) {
-		model.addAttribute("emailForm", new UserEmailFormDto());
+	public String passwordChangeEmail() {
 		return "pages/access/password-change-email";
 	}
 
@@ -116,7 +148,8 @@ public class AccessController {
 			accessService.sendRecoveryPasswordEmail(email.getEmail(), getPasswordChangeUrl(httpServletRequest));
 			return "redirect:/login";
 		} catch (AccessException e) {
-			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			redirectAttributes.addFlashAttribute("error",
+				"Se ha producido un error al enviar el email. Intente lo más tarde");
 			return "redirect:/password-change/email";
 		}
 	}
@@ -148,7 +181,6 @@ public class AccessController {
 	) {
 		if (accessService.isValidToken(token)) {
 			model.addAttribute("token", token);
-			model.addAttribute("passwordForm", new UserPasswordFormDto());
 			return "pages/access/password-change";
 		}
 		return "redirect:/";
@@ -182,11 +214,9 @@ public class AccessController {
 				userPasswordFormDto.getPassword(),
 				userPasswordFormDto.getConfirmPassword()
 			);
-			log.info("User password updated");
 			return "redirect:/login";
 		} catch (AccessException e) {
 			redirectAttributes.addAttribute("error", "Se ha producido un error al actualizar la contraseña");
-			log.error("Failed to update user password", e);
 			return "redirect:/login";
 		} catch (PasswordFormatException e) {
 			redirectAttributes.addAttribute("error", """
@@ -196,7 +226,6 @@ public class AccessController {
 				- 1 número y 1 símbolo
 				- Sin espacios
 				""");
-			log.error("Invalid password format", e);
 			return "redirect:/password-change?token=" + token;
 		}
 	}

@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+import java.util.Set;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -25,6 +28,13 @@ public class PublicUserEntity {
 	@JoinColumn(name = "id_profile_image", referencedColumnName = "id")
 	private ProfileImageEntity profileImage;
 
-	@OneToOne(mappedBy = "publicUserEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+		name = "public_user_language",
+		joinColumns = @JoinColumn(name = "id_public_user"),
+		inverseJoinColumns = @JoinColumn(name = "id_language"))
+	private Set<LanguageEntity> languages;
+
+	@OneToOne(mappedBy = "publicUserEntity", cascade = CascadeType.PERSIST)
 	private PrivateUserEntity privateUserEntity;
 }
