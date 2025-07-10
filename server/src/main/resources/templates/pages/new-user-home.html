@@ -11,38 +11,23 @@
 <body>
 <main layout:fragment="main-content">
 	<div class="container py-4">
-	<div class="row gx-5 align-items-start">
+		<div class="row gx-5 gy-3 align-items-start">
+			<div class="col-12 col-lg-5">
+				<div class="d-flex flex-column gap-3">
+					<section
+						th:replace="~{components/user-home/resume :: example-card-component('Anastasia','Bienvenida',10230,20,2,10)}">
+					</section>
+					<div th:insert="~{components/user-home/missionsComponent :: missionsComponent(${missionsList},${lenguageOptions})}">
+					</div>
+				</div>
+			</div>
 
-		<!-- === COLUMNA IZQUIERDA: resume + misiones apiladas === -->
-		<div class="col-12 col-lg-5">
-			<div class="d-flex flex-column gap-3">
-				<!-- Resume arriba -->
-				<section
-					th:replace="~{components/user-home/resume :: example-card-component(
-                         'Anastasia',
-                         'Bienvenida',
-                         10230,
-                         20,
-                         2,
-                         10)}">
-				</section>
-				<!-- Misiones justo debajo, con gap-3 separando -->
-				<div th:insert="~{components/user-home/missionsComponent :: missionsComponent(
-                        ${missionsList},
-                        ${lenguageOptions})}">
+			<div class="col-12 col-lg-7">
+				<div
+					th:insert="~{components/user-home/carousel-news :: carousel-news('carousel-news-id',${newsHome})}">
 				</div>
 			</div>
 		</div>
-
-		<!-- === COLUMNA DERECHA: carrusel con ratio 16:9  === -->
-		<div class="col-12 col-lg-7">
-				<div
-					th:insert="~{components/user-home/carousel-news :: carousel-news(
-                        'carousel-news-id',
-                        ${newsHome})}">
-				</div>
-		</div>
-	</div>
 
 	</div>
 </main>
