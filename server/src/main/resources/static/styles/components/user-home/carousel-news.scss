@@ -16,8 +16,13 @@
 	font-family: excalifont, serif;
 
 	&--title {
-		font-weight: 600;
+		font-weight: 400;
 	}
+}
+
+#carousel-news-id {
+	touch-action: pan-y;
+	overscroll-behavior: contain;
 }
 
 

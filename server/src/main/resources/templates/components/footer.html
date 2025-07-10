@@ -1,36 +1,58 @@
-<footer class="kn-footer" th:fragment="footer">
-	<div
-		class="d-flex flex-wrap justify-content-between align-items-center py-3 mt-4 border-top border-1 border-success">
-		<div class="col-md-4 d-flex align-items-center">
-			<a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1" aria-label="KNOWY Home">
+<footer class="text-light pt-3 mt-auto">
+	<div class="container-fluid">
+		<div class="row justify-content-center gap-5 p-3">
 
-				<img src="/images/logoWoutText.png" alt="KNOWY LOGO" width="30px">
-			</a>
-			<span class="mb-3 mb-md-0 text-body-secondary">© 2025 KNOWY, Inc</span>
+			<div class="col-12 col-sm-6 col-md-3 text-center">
+				<a class="text-decoration-none" th:href="${'/home'}">
+					<h3 class="title-logo">KNOWY</h3>
+					<img class="logo" src="/images/logoWoutText.png" alt="Logo de Knowy">
+				</a>
+			</div>
+
+			<div class="col-12 col-sm-6 col-md-3 text-center">
+				<h4 class="title-footer">Enlaces</h4>
+				<ul class="list-unstyled">
+					<li><a href="#" class="link-footer">Términos y condiciones</a></li>
+					<li><a href="#" class="link-footer">Política de privacidad</a></li>
+					<li><a href="#" class="link-footer">Lista de cursos</a></li>
+				</ul>
+			</div>
+
+			<div class="col-12 col-sm-6 col-md-3 text-center">
+				<h4 class="title-footer">Contacto</h4>
+				<ul class="social-list mb-4">
+					<li>
+						<a href="https://linkedin.com/in/tu-perfil" target="_blank" aria-label="LinkedIn">
+							<i class="bi bi-linkedin"></i>
+						</a>
+					</li>
+					<li>
+						<a href="https://github.com/tu-usuario" target="_blank" aria-label="GitHub">
+							<i class="bi bi-github"></i>
+						</a>
+					</li>
+					<li>
+						<a href="https://instagram.com/tu-perfil" target="_blank" aria-label="Instagram">
+							<i class="bi bi-instagram"></i>
+						</a>
+					</li>
+					<li>
+						<a href="https://facebook.com/tu-pagina" target="_blank" aria-label="Facebook">
+							<i class="bi bi-facebook"></i>
+						</a>
+					</li>
+				</ul>
+				<p class="mb-0">
+					<a href="mailto:info@ejemplo.com" class="text-light text-decoration-none">
+						<i class="bi bi-envelope-fill"></i>
+						support@knowy.com
+					</a>
+				</p>
+			</div>
+
 		</div>
-
-		<div class="col-md-4 d-flex justify-content-center">
-			<a href="@{/terminos}" class="text-body-secondary text-decoration-none me-3">
-				Términos y Condiciones
-			</a>
-		</div>
-
-		<ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-			<li class="ms-3">
-				<a class="text-body-secondary" href="#" aria-label="Instagram">
-					<i class="bi bi-instagram" style="font-size: 24px;"></i>
-				</a>
-			</li>
-			<li class="ms-3">
-				<a class="text-body-secondary" href="#" aria-label="Facebook">
-					<i class="bi bi-facebook" style="font-size: 24px;"></i>
-				</a>
-			</li>
-			<li class="ms-3">
-				<a class="text-body-secondary" href="#" aria-label="X">
-					<i class="bi bi-twitter-x" style="font-size: 24px;"></i>
-				</a>
-			</li>
-		</ul>
+	</div>
+	<div class="text-center copyr">
+		<small>&copy; 2025 KNOWY, Inc.</small>
 	</div>
 </footer>

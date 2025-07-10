@@ -1,4 +1,5 @@
 @use '_global-vars' as *;
+@use './components/footer';
 
 // Exportar a variables CSS (para a futuro colores dinámicos)
 :root {
@@ -9,6 +10,7 @@
 	--primary-700: #{$primary-700};
 	--secundary-100: #{$secundary-100};
 	--secundary-300: #{$secundary-300};
+	--secundary-400: #{$secundary-400};
 	--secundary-500: #{$secundary-500};
 	--secundary-700: #{$secundary-700};
 	--neutral-100: #{$neutral-100};

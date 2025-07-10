@@ -2,32 +2,3 @@
 @use '../components/user-home/resume';
 @use '../components/user-home/missionsComponent';
 @use '../components/user-home/carousel-news';
-
-body {
-	min-height: 100vh;
-	margin: 0;
-	display: flex;
-	flex-direction: column;
-}
-
-main {
-	flex: 1;
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	grid-auto-rows: 33%;
-	height: 100%;
-	gap: 1rem;
-	padding: 10px 10%;
-
-	@media screen and (max-width: 768px) {
-		grid-template-columns: 1fr;
-	}
-}
-
-.home-grid--1c2r {
-	grid-row: span 2;
-}
-
-.home-grid--1c3r {
-	grid-row: span 3;
-}
