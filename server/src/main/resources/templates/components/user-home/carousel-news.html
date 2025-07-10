@@ -38,5 +38,14 @@
 
 </div>
 
+<script th:inline="javascript">
+	const carouselId = /*[[${id}]]*/ 'carousel-news-id';
+	const carousel = document.getElementById(carouselId);
+
+	carousel.addEventListener('wheel', function(e) {
+		if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) return;
+		e.stopPropagation();
+	}, { passive: true });
+</script>
 
 

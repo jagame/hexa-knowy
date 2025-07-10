@@ -20,5 +20,10 @@
 	}
 }
 
+#carousel-news-id {
+	touch-action: pan-y;
+	overscroll-behavior: contain;
+}
+
 
 
