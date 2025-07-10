@@ -3,7 +3,6 @@ package com.knowy.server.util;
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.repository.PrivateUserRepository;
 import com.knowy.server.service.model.UserSecurityDetails;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,20 +18,22 @@ import java.util.function.UnaryOperator;
 
 @Slf4j
 @Service
-public class UserSecurityDetailsHelper implements UserDetailsService {
+public class UserSecurityDetailsHelper {
 
+	private final UserDetailsService userDetailsService;
 	private final PrivateUserRepository privateUserRepository;
-	private final HttpServletRequest httpServletRequest;
+	private final HttpSession httpSession;
 
 	/**
 	 * The constructor
 	 *
 	 * @param privateUserRepository the privateUserRepository
-	 * @param httpServletRequest    the httpServletRequest
+	 * @param httpSession           the httpSession
 	 */
-	public UserSecurityDetailsHelper(PrivateUserRepository privateUserRepository, HttpServletRequest httpServletRequest) {
+	public UserSecurityDetailsHelper(UserDetailsService userDetailsService, PrivateUserRepository privateUserRepository, HttpSession httpSession) {
+		this.userDetailsService = userDetailsService;
 		this.privateUserRepository = privateUserRepository;
-		this.httpServletRequest = httpServletRequest;
+		this.httpSession = httpSession;
 	}
 
 	/**
@@ -45,7 +46,9 @@ public class UserSecurityDetailsHelper implements UserDetailsService {
 	 * @throws UsernameNotFoundException if the user cannot be found using the current username
 	 */
 	public void refreshUserAuthentication() throws UsernameNotFoundException {
-		refreshAuthentication(user -> (UserSecurityDetails) loadUserByUsername(user.getUsername()));
+		refreshAuthentication(user -> (UserSecurityDetails) userDetailsService
+			.loadUserByUsername(user.getUsername())
+		);
 	}
 
 	/**
@@ -105,7 +108,7 @@ public class UserSecurityDetailsHelper implements UserDetailsService {
 	}
 
 	private UsernamePasswordAuthenticationToken createAuthTokenFromEmail(String email) throws UsernameNotFoundException {
-		UserSecurityDetails updateUserDetails = (UserSecurityDetails) loadUserByUsername(email);
+		UserSecurityDetails updateUserDetails = (UserSecurityDetails) userDetailsService.loadUserByUsername(email);
 		return new UsernamePasswordAuthenticationToken(
 			updateUserDetails,
 			null,
@@ -121,28 +124,6 @@ public class UserSecurityDetailsHelper implements UserDetailsService {
 	}
 
 	private void bindSecurityContextInSession(SecurityContext securityContext) {
-		HttpSession session = httpServletRequest.getSession(true);
-		session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
-	}
-
-	/**
-	 * Loads the user details based on the provided email address.
-	 * <p>
-	 * This method is the implementation of the {@link org.springframework.security.core.userdetails.UserDetailsService}
-	 * interface, used by Spring Security during the authentication process. It searches for the user in the database by
-	 * email, and if found, returns a {@link UserSecurityDetails} object containing the user's information.
-	 * </p>
-	 *
-	 * @param email the email address of the user to authenticate
-	 * @return a {@link UserSecurityDetails} object implementing
-	 * {@link org.springframework.security.core.userdetails.UserDetails}, required for the authentication process in
-	 * Spring Security
-	 * @throws UsernameNotFoundException if no user is found with the given email
-	 */
-	@Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		PrivateUserEntity privateUser = privateUserRepository.findByEmail(email)
-			.orElseThrow(() -> new UsernameNotFoundException("User not found"));
-		return new UserSecurityDetails(privateUser);
+		httpSession.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
 	}
 }
