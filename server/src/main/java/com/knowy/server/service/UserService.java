@@ -1,28 +1,20 @@
 package com.knowy.server.service;
 
-import com.knowy.server.controller.dto.SessionUser;
 import com.knowy.server.entity.LanguageEntity;
+import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.entity.ProfileImageEntity;
 import com.knowy.server.entity.PublicUserEntity;
 import com.knowy.server.repository.*;
 import com.knowy.server.service.exception.*;
-import com.knowy.server.util.exception.UserNotFoundException;
+import com.knowy.server.util.PasswordChecker;
+import com.knowy.server.util.exception.WrongPasswordException;
 import jakarta.annotation.Nonnull;
-import jakarta.servlet.http.HttpSession;
-import lombok.Getter;
-import lombok.Setter;
-import com.knowy.server.entity.PrivateUserEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import static com.knowy.server.controller.AccessController.SESSION_LOGGED_USER;
-
-@Getter
-@Setter
 @Service
 public class UserService {
 	private final PrivateUserRepository privateUserRepository;
@@ -30,23 +22,24 @@ public class UserService {
 	private final BannedWordsRepository bannedWordsRepo;
 	private final LanguageRepository languageRepository;
 	private final ProfileImageRepository profileImageRepository;
+	private final PasswordChecker passwordChecker;
 
 
-	public UserService(PrivateUserRepository privateUserRepository, PublicUserRepository publicUserRepository,
-					   BannedWordsRepository bannedWordsRepo, LanguageRepository jpaLanguageRepository,
-					   ProfileImageRepository profileImageRepository) {
-
+	public UserService(
+		PrivateUserRepository privateUserRepository,
+		PublicUserRepository publicUserRepository,
+		BannedWordsRepository bannedWordsRepo,
+		LanguageRepository jpaLanguageRepository,
+		ProfileImageRepository profileImageRepository,
+		PasswordChecker passwordChecker
+	) {
 		this.privateUserRepository = privateUserRepository;
 		this.publicUserRepository = publicUserRepository;
 		this.bannedWordsRepo = bannedWordsRepo;
 		this.languageRepository = jpaLanguageRepository;
 		this.profileImageRepository = profileImageRepository;
+		this.passwordChecker = passwordChecker;
 	}
-
-
-//	public boolean validatePrivateUsername(String newPrivateUsername){
-//		return !(newPrivateUsername.equals(this.privateUsername));
-//	}
 
 	public PublicUserEntity findPublicUserById(Integer id) throws UserNotFoundException {
 		return publicUserRepository.findUserById(id).
@@ -56,27 +49,6 @@ public class UserService {
 	public Optional<PrivateUserEntity> findPrivateUserByEmail(String email) {
 		return privateUserRepository.findByEmail(email);
 	}
-
-	private boolean isCurrentNickname(String newNickname, PublicUserEntity user) {
-		return (user.getNickname().equals(newNickname));
-	}
-
-	private boolean isCurrentEmail(String newEmail, PrivateUserEntity privateUser) {
-		return (privateUser.getEmail().equals(newEmail));
-	}
-
-	private boolean isValidPassword(String currentPassword, PrivateUserEntity privateUser) {
-		return privateUser.getPassword().equals(currentPassword);
-	}
-
-//	public boolean updateNickname(String newNickname, Integer id){
-//		Optional<PublicUserEntity> publicUser = findPublicUserById(id);
-//		if(publicUser.isPresent() && !isCurrentNickname(newNickname, publicUser.get())){
-//			publicUserRepository.updateNickname(newNickname, id);
-//			return true;
-//		}
-//		return false;
-//	}
 
 	/**
 	 * Updates the nickname of a public user.
@@ -97,11 +69,9 @@ public class UserService {
 	 * @throws NicknameAlreadyTakenException if the new nickname is already in use by another user
 	 */
 	public void updateNickname(String newNickname, @Nonnull Integer id) throws UserNotFoundException, UnchangedNicknameException, NicknameAlreadyTakenException {
-		Optional<PublicUserEntity> publicUser = publicUserRepository.findUserById(id);
-		if (publicUser.isEmpty()) {
-			throw new UserNotFoundException("User not found");
-		}
-		if (isCurrentNickname(newNickname, publicUser.get())) {
+		PublicUserEntity publicUser = publicUserRepository.findUserById(id)
+			.orElseThrow(() -> new UserNotFoundException("User not found"));
+		if (isCurrentNickname(newNickname, publicUser)) {
 			throw new UnchangedNicknameException("Nickname must be different from the current one.");
 		}
 		if (publicUserRepository.existsByNickname(newNickname)) {
@@ -111,8 +81,11 @@ public class UserService {
 		publicUserRepository.updateNickname(newNickname, id);
 	}
 
-	public void updateProfileImage(Integer newProfileImageId, @Nonnull Integer userId) throws UnchangedImageException, ImageNotFoundException, UserNotFoundException {
+	private boolean isCurrentNickname(String newNickname, PublicUserEntity user) {
+		return user.getNickname().equals(newNickname);
+	}
 
+	public void updateProfileImage(Integer newProfileImageId, @Nonnull Integer userId) throws UnchangedImageException, ImageNotFoundException, UserNotFoundException {
 		PublicUserEntity user = publicUserRepository.findUserById(userId)
 			.orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 
@@ -122,8 +95,6 @@ public class UserService {
 		if (user.getProfileImage().getId().equals(img.getId())) {
 			throw new UnchangedImageException("Image must be different from the current one.");
 		}
-
-
 
 		user.setProfileImage(img);
 		publicUserRepository.save(user);
@@ -138,61 +109,6 @@ public class UserService {
 		publicUserRepository.save(user);
 	}
 
-
-	//method to update favourite languages
-//		public PublicUserEntity updateUserProfile(Integer userId, String newNickname, Set<LanguageEntity> languages) {
-//			Optional <PublicUserEntity> optUser = jpaPublicUserRepository.findUserById(userId);
-//			if (optUser.isEmpty()) {
-//				return null;
-//			}
-//			PublicUserEntity publicUserEntity = optUser.get();
-//			if (newNickname != null && !newNickname.equals(publicUserEntity.getNickname())) {
-//				if (isTakenUsername(newNickname)) {
-//					return null;
-//				}
-//				if (isInappropriateName(newNickname)) {
-//					return null;
-//				}
-//				publicUserEntity.setNickname(newNickname);
-//			}
-//			if (languages != null && !languages.isEmpty()) {
-//				Set<String> languagesNames = languages.stream().map(LanguageEntity::getName).collect(Collectors.toSet());
-//				Set<LanguageEntity> newLanguages = new HashSet<>(jpaLanguageRepository.findByNameIn(languagesNames));
-//				publicUserEntity.setLanguages(newLanguages);
-//			}
-//			return jpaPublicUserRepository.save(publicUserEntity);
-//		}
-
-	public PublicUserEntity updateUserProfile(Integer userId, String newNickname, Integer profilePicId, String[] languages) {
-		Optional<PublicUserEntity> optUser = publicUserRepository.findUserById(userId);
-		if (optUser.isEmpty()) {
-			return null;
-		}
-
-		PublicUserEntity publicUserEntity = optUser.get();
-		if (newNickname != null && !newNickname.equals(publicUserEntity.getNickname())) {
-			if (isUsernameTaken(newNickname)) {
-				return null;
-			}
-			if (isNicknameBanned(newNickname)) {
-				return null;
-			}
-			publicUserEntity.setNickname(newNickname);
-		}
-		if (languages != null && languages.length > 0) {
-			Set<LanguageEntity> newLanguages = languageRepository.findByNameInIgnoreCase(languages);
-			publicUserEntity.setLanguages(newLanguages);
-		}
-
-		if (profilePicId != null && (profilePicId >= 1) && (profilePicId <= 3)) {
-			publicUserEntity.setProfileImage(profileImageRepository.findById(profilePicId)
-				.orElseThrow(() -> new IllegalArgumentException
-					("Profile image with id " + profilePicId + " does not exist.")));
-		}
-		return publicUserRepository.save(publicUserEntity);
-	}
-
-
 	//method to check if the new username contains any of the banned words
 	public boolean isNicknameBanned(String nickname) {
 		return bannedWordsRepo.isWordBanned(nickname);
@@ -203,14 +119,34 @@ public class UserService {
 		return publicUserRepository.existsByNickname(nickname);
 	}
 
-
-	public boolean updateEmail(String email, String newEmail, String currentPassword) {
-		Optional<PrivateUserEntity> privateUser = findPrivateUserByEmail(email);
-		if (privateUser.isPresent() && !isCurrentEmail(newEmail, privateUser.get()) && isValidPassword(currentPassword, privateUser.get())) {
-			privateUserRepository.updateEmail(email, newEmail);
-			return true;
+	/**
+	 * Updates the email of a user after validating identity and email change.
+	 *
+	 * <p>This method performs the following checks:
+	 * <ul>
+	 *   <li>Ensures a user with the given {@code userId} exists.</li>
+	 *   <li>Verifies the new email is different from the current one.</li>
+	 *   <li>Validates the provided password matches the user's current password.</li>
+	 * </ul>
+	 * If all checks pass, the user's email is updated in the repository.
+	 *
+	 * @param email    the new email to set for the user
+	 * @param userId   the ID of the user whose email will be updated
+	 * @param password the current password to authenticate the email change
+	 * @throws UserNotFoundException   if no user exists with the given ID
+	 * @throws UnchangedEmailException if the new email is the same as the current one
+	 * @throws WrongPasswordException  if the provided password is incorrect
+	 */
+	public void updateEmail(String email, int userId, String password)
+		throws UserNotFoundException, UnchangedEmailException, WrongPasswordException {
+		PrivateUserEntity privateUser = privateUserRepository.findById(userId)
+			.orElseThrow(() -> new UserNotFoundException("User not found"));
+		if (Objects.equals(email, privateUser.getEmail())) {
+			throw new UnchangedEmailException("Email must be different from the current one.");
 		}
-		return false;
+		passwordChecker.assertHasPassword(privateUser, password);
+
+		privateUserRepository.updateEmail(privateUser.getEmail(), email);
 	}
 
 	public String findNicknameById(Integer id) throws UserNotFoundException {
@@ -218,7 +154,7 @@ public class UserService {
 			.orElseThrow(() -> new UserNotFoundException("User with id " + id + " does not exist."));
 	}
 
-	public String getProfileImageUrlById(Integer userId) throws UserNotFoundException{
+	public String getProfileImageUrlById(Integer userId) throws UserNotFoundException {
 		return publicUserRepository.findProfileImageUrlById(userId)
 			.orElseThrow(() -> new UserNotFoundException("No se encontró la imagen de perfil para el id actual"));
 	}

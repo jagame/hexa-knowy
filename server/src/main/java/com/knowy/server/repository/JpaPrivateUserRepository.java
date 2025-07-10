@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface JpaPrivateUserRepository extends JpaRepository<PrivateUserEntity, Integer>, PrivateUserRepository{
+public interface JpaPrivateUserRepository extends JpaRepository<PrivateUserEntity, Integer>, PrivateUserRepository {
 	@Override
 	Optional<PrivateUserEntity> findByEmail(String email);
 
@@ -25,5 +25,5 @@ public interface JpaPrivateUserRepository extends JpaRepository<PrivateUserEntit
 	<S extends PrivateUserEntity> S save(@NonNull S user);
 
 	@Override
-	PrivateUserEntity findById(int id);
+	Optional<PrivateUserEntity> findById(int id);
 }

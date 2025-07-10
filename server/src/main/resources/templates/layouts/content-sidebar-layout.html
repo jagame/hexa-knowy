@@ -20,9 +20,7 @@
 </head>
 <body>
 
-<header th:replace="~{components/navbar :: knowy-navbar(username=${nickname}, avatar=${profileImageUrl})}"></header>
-
-<div th:replace="components/toast-wrapper :: wrapper(${toasts})"></div>
+<header th:replace="~{components/navbar :: knowy-navbar()}"></header>
 
 <div class="layout-body">
 	<aside class="kn-aside" layout:fragment="sidebar"></aside>

@@ -33,7 +33,7 @@ public class CourseEntity {
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
-		name = "course_languages",
+		name = "course_language",
 		joinColumns = @JoinColumn(name = "id_course"),
 		inverseJoinColumns = @JoinColumn(name = "id_language")
 	)

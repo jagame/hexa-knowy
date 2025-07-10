@@ -12,5 +12,5 @@ public interface PrivateUserRepository {
 
 	<S extends PrivateUserEntity> S save(S user);
 
-	PrivateUserEntity findById(int id);
+	Optional<PrivateUserEntity> findById(int id);
 }

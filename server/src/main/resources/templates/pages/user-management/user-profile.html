@@ -14,7 +14,7 @@
 
 <aside class="kn-aside user-sidebar" layout:fragment="sidebar">
 	<div class="user-info text-center mb-4">
-		<h3 class="mt-3 username-title" th:text="${currentNickname}">Usuario</h3>
+		<h3 class="mt-3 username-title" th:text="${publicUser.nickname}">Usuario</h3>
 	</div>
 	<div class="sidebar-menu">
 		<button class="sidebar-link" data-sidebar-toggler="" th:classappend="active">Editar Perfil</button>
@@ -39,37 +39,45 @@
 
 			<div class="row user-information">
 				<!--PHOTO-->
-				<div class="picture-edit-container col-lg-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+				<div class="picture-edit-container col-lg-3" data-bs-target="#exampleModal" data-bs-toggle="modal">
 					<img alt="User Avatar" class="edit-avatar" id="profilePicture" src="https://placehold.co/50x50">
 
-					<label class="edit-pic-btn" for= "profile-pic-path">
+					<label class="edit-pic-btn" for="profile-pic-id">
 						<i class="bi bi-person-bounding-box"></i>
 					</label>
 
-					<input type="hidden" id="profile-pic-id" name="profilePictureId" class="file-input-overlay">
+					<input class="file-input-overlay" id="profile-pic-id" name="profilePictureId" type="hidden">
 				</div>
 
-				<div class="information-edit-container col-lg-9" >
+				<div class="information-edit-container col-lg-9">
 
 					<h6 class="section-title">Nombre de Usuario: 👤</h6>
-					<input class="user-name form-control" name="nickname" th:placeholder="${currentNickname}" th:value="*{username}" type="text">
+					<input class="user-name form-control" name="nickname" th:placeholder="${publicUser.nickname}"
+						   type="text">
 					<br>
 					<h6 class="section-title">Lenguajes de Programación favoritos ⭐</h6>
-					<select class="form-control" id="languages" multiple name="languages">
-						<option value="JAVASCRIPT">JavaScript</option>
-						<option value="JAVA">Java</option>
-						<option value="HTML">HTML</option>
-						<option value="CSS">CSS</option>
-						<option value="PYTHON">Python</option>
-						<option value="PHP">PHP</option>
-						<option value="C">#C</option>
-						<option value="TYPESCRIPT">TypeScript</option>
-						<option value="	RUBY">Ruby</option>
-						<option value="SWIFT">Swift</option>
+					<select class="form-control" id="languages" multiple>
+						<option th:each="language : ${languages}"
+								th:text="${language.name}"
+								th:value="${language.name}">
+						</option>
 					</select>
 					<button class="btn btn-save" id="chooseLanguage" type="button">Escoger lenguaje</button>
 					<button class="btn btn-delete" id="removeLanguage" type="button">Eliminar lenguaje</button>
-					<div class="mt-2" id="selectedLanguages"></div>
+					<div class="mt-2" id="selectedLanguages">
+						<th:block th:each="userLanguage : ${publicUser.languages}">
+  							<span class="badge badge-info mr-1 mb-1 selected-language"
+								  style="cursor: pointer;"
+								  th:data-language="${userLanguage.name}"
+								  th:text="${userLanguage.name}">
+  							</span>
+							<input class="selected-language"
+								   name="languages"
+								   th:data-language="${userLanguage.name}"
+								   th:value="${userLanguage.name}"
+								   type="hidden"/>
+						</th:block>
+					</div>
 
 				</div>
 			</div>
@@ -86,34 +94,34 @@
 
 
 	<!-- Modal -->
-	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" tabindex="-1">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
 				</div>
 				<div class="modal-body d-flex flex-wrap justify-content-evenly">
-					<img src="/images/profile/knowylogo.svg" alt="Avatar 1"
-						 class="avatar-selectable rounded-circle img-fluid me-2"
-						 width="80" height="80"
-						 data-bs-dismiss="modal"
-						 data-avatar-src-path="/images/profile/knowylogo.svg"
+					<img alt="Avatar 1" class="avatar-selectable rounded-circle img-fluid me-2"
 						 data-avatar-id="1"
+						 data-avatar-src-path="/images/profile/knowylogo.svg" data-bs-dismiss="modal"
+						 height="80"
+						 src="/images/profile/knowylogo.svg"
+						 width="80"
 					/>
-					<img src="/images/profile/knowylogo_red.svg" alt="Avatar 2"
-						 class="avatar-selectable rounded-circle img-fluid me-2"
-						 width="80" height="80"
-						 data-bs-dismiss="modal"
-						 data-avatar-src-path="/images/profile/knowylogo_red.svg"
+					<img alt="Avatar 2" class="avatar-selectable rounded-circle img-fluid me-2"
 						 data-avatar-id="2"
+						 data-avatar-src-path="/images/profile/knowylogo_red.svg" data-bs-dismiss="modal"
+						 height="80"
+						 src="/images/profile/knowylogo_red.svg"
+						 width="80"
 					/>
-					<img src="/images/profile/knowylogo_blue.svg" alt="Avatar 3"
-						 class="avatar-selectable rounded-circle img-fluid"
-						 width="80" height="80"
-						 data-bs-dismiss="modal"
-						 data-avatar-src-path="/images/profile/knowylogo_blue.svg"
+					<img alt="Avatar 3" class="avatar-selectable rounded-circle img-fluid"
 						 data-avatar-id="3"
+						 data-avatar-src-path="/images/profile/knowylogo_blue.svg" data-bs-dismiss="modal"
+						 height="80"
+						 src="/images/profile/knowylogo_blue.svg"
+						 width="80"
 					/>
 				</div>
 			</div>

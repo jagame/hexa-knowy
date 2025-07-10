@@ -31,14 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		span.className = 'badge badge-info mr-1 mb-1 selected-language';
 		span.style.cursor = 'pointer';
 		span.textContent = language;
-		span.onclick = () => removeLanguage(language);
 		return span;
-	}
-
-	function removeLanguage(language) {
-		selectedLanguagesSet.delete(language);
-		document.querySelectorAll(`[data-language="${language}"]`)
-			.forEach(item => item.remove());
 	}
 
 	function buildInputLanguageOptions(language) {
@@ -58,6 +51,25 @@ document.addEventListener('DOMContentLoaded', function () {
 			element.remove()
 		});
 		selectedLanguagesSet.clear()
+	}
+
+	document.getElementById('selectedLanguages')
+		.addEventListener('click', (event) => {
+			const target = event.target;
+			if (!target.classList.contains('selected-language')) {
+				return;
+			}
+
+			const language = target.dataset.language;
+			if (language) {
+				removeLanguage(language);
+			}
+		})
+
+	function removeLanguage(language) {
+		selectedLanguagesSet.delete(language);
+		document.querySelectorAll(`[data-language="${language}"]`)
+			.forEach(item => item.remove());
 	}
 
 	const profilePicId = document.getElementById('profile-pic-id');

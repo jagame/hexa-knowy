@@ -1,155 +1,125 @@
 package com.knowy.server.controller;
 
-import com.knowy.server.controller.dto.SessionUser;
-import com.knowy.server.controller.dto.UserConfigSessionDTO;
-import com.knowy.server.entity.LanguageEntity;
-import com.knowy.server.entity.PrivateUserEntity;
-import com.knowy.server.entity.PublicUserEntity;
+import com.knowy.server.controller.dto.UserConfigChangeEmailFormDto;
 import com.knowy.server.controller.dto.UserProfileDTO;
-import com.knowy.server.service.exception.*;
+import com.knowy.server.service.LanguageService;
 import com.knowy.server.service.UserService;
-import com.knowy.server.util.exception.UserNotFoundException;
-import jakarta.servlet.http.HttpSession;
+import com.knowy.server.service.exception.*;
+import com.knowy.server.service.model.UserSecurityDetails;
+import com.knowy.server.util.UserSecurityDetailsHelper;
+import com.knowy.server.util.exception.WrongPasswordException;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.*;
-
-import static com.knowy.server.controller.AccessController.SESSION_LOGGED_USER;
 
 @Slf4j
 @Controller
 public class UserConfigController {
 
 	private final UserService userService;
+	private final LanguageService languageService;
+	private final UserSecurityDetailsHelper userSecurityDetailsHelper;
 
-
-	public UserConfigController(UserService userService) {
+	public UserConfigController(UserService userService, LanguageService languageService, UserSecurityDetailsHelper userSecurityDetailsHelper) {
 		this.userService = userService;
+		this.languageService = languageService;
+		this.userSecurityDetailsHelper = userSecurityDetailsHelper;
 	}
 
-
-	//User-Account
+	/**
+	 * Displays the user account page.
+	 *
+	 * <p>Retrieves the authenticated user's public information and adds it to the model.
+	 * Prepares the necessary data for the view to render the user's account details.</p>
+	 *
+	 * @param model       the model to which attributes are added for rendering the view
+	 * @param userDetails the authenticated user's security details provided by Spring Security
+	 * @return the name of the view template for the user account page
+	 */
 	@GetMapping("/user-account")
-	public String viewUserAccount(Model model, HttpSession session) {
-		SessionUser loggedUser = (SessionUser) session.getAttribute(SESSION_LOGGED_USER);
-
-		String email = getCurrentEmail(session);
-		Optional<PrivateUserEntity> privateUser = userService.findPrivateUserByEmail(email);
-		// FixMe: Changing the way we get UserById in the future
-		PublicUserEntity publicUser = null;
-		try {
-			publicUser = userService.findPublicUserById(loggedUser.id());
-		} catch (UserNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-
-		if (privateUser.isEmpty()) {
-			// Manejo de error: usuario no encontrado
-			model.addAttribute("error", "User information could not be uploaded.");
-			return "pages/user-management/user-account";
-		}
-
-		model.addAttribute("privateUser", privateUser.get());
-		model.addAttribute("publicUser", publicUser);
-		session.setAttribute("nickName", publicUser.getNickname());
-
-		UserConfigSessionDTO userConfigSessionDTO = new UserConfigSessionDTO();
-		userConfigSessionDTO.setEmail(privateUser.get().getEmail());
-		model.addAttribute("userConfigSessionDTO", userConfigSessionDTO);
+	public String viewUserAccount(Model model, @AuthenticationPrincipal UserSecurityDetails userDetails) {
+		model.addAttribute("publicUser", userDetails.getPublicUser());
 		return "pages/user-management/user-account";
 	}
 
-	private String getCurrentEmail(HttpSession session) {
-		String email = (String) session.getAttribute("email");
-		if (email == null) {
-			email = "usuario123@correo.com";
-			session.setAttribute("email", email);
-			// FixMe: Changing the way we get email in the future
-		}
-		return email;
-	}
-
-	//Method available for use on the other pages of UserConfig
-	public String getCurrentNickname(HttpSession session) throws UserNotFoundException {
-
-		SessionUser loggedUser = (SessionUser) session.getAttribute(SESSION_LOGGED_USER);
-		return userService.findNicknameById(loggedUser.id());
-
-	}
-
-//	@PostMapping("/update-Nickname")
-//	public String updateNickname(String newNickname, Integer id,
-//								 RedirectAttributes redirectAttributes,
-//								 HttpSession session) {
-//
-//		if (userService.updateNickname(newNickname, id)) {
-//			session.setAttribute("nickname", newNickname);
-//			redirectAttributes.addFlashAttribute("success", "Nombre de usuario actualizado");
-//		} else {
-//			redirectAttributes.addFlashAttribute("error", "Nombre no valido");
-//		}
-//		return "redirect:/user-account";
-//	}
-
+	/**
+	 * Handles the request to update a user's email address.
+	 *
+	 * <p>This method receives the new email and current password, verifies the user's identity,
+	 * and attempts to update the email address. Proper error handling is applied for invalid inputs or mismatches.</p>
+	 *
+	 * <p>On success or failure, an appropriate flash message is added for display on redirect.</p>
+	 *
+	 * @param userConfigChangeEmailFormDto the form object containing the new email and current password
+	 * @param userDetails                  the authenticated user's security details, used to retrieve the user ID
+	 * @param redirectAttributes           used to pass flash messages after redirect
+	 * @return a redirect to the user account page
+	 */
 	@PostMapping("/update-email")
-	public String updateEmail(@ModelAttribute UserConfigSessionDTO userConfigSessionDTO,
-							  RedirectAttributes redirectAttributes, HttpSession session) {
-		if (userService.updateEmail(userConfigSessionDTO.getEmail(),
-			userConfigSessionDTO.getNewEmail(),
-			userConfigSessionDTO.getCurrentPassword())) {
-			session.setAttribute("email", userConfigSessionDTO.getNewEmail());
-			redirectAttributes.addFlashAttribute("successEmail", "Email actualizado");
-		} else {
-			redirectAttributes.addFlashAttribute("errorEmail", "Algo salió mal");
+	public String updateEmail(
+		@ModelAttribute UserConfigChangeEmailFormDto userConfigChangeEmailFormDto,
+		@AuthenticationPrincipal UserSecurityDetails userDetails,
+		RedirectAttributes redirectAttributes
+	) {
+		try {
+			userService.updateEmail(
+				userConfigChangeEmailFormDto.getEmail(),
+				userDetails.getPublicUser().getId(),
+				userConfigChangeEmailFormDto.getPassword()
+			);
+
+			userSecurityDetailsHelper.refreshUserAuthenticationById();
+			redirectAttributes.addFlashAttribute("successEmail", "Email actualizado con éxito.");
+		} catch (UserNotFoundException e) {
+			redirectAttributes.addFlashAttribute("errorEmail", "Usuario no encontrado.");
+		} catch (UnchangedEmailException e) {
+			redirectAttributes.addFlashAttribute("errorEmail", "El nuevo correo debe ser diferente al actual.");
+		} catch (WrongPasswordException e) {
+			redirectAttributes.addFlashAttribute("errorEmail", "La contraseña es incorrecta.");
 		}
 		return "redirect:/user-account";
 	}
 
 	// Delete account
 	@GetMapping("/delete-account")
-	public String deleteAccountForm(ModelMap interfaceScreen, HttpSession session) throws UserNotFoundException {
-		try {
-			interfaceScreen.addAttribute("username", getCurrentNickname(session));
-		} catch (UserNotFoundException e) {
-			throw new UserNotFoundException("Usuario en sesión no encontrado: id=" + session.getId());
-		}
+	public String deleteAccountForm(ModelMap interfaceScreen, @AuthenticationPrincipal UserSecurityDetails userDetails) {
+		interfaceScreen.addAttribute("username", userDetails.getPublicUser().getNickname());
 		return "pages/user-management/delete-account";
 	}
 
 	//Delete-Account-End (Finally deleting Account)
 	@GetMapping("/delete-account-end")
-	public String deleteAccountEnd(ModelMap interfaceScreen, HttpSession session) throws UserNotFoundException {
-		interfaceScreen.addAttribute("username", getCurrentNickname(session));
+	public String deleteAccountEnd(ModelMap interfaceScreen, @AuthenticationPrincipal UserSecurityDetails userDetails) {
+		interfaceScreen.addAttribute("username", userDetails.getPublicUser().getNickname());
 		return "pages/user-management/delete-account-end";
 	}
 
 	//User-Profile
 	@GetMapping("/user-profile")
-	public String viewUserProfile(Model model, UserProfileDTO userProfileDTO, HttpSession session) throws UserNotFoundException {
-		SessionUser loggedUser = (SessionUser) session.getAttribute(SESSION_LOGGED_USER);
-//		log.info(userProfileDTO.toString()); //Fixme - Eventualmente lo quitaremos
-
-		model.addAttribute("userProfileDTO", userProfileDTO);
-		model.addAttribute("username", userProfileDTO.getNickname());
-		model.addAttribute("currentNickname", getCurrentNickname(session));
-		model.addAttribute("profilePictureUrl", userService.getProfileImageUrlById(loggedUser.id()));
+	public String viewUserProfile(Model model, UserProfileDTO userProfileDTO, @AuthenticationPrincipal UserSecurityDetails userDetails) {
+		Hibernate.initialize(userDetails.getPublicUser().getLanguages());
+		model.addAttribute("publicUser", userDetails.getPublicUser());
+		model.addAttribute("languages", languageService.findAll());
 		return "pages/user-management/user-profile";
 	}
 
 	@PostMapping("/update-user-profile")
-	public String updateUserProfile(@ModelAttribute("profileDto") UserProfileDTO userProfileDTO, RedirectAttributes redirectAttributes, HttpSession session) throws UserNotFoundException {
-		SessionUser loggedUser = (SessionUser) session.getAttribute(SESSION_LOGGED_USER);
-		log.info(userProfileDTO.toString()); //Fixme - Eventualmente lo quitaremos
-
+	public String updateUserProfile(
+		@ModelAttribute("profileDto") UserProfileDTO userProfileDTO,
+		RedirectAttributes redirectAttributes,
+		@AuthenticationPrincipal UserSecurityDetails userDetails
+	) {
 		String newNickname = userProfileDTO.getNickname();
 		if (newNickname != null && !newNickname.isBlank()) {
 			try {
-				userService.updateNickname(newNickname, loggedUser.id());
+				userService.updateNickname(newNickname, userDetails.getPublicUser().getId());
 				redirectAttributes.addFlashAttribute("username", newNickname);
 			} catch (UserNotFoundException e) {
 				redirectAttributes.addFlashAttribute("error", "Usuario no encontrado.");
@@ -168,9 +138,9 @@ public class UserConfigController {
 
 		if (userProfileDTO.getProfilePictureId() != null && userProfileDTO.getProfilePictureId() > 0) {
 			try {
-				userService.updateProfileImage(userProfileDTO.getProfilePictureId(), loggedUser.id());
+				userService.updateProfileImage(userProfileDTO.getProfilePictureId(), userDetails.getPublicUser().getId());
 				redirectAttributes.addFlashAttribute("profilePicture", userProfileDTO.getProfilePictureId());
-				redirectAttributes.addFlashAttribute("profilePictureUrl", userService.getProfileImageUrlById(loggedUser.id()));
+				redirectAttributes.addFlashAttribute("profilePictureUrl", userDetails.getPublicUser().getProfileImage().getUrl());
 			} catch (ImageNotFoundException e) {
 				redirectAttributes.addFlashAttribute("error", "Aún no existe una imagen de perfil");
 				return "redirect:/user-profile";
@@ -185,7 +155,7 @@ public class UserConfigController {
 
 		String[] newLanguages = userProfileDTO.getLanguages();
 		try {
-			userService.updateLanguages(loggedUser.id(), newLanguages);
+			userService.updateLanguages(userDetails.getPublicUser().getId(), newLanguages);
 		} catch (UserNotFoundException e) {
 			redirectAttributes.addFlashAttribute("error", "Usuario no encontrado");
 		}
@@ -194,7 +164,7 @@ public class UserConfigController {
 		redirectAttributes.addFlashAttribute("nickname", userProfileDTO.getNickname());
 		redirectAttributes.addFlashAttribute("languages", userProfileDTO.getLanguages());
 
+		userSecurityDetailsHelper.refreshUserAuthentication();
 		return "redirect:/user-profile";
 	}
-
 }

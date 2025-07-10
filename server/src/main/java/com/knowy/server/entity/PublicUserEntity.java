@@ -28,13 +28,13 @@ public class PublicUserEntity {
 	@JoinColumn(name = "id_profile_image", referencedColumnName = "id")
 	private ProfileImageEntity profileImage;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 		name = "public_user_language",
 		joinColumns = @JoinColumn(name = "id_public_user"),
 		inverseJoinColumns = @JoinColumn(name = "id_language"))
 	private Set<LanguageEntity> languages;
 
-	@OneToOne(mappedBy = "publicUserEntity")
+	@OneToOne(mappedBy = "publicUserEntity", cascade = CascadeType.PERSIST)
 	private PrivateUserEntity privateUserEntity;
 }

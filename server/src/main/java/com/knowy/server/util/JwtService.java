@@ -18,7 +18,6 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Date;
-import java.util.UUID;
 
 @Service
 public class JwtService {
@@ -35,30 +34,33 @@ public class JwtService {
 	 * Encodes the given object into a signed JWT string.
 	 *
 	 * <p>This method serializes the provided object and places it under the {@code "data"} claim in the JWT payload.
-	 * The token is then signed using a derived HMAC key, which is calculated by combining:
+	 * The token is then signed using a derived secret key, which is calculated by combining:
 	 * <ul>
-	 *   <li>The user's encrypted password (acting as a user-specific secret), and</li>
-	 *   <li>A secure server-side secret key (unique to the application environment).</li>
+	 *   <li>The user's encrypted password (used as a user-specific secret), and</li>
+	 *   <li>A secure server-side secret key unique to the application environment.</li>
 	 * </ul>
-	 * This composition ensures that the token is tightly bound to both the user and the server, offering protection
-	 * against token forgery even if one of the keys is compromised.
+	 * This design ensures that the token is cryptographically bound to both the user and the server,
+	 * offering strong protection against forgery even if one secret is compromised.
 	 *
-	 * <p>The generated token is set to expire after 1 hour (3600000 ms) by default.
+	 * <p>The caller can specify a custom expiration time (in milliseconds), after which the token will be invalid.
 	 *
-	 * @param obj          the object to encode into the JWT payload, typically containing relevant security context
-	 *                     (e.g., user ID, email, token type, etc.)
-	 * @param secondaryKey a user-specific component (usually an encrypted password) used to derive the signing key
-	 * @param <T>          the type of the object being encoded
+	 * @param obj                 the object to encode into the JWT payload, typically including security-relevant data
+	 *                            (e.g., user ID, email, token type)
+	 * @param secondaryKey        a user-specific component (usually the encrypted password) used to derive the signing
+	 *                            key
+	 * @param tokenExpirationTime the expiration time in milliseconds (e.g., 600_000 for 10 minutes, 3_600_000 for 1
+	 *                            hour)
+	 * @param <T>                 the type of the object being encoded
 	 * @return a compact JWT string containing the signed and encoded data
-	 * @throws JwtKnowyException if the token generation fails due to signing or serialization issues
+	 * @throws JwtKnowyException if token generation fails due to signing or serialization issues
 	 */
-	public <T> String encode(T obj, String secondaryKey) throws JwtKnowyException {
+	public <T> String encode(T obj, String secondaryKey, long tokenExpirationTime) throws JwtKnowyException {
 		try {
 			SecretKey superSecretKey = keyCalculator(secondaryKey);
 			return Jwts.builder()
 				.claim("data", obj)
 				.signWith(superSecretKey)
-				.expiration(new Date(System.currentTimeMillis() + 3_600_000))
+				.expiration(new Date(System.currentTimeMillis() + tokenExpirationTime))
 				.compact();
 		} catch (JwtException | JwtKnowyException e) {
 			throw new JwtKnowyException("Failed to encode claims", e);
@@ -66,12 +68,33 @@ public class JwtService {
 	}
 
 	/**
-	 * Decodes and verifies a signed JWT token using a dynamically derived HMAC key,
-	 * and deserializes the {@code "data"} claim into an instance of the specified class.
+	 * Encodes the given object into a signed JWT string with a default expiration time of 10 minutes (600,000 ms).
+	 *
+	 * <p>This method is a convenience overload of {@link #encode(Object, String, long)}, which uses a fixed
+	 * expiration duration of 10 minutes. It signs the token using a key derived from a combination of:
+	 * <ul>
+	 *   <li>The user's encrypted password (as a user-specific secret), and</li>
+	 *   <li>A server-side secret unique to the application environment.</li>
+	 * </ul>
+	 * This ensures the token is cryptographically bound to both the user and the server.
+	 *
+	 * @param obj          the object to encode into the JWT payload (e.g., user ID, email, token type)
+	 * @param secondaryKey a user-specific component (typically an encrypted password) used to derive the signing key
+	 * @param <T>          the type of the object being encoded
+	 * @return a compact, signed JWT string containing the encoded data
+	 * @throws JwtKnowyException if token generation fails due to signing or serialization issues
+	 */
+	public <T> String encode(T obj, String secondaryKey) throws JwtKnowyException {
+		return encode(obj, secondaryKey, 600_000);
+	}
+
+	/**
+	 * Decodes and verifies a signed JWT token using a dynamically derived HMAC key, and deserializes the {@code "data"}
+	 * claim into an instance of the specified class.
 	 *
 	 * <p>The verification key (superkey) is derived by applying HMAC-SHA256 to the provided
-	 * {@code secondaryKey} (e.g., the user’s encrypted password), using a server-side base secret key.
-	 * This ensures that:
+	 * {@code secondaryKey} (e.g., the user’s encrypted password), using a server-side base secret key. This ensures
+	 * that:
 	 * <ul>
 	 *   <li>The token is tied both to the user and the server environment.</li>
 	 *   <li>It cannot be verified or regenerated without both keys being correct.</li>
@@ -113,8 +136,8 @@ public class JwtService {
 	}
 
 	/**
-	 * Decodes a JWT token *without verifying its signature* and extracts the "data" claim
-	 * from the payload, mapping it to an instance of the specified class.
+	 * Decodes a JWT token *without verifying its signature* and extracts the "data" claim from the payload, mapping it
+	 * to an instance of the specified class.
 	 *
 	 * <p><strong>⚠️ Warning:</strong> This method does <em>not</em> verify the JWT's signature.
 	 * Use it only in trusted environments or when the token has already been verified through other means.</p>
@@ -126,8 +149,8 @@ public class JwtService {
 	 * @param clazz the target class to map the "data" field to
 	 * @param <T>   the type to deserialize the "data" object into
 	 * @return an instance of the specified class representing the "data" claim
-	 * @throws JwtKnowyException if the token is invalid, improperly formatted,
-	 *                           or if deserialization of the "data" field fails
+	 * @throws JwtKnowyException if the token is invalid, improperly formatted, or if deserialization of the "data"
+	 *                           field fails
 	 */
 	public <T> T decodeUnverified(String token, Class<T> clazz) throws JwtKnowyException {
 		try {

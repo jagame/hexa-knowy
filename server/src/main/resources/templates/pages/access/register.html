@@ -17,37 +17,38 @@
 		<span class="kn-logo--text">KNOWY</span>
 	</div>
 
-	<form class="kn-form" method="post" th:action="@{/register}" th:object="${user}" onsubmit="return validarFormularioCompleta()">
+	<form class="kn-form" method="post" onsubmit="return validarFormularioCompleta()" th:action="@{/register}"
+		  th:object="${user}">
 		<h1 class="kn-form__title">Registro del usuario</h1>
 
 		<div class="kn-form__group">
-			<label class="kn-form--label" for="username">Nombre de usuario:</label>
-			<input class="kn-form--input" id="username" placeholder="johnd67" th:field="${user.username}"
-				   type="text" required>
+			<label class="kn-form--label" for="nickname">Nombre de usuario:</label>
+			<input class="kn-form--input" id="nickname" placeholder="johnd67" required
+				   th:field="*{nickname}" type="text">
 		</div>
-		<span class="text-danger" th:if="${#fields.hasErrors('username')}"
-			  th:errors="*{username}">></span>
-
+		<span class="text-danger" th:errors="*{nickname}" th:if="${#fields.hasErrors('nickname')}"></span>
 
 		<div class="kn-form__group">
 			<label class="kn-form--label" for="email">Correo electrónico:</label>
-			<input class="kn-form--input" id="email" placeholder="johndoe@gmail.com" th:field="${user.email}" type="text" required>
+			<input class="kn-form--input" id="email" placeholder="johndoe@gmail.com" required th:field="*{email}"
+				   type="text">
 		</div>
-		<span class="text-danger" th:if="${#fields.hasErrors('email')}"
-			  th:errors="*{email}">></span>
-
+		<span class="text-danger" th:errors="*{email}"
+			  th:if="${#fields.hasErrors('email')}">></span>
 
 		<div class="kn-form__group">
 			<label class="kn-form--label" for="password">Contraseña:</label>
-			<input class="kn-form--input" id="password" th:field="${user.password}"
-				   type="password" placeholder="Escriba su contraseña" required oninput="verifyPassword(); checkNewPassword()">
+			<input class="kn-form--input" id="password" oninput="verifyPassword(); checkNewPassword()"
+				   placeholder="Escriba su contraseña" required th:field="*{password}"
+				   type="password">
 			<p class="password-advice" id="passwordAdvice1"></p>
 		</div>
 
 		<div class="kn-form__group">
 			<label class="kn-form--label" for="repeat-password">Repetir contraseña:</label>
-			<input class="kn-form--input" id="repeat-password" placeholder="Escriba de nuevo su contraseña" type="password"
-				   required oninput= "checkNewPassword();">
+			<input class="kn-form--input" id="repeat-password" oninput="checkNewPassword();"
+				   placeholder="Escriba de nuevo su contraseña"
+				   required type="password">
 			<p class="password-advice" id="passwordAdvice2"></p>
 		</div>
 
