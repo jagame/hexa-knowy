@@ -4,14 +4,20 @@ import com.knowy.server.entity.LanguageEntity;
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.entity.ProfileImageEntity;
 import com.knowy.server.entity.PublicUserEntity;
-import com.knowy.server.repository.*;
+import com.knowy.server.repository.LanguageRepository;
+import com.knowy.server.repository.PrivateUserRepository;
+import com.knowy.server.repository.ProfileImageRepository;
+import com.knowy.server.repository.PublicUserRepository;
 import com.knowy.server.service.exception.*;
+import com.knowy.server.service.model.MailMessage;
+import com.knowy.server.service.model.PasswordResetInfo;
 import com.knowy.server.util.PasswordChecker;
-import com.knowy.server.util.exception.WrongPasswordException;
+import com.knowy.server.util.exception.JwtKnowyException;
 import jakarta.annotation.Nonnull;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -19,35 +25,23 @@ import java.util.Set;
 public class UserService {
 	private final PrivateUserRepository privateUserRepository;
 	private final PublicUserRepository publicUserRepository;
-	private final BannedWordsRepository bannedWordsRepo;
 	private final LanguageRepository languageRepository;
 	private final ProfileImageRepository profileImageRepository;
+	private final PasswordEncoder passwordEncoder;
 	private final PasswordChecker passwordChecker;
-
 
 	public UserService(
 		PrivateUserRepository privateUserRepository,
 		PublicUserRepository publicUserRepository,
-		BannedWordsRepository bannedWordsRepo,
-		LanguageRepository jpaLanguageRepository,
-		ProfileImageRepository profileImageRepository,
-		PasswordChecker passwordChecker
+		LanguageRepository languageRepository,
+		ProfileImageRepository profileImageRepository, PasswordEncoder passwordEncoder
 	) {
 		this.privateUserRepository = privateUserRepository;
 		this.publicUserRepository = publicUserRepository;
-		this.bannedWordsRepo = bannedWordsRepo;
-		this.languageRepository = jpaLanguageRepository;
+		this.languageRepository = languageRepository;
 		this.profileImageRepository = profileImageRepository;
-		this.passwordChecker = passwordChecker;
-	}
-
-	public PublicUserEntity findPublicUserById(Integer id) throws UserNotFoundException {
-		return publicUserRepository.findUserById(id).
-			orElseThrow(() -> new UserNotFoundException("Usuario no encontrado"));
-	}
-
-	public Optional<PrivateUserEntity> findPrivateUserByEmail(String email) {
-		return privateUserRepository.findByEmail(email);
+		this.passwordChecker = new PasswordChecker(passwordEncoder);
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	/**
@@ -109,59 +103,119 @@ public class UserService {
 		publicUserRepository.save(user);
 	}
 
-	//method to check if the new username contains any of the banned words
-	public boolean isNicknameBanned(String nickname) {
-		return bannedWordsRepo.isWordBanned(nickname);
-	}
-
-	//method to check if the username already exists
-	public boolean isUsernameTaken(String nickname) {
-		return publicUserRepository.existsByNickname(nickname);
-	}
-
-	/**
-	 * Updates the email of a user after validating identity and email change.
-	 *
-	 * <p>This method performs the following checks:
-	 * <ul>
-	 *   <li>Ensures a user with the given {@code userId} exists.</li>
-	 *   <li>Verifies the new email is different from the current one.</li>
-	 *   <li>Validates the provided password matches the user's current password.</li>
-	 * </ul>
-	 * If all checks pass, the user's email is updated in the repository.
-	 *
-	 * @param email    the new email to set for the user
-	 * @param userId   the ID of the user whose email will be updated
-	 * @param password the current password to authenticate the email change
-	 * @throws UserNotFoundException   if no user exists with the given ID
-	 * @throws UnchangedEmailException if the new email is the same as the current one
-	 * @throws WrongPasswordException  if the provided password is incorrect
-	 */
-	public void updateEmail(String email, int userId, String password)
-		throws UserNotFoundException, UnchangedEmailException, WrongPasswordException {
-		PrivateUserEntity privateUser = privateUserRepository.findById(userId)
-			.orElseThrow(() -> new UserNotFoundException("User not found"));
-		if (Objects.equals(email, privateUser.getEmail())) {
-			throw new UnchangedEmailException("Email must be different from the current one.");
+	// TODO - Añadir JavaDoc
+	public PublicUserEntity createUser(String nickname, String email, String password) throws InvalidUserException, ImageNotFoundException {
+		if (findPublicUserByNickname(nickname).isPresent()) {
+			throw new InvalidUserNicknameException("Nickname alredy exists");
 		}
-		passwordChecker.assertHasPassword(privateUser, password);
 
-		privateUserRepository.updateEmail(privateUser.getEmail(), email);
+		if (findPrivateUserByEmail(email).isPresent()) {
+			throw new InvalidUserEmailException("Email alredy exists");
+		}
+
+		if (!passwordChecker.isRightPasswordFormat(password)) {
+			throw new InvalidUserPasswordFormatException("Invalid password format");
+		}
+
+		PrivateUserEntity privateUser = new PrivateUserEntity();
+		privateUser.setEmail(email);
+		privateUser.setPassword(passwordEncoder.encode(password));
+
+		PublicUserEntity publicUser = new PublicUserEntity();
+		publicUser.setNickname(nickname);
+		publicUser.setProfileImage(findProfileImageById(1)
+			.orElseThrow(() -> new ImageNotFoundException("Not found profile image")));
+
+		privateUser.setPublicUserEntity(publicUser);
+		publicUser.setPrivateUserEntity(privateUser);
+
+		publicUser = save(publicUser);
+
+		return publicUser;
 	}
 
-	public String findNicknameById(Integer id) throws UserNotFoundException {
-		return publicUserRepository.findNicknameById(id)
-			.orElseThrow(() -> new UserNotFoundException("User with id " + id + " does not exist."));
+	// TODO - JavaDoc
+	public PublicUserEntity save(PublicUserEntity user) {
+		return publicUserRepository.save(user);
 	}
 
-	public String getProfileImageUrlById(Integer userId) throws UserNotFoundException {
-		return publicUserRepository.findProfileImageUrlById(userId)
-			.orElseThrow(() -> new UserNotFoundException("No se encontró la imagen de perfil para el id actual"));
+	// TODO - JavaDoc
+	public PrivateUserEntity save(PrivateUserEntity user) {
+		return privateUserRepository.save(user);
 	}
 
-	public boolean isCurrentNickname(String newNickname, String currentNickname) {
-		return newNickname != null && newNickname.equals(currentNickname);
+	// TODO - JavaDoc
+	public void updateEmailByEmail(String email, String newEmail) {
+		privateUserRepository.updateEmail(email, newEmail);
 	}
 
+	// TODO - JavaDoc
+	public Optional<PrivateUserEntity> findPrivateUserById(Integer id) {
+		return privateUserRepository.findById(id);
+	}
+
+	// TODO - JavaDoc
+	public Optional<PublicUserEntity> findPublicUserById(Integer id) {
+		return publicUserRepository.findUserById(id);
+	}
+
+	// TODO - JavaDoc
+	public Optional<ProfileImageEntity> findProfileImageById(Integer id) {
+		return profileImageRepository.findById(id);
+	}
+
+	// TODO - JavaDoc
+	public Optional<PrivateUserEntity> findPrivateUserByEmail(String email) {
+		return privateUserRepository.findByEmail(email);
+	}
+
+	// TODO - JavaDoc
+	public PrivateUserEntity getPrivateUserByEmail(String email) throws UserNotFoundException {
+		return findPrivateUserByEmail(email)
+			.orElseThrow(() -> new UserNotFoundException("User not found"));
+	}
+
+	// TODO - JavaDoc
+	public Optional<PublicUserEntity> findPublicUserByNickname(String nickname) {
+		return publicUserRepository.findByNickname(nickname);
+	}
+
+	// TODO - JavaDoc
+	public MailMessage createRecoveryPasswordEmail(String email, String token, String recoveryBaseUrl) throws UserNotFoundException {
+		findPrivateUserByEmail(email)
+			.orElseThrow(() -> new UserNotFoundException(String.format("The user with email %s was not found", email)));
+
+		String subject = "Tu enlace para recuperar la cuenta de Knowy está aquí";
+		String body = tokenBody(token, recoveryBaseUrl);
+
+		return new MailMessage(email, subject, body);
+	}
+
+	private String tokenBody(String token, String appUrl) {
+		String url = "%s?token=%s".formatted(appUrl, token);
+		return """
+			¡Hola, talentoso %%$@€#&%%$%%! 👋
+			
+			Sabemos que tu camino como $%%$@%%&€#@&$ es importante, por eso te ayudamos a recuperar tu acceso. \s
+			Haz clic en el siguiente enlace para restablecer tu contraseña:
+			
+			%s
+			
+			Este enlace es válido solo por un tiempo limitado.
+			Si no fuiste tú quien pidió este cambio, no te preocupes, simplemente ignora este correo.
+			
+			¡Sigue aprendiendo y conquistando tus metas con Knowy! 💪
+			
+			---
+			© 2025 KNOWY, Inc
+			""".formatted(url);
+	}
+
+	// TODO - JavaDoc
+	public PasswordResetInfo createPasswordResetInfo(String email) throws JwtKnowyException {
+		PrivateUserEntity user = findPrivateUserByEmail(email)
+			.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		return new PasswordResetInfo(user.getId(), user.getEmail());
+	}
 
 }
