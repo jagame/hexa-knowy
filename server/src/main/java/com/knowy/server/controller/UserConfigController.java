@@ -2,12 +2,14 @@ package com.knowy.server.controller;
 
 import com.knowy.server.controller.dto.UserConfigChangeEmailFormDto;
 import com.knowy.server.controller.dto.UserProfileDTO;
-import com.knowy.server.util.UserSecurityDetailsHelper;
+import com.knowy.server.service.LanguageService;
 import com.knowy.server.service.UserService;
 import com.knowy.server.service.exception.*;
 import com.knowy.server.service.model.UserSecurityDetails;
+import com.knowy.server.util.UserSecurityDetailsHelper;
 import com.knowy.server.util.exception.WrongPasswordException;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,23 +24,24 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class UserConfigController {
 
 	private final UserService userService;
+	private final LanguageService languageService;
 	private final UserSecurityDetailsHelper userSecurityDetailsHelper;
 
-	public UserConfigController(UserService userService, UserSecurityDetailsHelper userSecurityDetailsHelper) {
+	public UserConfigController(UserService userService, LanguageService languageService, UserSecurityDetailsHelper userSecurityDetailsHelper) {
 		this.userService = userService;
+		this.languageService = languageService;
 		this.userSecurityDetailsHelper = userSecurityDetailsHelper;
 	}
 
-	// FIXME - Rehacer JavaDoc
 	/**
-	 * Handles the request to view the user account page.
+	 * Displays the user account page.
 	 *
-	 * <p>Fetches the authenticated user's public information and prepares an empty DTO
-	 * for updating the email address. This data is added to the model for rendering in the view.</p>
+	 * <p>Retrieves the authenticated user's public information and adds it to the model.
+	 * Prepares the necessary data for the view to render the user's account details.</p>
 	 *
-	 * @param model       the model used to pass attributes to the view
-	 * @param userDetails the authenticated user's security details injected by Spring Security
-	 * @return the path to the user account view template
+	 * @param model       the model to which attributes are added for rendering the view
+	 * @param userDetails the authenticated user's security details provided by Spring Security
+	 * @return the name of the view template for the user account page
 	 */
 	@GetMapping("/user-account")
 	public String viewUserAccount(Model model, @AuthenticationPrincipal UserSecurityDetails userDetails) {
@@ -101,10 +104,9 @@ public class UserConfigController {
 	//User-Profile
 	@GetMapping("/user-profile")
 	public String viewUserProfile(Model model, UserProfileDTO userProfileDTO, @AuthenticationPrincipal UserSecurityDetails userDetails) {
-		model.addAttribute("userProfileDTO", userProfileDTO);
-		model.addAttribute("username", userProfileDTO.getNickname());
-		model.addAttribute("currentNickname", userDetails.getPublicUser().getNickname());
-		model.addAttribute("profilePictureUrl", userDetails.getPublicUser().getProfileImage().getUrl());
+		Hibernate.initialize(userDetails.getPublicUser().getLanguages());
+		model.addAttribute("publicUser", userDetails.getPublicUser());
+		model.addAttribute("languages", languageService.findAll());
 		return "pages/user-management/user-profile";
 	}
 
@@ -162,6 +164,7 @@ public class UserConfigController {
 		redirectAttributes.addFlashAttribute("nickname", userProfileDTO.getNickname());
 		redirectAttributes.addFlashAttribute("languages", userProfileDTO.getLanguages());
 
+		userSecurityDetailsHelper.refreshUserAuthentication();
 		return "redirect:/user-profile";
 	}
 }

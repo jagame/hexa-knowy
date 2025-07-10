@@ -75,8 +75,7 @@
 				</div>
 				<div class="modal-body">
 
-					<form id="emailChangeForm" method="post" th:action="@{/update-email}"
-						  th:object="${userConfigChangeEmailFormDto}">
+					<form id="emailChangeForm" method="post" th:action="@{/update-email}">
 
 						<label for="email">📧 Correo Electrónico</label>
 						<input class="form-control" id="email" name="email" placeholder="Introduce tu nuevo correo"

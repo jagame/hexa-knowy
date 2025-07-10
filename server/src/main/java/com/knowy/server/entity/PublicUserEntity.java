@@ -28,7 +28,7 @@ public class PublicUserEntity {
 	@JoinColumn(name = "id_profile_image", referencedColumnName = "id")
 	private ProfileImageEntity profileImage;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 		name = "public_user_language",
 		joinColumns = @JoinColumn(name = "id_public_user"),
