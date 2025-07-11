@@ -2,8 +2,8 @@ package com.knowy.server.controller;
 
 import com.knowy.server.controller.dto.UserConfigChangeEmailFormDto;
 import com.knowy.server.controller.dto.UserProfileDTO;
-import com.knowy.server.service.UserFacadeService;
 import com.knowy.server.service.LanguageService;
+import com.knowy.server.service.UserFacadeService;
 import com.knowy.server.service.exception.*;
 import com.knowy.server.service.model.UserSecurityDetails;
 import com.knowy.server.util.UserSecurityDetailsHelper;
@@ -27,6 +27,13 @@ public class UserConfigController {
 	private final LanguageService languageService;
 	private final UserSecurityDetailsHelper userSecurityDetailsHelper;
 
+	/**
+	 * The constructor
+	 *
+	 * @param userFacadeService         the userFacadeService
+	 * @param languageService           the languageService
+	 * @param userSecurityDetailsHelper the userSecurityDetailsHelper
+	 */
 	public UserConfigController(
 		UserFacadeService userFacadeService,
 		LanguageService languageService,

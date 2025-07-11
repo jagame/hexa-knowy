@@ -12,7 +12,7 @@ public class BannedWordService {
 	}
 
 	// TODO - JavaDoc
-	public boolean isNicknameBanned(String nickname) {
-		return bannedWordsRepository.isWordBanned(nickname);
+	public boolean isWordBanned(String word) {
+		return bannedWordsRepository.isWordBanned(word);
 	}
 }
