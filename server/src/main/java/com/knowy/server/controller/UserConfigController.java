@@ -2,7 +2,7 @@ package com.knowy.server.controller;
 
 import com.knowy.server.controller.dto.UserConfigChangeEmailFormDto;
 import com.knowy.server.controller.dto.UserProfileDTO;
-import com.knowy.server.service.AccessFacadeService;
+import com.knowy.server.service.UserFacadeService;
 import com.knowy.server.service.LanguageService;
 import com.knowy.server.service.exception.*;
 import com.knowy.server.service.model.UserSecurityDetails;
@@ -23,16 +23,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class UserConfigController {
 
-	private final AccessFacadeService accessFacadeService;
+	private final UserFacadeService userFacadeService;
 	private final LanguageService languageService;
 	private final UserSecurityDetailsHelper userSecurityDetailsHelper;
 
 	public UserConfigController(
-		AccessFacadeService accessFacadeService,
+		UserFacadeService userFacadeService,
 		LanguageService languageService,
 		UserSecurityDetailsHelper userSecurityDetailsHelper
 	) {
-		this.accessFacadeService = accessFacadeService;
+		this.userFacadeService = userFacadeService;
 		this.languageService = languageService;
 		this.userSecurityDetailsHelper = userSecurityDetailsHelper;
 	}
@@ -73,7 +73,7 @@ public class UserConfigController {
 		RedirectAttributes redirectAttributes
 	) {
 		try {
-			accessFacadeService.updateEmail(
+			userFacadeService.updateEmail(
 				userConfigChangeEmailFormDto.getEmail(),
 				userDetails.getPublicUser().getId(),
 				userConfigChangeEmailFormDto.getPassword()
@@ -123,7 +123,7 @@ public class UserConfigController {
 		String newNickname = userProfileDTO.getNickname();
 		if (newNickname != null && !newNickname.isBlank()) {
 			try {
-				accessFacadeService.updateNickname(newNickname, userDetails.getPublicUser().getId());
+				userFacadeService.updateNickname(newNickname, userDetails.getPublicUser().getId());
 				redirectAttributes.addFlashAttribute("username", newNickname);
 			} catch (UserNotFoundException e) {
 				redirectAttributes.addFlashAttribute("error", "Usuario no encontrado.");
@@ -142,7 +142,7 @@ public class UserConfigController {
 
 		if (userProfileDTO.getProfilePictureId() != null && userProfileDTO.getProfilePictureId() > 0) {
 			try {
-				accessFacadeService.updateProfileImage(userProfileDTO.getProfilePictureId(), userDetails.getPublicUser().getId());
+				userFacadeService.updateProfileImage(userProfileDTO.getProfilePictureId(), userDetails.getPublicUser().getId());
 				redirectAttributes.addFlashAttribute("profilePicture", userProfileDTO.getProfilePictureId());
 				redirectAttributes.addFlashAttribute("profilePictureUrl", userDetails.getPublicUser().getProfileImage().getUrl());
 			} catch (ImageNotFoundException e) {
@@ -159,7 +159,7 @@ public class UserConfigController {
 
 		String[] newLanguages = userProfileDTO.getLanguages();
 		try {
-			accessFacadeService.updateLanguages(userDetails.getPublicUser().getId(), newLanguages);
+			userFacadeService.updateLanguages(userDetails.getPublicUser().getId(), newLanguages);
 		} catch (UserNotFoundException e) {
 			redirectAttributes.addFlashAttribute("error", "Usuario no encontrado");
 		}

@@ -5,7 +5,7 @@ import com.knowy.server.controller.dto.UserEmailFormDto;
 import com.knowy.server.controller.dto.UserPasswordFormDto;
 import com.knowy.server.controller.dto.UserRegisterFormDto;
 import com.knowy.server.entity.PublicUserEntity;
-import com.knowy.server.service.AccessFacadeService;
+import com.knowy.server.service.UserFacadeService;
 import com.knowy.server.service.exception.ImageNotFoundException;
 import com.knowy.server.service.exception.InvalidUserException;
 import com.knowy.server.service.exception.UserNotFoundException;
@@ -31,7 +31,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AccessController {
 
 	private final UserSecurityDetailsHelper userSecurityDetailsHelper;
-	private final AccessFacadeService accessService;
+	private final UserFacadeService accessService;
 
 	/**
 	 * The constructor
@@ -39,7 +39,7 @@ public class AccessController {
 	 * @param accessService             the accessService
 	 * @param userSecurityDetailsHelper the userSecurityDetailsService
 	 */
-	public AccessController(AccessFacadeService accessService, UserSecurityDetailsHelper userSecurityDetailsHelper) {
+	public AccessController(UserFacadeService accessService, UserSecurityDetailsHelper userSecurityDetailsHelper) {
 		this.accessService = accessService;
 		this.userSecurityDetailsHelper = userSecurityDetailsHelper;
 	}

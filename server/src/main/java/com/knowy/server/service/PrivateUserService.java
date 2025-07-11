@@ -13,7 +13,6 @@ import com.knowy.server.util.PasswordChecker;
 import com.knowy.server.util.exception.JwtKnowyException;
 import com.knowy.server.util.exception.PasswordFormatException;
 import com.knowy.server.util.exception.WrongPasswordException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -92,6 +91,31 @@ public class PrivateUserService {
 		return privateUser;
 	}
 
+	/**
+	 * Validates a password reset JWT token by decoding and verifying its signature.
+	 *
+	 * <p>The method performs the following steps:
+	 * <ul>
+	 *     <li>Decodes the token without verifying the signature to extract the user ID.</li>
+	 *     <li>Fetches the corresponding user from the database using the extracted ID.</li>
+	 *     <li>Verifies the token's signature using the user's current password as the secret key.</li>
+	 * </ul>
+	 *
+	 * <p>If all steps succeed, the token is considered valid. Otherwise, the method returns {@code false}.</p>
+	 *
+	 * @param token the JWT token to validate
+	 * @return {@code true} if the token is well-formed, matches a known user, and its signature is valid; {@code false}
+	 * otherwise
+	 */
+	public boolean isValidToken(String token) throws UserNotFoundException {
+		try {
+			verifyPasswordResetToken(token);
+			return true;
+		} catch (JwtKnowyException e) {
+			return false;
+		}
+	}
+
 	// TODO - JavaDoc
 	public PrivateUserEntity save(PrivateUserEntity user) {
 		return privateUserRepository.save(user);
@@ -120,14 +144,21 @@ public class PrivateUserService {
 	}
 
 	// TODO - JavaDoc
-	public MailMessage createRecoveryPasswordEmail(String email, String token, String recoveryBaseUrl) throws UserNotFoundException {
-		findPrivateUserByEmail(email)
-			.orElseThrow(() -> new UserNotFoundException(String.format("The user with email %s was not found", email)));
+	public MailMessage createRecoveryPasswordEmail(String email, String recoveryBaseUrl)
+		throws UserNotFoundException, JwtKnowyException {
 
 		String subject = "Tu enlace para recuperar la cuenta de Knowy está aquí";
+		String token = createUserTokenByEmail(email);
 		String body = tokenBody(token, recoveryBaseUrl);
-
 		return new MailMessage(email, subject, body);
+	}
+
+	private String createUserTokenByEmail(String email) throws UserNotFoundException, JwtKnowyException {
+		PrivateUserEntity privateUser = findPrivateUserByEmail(email)
+			.orElseThrow(() -> new UserNotFoundException(String.format("The user with email %s was not found", email)));
+
+		PasswordResetInfo passwordResetInfo = new PasswordResetInfo(privateUser.getId(), privateUser.getEmail());
+		return jwtTools.encode(passwordResetInfo, privateUser.getPassword());
 	}
 
 	private String tokenBody(String token, String appUrl) {
@@ -149,38 +180,4 @@ public class PrivateUserService {
 			© 2025 KNOWY, Inc
 			""".formatted(url);
 	}
-
-	// TODO - JavaDoc
-	public PasswordResetInfo createPasswordResetInfo(String email) throws JwtKnowyException {
-		PrivateUserEntity user = findPrivateUserByEmail(email)
-			.orElseThrow(() -> new UsernameNotFoundException("User not found"));
-		return new PasswordResetInfo(user.getId(), user.getEmail());
-	}
-
-
-	/**
-	 * Validates a password reset JWT token by decoding and verifying its signature.
-	 *
-	 * <p>The method performs the following steps:
-	 * <ul>
-	 *     <li>Decodes the token without verifying the signature to extract the user ID.</li>
-	 *     <li>Fetches the corresponding user from the database using the extracted ID.</li>
-	 *     <li>Verifies the token's signature using the user's current password as the secret key.</li>
-	 * </ul>
-	 *
-	 * <p>If all steps succeed, the token is considered valid. Otherwise, the method returns {@code false}.</p>
-	 *
-	 * @param token the JWT token to validate
-	 * @return {@code true} if the token is well-formed, matches a known user, and its signature is valid; {@code false}
-	 * otherwise
-	 */
-	public boolean isValidToken(String token) throws UserNotFoundException {
-		try {
-			verifyPasswordResetToken(token);
-			return true;
-		} catch (JwtKnowyException e) {
-			return false;
-		}
-	}
-
 }
