@@ -6,9 +6,12 @@ import com.knowy.server.controller.dto.UserPasswordFormDto;
 import com.knowy.server.controller.dto.UserRegisterFormDto;
 import com.knowy.server.entity.PublicUserEntity;
 import com.knowy.server.service.AccessFacadeService;
-import com.knowy.server.service.exception.AccessException;
+import com.knowy.server.service.exception.ImageNotFoundException;
 import com.knowy.server.service.exception.InvalidUserException;
+import com.knowy.server.service.exception.UserNotFoundException;
 import com.knowy.server.util.UserSecurityDetailsHelper;
+import com.knowy.server.util.exception.JwtKnowyException;
+import com.knowy.server.util.exception.MailDispatchException;
 import com.knowy.server.util.exception.PasswordFormatException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -91,11 +94,12 @@ public class AccessController {
 		@Valid @ModelAttribute UserRegisterFormDto user,
 		RedirectAttributes redirectAttributes,
 		Errors errors
-	) {
+	) throws ImageNotFoundException {
 		try {
 			validateFieldErrors(errors);
 
-			PublicUserEntity publicUser = accessService.registerNewUser(user.getNickname(), user.getEmail(), user.getPassword());
+			PublicUserEntity publicUser = accessService.registerNewUser(user.getNickname(), user.getEmail(),
+				user.getPassword());
 			userSecurityDetailsHelper.autoLoginUserByEmail(publicUser.getPrivateUserEntity().getEmail());
 			return "redirect:/home";
 		} catch (InvalidUserException e) {
@@ -147,7 +151,7 @@ public class AccessController {
 		try {
 			accessService.sendRecoveryPasswordEmail(email.getEmail(), getPasswordChangeUrl(httpServletRequest));
 			return "redirect:/login";
-		} catch (AccessException e) {
+		} catch (UserNotFoundException | JwtKnowyException | MailDispatchException e) {
 			redirectAttributes.addFlashAttribute("error",
 				"Se ha producido un error al enviar el email. Intente lo más tarde");
 			return "redirect:/password-change/email";
@@ -178,12 +182,12 @@ public class AccessController {
 	public String passwordChange(
 		@RequestParam String token,
 		Model model
-	) {
-		if (accessService.isValidToken(token)) {
-			model.addAttribute("token", token);
-			return "pages/access/password-change";
+	) throws UserNotFoundException {
+		if (!accessService.isValidToken(token)) {
+			return "redirect:/";
 		}
-		return "redirect:/";
+		model.addAttribute("token", token);
+		return "pages/access/password-change";
 	}
 
 	/**
@@ -209,13 +213,13 @@ public class AccessController {
 		RedirectAttributes redirectAttributes
 	) {
 		try {
-			accessService.updateUserPassword(
+			accessService.updatePassword(
 				token,
 				userPasswordFormDto.getPassword(),
 				userPasswordFormDto.getConfirmPassword()
 			);
 			return "redirect:/login";
-		} catch (AccessException e) {
+		} catch (UserNotFoundException | JwtKnowyException e) {
 			redirectAttributes.addAttribute("error", "Se ha producido un error al actualizar la contraseña");
 			return "redirect:/login";
 		} catch (PasswordFormatException e) {
