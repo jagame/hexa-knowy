@@ -35,10 +35,10 @@ public class UserFacadeService {
 	}
 
 	// TODO - Añadir JavaDoc
-	public PublicUserEntity registerNewUser(String nickname, String email, String password)
+	public PrivateUserEntity registerNewUser(String nickname, String email, String password)
 		throws InvalidUserException, ImageNotFoundException {
-		PrivateUserEntity newPrivateUser = privateUserService.create(email, password);
-		return publicUserService.create(nickname, newPrivateUser);
+		PublicUserEntity newPublicUser = publicUserService.create(nickname);
+		return privateUserService.create(email, password, newPublicUser);
 	}
 
 	// TODO - Añadir JavaDoc

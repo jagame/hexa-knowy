@@ -1,6 +1,7 @@
 package com.knowy.server.service;
 
 import com.knowy.server.entity.PrivateUserEntity;
+import com.knowy.server.entity.PublicUserEntity;
 import com.knowy.server.repository.PrivateUserRepository;
 import com.knowy.server.service.exception.InvalidUserEmailException;
 import com.knowy.server.service.exception.InvalidUserPasswordFormatException;
@@ -38,7 +39,7 @@ public class PrivateUserService {
 		this.jwtTools = jwtTools;
 	}
 
-	public PrivateUserEntity create(String email, String password)
+	public PrivateUserEntity create(String email, String password, PublicUserEntity publicUser)
 		throws InvalidUserPasswordFormatException, InvalidUserEmailException {
 
 		if (findPrivateUserByEmail(email).isPresent()) {
@@ -52,7 +53,9 @@ public class PrivateUserService {
 		PrivateUserEntity privateUser = new PrivateUserEntity();
 		privateUser.setEmail(email);
 		privateUser.setPassword(passwordEncoder.encode(password));
-		return privateUser;
+		privateUser.setPublicUserEntity(publicUser);
+
+		return save(privateUser);
 	}
 
 	// TODO - JavaDoc

@@ -1,7 +1,6 @@
 package com.knowy.server.service;
 
 import com.knowy.server.entity.LanguageEntity;
-import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.entity.ProfileImageEntity;
 import com.knowy.server.entity.PublicUserEntity;
 import com.knowy.server.repository.LanguageRepository;
@@ -28,7 +27,7 @@ public class PublicUserService {
 	}
 
 	// TODO - Añadir JavaDoc; Hacer que el usuario se cree atraves del privado y quitar acceso del publico al private
-	public PublicUserEntity create(String nickname, PrivateUserEntity privateUser) throws InvalidUserException, ImageNotFoundException {
+	public PublicUserEntity create(String nickname) throws InvalidUserException, ImageNotFoundException {
 		if (findPublicUserByNickname(nickname).isPresent()) {
 			throw new InvalidUserNicknameException("Nickname alredy exists");
 		}
@@ -37,11 +36,7 @@ public class PublicUserService {
 		publicUser.setNickname(nickname);
 		publicUser.setProfileImage(findProfileImageById(1)
 			.orElseThrow(() -> new ImageNotFoundException("Not found profile image")));
-
-		privateUser.setPublicUserEntity(publicUser);
-		publicUser.setPrivateUserEntity(privateUser);
-
-		return save(publicUser);
+		return publicUser;
 	}
 
 	// TODO - JavaDoc
