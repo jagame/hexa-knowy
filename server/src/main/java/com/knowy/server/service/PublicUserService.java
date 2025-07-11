@@ -19,14 +19,34 @@ public class PublicUserService {
 	private final ProfileImageRepository profileImageRepository;
 	private final LanguageRepository languageRepository;
 
-	// TODO - JavaDoc
-	public PublicUserService(PublicUserRepository publicUserRepository, LanguageRepository languageRepository, ProfileImageRepository profileImageRepository) {
+	/**
+	 * The constructor
+	 *
+	 * @param publicUserRepository   the publicUserRepository
+	 * @param languageRepository     the languageRepository
+	 * @param profileImageRepository the profileImageRepository
+	 */
+	public PublicUserService(
+		PublicUserRepository publicUserRepository,
+		LanguageRepository languageRepository,
+		ProfileImageRepository profileImageRepository
+	) {
 		this.publicUserRepository = publicUserRepository;
 		this.languageRepository = languageRepository;
 		this.profileImageRepository = profileImageRepository;
 	}
 
-	// TODO - Añadir JavaDoc
+	/**
+	 * Creates a new {@code PublicUserEntity} with the specified nickname.
+	 *
+	 * <p>Validates that the nickname is unique and assigns a default profile image (ID 1).
+	 * Throws exceptions if the nickname is already taken or the default image cannot be found.</p>
+	 *
+	 * @param nickname the desired nickname for the new user
+	 * @return a new {@code PublicUserEntity} instance with the default profile image set
+	 * @throws InvalidUserException   if the nickname is already in use
+	 * @throws ImageNotFoundException if the default profile image (ID 1) does not exist
+	 */
 	public PublicUserEntity create(String nickname) throws InvalidUserException, ImageNotFoundException {
 		if (findPublicUserByNickname(nickname).isPresent()) {
 			throw new InvalidUserNicknameException("Nickname already exists");
@@ -39,12 +59,30 @@ public class PublicUserService {
 		return publicUser;
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Persists the given {@code PublicUserEntity} in the database.
+	 *
+	 * <p>If the entity already exists, it will be updated; otherwise, a new record will be created.</p>
+	 *
+	 * @param user the {@code PublicUserEntity} to persist
+	 * @return the saved entity with any database-generated fields (like ID) populated
+	 */
 	public PublicUserEntity save(PublicUserEntity user) {
 		return publicUserRepository.save(user);
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Updates the nickname of a public user.
+	 *
+	 * <p>Ensures the new nickname is different from the current one and not already taken.
+	 * Performs the update in the repository if validations pass.</p>
+	 *
+	 * @param newNickname the new nickname to assign
+	 * @param id          the ID of the user whose nickname should be updated
+	 * @throws UserNotFoundException         if the user with the given ID does not exist
+	 * @throws UnchangedNicknameException    if the new nickname is the same as the current one
+	 * @throws NicknameAlreadyTakenException if the new nickname is already in use by another user
+	 */
 	public void updateNickname(String newNickname, Integer id) throws UserNotFoundException,
 		UnchangedNicknameException, NicknameAlreadyTakenException {
 		PublicUserEntity publicUser = publicUserRepository.findUserById(id)
@@ -59,7 +97,18 @@ public class PublicUserService {
 		publicUserRepository.updateNickname(newNickname, id);
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Updates the profile image of a public user.
+	 *
+	 * <p>Validates that the new profile image exists and is different from the current one.
+	 * Throws exceptions if validations fail or if the user or image is not found.</p>
+	 *
+	 * @param newProfileImageId the ID of the new profile image to assign
+	 * @param userId            the ID of the user whose profile image should be updated
+	 * @throws UserNotFoundException   if no user exists with the given ID
+	 * @throws ImageNotFoundException  if no profile image exists with the given ID
+	 * @throws UnchangedImageException if the new image is the same as the current one
+	 */
 	public void updateProfileImage(Integer newProfileImageId, Integer userId) throws UnchangedImageException,
 		ImageNotFoundException, UserNotFoundException {
 		PublicUserEntity user = publicUserRepository.findUserById(userId)
@@ -76,7 +125,16 @@ public class PublicUserService {
 		publicUserRepository.save(user);
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Updates the set of languages associated with a public user.
+	 *
+	 * <p>Fetches language entities by their names (case-insensitive) and updates the user's languages.
+	 * Throws an exception if the user is not found.</p>
+	 *
+	 * @param userId    the ID of the user whose languages should be updated
+	 * @param languages an array of language names to assign to the user
+	 * @throws UserNotFoundException if no user exists with the given ID
+	 */
 	public void updateLanguages(Integer userId, String[] languages) throws UserNotFoundException {
 		PublicUserEntity user = publicUserRepository.findUserById(userId)
 			.orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
@@ -86,17 +144,32 @@ public class PublicUserService {
 		publicUserRepository.save(user);
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Finds a public user by their unique identifier.
+	 *
+	 * @param id the unique ID of the public user
+	 * @return an {@code Optional} containing the {@code PublicUserEntity} if found, or empty if not found
+	 */
 	public Optional<PublicUserEntity> findPublicUserById(Integer id) {
 		return publicUserRepository.findUserById(id);
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Finds a profile image by its unique identifier.
+	 *
+	 * @param id the unique ID of the profile image
+	 * @return an {@code Optional} containing the {@code ProfileImageEntity} if found, or empty if not found
+	 */
 	public Optional<ProfileImageEntity> findProfileImageById(Integer id) {
 		return profileImageRepository.findById(id);
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Finds a public user by their nickname.
+	 *
+	 * @param nickname the nickname of the public user
+	 * @return an {@code Optional} containing the {@code PublicUserEntity} if found, or empty if not found
+	 */
 	public Optional<PublicUserEntity> findPublicUserByNickname(String nickname) {
 		return publicUserRepository.findByNickname(nickname);
 	}
