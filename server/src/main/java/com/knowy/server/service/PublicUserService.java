@@ -26,10 +26,10 @@ public class PublicUserService {
 		this.profileImageRepository = profileImageRepository;
 	}
 
-	// TODO - Añadir JavaDoc; Hacer que el usuario se cree atraves del privado y quitar acceso del publico al private
+	// TODO - Añadir JavaDoc
 	public PublicUserEntity create(String nickname) throws InvalidUserException, ImageNotFoundException {
 		if (findPublicUserByNickname(nickname).isPresent()) {
-			throw new InvalidUserNicknameException("Nickname alredy exists");
+			throw new InvalidUserNicknameException("Nickname already exists");
 		}
 
 		PublicUserEntity publicUser = new PublicUserEntity();
@@ -44,24 +44,6 @@ public class PublicUserService {
 		return publicUserRepository.save(user);
 	}
 
-	/**
-	 * Updates the nickname of a public user.
-	 *
-	 * <p>This method validates the provided nickname change by performing the following checks:
-	 * <ul>
-	 *   <li>Verifies that a user with the given {@code id} exists.</li>
-	 *   <li>Ensures that the new nickname is different from the user's current nickname.</li>
-	 *   <li>Checks that the new nickname is not already taken by another user.</li>
-	 * </ul>
-	 *
-	 * <p>If all validations pass, the user's nickname is updated in the repository.
-	 *
-	 * @param newNickname the new nickname to assign to the user
-	 * @param id          the unique identifier of the user whose nickname is being updated
-	 * @throws UserNotFoundException         if no user is found with the given ID
-	 * @throws UnchangedNicknameException    if the new nickname is the same as the current one
-	 * @throws NicknameAlreadyTakenException if the new nickname is already in use by another user
-	 */
 	// TODO - JavaDoc
 	public void updateNickname(String newNickname, Integer id) throws UserNotFoundException,
 		UnchangedNicknameException, NicknameAlreadyTakenException {

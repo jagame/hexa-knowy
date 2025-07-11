@@ -43,7 +43,7 @@ public class PrivateUserService {
 		throws InvalidUserPasswordFormatException, InvalidUserEmailException {
 
 		if (findPrivateUserByEmail(email).isPresent()) {
-			throw new InvalidUserEmailException("Email alredy exists");
+			throw new InvalidUserEmailException("Email already exists");
 		}
 
 		if (!passwordChecker.isRightPasswordFormat(password)) {
@@ -59,7 +59,6 @@ public class PrivateUserService {
 	}
 
 	// TODO - JavaDoc
-	// *
 	public void updateEmail(String email, int userId, String password)
 		throws UserNotFoundException, UnchangedEmailException, WrongPasswordException {
 		PrivateUserEntity privateUser = getPrivateUserById(userId);
@@ -68,11 +67,11 @@ public class PrivateUserService {
 		}
 		passwordChecker.assertHasPassword(privateUser, password);
 
-		privateUserRepository.updateEmail(privateUser.getEmail(), email);
+		privateUser.setEmail(email);
+		privateUserRepository.save(privateUser);
 	}
 
 	// TODO - JavaDoc
-	// *
 	public void resetPassword(String token, String password, String confirmPassword)
 		throws PasswordFormatException, JwtKnowyException, UserNotFoundException {
 
