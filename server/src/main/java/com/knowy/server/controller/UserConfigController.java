@@ -4,6 +4,7 @@ import com.knowy.server.controller.dto.UserConfigSessionDTO;
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.entity.PublicUserEntity;
 import com.knowy.server.repository.JpaPrivateUserRepository;
+import com.knowy.server.repository.JpaPublicUserRepository;
 import com.knowy.server.repository.PrivateUserRepository;
 import com.knowy.server.service.AccessService;
 import com.knowy.server.service.UserService;
@@ -13,6 +14,7 @@ import com.knowy.server.util.exception.MailDispatchException;
 import com.knowy.server.util.exception.WrongPasswordException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.jdbc.support.JdbcAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -29,12 +31,16 @@ public class UserConfigController {
 	private final AccessService accessService;
 	private final JpaPrivateUserRepository jpaPrivateUserRepository;
 	private final PasswordCheker passwordCheker;
+	private final JdbcAccessor jdbcAccessor;
+	private final JpaPublicUserRepository jpaPublicUserRepository;
 
-	public UserConfigController(UserService userService, AccessService accessService, JpaPrivateUserRepository jpaPrivateUserRepository, PasswordCheker passwordCheker) {
+	public UserConfigController(UserService userService, AccessService accessService, JpaPrivateUserRepository jpaPrivateUserRepository, PasswordCheker passwordCheker, JdbcAccessor jdbcAccessor, JpaPublicUserRepository jpaPublicUserRepository) {
 		this.userService = userService;
 		this.accessService = accessService;
 		this.jpaPrivateUserRepository = jpaPrivateUserRepository;
 		this.passwordCheker = passwordCheker;
+		this.jdbcAccessor = jdbcAccessor;
+		this.jpaPublicUserRepository = jpaPublicUserRepository;
 	}
 
 	String username = "usuario123";
@@ -136,6 +142,7 @@ public class UserConfigController {
 								 ModelMap interfaceScreen,
 								 HttpSession session,
 								 HttpServletRequest request) throws WrongPasswordException, JwtKnowyException, MailDispatchException {
+
 		if (!deletePassword.equals(confirmPassword)) {
 			interfaceScreen.addAttribute("error", "La contraseña es incorrecta o no coincide");
 			return "pages/user-management/delete-account-end";
@@ -153,30 +160,33 @@ public class UserConfigController {
 			return "pages/user-management/delete-account-end";
 		}
 
+		String domainUrl = getDomainUrl(request);
+		String recoveryBaseUrl = domainUrl + "/reactivate-account";
+		accessService.sendDeletedAccountEmail(recoveryBaseUrl, privateUserEntity.getEmail());
+
 		privateUserEntity.setActive(false);
 		jpaPrivateUserRepository.save(privateUserEntity);
 		interfaceScreen.addAttribute("success", "Tu cuenta ha sido eliminada correctamente. Dispones de 30 días para recuperarla.");
-		session.invalidate();
 
-
-		String domainUrl = getDomainUrl(request);
-		String recoveryBaseUrl = domainUrl + "/reactivate-account";
-		//accessService.sendDeletedAccountEmail(recoveryBaseUrl, privateUserEntity.getEmail());
 		session.invalidate();
 
 		return "pages/user-management/delete-account-end";
-
 	}
 
+
 	@GetMapping("/reactivate-account")
-	public String reactivateAccount(@RequestParam String token, ModelMap interfaceScreen) {
+	public String reactivateAccount(@RequestParam("token") String token, RedirectAttributes redirectAttributes) {
 		boolean isValidToken = accessService.isValidToken(token);
 		if (!isValidToken) {
-			interfaceScreen.addAttribute("error", "El token ha expirado o no es válido");
-			return "pages/user-management/reactivate-account";
+			redirectAttributes.addFlashAttribute("error", "El token ha expirado o no es válido");
+			return "redirect:/error/error";
 		}
-		interfaceScreen.addAttribute("success", "Tu cuenta ha sido reactivada correctamente.");
-		return "pages/user-management/reactivate-account";
+		//obtener usuario del token??
+		//active=true
+		//guardar usuario en bbdd
+
+		redirectAttributes.addFlashAttribute("success", "Tu cuenta ha sido reactivada correctamente.");
+		return "redirect:/pages/access/login";
 	}
 
 	private String getDomainUrl(HttpServletRequest request) {

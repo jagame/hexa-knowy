@@ -229,10 +229,12 @@ public class AccessService {
 		return """
 			¡Hola, %%$@<UNK>#&%%$%%!
 			
-			Tu cuenta de KNOWY ha sido eliminada correctamente.
+			Tu cuenta de KNOWY ha sido desactivada correctamente.
 			
 			Dispones de 30 días para recuperarla haciendo click en el siguiente enlace:
 			%s
+			
+			Una vez transcurrido este tiempo, tu cuenta será eliminada definitivamente.
 			
 			¡Esperamos verte de vuelta!
 			
