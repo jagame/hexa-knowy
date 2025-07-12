@@ -18,14 +18,15 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Objects;
 
 @Service
-public class JwtService {
+public class JwtTools {
 
 	private final SecretKey key;
 	private final ObjectMapper objectMapper;
 
-	public JwtService(@Value("${spring.jwt.key}") String secretKey, ObjectMapper objectMapper) {
+	public JwtTools(@Value("${spring.jwt.key}") String secretKey, ObjectMapper objectMapper) {
 		this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 		this.objectMapper = objectMapper;
 	}
@@ -153,6 +154,8 @@ public class JwtService {
 	 *                           field fails
 	 */
 	public <T> T decodeUnverified(String token, Class<T> clazz) throws JwtKnowyException {
+		Objects.requireNonNull(token, "A not null token is required");
+
 		try {
 			String payloadJson = extractPayloadJson(token);
 			JsonNode jsonData = extractDataNode(payloadJson);

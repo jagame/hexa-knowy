@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class EmailClientService {
+public class EmailClientTool {
 
 	private final JavaMailSender mailSender;
 
-	public EmailClientService(JavaMailSender mailSender) {
+	public EmailClientTool(JavaMailSender mailSender) {
 		this.mailSender = mailSender;
 	}
 
