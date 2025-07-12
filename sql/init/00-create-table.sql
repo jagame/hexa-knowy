@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS public.public_user_lesson
 	PRIMARY KEY (id_public_user, id_lesson)
 );
 
-CREATE TABLE IF NOT EXISTS public.exercises
+CREATE TABLE IF NOT EXISTS public.exercise
 (
 	id        serial  NOT NULL,
 	id_lesson integer NOT NULL,
@@ -165,15 +165,15 @@ ALTER TABLE IF EXISTS public.lesson
 	ADD FOREIGN KEY (id_next_lesson)
 		REFERENCES public.lesson (id);
 
--- FK exercises
-ALTER TABLE IF EXISTS public.exercises
+-- FK exercise
+ALTER TABLE IF EXISTS public.exercise
 	ADD FOREIGN KEY (id_lesson)
 		REFERENCES public.lesson (id);
 
 -- FK option
 ALTER TABLE IF EXISTS public.option
 	ADD FOREIGN KEY (id_exercise)
-		REFERENCES public.exercises (id);
+		REFERENCES public.exercise (id);
 
 -- FK public_user_option
 ALTER TABLE IF EXISTS public.public_user_option

@@ -1,6 +1,7 @@
-package com.knowy.server.repository;
+package com.knowy.server.repository.adapters;
 
 import com.knowy.server.entity.CourseEntity;
+import com.knowy.server.repository.ports.CourseRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;

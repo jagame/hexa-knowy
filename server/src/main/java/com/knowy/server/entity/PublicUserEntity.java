@@ -34,4 +34,5 @@ public class PublicUserEntity {
 		joinColumns = @JoinColumn(name = "id_public_user"),
 		inverseJoinColumns = @JoinColumn(name = "id_language"))
 	private Set<LanguageEntity> languages;
+
 }

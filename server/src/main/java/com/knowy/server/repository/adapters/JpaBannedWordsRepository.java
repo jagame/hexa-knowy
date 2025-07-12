@@ -1,9 +1,9 @@
-package com.knowy.server.repository;
+package com.knowy.server.repository.adapters;
 
 import com.knowy.server.entity.BannedWordsEntity;
+import com.knowy.server.repository.ports.BannedWordsRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 

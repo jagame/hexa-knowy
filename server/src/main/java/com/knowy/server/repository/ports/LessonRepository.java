@@ -1,7 +1,6 @@
-package com.knowy.server.repository;
+package com.knowy.server.repository.ports;
 
 import com.knowy.server.entity.LessonEntity;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 

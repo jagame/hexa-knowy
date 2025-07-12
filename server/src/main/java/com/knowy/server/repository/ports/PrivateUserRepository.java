@@ -1,4 +1,4 @@
-package com.knowy.server.repository;
+package com.knowy.server.repository.ports;
 
 import com.knowy.server.entity.PrivateUserEntity;
 

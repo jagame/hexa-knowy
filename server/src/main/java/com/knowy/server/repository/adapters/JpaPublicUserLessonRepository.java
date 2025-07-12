@@ -1,8 +1,8 @@
-package com.knowy.server.repository;
+package com.knowy.server.repository.adapters;
 
 import com.knowy.server.entity.PublicUserLessonEntity;
 import com.knowy.server.entity.PublicUserLessonIdEntity;
-import jakarta.validation.constraints.NotNull;
+import com.knowy.server.repository.ports.PublicUserLessonRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

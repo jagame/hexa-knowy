@@ -1,9 +1,9 @@
-<div th:fragment="options-quiz" class="options-quiz">
+<div th:fragment="options-quiz(options)" class="options-quiz">
 	<button th:each="option : ${options}"
 			class="quiz-option"
 			type="button"
-			th:text="${option.getLetter() + ' '+option.getText()}"
-			th:attr="data-correct=${option.correct}">
+			th:text="${'-' + ' ' + option.text}"
+			th:attr="data-correct=${option.isCorrect}">
 	</button>
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {

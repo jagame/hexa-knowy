@@ -8,11 +8,18 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 	<link rel="stylesheet" th:href="@{/styles/pages/tests.css}">
 </head>
-<body >
+<body>
 <!-- I use this page ONLY for testing the quiz-options. It's not necessary. In case that you want, delete this page. -->
 <main layout:fragment="main-content">
 	<!--CARD LAYOUT HEADER-->
-	<div th:replace="~{components/cards-quiz/quiz-header :: quiz-header}"></div>
+	<div th:replace="~{components/cards-quiz/quiz-header :: quiz-header(
+			courseName='Java Script Avanzado',
+      		lessonId=${exercise.lessonID()},
+      		exerciseId=${exercise.exerciseID()},
+      		cardStreak=${exercise.cardStreak()},
+      		correctPercentage=${exercise.correctPercentage()}
+ 	 	)}">
+	</div>
 
 	<!--PROBLEM DEFINITION-->
 	<div class="question-container">
@@ -21,7 +28,7 @@
 
 	<!--POSSIBLE ANSWERS COMPONENT-->
 	<div class="answers-container">
-		<div th:replace="~{components/cards-quiz/options-quiz :: options-quiz}"></div>
+		<div th:replace="~{components/cards-quiz/options-quiz :: options-quiz(options=${exercise.options()})}"></div>
 	</div>
 
 	<!--NAVIGATION BUTTONS-->
@@ -36,9 +43,48 @@
 			</a>
 
 			<a href="#">
-				<button class="navigation-buttons__element">Siguiente →</button>
+				<button class="navigation-buttons__element" data-bs-target="#exampleModal" data-bs-toggle="modal">
+					Siguiente →
+				</button>
 			</a>
+		</div>
+	</div>
 
+	<!-- Modal -->
+	<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+					<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+				</div>
+				<div class="modal-body d-flex flex-wrap justify-content-evenly">
+					<button type="button" class="btn btn-primary happy">
+						Fácil
+						<img alt="Facil" class="avatar-selectable rounded-circle img-fluid me-2"
+							 data-avatar-src-path="/images/profile/knowylogo.svg" data-bs-dismiss="modal"
+							 src="/images/test/mood-happy.svg"
+						/>
+					</button>
+
+					<button type="button" class="btn btn-primary empty">
+						Normal
+						<img alt="Normal" class="avatar-selectable rounded-circle img-fluid me-2"
+							 data-avatar-src-path="/images/profile/knowylogo_red.svg" data-bs-dismiss="modal"
+							 src="/images/test/mood-empty.svg"
+						/>
+					</button>
+
+					<button type="button" class="btn btn-primary sad">
+						Difícil
+						<img alt="Difícil" class="avatar-selectable rounded-circle img-fluid"
+							 width="50px" height="50px"
+							 data-avatar-src-path="/images/profile/knowylogo_blue.svg" data-bs-dismiss="modal"
+							 src="/images/test/mood-sad.svg"
+						/>
+					</button>
+				</div>
+			</div>
 		</div>
 	</div>
 </main>

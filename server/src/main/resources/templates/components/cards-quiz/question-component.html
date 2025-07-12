@@ -2,7 +2,7 @@
 
 	<div class="enunciado-container">
 		<div class="enunciado-container__enunciado-header">
-			<p th:text="${'Pregunta ' + questionNumber}" class="enunciado-header__text"></p>
+			<p th:text="${'Pregunta ' + exerciseId}" class="enunciado-header__text"></p>
 			<button class="toggle-button" id="toggleEnunciado">
 				<i class="fas fa-chevron-down toggle-icon"></i> </button>
 		</div>
@@ -15,6 +15,5 @@
 	<div class="media-container">
 		<img th:src="${imgPath}" alt="Imagen o Video de la Lección" class="lesson-media">
 	</div>
-
 
 </div>

@@ -1,7 +1,8 @@
-package com.knowy.server.repository;
+package com.knowy.server.repository.adapters;
 
 import com.knowy.server.entity.ProfileImageEntity;
 import com.knowy.server.entity.PublicUserEntity;
+import com.knowy.server.repository.ports.PublicUserRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
