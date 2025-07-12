@@ -1,8 +1,6 @@
 @use "../global-vars" as *;
 @use "../components/lesson/documents-links" as *;
 @use "../pages/course-page" as *;
-@use "../font" as *;
-
 
 body {
 	box-sizing: border-box;
@@ -93,7 +91,7 @@ body {
 }
 
 .lesson-content{
-	font-family: "inter", sans-serif;
+	font-family: inter, sans-serif;
 	padding-bottom: 1rem;
 }
 
