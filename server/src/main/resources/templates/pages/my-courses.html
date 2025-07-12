@@ -19,83 +19,49 @@
 		<div class="row row-cols-md-2 row-cols-1">
 			<section class="col-md-9 col-12">
 				<!--filters-->
-				<div class="filters">
+				<form method="get" th:action="@{/my-courses}" class="filters">
 					<div class="filters-dropdowns">
-
-						<!--categories-->
+						<!-- Categories -->
 						<div class="dropdown-categories">
-							<button aria-expanded="false" class="btn btn-categories dropdown-toggle w-100"
-									data-bs-toggle="dropdown"
-									type="button">
-								Categorías
-							</button>
-							<ul class="dropdown-menu">
-								<li class="list-group-item">
-									<input class="form-check-input me-1" id="categoriesFirstCheckbox" type="checkbox"
-										   value="">
-									<label class="form-check-label" for="categoriesFirstCheckbox">En curso</label>
-								</li>
-								<li class="list-group-item">
-									<input class="form-check-input me-1" id="categoriesSecondCheckbox" type="checkbox"
-										   value="">
-									<label class="form-check-label" for="categoriesSecondCheckbox">Terminados</label>
-								</li>
-							</ul>
+							<label for="category" class="form-label d-block mb-1">Categoría</label>
+							<select class="form-select btn-categories w-100" name="category" id="category">
+								<option value="">Todos los idiomas</option>
+								<option th:each="lang : ${allLanguages}"
+										th:value="${lang}"
+										th:text="${lang}"
+										th:selected="${category != null and #strings.equalsIgnoreCase(category, lang)}"></option>
+							</select>
 						</div>
 
-						<!--order-->
-						<div class="dropdown-order">
-							<button aria-expanded="false" class="btn btn-order dropdown-toggle w-100"
-									data-bs-toggle="dropdown"
-									type="button">
-								Orden
-							</button>
-							<ul class="dropdown-menu">
-								<li class="list-group-item">
-									<input class="form-check-input me-1" id="orderFirstCheckbox" type="checkbox"
-										   value="">
-									<label class="form-check-label" for="orderFirstCheckbox">En curso</label>
-								</li>
-								<li class="list-group-item">
-									<input class="form-check-input me-1" id="orderSecondCheckbox" type="checkbox"
-										   value="">
-									<label class="form-check-label" for="orderSecondCheckbox">Terminados</label>
-								</li>
-							</ul>
-						</div>
+						<!-- Difficulty (Implement in the future when courses were implemented) -->
+						<!-- <div class="dropdown-categories">-->
+						<!-- <label for="difficulty" class="form-label d-block mb-1">Dificultad</label>-->
+						<!-- <select class="form-select btn-difficulty w-100" name="difficulty" id="difficulty">-->
+						<!-- <option value="">Todas</option>-->
+						<!-- <option value="1">Fácil</option>-->
+						<!-- <option value="2">Intermedio</option>-->
+						<!-- <option value="2">Difícil</option>-->
+						<!-- </select>-->
+						<!-- </div>-->
 
-						<!--visualization-->
-						<div class="dropdown-visualization">
-							<button aria-expanded="false" class="btn btn-visualization dropdown-toggle w-100"
-									data-bs-toggle="dropdown"
-									type="button">
-								Visualización
-							</button>
-							<ul class="dropdown-menu">
-								<li class="list-group-item">
-									<input class="form-check-input me-1" id="visualizationFirstCheckbox" type="checkbox"
-										   value="">
-									<label class="form-check-label" for="visualizationFirstCheckbox">En curso</label>
-								</li>
-								<li class="list-group-item">
-									<input class="form-check-input me-1" id="visualizationSecondCheckbox"
-										   type="checkbox"
-										   value="">
-									<label class="form-check-label" for="visualizationSecondCheckbox">Terminados</label>
-								</li>
-							</ul>
+						<!-- Order -->
+						<div class="dropdown-categories">
+							<label for="order" class="form-label d-block mb-1">Ordenar por:</label>
+							<select class="form-select btn-order w-100" name="order" id="order">
+								<option value="alpha_asc" th:selected="${order == 'alpha_asc'}">Alfabético A→Z</option>
+								<option value="alpha_desc" th:selected="${order == 'alpha_desc'}">Alfabético Z→A</option>
+								<option value="progress_asc" th:selected="${order == 'progress_asc'}">Progresión ↑</option>
+								<option value="progress_desc" th:selected="${order == 'progress_desc'}">Progresión ↓</option>
+								<option value="date_asc" th:selected="${order == 'date_asc'}">Fecha de publicación ↑</option>
+								<option value="date_desc" th:selected="${order == 'date_desc'}">Fecha de publicación ↓</option>
+							</select>
 						</div>
 					</div>
-
-					<div class="row row-cols-2 g-2">
-						<div class="col">
-							<button class="btn btn-apply w-100" type="button">Aplicar</button>
-						</div>
-						<div class="col">
-							<button class="btn btn-delete w-100" type="button">Borrar</button>
-						</div>
+					<div class="filters-buttons mt-3">
+						<button class="btn btn-apply w-100" type="submit">Aplicar</button>
+						<a class="btn btn-delete w-100" th:href="@{/my-courses}">Borrar</a>
 					</div>
-				</div>
+				</form>
 
 				<!--course-->
 				<div class="courses">

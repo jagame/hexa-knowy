@@ -3,6 +3,7 @@ package com.knowy.server.service;
 import com.knowy.server.controller.dto.CourseCardDTO;
 import com.knowy.server.entity.*;
 import com.knowy.server.repository.CourseRepository;
+import com.knowy.server.repository.LanguageRepository;
 import com.knowy.server.repository.LessonRepository;
 import com.knowy.server.repository.PublicUserLessonRepository;
 import org.springframework.stereotype.Service;
@@ -14,12 +15,14 @@ import java.util.List;
 public class CourseSubscriptionService {
 	private final CourseRepository courseRepository;
 	private final LessonRepository lessonRepository;
-	public final PublicUserLessonRepository publicUserLessonRepository;
+	private final PublicUserLessonRepository publicUserLessonRepository;
+	private final LanguageRepository languageRepository;
 
-	public CourseSubscriptionService(CourseRepository courseRepository, LessonRepository lessonRepository, PublicUserLessonRepository publicUserLessonRepository) {
+	public CourseSubscriptionService(CourseRepository courseRepository, LessonRepository lessonRepository, PublicUserLessonRepository publicUserLessonRepository, LanguageRepository languageRepository) {
 		this.courseRepository = courseRepository;
 		this.lessonRepository = lessonRepository;
 		this.publicUserLessonRepository = publicUserLessonRepository;
+		this.languageRepository = languageRepository;
 	}
 
 	public List<CourseCardDTO> getUserCourses(Integer userId) {
@@ -85,5 +88,11 @@ public class CourseSubscriptionService {
 		if (totalLessons == 0) return 0;
 		int completedLessons = publicUserLessonRepository.countByUserIdAndCourseIdAndStatus(userId, courseId, "completed");
 		return (int) Math.round((completedLessons * 100.0 / totalLessons));
+	}
+	public List<String> findAllLanguages() {
+		return languageRepository.findAll()
+			.stream()
+			.map(LanguageEntity::getName)
+			.toList();
 	}
 }
