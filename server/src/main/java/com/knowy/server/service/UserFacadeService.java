@@ -67,7 +67,7 @@ public class UserFacadeService {
 	 * @throws UnchangedNicknameException    if the new nickname is the same as the current one
 	 */
 	public void updateNickname(String nickname, int userId)
-		throws UserNotFoundException, NicknameAlreadyTakenException, UnchangedNicknameException {
+		throws UserNotFoundException, NicknameAlreadyTakenException, UnchangedNicknameException, InvalidUserNicknameException {
 		publicUserService.updateNickname(nickname, userId);
 	}
 
@@ -134,7 +134,7 @@ public class UserFacadeService {
 	 * @throws WrongPasswordException  if the provided password is incorrect
 	 */
 	public void updateEmail(String email, int userId, String password)
-		throws UserNotFoundException, UnchangedEmailException, WrongPasswordException {
+		throws UserNotFoundException, UnchangedEmailException, WrongPasswordException, InvalidUserEmailException {
 		privateUserService.updateEmail(email, userId, password);
 	}
 

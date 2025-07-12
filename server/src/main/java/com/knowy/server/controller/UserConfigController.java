@@ -94,6 +94,8 @@ public class UserConfigController {
 			redirectAttributes.addFlashAttribute("errorEmail", "El nuevo correo debe ser diferente al actual.");
 		} catch (WrongPasswordException e) {
 			redirectAttributes.addFlashAttribute("errorEmail", "La contraseña es incorrecta.");
+		} catch (InvalidUserEmailException e) {
+			redirectAttributes.addFlashAttribute("errorEmail", "El correo ingresado ya está asociado a una cuenta existente.");
 		}
 		return "redirect:/user-account";
 	}
@@ -141,8 +143,8 @@ public class UserConfigController {
 			} catch (NicknameAlreadyTakenException e) {
 				redirectAttributes.addFlashAttribute("error", "El nombre ya está en uso.");
 				return "redirect:/user-profile";
-			} catch (Exception e) {
-				redirectAttributes.addFlashAttribute("error", "Error inesperado al actualizar el nombre.");
+			} catch (InvalidUserNicknameException e) {
+				redirectAttributes.addFlashAttribute("error", "No se permiten apodos en blanco o vacíos.");
 				return "redirect:/user-profile";
 			}
 		}
@@ -164,7 +166,9 @@ public class UserConfigController {
 			}
 		}
 
-		String[] newLanguages = userProfileDTO.getLanguages();
+		String[] newLanguages = userProfileDTO.getLanguages() != null
+			? userProfileDTO.getLanguages()
+			: new String[0];
 		try {
 			userFacadeService.updateLanguages(userDetails.getPublicUser().getId(), newLanguages);
 		} catch (UserNotFoundException e) {

@@ -92,7 +92,10 @@ public class PrivateUserService {
 	 * @throws WrongPasswordException  if the provided password is incorrect
 	 */
 	public void updateEmail(String email, int userId, String password)
-		throws UserNotFoundException, UnchangedEmailException, WrongPasswordException {
+		throws UserNotFoundException, UnchangedEmailException, WrongPasswordException, InvalidUserEmailException {
+		findPrivateUserByEmail(email)
+			.orElseThrow(() -> new InvalidUserEmailException("The provided email is already associated with an existing account."));
+
 		PrivateUserEntity privateUser = getPrivateUserById(userId);
 		if (Objects.equals(email, privateUser.getEmail())) {
 			throw new UnchangedEmailException("Email must be different from the current one.");
@@ -118,6 +121,8 @@ public class PrivateUserService {
 	 */
 	public void resetPassword(String token, String password, String confirmPassword)
 		throws PasswordFormatException, JwtKnowyException, UserNotFoundException {
+
+		Objects.requireNonNull(password, "A password should be specified");
 
 		passwordChecker.assertPasswordFormatIsRight(password);
 		if (!password.equals(confirmPassword)) {
@@ -170,6 +175,7 @@ public class PrivateUserService {
 	 */
 	public boolean isValidToken(String token) throws UserNotFoundException {
 		try {
+			Objects.requireNonNull(token, "A not null token is required");
 			verifyPasswordResetToken(token);
 			return true;
 		} catch (JwtKnowyException e) {

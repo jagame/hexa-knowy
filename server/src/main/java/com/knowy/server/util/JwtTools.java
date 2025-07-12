@@ -18,6 +18,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Objects;
 
 @Service
 public class JwtTools {
@@ -153,6 +154,8 @@ public class JwtTools {
 	 *                           field fails
 	 */
 	public <T> T decodeUnverified(String token, Class<T> clazz) throws JwtKnowyException {
+		Objects.requireNonNull(token, "A not null token is required");
+
 		try {
 			String payloadJson = extractPayloadJson(token);
 			JsonNode jsonData = extractDataNode(payloadJson);

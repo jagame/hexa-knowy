@@ -7,8 +7,10 @@ import com.knowy.server.repository.LanguageRepository;
 import com.knowy.server.repository.ProfileImageRepository;
 import com.knowy.server.repository.PublicUserRepository;
 import com.knowy.server.service.exception.*;
+import com.knowy.server.util.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -48,6 +50,8 @@ public class PublicUserService {
 	 * @throws ImageNotFoundException if the default profile image (ID 1) does not exist
 	 */
 	public PublicUserEntity create(String nickname) throws InvalidUserException, ImageNotFoundException {
+		assertNotBlankNickname(nickname);
+
 		if (findPublicUserByNickname(nickname).isPresent()) {
 			throw new InvalidUserNicknameException("Nickname already exists");
 		}
@@ -84,7 +88,9 @@ public class PublicUserService {
 	 * @throws NicknameAlreadyTakenException if the new nickname is already in use by another user
 	 */
 	public void updateNickname(String newNickname, Integer id) throws UserNotFoundException,
-		UnchangedNicknameException, NicknameAlreadyTakenException {
+		UnchangedNicknameException, NicknameAlreadyTakenException, InvalidUserNicknameException {
+		assertNotBlankNickname(newNickname);
+
 		PublicUserEntity publicUser = publicUserRepository.findUserById(id)
 			.orElseThrow(() -> new UserNotFoundException("User not found"));
 		if (publicUser.getNickname().equals(newNickname)) {
@@ -95,6 +101,12 @@ public class PublicUserService {
 		}
 
 		publicUserRepository.updateNickname(newNickname, id);
+	}
+
+	private void assertNotBlankNickname(String nickname) throws InvalidUserNicknameException {
+		if (StringUtils.isBlank(nickname)) {
+			throw new InvalidUserNicknameException("Blank nicknames are not allowed");
+		}
 	}
 
 	/**
@@ -136,6 +148,8 @@ public class PublicUserService {
 	 * @throws UserNotFoundException if no user exists with the given ID
 	 */
 	public void updateLanguages(Integer userId, String[] languages) throws UserNotFoundException {
+		Objects.requireNonNull(languages, "A not null languages array is required, if no languages are selected use an empty array instead of null");
+
 		PublicUserEntity user = publicUserRepository.findUserById(userId)
 			.orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 		Set<LanguageEntity> newLanguages = languageRepository.findByNameInIgnoreCase(languages);
