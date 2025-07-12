@@ -6,30 +6,27 @@
 
 body {
 	box-sizing: border-box;
-	background-color: $neutral-300;
+	background-color: $bg;
 }
 
 .img-head {
 	height: 300px;
 	width: 100%;
 	object-fit: cover;
-	border-radius: $card-radius;
+	border-radius: $radius-25;
 }
 .main-content {
 	display:flex;
 	flex-direction: column;
-
 	margin-left: 10px;
 	margin-top: 10px;
 }
 
 .info-course {
 	font-family: "caveat-brush", cursive;
-	color: #2F9E44;
-	font-size: 20px;
-	margin-top: 30px;
-	margin-left: 10px;
-	font-weight: 600;
+	font-weight: normal;
+	color: $info-500;
+	margin-top: 2.5rem;
 
 }
 .container-flex{
@@ -47,21 +44,19 @@ body {
 
 .btn-lesson {
 	font-family: "Excalifont", sans-serif;
-	font-size: 1.3em;
-	margin-right: 60px;
+	font-size: 1.25rem;
 	padding: 0.4em 1.5em;
 	display: inline-flex;
 	align-items: center;
 	cursor: pointer;
 	transition: $transition-speed;
-	border-radius: $card-radius;
-	box-shadow: $card-shadow;
+	border-radius: $radius-10;
 	background-color: $primary-500;
-	color:$neutral-100;
+	color: white;
 }
 .btn-lesson:hover {
 	background-color: $primary-700;
-	color: $neutral-100;
+	color: white;
 }
 
 .btn-lesson:focus, .btn-lesson:active {
@@ -71,28 +66,27 @@ body {
 
 .title {
 	color: $primary-500;
-	font-size: 2rem;
-	font-weight: bold;
-	margin: 0.2em;
+	font-family: caveat-brush, sans-serif;
+	font-weight: normal;
+	margin: 0.5rem 0;
 }
 .meta-row{
 	display: flex;
 	align-items: center;
 	gap: 5em;
 	font-size: 1.1rem;
-	margin-top: 1rem;
-
+	margin-top: 2rem;
 }
 
 .theory {
-	margin-top: 30px;
-	margin-left: 10px;
+	margin-top: 1.25rem;
 }
 
 .icon {
 	display: flex;
 	align-items: center;
 	gap: 0.3em;
+	stroke-width: 2;
 }
 .duration {
 	margin-left: 0.2em;
