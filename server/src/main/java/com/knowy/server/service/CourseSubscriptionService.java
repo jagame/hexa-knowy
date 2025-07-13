@@ -30,7 +30,7 @@ public class CourseSubscriptionService {
 		return userCourses.stream()
 			.map(course -> CourseCardDTO.fromEntity(
 				course, getCourseProgress(userId, course.getId()),
-				findLanguagesForCourse(course)))
+				findLanguagesForCourse(course), course.getCreationDate()))
 			.toList();
 	}
 
@@ -40,7 +40,7 @@ public class CourseSubscriptionService {
 		return allCourses.stream()
 			.filter(course -> !userCourses.contains(course))
 			.map(course -> CourseCardDTO.fromRecommendation(
-				course, findLanguagesForCourse(course)))
+				course, findLanguagesForCourse(course), course.getCreationDate()))
 			.toList();
 	}
 

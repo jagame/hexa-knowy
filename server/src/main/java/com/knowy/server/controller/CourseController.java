@@ -71,8 +71,6 @@ public class CourseController {
 					courses = courses.stream()
 						.sorted(Comparator.comparing(CourseCardDTO::getProgress).reversed())
 						.toList();
-
-
 			}
 		}
 
@@ -83,6 +81,13 @@ public class CourseController {
 		model.addAttribute("category", category);
 		return "pages/my-courses";
 	}
+/*
+	@GetMapping("/store")
+	public String storeCourses(Model model, @AuthenticationPrincipal UserSecurityDetails userDetails) {
+		List<CourseCardDTO> availableCourses = courseSubscriptionService.getRecommendedCourses(userDetails.getPublicUser().getId());
+		model.addAttribute("courses", availableCourses);
+		return "pages/course-page";
+	}*/
 
 	@PostMapping("/subscribe")
 	public String subscribeToCourse(
@@ -97,4 +102,5 @@ public class CourseController {
 		attrs.addFlashAttribute("success", "¡Te has suscrito correctamente!");
 		return "redirect:/my-courses";
 	}
+
 }
