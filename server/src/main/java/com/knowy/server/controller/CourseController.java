@@ -71,8 +71,6 @@ public class CourseController {
 					courses = courses.stream()
 						.sorted(Comparator.comparing(CourseCardDTO::getProgress).reversed())
 						.toList();
-
-
 			}
 		}
 
@@ -81,6 +79,7 @@ public class CourseController {
 		model.addAttribute("recommendations", courseSubscriptionService.getRecommendedCourses(userDetails.getPublicUser().getId()));
 		model.addAttribute("order", order);
 		model.addAttribute("category", category);
+		model.addAttribute("acquireAction", "/my-courses/subscribe");
 		return "pages/my-courses";
 	}
 
@@ -97,4 +96,5 @@ public class CourseController {
 		attrs.addFlashAttribute("success", "¡Te has suscrito correctamente!");
 		return "redirect:/my-courses";
 	}
+
 }
