@@ -3,9 +3,9 @@ package com.knowy.server.controller.dto;
 import java.util.List;
 
 public record ExerciseDto(
-	int courseID,
-	int lessonID,
-	int exerciseID,
+	int courseId,
+	int lessonId,
+	int exerciseId,
 	//QUIZLAYOUTDTO
 	String courseName,
 	int cardStreak,
@@ -14,5 +14,5 @@ public record ExerciseDto(
 	String questionText,
 	String imgPath,
 	List<OptionsDto> options
-	) {
+) {
 }
