@@ -79,15 +79,9 @@ public class CourseController {
 		model.addAttribute("recommendations", courseSubscriptionService.getRecommendedCourses(userDetails.getPublicUser().getId()));
 		model.addAttribute("order", order);
 		model.addAttribute("category", category);
+		model.addAttribute("acquireAction", "/my-courses/subscribe");
 		return "pages/my-courses";
 	}
-/*
-	@GetMapping("/store")
-	public String storeCourses(Model model, @AuthenticationPrincipal UserSecurityDetails userDetails) {
-		List<CourseCardDTO> availableCourses = courseSubscriptionService.getRecommendedCourses(userDetails.getPublicUser().getId());
-		model.addAttribute("courses", availableCourses);
-		return "pages/course-page";
-	}*/
 
 	@PostMapping("/subscribe")
 	public String subscribeToCourse(
