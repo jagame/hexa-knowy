@@ -37,7 +37,7 @@ public class ExerciseController {
 
 		ExerciseDto exerciseDTO = new ExerciseDto(
 			1,
-			2,
+			exerciseEntity.getLesson().getId(),
 			exerciseEntity.getId(),
 			"NA1",
 			3,

@@ -14,7 +14,7 @@
 	<!--CARD LAYOUT HEADER-->
 	<div th:replace="~{components/cards-quiz/quiz-header :: quiz-header(
 			courseName='Java Script Avanzado',
-      		lessonId=${null},
+      		lessonId=${exercise.lessonId()},
       		exerciseId=${exercise.exerciseId()},
       		cardStreak=${null},
       		correctPercentage=${exercise.correctPercentage()}
@@ -38,13 +38,10 @@
 
 	<!--NAVIGATION BUTTONS-->
 	<div layout:fragment="quiz-navigation-buttons">
-		<div class="answer-button">
-			<button class="answer-button__element" type="submit">Responder</button>
-		</div>
 
 		<div class="navigation-buttons">
 			<a href="#">
-				<button class="navigation-buttons__element">← Anterior</button>
+				<button class="navigation-buttons__element" th:href="@{{id}(id=${exercise.exerciseId - 1})}">← Anterior</button>
 			</a>
 
 			<a href="#">
@@ -60,38 +57,43 @@
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+					<h1 class="modal-title fs-5" id="exampleModalLabel">Respuesta correcta</h1>
 					<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
 				</div>
 				<div class="modal-body d-flex flex-wrap justify-content-evenly">
-					<button class="btn btn-primary happy" type="button">
-						Fácil
-						<img alt="Facil" class="avatar-selectable rounded-circle img-fluid me-2"
-							 data-avatar-src-path="/images/profile/knowylogo.svg" data-bs-dismiss="modal"
-							 src="/images/test/mood-happy.svg"
-						/>
-					</button>
+					<p>¿Cómo te resultó el ejercicio?</p>
+					<div class="modal-buttons">
+						<a class="btn btn-primary happy" th:href="@{{id}(id=${exercise.exerciseId() +1})}" type="button">
+							Fácil
+							<img alt="Facil" class="avatar-selectable rounded-circle img-fluid me-2 w-50"
+								 data-avatar-src-path="/images/profile/knowylogo.svg" data-bs-dismiss="modal"
+								 src="/images/test/mood-happy.svg"
+							/>
+						</a>
 
-					<button class="btn btn-primary empty" type="button">
-						Normal
-						<img alt="Normal" class="avatar-selectable rounded-circle img-fluid me-2"
-							 data-avatar-src-path="/images/profile/knowylogo_red.svg" data-bs-dismiss="modal"
-							 src="/images/test/mood-empty.svg"
-						/>
-					</button>
+						<a class="btn btn-primary empty" th:href="@{{id}(id=${exercise.exerciseId +1})}" type="button">
+							Normal
+							<img alt="Normal" class="avatar-selectable rounded-circle img-fluid me-2 w-50"
+								 data-avatar-src-path="/images/profile/knowylogo_red.svg" data-bs-dismiss="modal"
+								 src="/images/test/mood-empty.svg"
+							/>
+						</a>
 
-					<button class="btn btn-primary sad" type="button">
-						Difícil
-						<img alt="Difícil" class="avatar-selectable rounded-circle img-fluid"
-							 data-avatar-src-path="/images/profile/knowylogo_blue.svg" data-bs-dismiss="modal"
-							 height="50px" src="/images/test/mood-sad.svg"
-							 width="50px"
-						/>
-					</button>
+						<a class="btn btn-primary sad" th:href="@{{id}(id=${exercise.exerciseId +1})}" type="button">
+							Difícil
+							<img alt="Difícil" class="avatar-selectable rounded-circle img-fluid me-2 w-50"
+								 data-avatar-src-path="/images/profile/knowylogo_blue.svg" data-bs-dismiss="modal"
+								 height="50px" src="/images/test/mood-sad.svg"
+								 width="50px"
+							/>
+						</a>
+					</div>
+					<p>¡Valoración obligatoria!</p>
 				</div>
 			</div>
 		</div>
 	</div>
 </main>
+<!---script th:src="@{/scripts/answer-exercise-engine.js}" defer></script---->
 </body>
 </html>

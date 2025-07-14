@@ -5,33 +5,56 @@
 			th:text="${'-' + ' ' + option.text}"
 			th:attr="data-correct=${option.isCorrect}">
 	</button>
-	<script>
-		document.addEventListener('DOMContentLoaded', function() {
-			const answeredButtons = document.querySelectorAll('.quiz-option');
-			let answered = false;
 
-			answeredButtons.forEach(btn => {
-				btn.addEventListener('click', function() {
-					if (answered) return;
-					answered = true;
+	<!--NAVIGATION BUTTONS-->
+		<div class="answer-button">
+			<button id="answer-button" class="answer-button__element" type="button">Responder</button>
+		</div>
 
-					answeredButtons.forEach(b => {
-						const isCorrect = b.getAttribute('data-correct') === 'true';
-						if (b === btn) {
-							if (isCorrect) {
-								b.classList.add('correct');
-							} else {
-								b.classList.add('incorrect');
-							}
-						} else if (isCorrect) {
-							b.classList.add('correct');
-						}
-					});
-				});
+</div>
+<script>
+	console.log('Quiz options script loaded');
+	document.addEventListener('DOMContentLoaded', function () {
+		const answeredButtons = document.querySelectorAll('.quiz-option');
+		const checkButton = document.getElementById('answer-button');
+		let answered = false;
+		let selectedOption = null;
+
+		// Guardamos qué opción seleccionó el usuario
+		answeredButtons.forEach(btn => {
+			btn.addEventListener('click', function () {
+				if (answered) return;
+
+				// Desmarcar todas
+				answeredButtons.forEach(b => b.classList.remove('selected'));
+
+				// Marcar la actual
+				btn.classList.add('selected');
+				selectedOption = btn;
 			});
 		});
-	</script>
-</div>
+
+		// Escuchar el clic en el botón externo
+		checkButton.addEventListener('click', function () {
+			if (answered || !selectedOption) return;
+
+			answered = true;
+
+			answeredButtons.forEach(b => {
+				const isCorrect = b.getAttribute('data-correct') === 'true';
+				if (b === selectedOption) {
+					if (isCorrect) {
+						b.classList.add('correct');
+					} else {
+						b.classList.add('incorrect');
+					}
+				} else if (isCorrect) {
+					b.classList.add('correct');
+				}
+			});
+		});
+	});
+</script>
 
 
 

@@ -85,15 +85,48 @@ body{
 }
 
 
+.modal-header{
+	background-color: $primary-500;
+	display:flex;
+	justify-content: center;
+	color: white;
+}
 
-.btn btn-primary happy{
+.btn.btn-primary.happy,
+.btn.btn-primary.sad,
+.btn.btn-primary.empty {
+	display:flex;
+	flex-direction:row;
+	gap:1em;
+	margin:auto;
+	text-align:center;
+}
+
+.modal-body.d-flex.flex-wrap.justify-content-evenly {
+	display:flex;
+	flex-direction:column;
+	gap:1em;
+	margin:auto;
+	text-align:center;
+}
+
+.modal-buttons{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	gap:1em;
+}
+.btn.btn-primary.happy{
 	background-color: $info-600;
+	text-decoration:none;
 }
 
-.btn btn-primary empty {
+.btn.btn-primary.empty {
 	background-color: $secundary-500;
+	text-decoration:none;
 }
 
-.btn btn-primary sad{
+.btn.btn-primary.sad{
 	background-color: $neutral-700;
+	text-decoration:none;
 }
