@@ -44,7 +44,7 @@ infraestructura:
 ### 🔧 Backend
 
 - **Java 21** – Lenguaje principal.
-- **Spring Boot 3.4.5** – Framework para construir la API REST y lógica de negocio.
+- **Spring Boot 3.4.5** – Framework para construir la lógica de negocio.
 - **Spring Security** – Seguridad de la aplicación.
 - **Spring Data JPA** – Acceso a datos mediante ORM.
 - **Hibernate** – Implementación de JPA.
@@ -70,6 +70,7 @@ infraestructura:
 - **Thymeleaf** – Motor de plantillas del lado del servidor.
 - **Bootstrap** – Framework CSS para diseño responsivo.
 - **SCSS (Sass)** – Preprocesador CSS para estilos personalizados.
+- **JavaScript** – Lenguaje de programación del lado del cliente para funcionalidades dinámicas e interactivas en la web.
 
 ### 🐳 Contenedores y despliegue
 
@@ -109,7 +110,8 @@ server
 │           ├── static              → Archivos estáticos públicos (CSS, JS, imágenes)
 │           │   ├── fonts
 │           │   ├── images
-│           │   │   └── profile
+│           │   │   ├── profile
+│           │   │   └── course
 │           │   ├── scripts
 │           │   └── styles
 │           │       ├── components  → Estilos SCSS específicos por componente
