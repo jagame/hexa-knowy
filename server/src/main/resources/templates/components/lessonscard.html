@@ -1,9 +1,9 @@
-<div class="lesson-card" th:fragment="lessonscard(course)">
+<div class="lesson-card" th:fragment="lessonscard(course, courseId)">
 
-	<div class="lesson-list">
+	<div class="lesson-list" th:if="${course.lessons != null}">
 		<div class = "lesson-item"  th:each="lesson : ${course.lessons}"
 			 th:data-status="${lesson.status.name()}">
-			<a href="#" class="lesson-item__lesson-link">
+			<a th:href="@{'/course/' + ${courseId} + '/lesson/' + ${lesson.id}}" class="lesson-item__lesson-link">
 
 				<div class="lesson-item__lesson-icon">
 					<span th:if="${lesson.status.name() == 'COMPLETE'}">✅</span>

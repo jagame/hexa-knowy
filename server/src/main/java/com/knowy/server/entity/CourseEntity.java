@@ -28,6 +28,9 @@ public class CourseEntity {
 	@Column(name = "description", length = 250, nullable = false)
 	private String description;
 
+	@Column(name = "image", nullable = false)
+	private String image;
+
 	@Column(name = "author", length = 250, nullable = false)
 	private String author;
 

@@ -1,6 +1,9 @@
 package com.knowy.server.service;
 
 import com.knowy.server.controller.dto.CourseCardDTO;
+import com.knowy.server.controller.dto.CourseDTO;
+import com.knowy.server.controller.dto.LessonDTO;
+import com.knowy.server.controller.dto.LessonPageDataDTO;
 import com.knowy.server.entity.*;
 import com.knowy.server.repository.CourseRepository;
 import com.knowy.server.repository.LessonRepository;
@@ -8,6 +11,7 @@ import com.knowy.server.repository.PublicUserLessonRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -85,5 +89,73 @@ public class CourseSubscriptionService {
 		if (totalLessons == 0) return 0;
 		int completedLessons = publicUserLessonRepository.countByUserIdAndCourseIdAndStatus(userId, courseId, "completed");
 		return (int) Math.round((completedLessons * 100.0 / totalLessons));
+	}
+
+	// TODO:Terminar de implementar todo sobre el curso y las lecciones
+	public LessonPageDataDTO getCourseOverviewWithLessons(Integer userId, Integer courseId) {
+		CourseEntity course = courseRepository.findById(courseId)
+			.orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+
+		List<LessonEntity> lessons = lessonRepository.findByCourseId(courseId);
+		List<LessonDTO> lessonDTOs = new ArrayList<>();
+		int lastCompletedIndex = -1;
+
+		for (int i = 0; i < lessons.size(); i++) {
+			LessonEntity lesson = lessons.get(i);
+			PublicUserLessonIdEntity id = new PublicUserLessonIdEntity(userId, lesson.getId());
+
+			String status = publicUserLessonRepository.findById(id)
+				.map(PublicUserLessonEntity::getStatus)
+				.orElse("blocked");
+
+			LessonDTO.LessonStatus lessonStatus = switch (status.toLowerCase()) {
+				case "completed" -> {
+					lastCompletedIndex = i;
+					yield LessonDTO.LessonStatus.COMPLETE;
+				}
+				case "in_progress" -> LessonDTO.LessonStatus.NEXT_LESSON;
+				default -> LessonDTO.LessonStatus.BLOCKED;
+			};
+
+			lessonDTOs.add(new LessonDTO(
+				i + 1,
+				lesson.getId(),
+				lesson.getTitle(),
+				null,
+				null,
+				lessonStatus
+			));
+		}
+
+		int progress = getCourseProgress(userId, courseId);
+
+		CourseDTO courseDTO = new CourseDTO(course.getTitle(), progress, lessonDTOs, course.getDescription(), course.getImage());
+
+		return new LessonPageDataDTO(
+			courseDTO,
+			null,
+			null,
+			lastCompletedIndex + 2
+		);
+	}
+	public LessonPageDataDTO getLessonViewData(Integer userId, Integer courseId, Integer lessonId) {
+		LessonPageDataDTO base = getCourseOverviewWithLessons(userId, courseId);
+
+		LessonEntity currentLesson = lessonRepository.findById(lessonId)
+			.orElseThrow(() -> new RuntimeException("Lección no encontrada"));
+
+		int indexInList = findLessonIndex(base.getCourse().getLessons(), currentLesson.getTitle());
+
+		base.setLesson(base.getCourse().getLessons().get(indexInList));
+		base.setLessonContent(currentLesson.getExplanation());
+
+		return base;
+	}
+
+	private int findLessonIndex(List<LessonDTO> lessons, String title) {
+		for (int i = 0; i < lessons.size(); i++) {
+			if (lessons.get(i).getTitle().equalsIgnoreCase(title)) return i;
+		}
+		throw new RuntimeException("No se encontró la lección");
 	}
 }

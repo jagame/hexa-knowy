@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 public class LessonDTO {
 	private int number;
+	private int id;
 	private String title;
 	private String image;
 	private String duration;

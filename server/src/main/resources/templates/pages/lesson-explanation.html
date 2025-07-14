@@ -18,39 +18,39 @@
 				<div class="progress-bar">
 					<div class="progress" th:style="'width:' + ${course.percentageCompleted} + '%'"></div>
 				</div>
-				<a class="introduction-btn--purple">Introducción al curso</a>
+				<a th:href="@{'/course/' + ${courseId}}" class="introduction-btn--purple">Introducción al curso</a>
 			</div>
 		</div>
-		<div th:replace="~{components/lessonscard ::lessonscard(${course})}"></div>
+		<div th:replace="~{components/lessonscard ::lessonscard(${course}, ${courseId})}"></div>
 	</div>
 </aside>
 
 <main class="main-content" layout:fragment="main-content">
 
-	<img alt="Imagen" class="img-head" th:src="${lesson.image}">
+	<img alt="Imagen del curso" class="img-head" th:src="${course.image}">
 
 	<div class="container mt-4">
-				<h1 class="title" th:text="${lesson.title}">Título de la lección</h1>
+				<h1 class="title" th:text="${isIntro} ? ${course.name} : ${lesson.title}">Título de la lección</h1>
 				<div class="meta-row">
-					<span class="icon">
-						<i class="bi bi-clock-fill"></i>
-						<span class="duration" th:text="${lesson.duration}">Duración de la lección</span>
-					</span>
-					<span class="meta" th:text="'Nivel: '+${level}">Nivel: Intermedio</span>
-					<span class="meta">Categoría</span>
+<!--					<span class="icon">-->
+<!--						<i class="bi bi-clock-fill"></i>-->
+<!--						<span class="duration" th:text="${lesson.duration}">Duración de la lección</span>-->
+<!--					</span>-->
+<!--					<span class="meta" th:text="'Nivel: '+${level}">Nivel: Intermedio</span>-->
+<!--					<span class="meta">Categoría</span>-->
 				</div>
 			<a class="btn btn-lesson mt-3">
 				<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-player-play"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 4v16l13 -8z" /></svg>
 				Iniciar lección
 			</a>
 		<h2 class="info-course">Información del curso</h2>
-		<div class="theory" th:utext="${lessonContent}">Teoría del curso</div>
+		<div class="theory" th:utext="${isIntro} ? ${course.description} : ${lessonContent}">Teoría del curso</div>
 	</div>
 
-	<div class="component" th:replace="~{components/lesson/solutions-component ::solutions-component(${solutions})}">Soluciones</div>
+<!--	<div class="component" th:replace="~{components/lesson/solutions-component ::solutions-component(${solutions})}">Soluciones</div>-->
 
 <!--	<div class="component" th:replace="~{components/lesson/documents-links ::documentLinkComponent(${LinksList})}">Documentos</div>-->
-	<div th:replace="~{components/lesson/documents-links :: documentLinkComponent(${LinksLessonList})}"></div>
+<!--	<div th:replace="~{components/lesson/documents-links :: documentLinkComponent(${LinksLessonList})}"></div>-->
 </main>
 </body>
 </html>
