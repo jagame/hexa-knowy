@@ -10,19 +10,18 @@ permitiendo además valorar el grado de dificultad de las actividades propuestas
 1. [Sobre el proyecto](#sobre-el-proyecto)
 	- [Objetivo del proyecto](#objetivo-del-proyecto)
 	- [Por qué Knowy](#por-qué-knowy)
-	- [Tecnologías y herramientas utilizadas](#️-tecnologías-y-herramientas-utilizadas)
+	- [Tecnologías y herramientas utilizadas](#tecnologías-y-herramientas-utilizadas)
 	- [Requisitos](#requisitos)
+	- [Arquitectura del proyecto](#arquitectura-del-proyecto)
 2. [Primeros pasos](#primeros-pasos)
 	- [Requisitos previos](#requisitos-previos)
-    - [Instalación y ejecución Docker](#-Instalación-y-ejecución-Docker)
-	- [Arranque manual del servidor Java](#-Arranque-manual-del-servidor-Java)
-3. [Uso](#uso)
-4. [Contribuciones](#contribuciones)
-5. [Licencia](#licencia)
-6. [Contacto](#contacto)
-7. [Agradecimientos](#agradecimientos)
+	- [Instalación y ejecución Docker](#instalación-y-ejecución-docker)
+	- [Arranque manual del servidor Java](#arranque-manual-del-servidor-java)
+	- [Solución rápida de problemas comunes](#solución-rápida-de-problemas-comunes)
+3. [Licencia](#licencia)
+4. [Contacto](#contacto)
 
-## Sobre el proyecto
+# Sobre el proyecto
 
 ### Objetivo del proyecto
 
@@ -84,7 +83,53 @@ infraestructura:
 - **Docker**
 - **Docker Compose**
 
-## 🏁 Primeros pasos
+## Arquitectura del proyecto
+
+La estructura del backend de Knowy sigue una arquitectura por capas y está organizada de forma funcional y modular para
+facilitar el mantenimiento, la escalabilidad y la comprensión del código.
+
+```txt
+server
+├── src
+│   └── main
+│       ├── java
+│       │   └── com.knowy.server
+│       │       ├── config          → Configuraciones globales (Spring Security)
+│       │       ├── controller      → Controladores endpoints web
+│       │       │   ├── dto         → Objetos de transferencia de datos (DTOs)
+│       │       │   └── exception   → Manejo de errores específicos del controlador
+│       │       ├── entity          → Entidades JPA mapeadas a la base de datos
+│       │       ├── repository      → Interfaces de acceso a datos (Spring Data JPA)
+│       │       ├── service         → Lógica de negocio
+│       │       │   ├── exception   → Excepciones personalizadas para lógica de negocio
+│       │       │   └── model       → Objetos de dominio intermedios y helpers
+│       │       └── util
+│       │           └── exception   → Utilidades para manejo global de excepciones
+│       └── resources
+│           ├── static              → Archivos estáticos públicos (CSS, JS, imágenes)
+│           │   ├── fonts
+│           │   ├── images
+│           │   │   └── profile
+│           │   ├── scripts
+│           │   └── styles
+│           │       ├── components  → Estilos SCSS específicos por componente
+│           │       ├── layouts     → Estilos comunes de estructura
+│           │       └── pages       → Estilos específicos por página
+│           └── templates
+│               ├── components      → Fragmentos reutilizables Thymeleaf
+│               ├── error           → Plantillas de error personalizadas
+│               ├── layouts         → Plantillas base Thymeleaf
+│               └── pages           → Páginas organizadas por funcionalidad
+│                   ├── access
+│                   └── user-management
+└── sql
+    ├── docs        → Documentación o scripts de referencia
+    ├── init        → Scripts de inicialización de base de datos
+    ├── kn_kn.com   → Datos específicos del dominio
+    └── queries     → Consultas SQL reutilizables o complejas
+```
+
+# 🏁 Primeros pasos
 
 ### Requisitos previos
 
@@ -170,7 +215,6 @@ Tienes dos opciones para iniciar todos los servicios (base de datos, correo):
    ```
 
 - **Opción B:** Usando IntelliJ IDEA
-  Opción B: Usando IntelliJ IDEA
   Ejecuta las configuraciones "Knowy-Dev-OnlyDB" y "Knowy-Dev-Mailpit" desde la carpeta .run en el IDE.
 
 Esto levantará:
@@ -215,18 +259,23 @@ http://localhost:8025<br>
 - **No se conecta a la base de datos:** Verifica que el contenedor PostgreSQL esté corriendo y que las credenciales
   coincidan con las configuradas en el backend.
 
-## Uso
-
-_(Por completar)_
-
-## Contribuciones
-
-_(Por completar)_
-
 ## Licencia
 
-_(Por completar)_
+Este proyecto está licenciado bajo la GNU General Public License v3.0 (GPLv3).
+
+Esto significa que:
+
+- Puedes usar, modificar y distribuir el software libremente.
+- Cualquier modificación o trabajo derivado debe publicarse bajo la misma licencia GPLv3.
+- Debes proporcionar el código fuente de cualquier versión modificada que distribuyas.
+- El software se proporciona “tal cual”, sin garantía de ningún tipo.
+
+Para más información, puedes leer el texto completo de la licencia en el archivo [LICENSE](LICENSE) o consultar el sitio
+oficial:<br>
+👉 https://www.gnu.org/licenses/gpl-3.0.html
 
 ## Contacto
 
-_(Por completar)_
+Proyecto desarrollado por:
+
+- [SaraMForte](https://github.com/SaraMForte)
