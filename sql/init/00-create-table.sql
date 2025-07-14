@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS public.course
 	title       varchar(100),
 	description varchar(250),
 	author      varchar(250),
+	creation_date timestamp NOT NULL DEFAULT current_timestamp,
 	PRIMARY KEY (id)
 );
 

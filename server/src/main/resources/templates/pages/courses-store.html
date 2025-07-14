@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es"
+	  layout:decorate="~{layouts/user-postlogin-layout}"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+	<title>Knowy - Store</title>
+	<link rel="stylesheet" th:href="@{/styles/pages/courses-store.css}">
+</head>
+<body>
+<main layout:fragment="main-content">
+	<div class="container-fluid">
+		<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+		<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+		<section class="filter-container">
+			<form method="get" th:action="@{/store}" class="filters d-flex align-items-center">
+				<select class="form-select filter-select me-2" name="category" id="category">
+					<option value="">Todos los idiomas</option>
+					<option th:each="lang : ${allLanguages}" th:value="${lang}" th:text="${lang}" th:selected="${category != null and #strings.equalsIgnoreCase(category, lang)}"></option>
+				</select>
+				<select class="form-select filter-select me-2" name="order" id="order">
+					<option value="alpha_asc" th:selected="${order == 'alpha_asc'}">Alfabético A→Z</option>
+					<option value="alpha_desc" th:selected="${order == 'alpha_desc'}">Alfabético Z→A</option>
+					<option value="date_asc" th:selected="${order == 'date_asc'}">Fecha publicación ↑</option>
+					<option value="date_desc" th:selected="${order == 'date_desc'}">Fecha publicación ↓</option>
+				</select>
+				<div class="actions d-flex">
+					<button class="btn-apply" type="submit">Aplicar</button>
+					<a class="btn-delete" th:href="@{/store}">Borrar</a>
+				</div>
+			</form>
+		</section>
+
+		<div class="courses">
+			<h2 class="h2-courses">Tienda de cursos</h2>
+			<div class="courses-container">
+				<div class="m-1" th:each="course : ${courses}">
+					<div th:replace="~{components/course-card :: course-card(${course}, ${acquireAction})}"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+
+</body>
+</html>

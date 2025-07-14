@@ -2,13 +2,12 @@
 <html lang="es"
 	  layout:decorate="~{layouts/user-postlogin-layout}"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org"
 >
-
 <head>
-	<title>Mis cursos</title>
+	<title>Knowy - Courses</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
 	<link rel="stylesheet" th:href="@{/styles/pages/my-courses.css}">
-	<link rel="stylesheet" th:href="@{/styles/components/course-card.css}">
 </head>
 <body>
 
@@ -16,93 +15,69 @@
 	<div class="container-fluid">
 		<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
 		<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
 		<div class="row row-cols-md-2 row-cols-1">
 			<section class="col-md-9 col-12">
-				<!--filters-->
-				<div class="filters">
-					<div class="filters-dropdowns">
+				<section class="filter-container">
+					<form method="get" th:action="@{/my-courses}" class="filters d-flex align-items-center">
+						<!-- Categories -->
+						<select class="form-select filter-select me-2" name="category" id="category">
+							<option value="">Todos los idiomas</option>
+							<option th:each="lang : ${allLanguages}"
+									th:value="${lang}"
+									th:text="${lang}"
+									th:selected="${category != null and #strings.equalsIgnoreCase(category, lang)}"></option>
+						</select>
 
-						<!--categories-->
-						<div class="dropdown-categories">
-							<button aria-expanded="false" class="btn btn-categories dropdown-toggle w-100"
-									data-bs-toggle="dropdown"
-									type="button">
-								Categorías
-							</button>
-							<ul class="dropdown-menu">
-								<li class="list-group-item">
-									<input class="form-check-input me-1" id="categoriesFirstCheckbox" type="checkbox"
-										   value="">
-									<label class="form-check-label" for="categoriesFirstCheckbox">En curso</label>
-								</li>
-								<li class="list-group-item">
-									<input class="form-check-input me-1" id="categoriesSecondCheckbox" type="checkbox"
-										   value="">
-									<label class="form-check-label" for="categoriesSecondCheckbox">Terminados</label>
-								</li>
-							</ul>
-						</div>
+						<!-- Difficulty (Implement in the future when courses were implemented) -->
+						<!-- <div class="dropdown-categories">-->
+						<!-- <label for="difficulty" class="form-label d-block mb-1">Dificultad</label>-->
+						<!-- <select class="form-select btn-difficulty w-100" name="difficulty" id="difficulty">-->
+						<!-- <option value="">Todas</option>-->
+						<!-- <option value="1">Fácil</option>-->
+						<!-- <option value="2">Intermedio</option>-->
+						<!-- <option value="2">Difícil</option>-->
+						<!-- </select>-->
+						<!-- </div>-->
 
-						<!--order-->
-						<div class="dropdown-order">
-							<button aria-expanded="false" class="btn btn-order dropdown-toggle w-100"
-									data-bs-toggle="dropdown"
-									type="button">
-								Orden
-							</button>
-							<ul class="dropdown-menu">
-								<li class="list-group-item">
-									<input class="form-check-input me-1" id="orderFirstCheckbox" type="checkbox"
-										   value="">
-									<label class="form-check-label" for="orderFirstCheckbox">En curso</label>
-								</li>
-								<li class="list-group-item">
-									<input class="form-check-input me-1" id="orderSecondCheckbox" type="checkbox"
-										   value="">
-									<label class="form-check-label" for="orderSecondCheckbox">Terminados</label>
-								</li>
-							</ul>
+						<!-- Order -->
+						<select class="form-select filter-select me-2" name="order" id="order">
+							<option value="alpha_asc" th:selected="${order == 'alpha_asc'}">Alfabético A→Z</option>
+							<option value="alpha_desc" th:selected="${order == 'alpha_desc'}">Alfabético Z→A</option>
+							<option value="progress_asc" th:selected="${order == 'progress_asc'}">Progresión ↑</option>
+							<option value="progress_desc" th:selected="${order == 'progress_desc'}">Progresión ↓</option>
+							<option value="date_asc" th:selected="${order == 'date_asc'}">Fecha publicación ↑</option>
+							<option value="date_desc" th:selected="${order == 'date_desc'}">Fecha publicación ↓</option>
+						</select>
+						<div class="actions d-flex">
+							<button class="btn-apply" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+																		   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+																		   class="icon icon-tabler icons-tabler-outline icon-tabler-check">
+								<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+								<path d="M5 12l5 5l10 -10" />
+							</svg>
+								Aplicar</button>
+							<a class="btn-delete" th:href="@{/my-courses}"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+																				fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+																				class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+								<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+								<path d="M4 7l16 0" />
+								<path d="M10 11l0 6" />
+								<path d="M14 11l0 6" />
+								<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+								<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+							</svg>
+								Borrar</a>
 						</div>
-
-						<!--visualization-->
-						<div class="dropdown-visualization">
-							<button aria-expanded="false" class="btn btn-visualization dropdown-toggle w-100"
-									data-bs-toggle="dropdown"
-									type="button">
-								Visualización
-							</button>
-							<ul class="dropdown-menu">
-								<li class="list-group-item">
-									<input class="form-check-input me-1" id="visualizationFirstCheckbox" type="checkbox"
-										   value="">
-									<label class="form-check-label" for="visualizationFirstCheckbox">En curso</label>
-								</li>
-								<li class="list-group-item">
-									<input class="form-check-input me-1" id="visualizationSecondCheckbox"
-										   type="checkbox"
-										   value="">
-									<label class="form-check-label" for="visualizationSecondCheckbox">Terminados</label>
-								</li>
-							</ul>
-						</div>
-					</div>
-
-					<div class="row row-cols-2 g-2">
-						<div class="col">
-							<button class="btn btn-apply w-100" type="button">Aplicar</button>
-						</div>
-						<div class="col">
-							<button class="btn btn-delete w-100" type="button">Borrar</button>
-						</div>
-					</div>
-				</div>
+					</form>
+				</section>
 
 				<!--course-->
 				<div class="courses">
 						<span><h2 class="h2-courses">Mis cursos</h2></span>
 					<div class="courses-container">
 						<div class="m-1" th:each="course : ${courses}">
-							<div th:replace="~{components/course-card :: course-card(${course})}"></div>
+							<div th:replace="~{components/course-card :: course-card(${course}, ${acquireAction})}"></div>
 						</div>
 					</div>
 
@@ -134,8 +109,8 @@
 			<aside class="recommendations col-md-3 col-12">
 				<h4>Recomendaciones para ti</h4>
 				<div class="recommendations-cards">
-					<div th:each="recommendation : ${recommendations}">
-						<div th:replace="~{components/course-card :: course-card(${recommendation})}"></div>
+					<div class="recommendation-card-wrapper mb-4" th:each="recommendation : ${recommendations}">
+						<div th:replace="~{components/course-card :: course-card(${recommendation}, ${acquireAction})}"></div>
 					</div>
 				</div>
 			</aside>

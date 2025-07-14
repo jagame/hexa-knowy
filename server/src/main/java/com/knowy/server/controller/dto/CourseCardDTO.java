@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +21,14 @@ public class CourseCardDTO {
 	private int progress;
 	private ActionType action;
 	private ArrayList<String> languages;
+	private LocalDateTime creationDate;
 
 	public enum ActionType {
 		START,
 		ACQUIRE
 	}
 
-	public static CourseCardDTO fromEntity(CourseEntity course, int progress, List<String> languages){
+	public static CourseCardDTO fromEntity(CourseEntity course, int progress, List<String> languages, LocalDateTime creationDate) {
 		CourseCardDTO dto = new CourseCardDTO();
 		dto.setId(course.getId());
 		dto.setName(course.getTitle());
@@ -34,10 +36,11 @@ public class CourseCardDTO {
 		dto.setProgress(progress);
 		dto.setAction(ActionType.START);
 		dto.setLanguages(new ArrayList<>(languages));
+		dto.setCreationDate(creationDate);
 		return dto;
 	}
 
-	public static CourseCardDTO fromRecommendation(CourseEntity course, List<String> languages
+	public static CourseCardDTO fromRecommendation(CourseEntity course, List<String> languages, LocalDateTime creationDate
 	) {
 		CourseCardDTO dto = new CourseCardDTO();
 		dto.setId(course.getId());
@@ -46,6 +49,7 @@ public class CourseCardDTO {
 		dto.setProgress(0);
 		dto.setAction(ActionType.ACQUIRE);
 		dto.setLanguages(new ArrayList<>(languages));
+		dto.setCreationDate(creationDate);
 		return dto;
 	}
 }
