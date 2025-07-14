@@ -279,3 +279,10 @@ oficial:<br>
 Proyecto desarrollado por:
 
 - [SaraMForte](https://github.com/SaraMForte)
+- [Aarón Helices Martín-Niño](https://github.com/aaronhmn)
+- [David Gil Campos](https://github.com/Sinnick29)
+- [NRichardsF](https://github.com/nrichardsf)
+- [Iván Carvajal Huetor](https://github.com/ivancarvajalhuetor)
+- [Judit Olaya Grima Lorente](https://github.com/JuditoLaya)
+- [Manuel Corvo Belda](https://github.com/Worldlover12)
+- [Jorgazo](https://github.com/JorgeSR95)
