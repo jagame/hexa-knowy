@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PublicUserExerciseRepository {
+
+	<S extends PublicUserExerciseEntity> S save(S entity);
+
 	Optional<PublicUserExerciseEntity> findById(PublicUserExerciseId id);
 
 	List<PublicUserExerciseEntity> findAll();

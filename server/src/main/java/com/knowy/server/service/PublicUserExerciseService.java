@@ -6,6 +6,7 @@ import com.knowy.server.service.model.ExerciseDifficult;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -13,19 +14,32 @@ public class PublicUserExerciseService {
 
 	private final PublicUserExerciseRepository publicUserExerciseRepository;
 
+	// TODO - JavaDoc
 	public PublicUserExerciseService(PublicUserExerciseRepository publicUserExerciseRepository) {
 		this.publicUserExerciseRepository = publicUserExerciseRepository;
 	}
 
+	// TODO - JavaDoc
 	public Optional<PublicUserExerciseEntity> findNextExerciseByLessonId(int userId, int lessonId) {
 		return publicUserExerciseRepository.findNextExerciseByLessonId(userId, lessonId);
 	}
 
+	// TODO - JavaDoc
 	public Optional<PublicUserExerciseEntity> findNextExerciseByUserId(int userId) {
 		return publicUserExerciseRepository.findNextExerciseByUserId(userId);
 	}
 
+	// TODO - JavaDoc
+	public PublicUserExerciseEntity save(PublicUserExerciseEntity publicUserExerciseEntity) {
+		Objects.requireNonNull(publicUserExerciseEntity, "publicUserExerciseEntity cannot be null");
+		return publicUserExerciseRepository.save(publicUserExerciseEntity);
+	}
+
+	// TODO - JavaDoc
 	public void difficultSelect(ExerciseDifficult exerciseDifficult, PublicUserExerciseEntity publicUserExerciseEntity) {
+		Objects.requireNonNull(exerciseDifficult, "exerciseDifficult cannot be null");
+		Objects.requireNonNull(publicUserExerciseEntity, "publicUserExerciseEntity cannot be null");
+
 		switch (exerciseDifficult) {
 			case EASY -> easySelect(publicUserExerciseEntity);
 			case MEDIUM -> mediumSelect(publicUserExerciseEntity);

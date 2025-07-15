@@ -16,6 +16,10 @@ public interface JpaPublicUserExerciseRepository extends PublicUserExerciseRepos
 
 	@Override
 	@NonNull
+	<S extends PublicUserExerciseEntity> S save(@NonNull S publicUserExerciseEntity);
+
+	@Override
+	@NonNull
 	Optional<PublicUserExerciseEntity> findById(@NonNull PublicUserExerciseId id);
 
 	@Override
