@@ -254,17 +254,17 @@ public class AccessService {
 									   String confirmPassword,
 									   HttpServletRequest request) throws JwtKnowyException, MailDispatchException, WrongPasswordException {
 		if (!deletePassword.equals(confirmPassword)) {
-			throw new WrongPasswordException("La contraseña es incorrecta o no coincide");
+			throw new WrongPasswordException("Passwords do not match");
 		}
 
 		Optional<PrivateUserEntity> optUser = privateUserRepository.findByEmail(email);
 		if (optUser.isEmpty()) {
-			throw new JwtKnowyException("Usuario no encontrado");
+			throw new JwtKnowyException("User not found");
 		}
 		PrivateUserEntity privateUserEntity = optUser.get();
 
 		if (!PasswordCheker.hasPassword(privateUserEntity, deletePassword)) {
-			throw new WrongPasswordException("La contraseña es incorrecta o no coincide");
+			throw new WrongPasswordException("Passwords do not match");
 		}
 
 		String domainUrl = getDomainUrl(request);
@@ -276,13 +276,13 @@ public class AccessService {
 
 	public void reactivateUserAccount (String token) throws JwtKnowyException {
 		if (!isValidToken(token)) {
-			throw new JwtKnowyException("El token ha expirado o no es válido");
+			throw new JwtKnowyException("Invalid token");
 			}
 
 		Optional<PrivateUserEntity> optUser = getUserByToken(token);
 
 		if (optUser.isEmpty()) {
-			throw new JwtKnowyException("Usuario no encontrado");
+			throw new JwtKnowyException("User not found");
 		}
 
 		PrivateUserEntity privateUserEntity = optUser.get();
