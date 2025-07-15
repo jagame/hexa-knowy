@@ -60,24 +60,3 @@ VALUES (9, 'super', false),
 	   (9, 'this', true),
 	   (9, 'self', false),
 	   (9, 'object', false);
-
--- Ejercicio 10: ¿Cuál de estas colecciones permite elementos duplicados y mantiene el orden de inserción?
-INSERT INTO public.option (id_exercise, option_text, is_correct)
-VALUES (10, 'Set', false),
-	   (10, 'Map', false),
-	   (10, 'List', true),
-	   (10, 'HashSet', false);
-
--- Ejercicio 11: ¿Qué clase implementarías para una colección que no permite duplicados?
-INSERT INTO public.option (id_exercise, option_text, is_correct)
-VALUES (11, 'ArrayList', false),
-	   (11, 'LinkedList', false),
-	   (11, 'HashSet', true),
-	   (11, 'Vector', false);
-
--- Ejercicio 12: ¿Cuál es la principal diferencia entre List y Set en Java?
-INSERT INTO public.option (id_exercise, option_text, is_correct)
-VALUES (12, 'Set permite duplicados, List no', false),
-	   (12, 'List es una clase abstracta, Set no', false),
-	   (12, 'List permite duplicados y mantiene el orden, Set no', true),
-	   (12, 'No hay diferencia, ambas hacen lo mismo', false);
