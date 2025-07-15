@@ -9,13 +9,12 @@ import com.knowy.server.repository.PublicUserRepository;
 import com.knowy.server.service.exception.AccessException;
 import com.knowy.server.service.exception.InvalidUserException;
 import com.knowy.server.service.model.PasswordResetJwt;
+import com.knowy.server.service.model.ReactivateAccountJwt;
 import com.knowy.server.util.EmailClientService;
 import com.knowy.server.util.JwtService;
 import com.knowy.server.util.PasswordCheker;
-import com.knowy.server.util.exception.JwtKnowyException;
-import com.knowy.server.util.exception.MailDispatchException;
-import com.knowy.server.util.exception.PasswordFormatException;
-import com.knowy.server.util.exception.UserNotFoundException;
+import com.knowy.server.util.exception.*;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -219,7 +218,7 @@ public class AccessService {
 
 	private void sendReactivationToken(PrivateUserEntity user, String token, String appUrl) throws JwtKnowyException, MailDispatchException {
 		String to = user.getEmail();
-		String subject = "Tu enlace para recuperar tu cuenta de KNOWY esta aquí.";
+		String subject = "El enlace para recuperar tu cuenta de KNOWY esta aquí.";
 		String body = reactivationTokenBody(token, appUrl);
 		emailClientService.sendEmail(to, subject, body);
 	}
@@ -227,11 +226,12 @@ public class AccessService {
 	private String reactivationTokenBody(String token, String appUrl) {
 		String url = "%s?token=%s".formatted(appUrl, token);
 		return """
-			¡Hola, %%$@<UNK>#&%%$%%!
+			¡Hola, %%$@€#&%%$%%!
 			
 			Tu cuenta de KNOWY ha sido desactivada correctamente.
 			
 			Dispones de 30 días para recuperarla haciendo click en el siguiente enlace:
+			
 			%s
 			
 			Una vez transcurrido este tiempo, tu cuenta será eliminada definitivamente.
@@ -240,5 +240,63 @@ public class AccessService {
 			
 			© 2025 KNOWY, Inc
 			""".formatted(url);
+	}
+
+	public Optional<PrivateUserEntity> getUserByToken(String token) throws JwtKnowyException {
+		ReactivateAccountJwt reactivateAccountJwt = jwtService.decodeUnverified(token, ReactivateAccountJwt.class);
+        PrivateUserEntity privateUser = privateUserRepository.findByEmail(reactivateAccountJwt.getEmail()).orElseThrow( () -> new JwtKnowyException("User not found"));
+        jwtService.decode(privateUser.getPassword(), token, ReactivateAccountJwt.class);
+		return Optional.of(privateUser);
+	}
+
+	public void deactivateUserAccount (String email,
+									   String deletePassword,
+									   String confirmPassword,
+									   HttpServletRequest request) throws JwtKnowyException, MailDispatchException, WrongPasswordException {
+		if (!deletePassword.equals(confirmPassword)) {
+			throw new WrongPasswordException("La contraseña es incorrecta o no coincide");
+		}
+
+		Optional<PrivateUserEntity> optUser = privateUserRepository.findByEmail(email);
+		if (optUser.isEmpty()) {
+			throw new JwtKnowyException("Usuario no encontrado");
+		}
+		PrivateUserEntity privateUserEntity = optUser.get();
+
+		if (!PasswordCheker.hasPassword(privateUserEntity, deletePassword)) {
+			throw new WrongPasswordException("La contraseña es incorrecta o no coincide");
+		}
+
+		String domainUrl = getDomainUrl(request);
+		String recoveryBaseUrl = domainUrl + "/reactivate-account";
+		sendDeletedAccountEmail(recoveryBaseUrl, privateUserEntity.getEmail());
+		privateUserEntity.setActive(false);
+		privateUserRepository.save(privateUserEntity);
+	}
+
+	public void reactivateUserAccount (String token) throws JwtKnowyException {
+		if (!isValidToken(token)) {
+			throw new JwtKnowyException("El token ha expirado o no es válido");
+			}
+
+		Optional<PrivateUserEntity> optUser = getUserByToken(token);
+
+		if (optUser.isEmpty()) {
+			throw new JwtKnowyException("Usuario no encontrado");
+		}
+
+		PrivateUserEntity privateUserEntity = optUser.get();
+		if (!privateUserEntity.isActive()) {
+			privateUserEntity.setActive(true);
+			privateUserRepository.save(privateUserEntity);
+		}
+	}
+
+	private String getDomainUrl(HttpServletRequest request) {
+		String scheme = request.getScheme();
+		String serverName = request.getServerName();
+		int serverPort = request.getServerPort();
+
+		return scheme + "://" + serverName + ":" + serverPort;
 	}
 }

@@ -23,6 +23,9 @@
 </head>
 <body class="landing-page-content" layout:fragment="body-content">
 
+<h4 class="message-success" th:if="${success}" th:text="${success}">Tu cuenta se ha desactivado.</h4>
+<h4 class="message-error" th:if="${error}" th:text="${error}">Algo salió mal en el servidor. Estamos trabajando para solucionarlo.</h4>
+
 <!-- Knowy main section with landing-page.css added and global.css (from basic-layout.html)-->
 	<header class="knowy-card">
 		<div class="knowy-content">

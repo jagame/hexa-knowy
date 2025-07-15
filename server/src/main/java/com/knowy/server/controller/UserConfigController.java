@@ -139,63 +139,41 @@ public class UserConfigController {
 	@PostMapping("/delete-account-end")
 	public String deleteAccount (@RequestParam String deletePassword,
 								 @RequestParam String confirmPassword,
-								 ModelMap interfaceScreen,
+								 RedirectAttributes redirectAttributes,
 								 HttpSession session,
+								 ModelMap interfaceScreen,
 								 HttpServletRequest request) throws WrongPasswordException, JwtKnowyException, MailDispatchException {
 
-		if (!deletePassword.equals(confirmPassword)) {
-			interfaceScreen.addAttribute("error", "La contraseña es incorrecta o no coincide");
-			return "pages/user-management/delete-account-end";
-		}
 		String email = getCurrentEmail(session);
-		Optional<PrivateUserEntity> optPrivateUser = userService.findPrivateUserByEmail(email);
-		if (optPrivateUser.isEmpty()) {
-			interfaceScreen.addAttribute("error", "Usuario no encontrado");
-			return "pages/user-management/delete-account-end";
-		}
 
-		PrivateUserEntity privateUserEntity = optPrivateUser.get();
-		if(!PasswordCheker.hasPassword(privateUserEntity, deletePassword)) {
+		try {
+			accessService.deactivateUserAccount(email, deletePassword, confirmPassword, request);
+			redirectAttributes.addFlashAttribute("success", "Tu cuenta ha sido desactivada correctamente. Dispones de 30 días para recuperarla.");
+			return "redirect:/";
+
+		} catch (WrongPasswordException e) {
 			interfaceScreen.addAttribute("error", "La contraseña es incorrecta o no coincide");
-			return "pages/user-management/delete-account-end";
+			return "/pages/user-management/delete-account-end";
 		}
-
-		String domainUrl = getDomainUrl(request);
-		String recoveryBaseUrl = domainUrl + "/reactivate-account";
-		accessService.sendDeletedAccountEmail(recoveryBaseUrl, privateUserEntity.getEmail());
-
-		privateUserEntity.setActive(false);
-		jpaPrivateUserRepository.save(privateUserEntity);
-		interfaceScreen.addAttribute("success", "Tu cuenta ha sido eliminada correctamente. Dispones de 30 días para recuperarla.");
-
-		session.invalidate();
-
-		return "pages/user-management/delete-account-end";
 	}
-
 
 	@GetMapping("/reactivate-account")
-	public String reactivateAccount(@RequestParam("token") String token, RedirectAttributes redirectAttributes) {
-		boolean isValidToken = accessService.isValidToken(token);
-		if (!isValidToken) {
-			redirectAttributes.addFlashAttribute("error", "El token ha expirado o no es válido");
-			return "redirect:/error/error";
-		}
-		//obtener usuario del token??
-		//active=true
-		//guardar usuario en bbdd
+	public String reactivateAccount(@RequestParam("token") String token, RedirectAttributes redirectAttributes) throws JwtKnowyException {
 
-		redirectAttributes.addFlashAttribute("success", "Tu cuenta ha sido reactivada correctamente.");
-		return "redirect:/pages/access/login";
+			try {
+				accessService.reactivateUserAccount(token);
+				redirectAttributes.addFlashAttribute("success", "Tu cuenta ha sido reactivada correctamente.");
+				return "redirect:/account-reactivation";
+
+			} catch (JwtKnowyException e) {
+				redirectAttributes.addFlashAttribute("error", "El token ha expirado o no es válido");
+				return "redirect:/error";
+			}
 	}
 
-	private String getDomainUrl(HttpServletRequest request) {
-		String scheme = request.getScheme();
-		String serverName = request.getServerName();
-		int serverPort = request.getServerPort();
-
-		return scheme + "://" + serverName + ":" + serverPort;
+	@GetMapping("account-reactivation")
+	public String accountReactivation() {
+		return "pages/user-management/account-reactivation";
 	}
-
 
 }

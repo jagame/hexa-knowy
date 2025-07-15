@@ -293,6 +293,25 @@
 	font-family: 'inter';
 }
 
+/*Account reactivation messages*/
+.message-success {
+	font-family: 'excalifont';
+	text-align: center;
+	background-color: $info-600;
+	color: $primary-100;
+	padding: clamp(10px, 3vw, 20px);
+	font-size: clamp(1rem, 1.5vw, 1.25rem);
+
+}
+.message-error {
+	font-family: 'excalifont';
+	text-align: center;
+	background-color: $danger-500;
+	color: $primary-100;
+	padding: clamp(10px, 3vw, 20px);
+	font-size: clamp(1rem, 1.5vw, 1.25rem);
+}
+
 /*Footer styles*/
 
 .footer{
