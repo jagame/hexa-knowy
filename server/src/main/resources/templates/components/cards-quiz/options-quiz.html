@@ -3,58 +3,64 @@
 			class="quiz-option"
 			type="button"
 			th:text="${'-' + ' ' + option.text}"
-			th:attr="data-correct=${option.isCorrect}">
+			th:data-correct="${option.isCorrect}">
 	</button>
 
 	<!--NAVIGATION BUTTONS-->
 		<div class="answer-button">
-			<button id="answer-button" class="answer-button__element" type="button">Responder</button>
+			<button class="answer-button__element" type="button" data-bs-target="#exampleModal" data-bs-toggle="modal">Responder</button>
 		</div>
 
-</div>
-<script>
-	console.log('Quiz options script loaded');
-	document.addEventListener('DOMContentLoaded', function () {
-		const answeredButtons = document.querySelectorAll('.quiz-option');
-		const checkButton = document.getElementById('answer-button');
-		let answered = false;
-		let selectedOption = null;
+	<script>
+		(() => {
 
-		// Guardamos qué opción seleccionó el usuario
-		answeredButtons.forEach(btn => {
-			btn.addEventListener('click', function () {
-				if (answered) return;
+			/** Función auxiliar: devuelve el contenedor .options-quiz de un elemento */
+			const getQuizBox = el => el.closest('.options-quiz');
 
-				// Desmarcar todas
-				answeredButtons.forEach(b => b.classList.remove('selected'));
+			/** Manejamos la selección de una opción */
+			document.addEventListener('click', e => {
+				const optionBtn = e.target.closest('.quiz-option');
+				if (!optionBtn) return;                       // no se hizo clic en una opción
 
-				// Marcar la actual
-				btn.classList.add('selected');
-				selectedOption = btn;
+				const box = getQuizBox(optionBtn);
+				if (box.dataset.answered === 'true') return;  // ya respondido
+
+				// Desmarcar anteriores y marcar la nueva
+				box.querySelectorAll('.quiz-option').forEach(b => b.classList.remove('selected'));
+				optionBtn.classList.add('selected');
+				box.dataset.selected = optionBtn.dataset.correct;   // "true" | "false"
+				box.dataset.selectedId = optionBtn.dataset.buttonId = Date.now(); // id único por si hace falta
 			});
-		});
 
-		// Escuchar el clic en el botón externo
-		checkButton.addEventListener('click', function () {
-			if (answered || !selectedOption) return;
+			/** Manejamos el clic en "Responder" */
+			document.addEventListener('click', e => {
+				const checkBtn = e.target.closest('.answer-button__element');
+				if (!checkBtn) return;                        // clic en otra cosa
 
-			answered = true;
+				const box = getQuizBox(checkBtn);
+				if (box.dataset.answered === 'true')   return; // ya respondido
+				if (!box.dataset.selectedId)           return; // aún no eligió opción
 
-			answeredButtons.forEach(b => {
-				const isCorrect = b.getAttribute('data-correct') === 'true';
-				if (b === selectedOption) {
-					if (isCorrect) {
-						b.classList.add('correct');
-					} else {
-						b.classList.add('incorrect');
+				box.dataset.answered = 'true';
+
+				const selected   = box.querySelector('.quiz-option.selected');
+				const optionBtns = box.querySelectorAll('.quiz-option');
+
+				optionBtns.forEach(btn => {
+					const isCorrect = btn.dataset.correct === 'true';
+					if (btn === selected) {
+						btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+					} else if (isCorrect) {
+						btn.classList.add('correct');
 					}
-				} else if (isCorrect) {
-					b.classList.add('correct');
-				}
+				});
 			});
-		});
-	});
-</script>
+
+		})();
+	</script>
+
+</div>
+
 
 
 

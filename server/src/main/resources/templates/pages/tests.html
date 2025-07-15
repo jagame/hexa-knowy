@@ -36,21 +36,6 @@
 		<div th:replace="~{components/cards-quiz/options-quiz :: options-quiz(options=${exercise.options()})}"></div>
 	</div>
 
-	<!--NAVIGATION BUTTONS-->
-	<div layout:fragment="quiz-navigation-buttons">
-
-		<div class="navigation-buttons">
-			<a href="#">
-				<button class="navigation-buttons__element" th:href="@{{id}(id=${exercise.exerciseId - 1})}">← Anterior</button>
-			</a>
-
-			<a href="#">
-				<button class="navigation-buttons__element" data-bs-target="#exampleModal" data-bs-toggle="modal">
-					Siguiente →
-				</button>
-			</a>
-		</div>
-	</div>
 
 	<!-- Modal -->
 	<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" tabindex="-1">
@@ -94,6 +79,6 @@
 		</div>
 	</div>
 </main>
-<!---script th:src="@{/scripts/answer-exercise-engine.js}" defer></script---->
+
 </body>
 </html>
