@@ -11,8 +11,7 @@
 <body>
 <main layout:fragment="main-content">
 	<div class="container-fluid">
-		<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
-		<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
 		<section class="filter-container">
 			<form method="get" th:action="@{/store}" class="filters d-flex align-items-center">
 				<select class="form-select filter-select me-2" name="category" id="category">

@@ -1,6 +1,7 @@
 package com.knowy.server.controller;
 
 import com.knowy.server.controller.dto.CourseCardDTO;
+import com.knowy.server.controller.dto.ToastDto;
 import com.knowy.server.service.CourseSubscriptionService;
 import com.knowy.server.service.model.UserSecurityDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -56,6 +57,10 @@ public class CoursesStoreController {
 					.toList();
 			}
 		}
+		List<ToastDto> toastList = List.of(new ToastDto("warning", "Este es un toast de prueba", ToastDto.ToastType.INFO));
+		System.out.println("ToastList en modelo: " + toastList);
+		model.addAttribute("toasts", toastList);
+
 		model.addAttribute("allLanguages", courseSubscriptionService.findAllLanguages());
 		model.addAttribute("courses", storeCourses);
 		model.addAttribute("order", order);
@@ -71,11 +76,11 @@ public class CoursesStoreController {
 										@AuthenticationPrincipal UserSecurityDetails userDetails,
 										RedirectAttributes attrs) {
 		if (!courseSubscriptionService.subscribeUserToCourse(userDetails.getPublicUser().getId(), courseId)) {
-			attrs.addFlashAttribute("error", "Error al adquirir el curso");
+			attrs.addFlashAttribute("toasts", List.of(new ToastDto("error", "Error al adquirir el curso", ToastDto.ToastType.ERROR)));
 			return "redirect:/store";
 		}
-		attrs.addFlashAttribute("success", "¡Curso adquirido con éxito!");
-			return "redirect:/store";
+		attrs.addFlashAttribute("toasts", List.of(new ToastDto("success", "¡Curso adquirido con éxito!", ToastDto.ToastType.SUCCESS)));
+		return "redirect:/store";
 		}
 	}
 
