@@ -33,10 +33,10 @@ public interface JpaPublicUserExerciseRepository extends PublicUserExerciseRepos
 	@Override
 	@Query(value = """
 		SELECT
-		    pl.id_public_user,
-		    ex.id,
-		    pex.next_review,
-		    pex.rate
+		    pl.id_public_user AS id_public_user,
+		    ex.id AS id_exercise,
+		    pex.next_review AS next_review,
+		    pex.rate AS rate
 		FROM public_user_lesson pl
 		    INNER JOIN lesson l
 		        ON pl.id_lesson = l.id
@@ -61,19 +61,19 @@ public interface JpaPublicUserExerciseRepository extends PublicUserExerciseRepos
 	@Override
 	@Query(value = """
 		SELECT
-		    pl.id_public_user,
-		    ex.id,
-		    pex.next_review,
-		    pex.rate
+		    pl.id_public_user AS id_public_user,
+		    ex.id AS id_exercise,
+		    pex.next_review AS next_review,
+		    pex.rate AS rate
 		FROM public_user_lesson pl
-		INNER JOIN lesson l
-		    ON pl.id_lesson = l.id
-		INNER JOIN course c
-		    ON l.id_course = c.id
-		INNER JOIN exercise ex
-		    ON l.id = ex.id_lesson
-		FULL JOIN public_user_exercise pex
-		    ON ex.id = pex.id_exercise
+		    INNER JOIN lesson l
+		        ON pl.id_lesson = l.id
+		    INNER JOIN course c
+		        ON l.id_course = c.id
+		    INNER JOIN exercise ex
+		        ON l.id = ex.id_lesson
+		    FULL JOIN public_user_exercise pex
+		        ON ex.id = pex.id_exercise
 		WHERE
 		    pl.id_public_user = :userId AND
 		    pl.status != 'pending'

@@ -2,7 +2,9 @@ package com.knowy.server.service;
 
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.entity.PublicUserEntity;
+import com.knowy.server.entity.PublicUserExerciseEntity;
 import com.knowy.server.service.exception.*;
+import com.knowy.server.service.model.ExerciseDifficult;
 import com.knowy.server.service.model.MailMessage;
 import com.knowy.server.util.EmailClientTool;
 import com.knowy.server.util.exception.JwtKnowyException;
@@ -11,28 +13,33 @@ import com.knowy.server.util.exception.PasswordFormatException;
 import com.knowy.server.util.exception.WrongPasswordException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserFacadeService {
 
 	private final EmailClientTool emailClientTool;
 	private final PrivateUserService privateUserService;
 	private final PublicUserService publicUserService;
+	private final PublicUserExerciseService publicUserExerciseService;
 
 	/**
 	 * The constructor
 	 *
-	 * @param emailClientTool    the emailClientService
-	 * @param privateUserService the privateUserService
-	 * @param publicUserService  the publicUserService
+	 * @param emailClientTool           the emailClientService
+	 * @param privateUserService        the privateUserService
+	 * @param publicUserService         the publicUserService
+	 * @param publicUserExerciseService the publicUserExerciseService
 	 */
 	public UserFacadeService(
 		EmailClientTool emailClientTool,
 		PrivateUserService privateUserService,
-		PublicUserService publicUserService
-	) {
+		PublicUserService publicUserService,
+		PublicUserExerciseService publicUserExerciseService) {
 		this.emailClientTool = emailClientTool;
 		this.privateUserService = privateUserService;
 		this.publicUserService = publicUserService;
+		this.publicUserExerciseService = publicUserExerciseService;
 	}
 
 	/**
@@ -168,5 +175,36 @@ public class UserFacadeService {
 		throws JwtKnowyException, UserNotFoundException, MailDispatchException {
 		MailMessage mailMessage = privateUserService.createRecoveryPasswordEmail(email, recoveryBaseUrl);
 		emailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
+	}
+
+	/**
+	 * Retrieves the next available association between a specific user and an exercise, filtered by lesson. This
+	 * represents the next {@code PublicUserExerciseEntity} the user is expected to complete.
+	 *
+	 * @param userId   the ID of the public user.
+	 * @param lessonId the ID of the lesson.
+	 * @return an {@code Optional} containing the next {@code PublicUserExerciseEntity} if available, or empty if none
+	 * is found.
+	 */
+	public Optional<PublicUserExerciseEntity> findNextExerciseByLessonId(int userId, int lessonId) {
+		return publicUserExerciseService.findNextExerciseByLessonId(userId, lessonId);
+	}
+
+	/**
+	 * Retrieves the next available association between a specific user and an exercise, regardless of the lesson. This
+	 * represents the next {@code PublicUserExerciseEntity} the user is expected to complete.
+	 *
+	 * @param userId the ID of the public user.
+	 * @return an {@code Optional} containing the next {@code PublicUserExerciseEntity} if available, or empty if none
+	 * is found.
+	 */
+	public Optional<PublicUserExerciseEntity> findNextExerciseByUserId(int userId) {
+		return publicUserExerciseService.findNextExerciseByUserId(userId);
+	}
+
+	// TODO - JavaDoc
+	public void processUserAnswer(ExerciseDifficult exerciseDifficult, PublicUserExerciseEntity exerciseEntity) {
+		publicUserExerciseService.difficultSelect(exerciseDifficult, exerciseEntity);
+		publicUserExerciseService.save(exerciseEntity);
 	}
 }

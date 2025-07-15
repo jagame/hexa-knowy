@@ -167,10 +167,13 @@ FROM public_user_lesson pl
 		 FULL JOIN public_user_exercise pex
 				   ON ex.id = pex.id_exercise
 WHERE
-	pl.id_public_user = 2
+	pl.id_public_user = 2 AND
+	pl.status != 'pending'
 ORDER BY
 	pex.rate NULLS FIRST,
 	pex.next_review NULLS FIRST;
+
+--
 SELECT
 	pl.id_public_user,
 	ex.id,

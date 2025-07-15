@@ -14,28 +14,50 @@ public class PublicUserExerciseService {
 
 	private final PublicUserExerciseRepository publicUserExerciseRepository;
 
-	// TODO - JavaDoc
+	/**
+	 * The constructor
+	 *
+	 * @param publicUserExerciseRepository the publicUserExerciseRepository
+	 */
 	public PublicUserExerciseService(PublicUserExerciseRepository publicUserExerciseRepository) {
 		this.publicUserExerciseRepository = publicUserExerciseRepository;
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Retrieves the next available exercise for a specific user and lesson.
+	 *
+	 * @param userId   the ID of the public user.
+	 * @param lessonId the ID of the lesson.
+	 * @return an {@code Optional} containing the next exercise if available, or empty if none is found.
+	 */
 	public Optional<PublicUserExerciseEntity> findNextExerciseByLessonId(int userId, int lessonId) {
 		return publicUserExerciseRepository.findNextExerciseByLessonId(userId, lessonId);
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Retrieves the next available exercise for a specific user, without filtering by lesson.
+	 *
+	 * @param userId the ID of the public user.
+	 * @return an {@code Optional} containing the next exercise if available, or empty if none is found.
+	 */
 	public Optional<PublicUserExerciseEntity> findNextExerciseByUserId(int userId) {
 		return publicUserExerciseRepository.findNextExerciseByUserId(userId);
 	}
 
-	// TODO - JavaDoc
+
+	/**
+	 * Saves or updates a public user exercise entity in the repository.
+	 *
+	 * @param publicUserExerciseEntity the entity to be saved.
+	 * @return the persisted entity.
+	 * @throws NullPointerException if {@code publicUserExerciseEntity} is {@code null}.
+	 */
 	public PublicUserExerciseEntity save(PublicUserExerciseEntity publicUserExerciseEntity) {
 		Objects.requireNonNull(publicUserExerciseEntity, "publicUserExerciseEntity cannot be null");
 		return publicUserExerciseRepository.save(publicUserExerciseEntity);
 	}
 
-	// TODO - JavaDoc
+	// TODO - JavaDoc And Finish it
 	public void difficultSelect(ExerciseDifficult exerciseDifficult, PublicUserExerciseEntity publicUserExerciseEntity) {
 		Objects.requireNonNull(exerciseDifficult, "exerciseDifficult cannot be null");
 		Objects.requireNonNull(publicUserExerciseEntity, "publicUserExerciseEntity cannot be null");
@@ -77,5 +99,4 @@ public class PublicUserExerciseService {
 		publicUserExerciseEntity.setRate(publicUserExerciseEntity.getRate() + 30);
 		publicUserExerciseEntity.setNextReview(LocalDateTime.now().plusMinutes(1));
 	}
-
 }

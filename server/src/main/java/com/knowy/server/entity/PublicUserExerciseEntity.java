@@ -28,9 +28,12 @@ public class PublicUserExerciseEntity {
 	private LocalDateTime nextReview;
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_public_user", referencedColumnName = "id", insertable = false, updatable = false)
 	private PublicUserEntity publicUserEntity;
 
 	@ManyToOne(fetch = FetchType.LAZY)
+
+	@JoinColumn(name = "id_exercise", referencedColumnName = "id", insertable = false, updatable = false)
 	private ExerciseEntity exerciseEntity;
 
 	public void setRate(int rate) {
