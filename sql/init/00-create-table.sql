@@ -33,10 +33,10 @@ CREATE TABLE IF NOT EXISTS public.public_user_mission
 
 CREATE TABLE IF NOT EXISTS public.course
 (
-	id          serial NOT NULL,
-	title       varchar(100),
-	description varchar(250),
-	author      varchar(250),
+	id            serial    NOT NULL,
+	title         varchar(100),
+	description   varchar(250),
+	author        varchar(250),
 	creation_date timestamp NOT NULL DEFAULT current_timestamp,
 	PRIMARY KEY (id)
 );
@@ -78,13 +78,13 @@ CREATE TABLE IF NOT EXISTS public.option
 	PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS public.public_user_option
+CREATE TABLE IF NOT EXISTS public.public_user_exercise
 (
 	id_public_user integer   NOT NULL,
-	id_option      integer   NOT NULL,
-	answer_date    timestamp NOT NULL DEFAULT current_timestamp,
-	rate           numeric   NOT NULL DEFAULT 0,
-	PRIMARY KEY (id_public_user, id_option)
+	id_exercise    integer   NOT NULL,
+	next_review    timestamp NOT NULL DEFAULT current_timestamp,
+	rate           integer   NOT NULL DEFAULT 0,
+	PRIMARY KEY (id_public_user, id_exercise)
 );
 
 CREATE TABLE IF NOT EXISTS public.profile_image
@@ -176,14 +176,14 @@ ALTER TABLE IF EXISTS public.option
 	ADD FOREIGN KEY (id_exercise)
 		REFERENCES public.exercise (id);
 
--- FK public_user_option
-ALTER TABLE IF EXISTS public.public_user_option
+-- FK public_user_exercise
+ALTER TABLE IF EXISTS public.public_user_exercise
 	ADD FOREIGN KEY (id_public_user)
 		REFERENCES public.public_user (id);
 
-ALTER TABLE IF EXISTS public.public_user_option
-	ADD FOREIGN KEY (id_option)
-		REFERENCES public.option (id);
+ALTER TABLE IF EXISTS public.public_user_exercise
+	ADD FOREIGN KEY (id_exercise)
+		REFERENCES public.exercise (id);
 
 --FK public_user_language
 ALTER TABLE IF EXISTS public.public_user_language

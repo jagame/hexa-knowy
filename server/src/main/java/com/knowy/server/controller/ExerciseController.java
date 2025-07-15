@@ -21,13 +21,12 @@ public class ExerciseController {
 
 	private final ExerciseService exerciseService;
 
-
 	public ExerciseController(ExerciseService exerciseService) {
 		this.exerciseService = exerciseService;
 	}
 
 	@GetMapping("/exercise/{id}")
-	public String exercises(@PathVariable("id") int id, Model model){
+	public String exercises(@PathVariable("id") int id, Model model) {
 		ExerciseEntity exerciseEntity = exerciseService.findById(id);
 
 		List<OptionsDto> options = exerciseEntity.getOptions()

@@ -15,9 +15,3 @@ INSERT INTO public.exercise (id_lesson, question)
 VALUES (3, '¿Qué es una clase en Java?'),
 	   (3, '¿Cómo se llama al proceso de crear una instancia de una clase?'),
 	   (3, '¿Qué palabra clave se utiliza para acceder a los miembros actuales del objeto?');
-
--- Lección 6: Colecciones en Java
-INSERT INTO public.exercise (id_lesson, question)
-VALUES (6, '¿Cuál de estas colecciones permite elementos duplicados y mantiene el orden de inserción?'),
-	   (6, '¿Qué clase implementarías para una colección que no permite duplicados?'),
-	   (6, '¿Cuál es la principal diferencia entre List y Set en Java?');

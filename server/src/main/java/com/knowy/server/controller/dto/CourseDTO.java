@@ -1,9 +1,6 @@
 package com.knowy.server.controller.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,8 +8,8 @@ import java.util.List;
 @Setter
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class CourseDTO {
-	public CourseDTO() {}
 	private String name;
 	private int percentageCompleted;
 	private List<LessonDTO> lessons;
