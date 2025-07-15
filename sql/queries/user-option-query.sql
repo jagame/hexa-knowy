@@ -175,7 +175,8 @@ SELECT
 	pl.id_public_user,
 	ex.id,
 	pex.next_review,
-	pex.rate
+	pex.rate,
+	pl.status
 FROM public_user_lesson pl
 		 INNER JOIN lesson l
 					ON pl.id_lesson = l.id
@@ -186,7 +187,9 @@ FROM public_user_lesson pl
 		 FULL JOIN public_user_exercise pex
 				   ON ex.id = pex.id_exercise
 WHERE
-	pl.id_public_user = 2
+	pl.id_public_user = 2 AND
+	l.id = :lessonId AND
+	pl.status != 'pending'
 ORDER BY
 	pex.rate NULLS FIRST,
 	pex.next_review NULLS FIRST,

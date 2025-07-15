@@ -12,4 +12,8 @@ public interface PublicUserExerciseRepository {
 	List<PublicUserExerciseEntity> findAll();
 
 	List<PublicUserExerciseEntity> findAllByPublicUserId(int publicUserId);
+
+	Optional<PublicUserExerciseEntity> findNextExerciseByLessonId(int publicUserId, int lessonId);
+
+	Optional<PublicUserExerciseEntity> findNextExerciseByUserId(int userId);
 }

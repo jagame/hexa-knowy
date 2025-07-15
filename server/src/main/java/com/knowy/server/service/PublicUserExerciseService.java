@@ -6,7 +6,6 @@ import com.knowy.server.service.model.ExerciseDifficult;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.Optional;
 
 @Service
@@ -18,13 +17,12 @@ public class PublicUserExerciseService {
 		this.publicUserExerciseRepository = publicUserExerciseRepository;
 	}
 
-	public Optional<PublicUserExerciseEntity> findPullByPublicUser(int publicUserId) {
-		return publicUserExerciseRepository.findAllByPublicUserId(publicUserId)
-			.stream()
-			.min(
-				Comparator.comparing(PublicUserExerciseEntity::getRate)
-					.thenComparing(PublicUserExerciseEntity::getNextReview)
-			);
+	public Optional<PublicUserExerciseEntity> findNextExerciseByLessonId(int userId, int lessonId) {
+		return publicUserExerciseRepository.findNextExerciseByLessonId(userId, lessonId);
+	}
+
+	public Optional<PublicUserExerciseEntity> findNextExerciseByUserId(int userId) {
+		return publicUserExerciseRepository.findNextExerciseByUserId(userId);
 	}
 
 	public void difficultSelect(ExerciseDifficult exerciseDifficult, PublicUserExerciseEntity publicUserExerciseEntity) {

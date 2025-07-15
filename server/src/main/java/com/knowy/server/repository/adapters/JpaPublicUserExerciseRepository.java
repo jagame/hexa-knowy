@@ -12,8 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface JpaPublicUserExerciseRepository extends PublicUserExerciseRepository,
-	JpaRepository<PublicUserExerciseEntity, PublicUserExerciseId> {
+public interface JpaPublicUserExerciseRepository extends PublicUserExerciseRepository, JpaRepository<PublicUserExerciseEntity, PublicUserExerciseId> {
 
 	@Override
 	@NonNull
@@ -26,4 +25,59 @@ public interface JpaPublicUserExerciseRepository extends PublicUserExerciseRepos
 	@Override
 	@Query("SELECT p FROM PublicUserExerciseEntity p WHERE p.id = :id")
 	List<PublicUserExerciseEntity> findAllByPublicUserId(int publicUserId);
+
+	@Override
+	@Query(value = """
+		SELECT
+		    pl.id_public_user,
+		    ex.id,
+		    pex.next_review,
+		    pex.rate
+		FROM public_user_lesson pl
+		INNER JOIN lesson l
+		    ON pl.id_lesson = l.id
+		INNER JOIN course c
+		    ON l.id_course = c.id
+		INNER JOIN exercise ex
+		    ON l.id = ex.id_lesson
+		FULL JOIN public_user_exercise pex
+		    ON ex.id = pex.id_exercise
+		WHERE
+		    pl.id_public_user = :userId AND
+		    l.id = :lessonId AND
+		    pl.status != 'pending'
+		ORDER BY
+		    pex.rate NULLS FIRST,
+		    pex.next_review NULLS FIRST,
+		    RANDOM()
+		LIMIT(1)
+		""", nativeQuery = true)
+	Optional<PublicUserExerciseEntity> findNextExerciseByLessonId(int userId, int lessonId);
+
+	@Override
+	@Query(value = """
+		SELECT
+		    pl.id_public_user,
+		    ex.id,
+		    pex.next_review,
+		    pex.rate
+		FROM public_user_lesson pl
+		INNER JOIN lesson l
+		    ON pl.id_lesson = l.id
+		INNER JOIN course c
+		    ON l.id_course = c.id
+		INNER JOIN exercise ex
+		    ON l.id = ex.id_lesson
+		FULL JOIN public_user_exercise pex
+		    ON ex.id = pex.id_exercise
+		WHERE
+		    pl.id_public_user = :userId AND
+		    pl.status != 'pending'
+		ORDER BY
+		    pex.rate NULLS FIRST,
+		    pex.next_review NULLS FIRST,
+		    RANDOM()
+		LIMIT(1)
+		""", nativeQuery = true)
+	Optional<PublicUserExerciseEntity> findNextExerciseByUserId(int userId);
 }
