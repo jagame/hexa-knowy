@@ -4,6 +4,7 @@ import com.knowy.server.controller.dto.ExerciseDto;
 import com.knowy.server.entity.PublicUserExerciseEntity;
 import com.knowy.server.service.UserFacadeService;
 import com.knowy.server.service.model.UserSecurityDetails;
+import com.knowy.server.util.exception.ExerciseNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -29,23 +30,34 @@ public class ExerciseController {
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		Model model
 	) {
-		PublicUserExerciseEntity publicUserExercise = userFacadeService
-			.findNextExerciseByLessonId(userDetails.getPublicUser().getId(), lessonId)
-			.orElseThrow();
+		try {
+			PublicUserExerciseEntity publicUserExercise = userFacadeService
+				.getNextExercise(userDetails.getPublicUser().getId(), lessonId);
 
-		model.addAttribute("exercise", ExerciseDto.fromPublicUserExerciseEntity(publicUserExercise));
-		model.addAttribute("mode", "ANSWERING");
-		return "pages/exercise";
+			model.addAttribute("exercise", ExerciseDto.fromPublicUserExerciseEntity(publicUserExercise));
+			model.addAttribute("mode", "ANSWERING");
+			return "pages/exercise";
+		} catch (ExerciseNotFoundException e) {
+			return "error/error";
+		}
 	}
 
 	@PostMapping("/lesson/{lessonId}/exercise")
 	public String exerciseResponse(
+		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		@PathVariable("lessonId") int lessonId,
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("answerId") String answerId,
 		Model model
-	) {
+	) throws ExerciseNotFoundException {
+		PublicUserExerciseEntity publicUserExercise = userFacadeService
+			.getPublicUserExerciseById(userDetails.getPublicUser().getId(), exerciseId);
 
+		ExerciseDto exerciseDto = ExerciseDto
+			.fromPublicUserExerciseEntity(publicUserExercise, Integer.parseInt(answerId));
+
+		model.addAttribute("exercise", exerciseDto);
+		model.addAttribute("mode", "REVIEWING");
 		return "pages/exercise";
 	}
 }

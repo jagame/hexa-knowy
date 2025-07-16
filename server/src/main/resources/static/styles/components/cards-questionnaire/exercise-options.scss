@@ -36,13 +36,13 @@
 	background: $secundary-500;
 }
 
-.exercise-option.correct {
+.exercise-option[data-status="RESPONSE_SUCCESS"] {
 	background: $primary-500;
 	color: $neutral-100;
 	border-color: $primary-700;
 }
 
-.exercise-option.incorrect {
+.exercise-option[data-status="RESPONSE_FAIL"] {
 	background: $danger-600;
 	color: $neutral-100;
 	border-color: $danger-500;

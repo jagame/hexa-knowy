@@ -33,4 +33,23 @@ public record ExerciseDto(
 			options
 		);
 	}
+
+	public static ExerciseDto fromPublicUserExerciseEntity(PublicUserExerciseEntity publicUserExercise, int answerId) {
+		ExerciseEntity exerciseEntity = publicUserExercise.getExerciseEntity();
+
+		List<ExerciseOptionDto> options = exerciseEntity.getOptions()
+			.stream()
+			.map(option -> ExerciseOptionDto.fromEntity(option, answerId))
+			.toList();
+
+		return new ExerciseDto(
+			exerciseEntity.getLesson().getId(),
+			exerciseEntity.getId(),
+			exerciseEntity.getLesson().getCourse().getTitle(),
+			publicUserExercise.getRate(),
+			publicUserExercise.getExerciseEntity().getQuestion(),
+			"TODO",
+			options
+		);
+	}
 }

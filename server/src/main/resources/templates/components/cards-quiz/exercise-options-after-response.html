@@ -6,6 +6,7 @@
 	<button
 		class="exercise-option"
 		name="selectedOption"
+		th:data-status="${option.status}"
 		th:each="option : ${options}"
 		th:text="${option.text}"
 		type="button">

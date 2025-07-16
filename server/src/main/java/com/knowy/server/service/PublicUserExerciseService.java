@@ -1,8 +1,10 @@
 package com.knowy.server.service;
 
 import com.knowy.server.entity.PublicUserExerciseEntity;
+import com.knowy.server.entity.PublicUserExerciseId;
 import com.knowy.server.repository.ports.PublicUserExerciseRepository;
 import com.knowy.server.service.model.ExerciseDifficult;
+import com.knowy.server.util.exception.ExerciseNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,6 +36,12 @@ public class PublicUserExerciseService {
 		return publicUserExerciseRepository.findNextExerciseByLessonId(userId, lessonId);
 	}
 
+	// TODO - JavaDoc
+	public PublicUserExerciseEntity getNextExerciseByLessonId(int userId, int lessonId) throws ExerciseNotFoundException {
+		return findNextExerciseByLessonId(userId, lessonId)
+			.orElseThrow(() -> new ExerciseNotFoundException("No next exercise found for user ID " + userId + " in lesson ID " + lessonId));
+	}
+
 	/**
 	 * Retrieves the next available exercise for a specific user, without filtering by lesson.
 	 *
@@ -44,6 +52,22 @@ public class PublicUserExerciseService {
 		return publicUserExerciseRepository.findNextExerciseByUserId(userId);
 	}
 
+	// TODO - JavaDoc
+	public PublicUserExerciseEntity getNextExerciseByUserId(int userId) throws ExerciseNotFoundException {
+		return findNextExerciseByUserId(userId)
+			.orElseThrow(() -> new ExerciseNotFoundException("No next exercise found for user ID " + userId));
+	}
+
+	// TODO - JavaDoc
+	public Optional<PublicUserExerciseEntity> findById(int userId, int exerciseId) {
+		return publicUserExerciseRepository.findById(new PublicUserExerciseId(userId, exerciseId));
+	}
+
+	// TODO - JavaDoc
+	public PublicUserExerciseEntity getById(int userId, int exerciseId) throws ExerciseNotFoundException {
+		return findById(userId, exerciseId)
+			.orElseThrow(() -> new ExerciseNotFoundException("Exercise ID " + exerciseId + " not found for user ID " + userId));
+	}
 
 	/**
 	 * Saves or updates a public user exercise entity in the repository.

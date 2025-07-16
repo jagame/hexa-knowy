@@ -7,10 +7,7 @@ import com.knowy.server.service.exception.*;
 import com.knowy.server.service.model.ExerciseDifficult;
 import com.knowy.server.service.model.MailMessage;
 import com.knowy.server.util.EmailClientTool;
-import com.knowy.server.util.exception.JwtKnowyException;
-import com.knowy.server.util.exception.MailDispatchException;
-import com.knowy.server.util.exception.PasswordFormatException;
-import com.knowy.server.util.exception.WrongPasswordException;
+import com.knowy.server.util.exception.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -177,29 +174,19 @@ public class UserFacadeService {
 		emailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
 	}
 
-	/**
-	 * Retrieves the next available association between a specific user and an exercise, filtered by lesson. This
-	 * represents the next {@code PublicUserExerciseEntity} the user is expected to complete.
-	 *
-	 * @param userId   the ID of the public user.
-	 * @param lessonId the ID of the lesson.
-	 * @return an {@code Optional} containing the next {@code PublicUserExerciseEntity} if available, or empty if none
-	 * is found.
-	 */
-	public Optional<PublicUserExerciseEntity> findNextExerciseByLessonId(int userId, int lessonId) {
-		return publicUserExerciseService.findNextExerciseByLessonId(userId, lessonId);
+	// TODO - JavaDoc
+	public PublicUserExerciseEntity getNextExercise(int userId, int lessonId) throws ExerciseNotFoundException {
+		return publicUserExerciseService.getNextExerciseByLessonId(userId, lessonId);
 	}
 
-	/**
-	 * Retrieves the next available association between a specific user and an exercise, regardless of the lesson. This
-	 * represents the next {@code PublicUserExerciseEntity} the user is expected to complete.
-	 *
-	 * @param userId the ID of the public user.
-	 * @return an {@code Optional} containing the next {@code PublicUserExerciseEntity} if available, or empty if none
-	 * is found.
-	 */
-	public Optional<PublicUserExerciseEntity> findNextExerciseByUserId(int userId) {
-		return publicUserExerciseService.findNextExerciseByUserId(userId);
+	// TODO - JavaDoc
+	public PublicUserExerciseEntity getNextExercise(int userId) throws ExerciseNotFoundException {
+		return publicUserExerciseService.getNextExerciseByUserId(userId);
+	}
+
+	// TODO - JavaDoc
+	public PublicUserExerciseEntity getPublicUserExerciseById(int userId, int exerciseId) throws ExerciseNotFoundException {
+		return publicUserExerciseService.getById(userId, exerciseId);
 	}
 
 	// TODO - JavaDoc

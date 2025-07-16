@@ -22,10 +22,13 @@ public record ExerciseOptionDto(
 		RESPONSE_SUCCESS;
 
 		public static AnswerStatus from(OptionEntity option, int answerId) {
-			if (option.getId() != answerId) {
-				return NO_RESPONSE;
+			if (option.getId() == answerId && !option.isCorrect()) {
+				return RESPONSE_FAIL;
 			}
-			return option.isCorrect() ? RESPONSE_SUCCESS : RESPONSE_FAIL;
+			if (option.isCorrect()) {
+				return RESPONSE_SUCCESS;
+			}
+			return NO_RESPONSE;
 		}
 	}
 }
