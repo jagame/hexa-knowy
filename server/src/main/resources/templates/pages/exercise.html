@@ -31,53 +31,68 @@
 	</div>
 
 	<!--POSSIBLE ANSWERS COMPONENT-->
-	<div class="answers-container">
-		<div
-			th:replace="~{components/cards-quiz/exercise-options :: options-quiz(
+	<section class="answers-container">
+		<form th:replace="~{components/cards-quiz/exercise-options :: options-quiz(
 			options=${exercise.options()},
-			lessonId=${exercise.lessonId()})}">
+			lessonId=${exercise.lessonId()},
+			exerciseId=${exercise.exerciseId()},
+			mode=${mode}
+			)}">
+		</form>
+
+		<div th:replace="~{components/cards-quiz/exercise-options-after-response :: options-quiz(
+			options=${exercise.options()},
+			lessonId=${exercise.lessonId()},
+			exerciseId=${mode == 'REVIEWING' ? exercise.exerciseId : null},
+			mode=${mode}
+			)}">
 		</div>
-	</div>
+	</section>
 
-
-	<!-- Modal -->
-	<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" tabindex="-1">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="exampleModalLabel">Respuesta correcta</h1>
-					<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
-				</div>
-				<div class="modal-body d-flex flex-wrap justify-content-evenly">
-					<p>¿Cómo te resultó el ejercicio?</p>
-					<div class="modal-buttons">
-						<a class="btn btn-primary happy" th:href="@{{id}(id=${exercise.exerciseId() +1})}"
-						   type="button">
-							Fácil
-							<img alt="Facil" class="avatar-selectable rounded-circle img-fluid me-2 w-50"
-								 data-avatar-src-path="/images/profile/knowylogo.svg" data-bs-dismiss="modal"
-								 src="/images/test/mood-happy.svg"
-							/>
-						</a>
-
-						<a class="btn btn-primary empty" th:href="@{{id}(id=${exercise.exerciseId +1})}" type="button">
-							Normal
-							<img alt="Normal" class="avatar-selectable rounded-circle img-fluid me-2 w-50"
-								 data-avatar-src-path="/images/profile/knowylogo_red.svg" data-bs-dismiss="modal"
-								 src="/images/test/mood-empty.svg"
-							/>
-						</a>
-
-						<a class="btn btn-primary sad" th:href="@{{id}(id=${exercise.exerciseId +1})}" type="button">
-							Difícil
-							<img alt="Difícil" class="avatar-selectable rounded-circle img-fluid me-2 w-50"
-								 data-avatar-src-path="/images/profile/knowylogo_blue.svg" data-bs-dismiss="modal"
-								 height="50px" src="/images/test/mood-sad.svg"
-								 width="50px"
-							/>
-						</a>
+	<div layout:fragment="layout-overlay">
+		<!-- Modal -->
+		<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal"
+			 tabindex="-1"
+			 th:if="${mode == 'REVIEWING'}">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="exampleModalLabel">Respuesta correcta</h1>
+						<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
 					</div>
-					<p>¡Valoración obligatoria!</p>
+					<div class="modal-body d-flex flex-wrap justify-content-evenly">
+						<p>¿Cómo te resultó el ejercicio?</p>
+						<div class="modal-buttons">
+							<a class="btn btn-primary happy" th:href="@{{id}(id=${exercise.exerciseId() +1})}"
+							   type="button">
+								Fácil
+								<img alt="Facil" class="avatar-selectable rounded-circle img-fluid me-2 w-50"
+									 data-avatar-src-path="/images/profile/knowylogo.svg" data-bs-dismiss="modal"
+									 src="/images/test/mood-happy.svg"
+								/>
+							</a>
+
+							<a class="btn btn-primary empty" th:href="@{{id}(id=${exercise.exerciseId +1})}"
+							   type="button">
+								Normal
+								<img alt="Normal" class="avatar-selectable rounded-circle img-fluid me-2 w-50"
+									 data-avatar-src-path="/images/profile/knowylogo_red.svg" data-bs-dismiss="modal"
+									 src="/images/test/mood-empty.svg"
+								/>
+							</a>
+
+							<a class="btn btn-primary sad" th:href="@{{id}(id=${exercise.exerciseId +1})}"
+							   type="button">
+								Difícil
+								<img alt="Difícil" class="avatar-selectable rounded-circle img-fluid me-2 w-50"
+									 data-avatar-src-path="/images/profile/knowylogo_blue.svg" data-bs-dismiss="modal"
+									 height="50px" src="/images/test/mood-sad.svg"
+									 width="50px"
+								/>
+							</a>
+						</div>
+						<p>¡Valoración obligatoria!</p>
+					</div>
 				</div>
 			</div>
 		</div>

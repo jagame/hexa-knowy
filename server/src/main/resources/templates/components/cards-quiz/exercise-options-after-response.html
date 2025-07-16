@@ -1,0 +1,24 @@
+<div class="options-quiz"
+	 method="post"
+	 th:action="@{/lesson/{lessonId}/exercise(lessonId=${lessonId})}"
+	 th:fragment="options-quiz(options, lessonId)"
+	 th:if="${mode == 'REVIEWING' || mode == 'FAILING'}">
+	<button
+		class="exercise-option"
+		name="selectedOption"
+		th:each="option : ${options}"
+		th:text="${option.text}"
+		type="button">
+	</button>
+
+	<!--NAVIGATION BUTTONS-->
+	<div class="answer-button" th:if="${mode == 'REVIEWING'}">
+		<button class="answer-button__element" data-bs-target="#exampleModal" data-bs-toggle="modal" type="button">
+			Siguiente Ejercicio ->
+		</button>
+	</div>
+</div>
+
+
+
+

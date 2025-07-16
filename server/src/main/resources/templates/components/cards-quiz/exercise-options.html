@@ -1,7 +1,7 @@
-<form class="options-quiz"
-	  method="post"
+<form class="options-quiz" method="post"
 	  th:action="@{/lesson/{lessonId}/exercise(lessonId=${lessonId})}"
-	  th:fragment="options-quiz(options, lessonId)">
+	  th:fragment="options-quiz(options, lessonId, exerciseId, mode)"
+	  th:if="${mode == 'ANSWERING'}">
 	<button
 		class="exercise-option"
 		name="selectedOption"
@@ -11,18 +11,12 @@
 		type="button">
 	</button>
 
-	<!--NAVIGATION BUTTONS-->
-	<div class="answer-button" th:if="${false}">
-		<button class="answer-button__element" data-bs-target="#exampleModal" data-bs-toggle="modal" type="button">
-			Siguiente Ejercicio ->
-		</button>
-	</div>
-
 	<div class="answer-button">
 		<button class="answer-button__element" data-bs-target="#exampleModal" data-bs-toggle="modal" type="submit">
 			Responder
 		</button>
 		<input id="answer-id" name="answerId" type="hidden" value="">
+		<input id="exercise-id" name="exerciseId" th:value="${exerciseId}" type="hidden">
 	</div>
 
 	<script>
@@ -47,6 +41,7 @@
 		})
 	</script>
 </form>
+
 
 
 
