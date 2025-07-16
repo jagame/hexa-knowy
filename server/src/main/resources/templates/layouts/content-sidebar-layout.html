@@ -34,7 +34,7 @@
 	</div>
 </div>
 
-<div th:replace="components/toast-wrapper :: wrapper(${toasts})"></div>
+<div th:replace="~{components/toast-wrapper :: wrapper(${toasts})}"></div>
 
 <div layout:fragment="layout-overlay"></div>
 
