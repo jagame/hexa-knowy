@@ -1,6 +1,7 @@
 package com.knowy.server.service;
 
 import com.knowy.server.controller.dto.CourseCardDTO;
+import com.knowy.server.controller.exception.KnowyCourseSubscriptionException;
 import com.knowy.server.entity.*;
 import com.knowy.server.repository.CourseRepository;
 import com.knowy.server.repository.LanguageRepository;
@@ -44,14 +45,18 @@ public class CourseSubscriptionService {
 			.toList();
 	}
 
-	public boolean subscribeUserToCourse(Integer userId, Integer courseId) {
+	public void subscribeUserToCourse(Integer userId, Integer courseId) throws KnowyCourseSubscriptionException{
 		List<LessonEntity> lessons = lessonRepository.findByCourseId(courseId);
-		if (lessons.isEmpty()) return false;
+		if (lessons.isEmpty()){
+			throw new KnowyCourseSubscriptionException("El curso no tiene lecciones disponibles");
+		}
 
 		boolean alreadySubscribed = lessons.stream()
 			.allMatch(lesson ->
 				publicUserLessonRepository.existsByUserIdAndLessonId(userId, lesson.getId()));
-		if (alreadySubscribed) return true;
+		if (alreadySubscribed){
+			throw new KnowyCourseSubscriptionException("Ya estás suscrito a este curso");
+		}
 
 		for (LessonEntity lesson : lessons) {
 			PublicUserLessonIdEntity id = new PublicUserLessonIdEntity(userId, lesson.getId());
@@ -64,7 +69,6 @@ public class CourseSubscriptionService {
 				publicUserLessonRepository.save(pul);
 			}
 		}
-		return true;
 	}
 
 	public List<CourseEntity> findCoursesByUserId(Integer userId) {
