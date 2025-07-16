@@ -1,74 +1,53 @@
 package com.knowy.server.controller;
 
 import com.knowy.server.controller.dto.ExerciseDto;
-import com.knowy.server.controller.dto.OptionsDto;
-import com.knowy.server.controller.dto.QuestionDTO;
-import com.knowy.server.controller.dto.QuizLayoutDTO;
-import com.knowy.server.entity.ExerciseEntity;
-import com.knowy.server.service.ExerciseService;
+import com.knowy.server.controller.dto.ExerciseOptionDto;
+import com.knowy.server.entity.PublicUserExerciseEntity;
+import com.knowy.server.service.UserFacadeService;
+import com.knowy.server.service.model.UserSecurityDetails;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 public class ExerciseController {
 
+	private final UserFacadeService userFacadeService;
 
-	private final ExerciseService exerciseService;
-
-	public ExerciseController(ExerciseService exerciseService) {
-		this.exerciseService = exerciseService;
+	public ExerciseController(UserFacadeService userFacadeService) {
+		this.userFacadeService = userFacadeService;
 	}
 
-	@GetMapping("/exercise/{id}")
-	public String exercises(@PathVariable("id") int id, Model model) {
-		ExerciseEntity exerciseEntity = exerciseService.findById(id);
+	@GetMapping("/lesson/{lessonId}/exercise")
+	public String exercise(
+		@PathVariable("lessonId") int lessonId,
+		@AuthenticationPrincipal UserSecurityDetails userDetails,
+		Model model
+	) {
+		PublicUserExerciseEntity publicUserExercise = userFacadeService
+			.findNextExerciseByLessonId(userDetails.getPublicUser().getId(), lessonId)
+			.orElseThrow();
 
-		List<OptionsDto> options = exerciseEntity.getOptions()
-			.stream()
-			.map(OptionsDto::fromEntity)
-			.toList();
-
-		ExerciseDto exerciseDTO = new ExerciseDto(
-			1,
-			exerciseEntity.getLesson().getId(),
-			exerciseEntity.getId(),
-			"NA1",
-			3,
-			4,
-			exerciseEntity.getQuestion(),
-			"NA1",
-			options
-		);
-
-		model.addAttribute("exercise", exerciseDTO);
-		return "pages/tests";
+		model.addAttribute("exercise", ExerciseDto.fromPublicUserExerciseEntity(publicUserExercise));
+		return "pages/exercise";
 	}
 
-	// FIXME - This is a temporary endpoint for testing purposes
-	@GetMapping("/asdasd")
-	public String viewComponents(@RequestParam(defaultValue = "3") int quizID, ModelMap model) {
-//		List<OptionQuizDTO> options = exerciseService.getOptionsForQuiz(quizID);
-		QuizLayoutDTO quizLayoutDTO = new QuizLayoutDTO(
-			"Java Básico",
-			2,
-			9,
-			8,
-			75
-		);
-		model.addAttribute("quizLayout", quizLayoutDTO);
-//		model.addAttribute("options", options);
+	@PostMapping("/lesson/{lessonId}/exercise")
+	public String exerciseResponse(
+		@PathVariable("lessonId") int lessonId,
+		@RequestParam("answerId") String answerId,
+		@AuthenticationPrincipal UserSecurityDetails userDetails,
+		Model model
+	) {
 
-		QuestionDTO questionDTO = new QuestionDTO("1", "Question", "images/knowylogo.png");
-		model.addAttribute("questionNumber", questionDTO.getQuestionNumber());
-		model.addAttribute("questionText", questionDTO.getQuestionText());
-		model.addAttribute("imgPath", questionDTO.getImgPath());
-
-		return "pages/tests";
+		return "pages/exercise";
 	}
 }

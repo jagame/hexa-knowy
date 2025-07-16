@@ -13,10 +13,9 @@
 <main layout:fragment="main-content">
 	<!--CARD LAYOUT HEADER-->
 	<div th:replace="~{components/cards-quiz/quiz-header :: quiz-header(
-			courseName='Java Script Avanzado',
+			courseName=${exercise.courseName()},
       		lessonId=${exercise.lessonId()},
       		exerciseId=${exercise.exerciseId()},
-      		cardStreak=${null},
       		correctPercentage=${exercise.correctPercentage()}
  	 	)}">
 	</div>
@@ -33,7 +32,11 @@
 
 	<!--POSSIBLE ANSWERS COMPONENT-->
 	<div class="answers-container">
-		<div th:replace="~{components/cards-quiz/options-quiz :: options-quiz(options=${exercise.options()})}"></div>
+		<div
+			th:replace="~{components/cards-quiz/exercise-options :: options-quiz(
+			options=${exercise.options()},
+			lessonId=${exercise.lessonId()})}">
+		</div>
 	</div>
 
 
@@ -48,7 +51,8 @@
 				<div class="modal-body d-flex flex-wrap justify-content-evenly">
 					<p>¿Cómo te resultó el ejercicio?</p>
 					<div class="modal-buttons">
-						<a class="btn btn-primary happy" th:href="@{{id}(id=${exercise.exerciseId() +1})}" type="button">
+						<a class="btn btn-primary happy" th:href="@{{id}(id=${exercise.exerciseId() +1})}"
+						   type="button">
 							Fácil
 							<img alt="Facil" class="avatar-selectable rounded-circle img-fluid me-2 w-50"
 								 data-avatar-src-path="/images/profile/knowylogo.svg" data-bs-dismiss="modal"

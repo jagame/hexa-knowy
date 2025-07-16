@@ -203,8 +203,8 @@ public class UserFacadeService {
 	}
 
 	// TODO - JavaDoc
-	public void processUserAnswer(ExerciseDifficult exerciseDifficult, PublicUserExerciseEntity exerciseEntity) {
+	public PublicUserExerciseEntity processUserAnswer(ExerciseDifficult exerciseDifficult, PublicUserExerciseEntity exerciseEntity) {
 		publicUserExerciseService.difficultSelect(exerciseDifficult, exerciseEntity);
-		publicUserExerciseService.save(exerciseEntity);
+		return publicUserExerciseService.save(exerciseEntity);
 	}
 }

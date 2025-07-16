@@ -1,0 +1,53 @@
+<form class="options-quiz"
+	  method="post"
+	  th:action="@{/lesson/{lessonId}/exercise(lessonId=${lessonId})}"
+	  th:fragment="options-quiz(options, lessonId)">
+	<button
+		class="exercise-option"
+		name="selectedOption"
+		th:data-option-id="${option.id}"
+		th:each="option : ${options}"
+		th:text="${option.text}"
+		type="button">
+	</button>
+
+	<!--NAVIGATION BUTTONS-->
+	<div class="answer-button" th:if="${false}">
+		<button class="answer-button__element" data-bs-target="#exampleModal" data-bs-toggle="modal" type="button">
+			Siguiente Ejercicio ->
+		</button>
+	</div>
+
+	<div class="answer-button">
+		<button class="answer-button__element" data-bs-target="#exampleModal" data-bs-toggle="modal" type="submit">
+			Responder
+		</button>
+		<input id="answer-id" name="answerId" type="hidden" value="">
+	</div>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", () => {
+			const options = document.querySelectorAll(".exercise-option");
+
+			options.forEach((option) => {
+				option.addEventListener("click", event => {
+					changeTargetColor(event.currentTarget);
+					changeValueOfAnswer(event.currentTarget.dataset.optionId);
+				})
+			})
+
+			function changeTargetColor(target) {
+				options.forEach((option) => option.classList.remove("selected"));
+				target.classList.toggle("selected");
+			}
+
+			function changeValueOfAnswer(value) {
+				document.getElementById("answer-id").setAttribute("value", value);
+			}
+		})
+	</script>
+</form>
+
+
+
+
