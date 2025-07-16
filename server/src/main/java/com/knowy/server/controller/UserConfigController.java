@@ -145,35 +145,50 @@ public class UserConfigController {
 								 HttpServletRequest request) throws WrongPasswordException, JwtKnowyException, MailDispatchException {
 
 		String email = getCurrentEmail(session);
+		String domainUrl = getDomainUrl(request);
+		String recoveryBaseUrl = domainUrl + "/reactivate-account";
 
 		try {
-			accessService.deactivateUserAccount(email, deletePassword, confirmPassword, request);
+			accessService.deactivateUserAccount(email, deletePassword, confirmPassword, recoveryBaseUrl);
 			redirectAttributes.addFlashAttribute("success", "Tu cuenta ha sido desactivada correctamente. Dispones de 30 días para recuperarla.");
 			return "redirect:/";
 
-		} catch (WrongPasswordException e) {
+		} catch (WrongPasswordException e ) {
 			interfaceScreen.addAttribute("error", "La contraseña es incorrecta o no coincide");
-			return "/pages/user-management/delete-account-end";
+			return "pages/user-management/delete-account-end";
+		} catch (MailDispatchException e ) {
+			interfaceScreen.addAttribute("error", "Error al enviar el email");
+			return "pages/user-management/delete-account-end";
+		} catch (JwtKnowyException e ) {
+			interfaceScreen.addAttribute("error", "Error al recuperar el token");
+			return "pages/user-management/delete-account-end";
 		}
 	}
 
 	@GetMapping("/reactivate-account")
-	public String reactivateAccount(@RequestParam("token") String token, RedirectAttributes redirectAttributes) throws JwtKnowyException {
+	public String reactivateAccount(@RequestParam("token") String token, Model model) {
 
 			try {
 				accessService.reactivateUserAccount(token);
-				redirectAttributes.addFlashAttribute("success", "Tu cuenta ha sido reactivada correctamente.");
-				return "redirect:/account-reactivation";
+				model.addAttribute("success", "Tu cuenta ha sido reactivada correctamente.");
+				return "pages/user-management/account-reactivation";
 
 			} catch (JwtKnowyException e) {
-				redirectAttributes.addFlashAttribute("error", "El token ha expirado o no es válido");
-				return "redirect:/error";
+				model.addAttribute("error", "El token ha expirado o no es válido");
+				return "error/error";
 			}
 	}
 
-	@GetMapping("account-reactivation")
-	public String accountReactivation() {
-		return "pages/user-management/account-reactivation";
+//	@GetMapping("account-reactivation")
+//	public String accountReactivation() {
+//		return "pages/user-management/account-reactivation";
+//	}
+
+	private String getDomainUrl(HttpServletRequest request) {
+		String scheme = request.getScheme();
+		String serverName = request.getServerName();
+		int serverPort = request.getServerPort();
+		return scheme + "://" + serverName + ":" + serverPort;
 	}
 
 }

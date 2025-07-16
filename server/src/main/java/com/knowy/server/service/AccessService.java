@@ -242,33 +242,27 @@ public class AccessService {
 			""".formatted(url);
 	}
 
-	public Optional<PrivateUserEntity> getUserByToken(String token) throws JwtKnowyException {
-		ReactivateAccountJwt reactivateAccountJwt = jwtService.decodeUnverified(token, ReactivateAccountJwt.class);
-        PrivateUserEntity privateUser = privateUserRepository.findByEmail(reactivateAccountJwt.getEmail()).orElseThrow( () -> new JwtKnowyException("User not found"));
-        jwtService.decode(privateUser.getPassword(), token, ReactivateAccountJwt.class);
-		return Optional.of(privateUser);
-	}
+//	public Optional<PrivateUserEntity> getUserByToken(String token) throws JwtKnowyException {
+//		ReactivateAccountJwt reactivateAccountJwt = jwtService.decodeUnverified(token, ReactivateAccountJwt.class);
+//        PrivateUserEntity privateUser = privateUserRepository.findByEmail(reactivateAccountJwt.getEmail()).orElseThrow( () -> new JwtKnowyException("User not found"));
+//        jwtService.decode(privateUser.getPassword(), token, ReactivateAccountJwt.class);
+//		return Optional.of(privateUser);
+//	}
 
 	public void deactivateUserAccount (String email,
 									   String deletePassword,
 									   String confirmPassword,
-									   HttpServletRequest request) throws JwtKnowyException, MailDispatchException, WrongPasswordException {
+									   String recoveryBaseUrl) throws JwtKnowyException, MailDispatchException, WrongPasswordException {
 		if (!deletePassword.equals(confirmPassword)) {
 			throw new WrongPasswordException("Passwords do not match");
 		}
 
-		Optional<PrivateUserEntity> optUser = privateUserRepository.findByEmail(email);
-		if (optUser.isEmpty()) {
-			throw new JwtKnowyException("User not found");
-		}
-		PrivateUserEntity privateUserEntity = optUser.get();
+		PrivateUserEntity privateUserEntity = privateUserRepository.findByEmail(email).orElseThrow(() -> new JwtKnowyException("User not found"));
 
 		if (!PasswordCheker.hasPassword(privateUserEntity, deletePassword)) {
 			throw new WrongPasswordException("Passwords do not match");
 		}
 
-		String domainUrl = getDomainUrl(request);
-		String recoveryBaseUrl = domainUrl + "/reactivate-account";
 		sendDeletedAccountEmail(recoveryBaseUrl, privateUserEntity.getEmail());
 		privateUserEntity.setActive(false);
 		privateUserRepository.save(privateUserEntity);
@@ -279,24 +273,12 @@ public class AccessService {
 			throw new JwtKnowyException("Invalid token");
 			}
 
-		Optional<PrivateUserEntity> optUser = getUserByToken(token);
+		PrivateUserEntity privateUserEntity = getUserByToken(token).orElseThrow(() -> new JwtKnowyException("User not found"));
 
-		if (optUser.isEmpty()) {
-			throw new JwtKnowyException("User not found");
-		}
-
-		PrivateUserEntity privateUserEntity = optUser.get();
 		if (!privateUserEntity.isActive()) {
 			privateUserEntity.setActive(true);
 			privateUserRepository.save(privateUserEntity);
 		}
 	}
 
-	private String getDomainUrl(HttpServletRequest request) {
-		String scheme = request.getScheme();
-		String serverName = request.getServerName();
-		int serverPort = request.getServerPort();
-
-		return scheme + "://" + serverName + ":" + serverPort;
-	}
 }
