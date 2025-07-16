@@ -170,8 +170,8 @@ WHERE
 	pl.id_public_user = 2 AND
 	pl.status != 'pending'
 ORDER BY
-	pex.rate NULLS FIRST,
-	pex.next_review NULLS FIRST;
+	pex.next_review NULLS FIRST,
+	pex.rate NULLS FIRST;
 
 --
 SELECT

@@ -51,8 +51,8 @@ public interface JpaPublicUserExerciseRepository extends PublicUserExerciseRepos
 		    l.id = :lessonId AND
 		    pl.status != 'pending'
 		ORDER BY
-		    pex.rate NULLS FIRST,
 		    pex.next_review NULLS FIRST,
+		    pex.rate NULLS FIRST,
 		    RANDOM()
 		LIMIT(1)
 		""", nativeQuery = true)
@@ -78,8 +78,8 @@ public interface JpaPublicUserExerciseRepository extends PublicUserExerciseRepos
 		    pl.id_public_user = :userId AND
 		    pl.status != 'pending'
 		ORDER BY
-		    pex.rate NULLS FIRST,
 		    pex.next_review NULLS FIRST,
+		    pex.rate NULLS FIRST,
 		    RANDOM()
 		LIMIT(1)
 		""", nativeQuery = true)

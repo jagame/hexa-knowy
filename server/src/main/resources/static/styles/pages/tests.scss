@@ -45,9 +45,28 @@ body {
 		border-radius: 15px;
 		background-color: $primary-500;
 
-		&:hover {
+		&:hover:enabled {
 			background-color: $primary-700;
 		}
+	}
+}
+
+.answer-button--fail {
+	font-size: 1rem;
+	font-weight: bold;
+	width: 100%;
+	padding: 0.5rem 1.5rem;
+	cursor: pointer;
+	transition: background-color 0.3s;
+	text-align: center;
+	color: white;
+	border: none;
+	border-radius: 15px;
+	background-color: $primary-500;
+	text-decoration: none;
+
+	&:hover {
+		background-color: $primary-700;
 	}
 }
 

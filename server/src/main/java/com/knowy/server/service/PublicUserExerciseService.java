@@ -120,7 +120,7 @@ public class PublicUserExerciseService {
 	}
 
 	private void failSelect(PublicUserExerciseEntity publicUserExerciseEntity) {
-		publicUserExerciseEntity.setRate(publicUserExerciseEntity.getRate() + 30);
+		publicUserExerciseEntity.setRate(publicUserExerciseEntity.getRate() - 30);
 		publicUserExerciseEntity.setNextReview(LocalDateTime.now().plusMinutes(1));
 	}
 }

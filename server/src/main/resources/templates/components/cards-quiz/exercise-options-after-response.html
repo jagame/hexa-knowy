@@ -1,6 +1,6 @@
 <div class="options-quiz"
 	 method="post"
-	 th:action="@{/lesson/{lessonId}/exercise(lessonId=${lessonId})}"
+	 th:action="@{/course/exercise/review}"
 	 th:fragment="options-quiz(options, lessonId)"
 	 th:if="${mode == 'REVIEWING' || mode == 'FAILING'}">
 	<button
@@ -18,6 +18,11 @@
 			Siguiente Ejercicio ->
 		</button>
 	</div>
+	<a class="answer-button--fail"
+	   th:href="'/course/' + ${lessonId} + '/exercise/review'"
+	   th:if="${mode == 'FAILING'}">
+		Siguiente Ejercicio ->
+	</a>
 </div>
 
 
