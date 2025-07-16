@@ -1,6 +1,8 @@
 package com.knowy.server.controller;
 
 import com.knowy.server.controller.dto.CourseCardDTO;
+import com.knowy.server.controller.dto.ToastDto;
+import com.knowy.server.controller.exception.KnowyCourseSubscriptionException;
 import com.knowy.server.service.CourseSubscriptionService;
 import com.knowy.server.service.model.UserSecurityDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -89,11 +91,15 @@ public class CourseController {
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		RedirectAttributes attrs
 	){
-		if (!courseSubscriptionService.subscribeUserToCourse(userDetails.getPublicUser().getId(), courseId)) {
-			attrs.addFlashAttribute("error", "Error al adquirir el curso");
-			return "redirect:/my-courses";
+		try{
+			courseSubscriptionService.subscribeUserToCourse(userDetails.getPublicUser().getId(), courseId);
+			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Éxito", "¡Te has suscrito correctamente!", ToastDto.ToastType.SUCCESS)));
+		} catch(KnowyCourseSubscriptionException e){
+			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Error", e.getMessage(), ToastDto.ToastType.ERROR)));
+		} catch (Exception e) {
+			e.printStackTrace();
+			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Error", "Ocurrió un error inesperado al suscribirte al curso.", ToastDto.ToastType.ERROR)));
 		}
-		attrs.addFlashAttribute("success", "¡Te has suscrito correctamente!");
 		return "redirect:/my-courses";
 	}
 
