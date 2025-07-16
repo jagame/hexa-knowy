@@ -45,7 +45,7 @@ public class CourseSubscriptionService {
 			.toList();
 	}
 
-	public void subscribeUserToCourse(Integer userId, Integer courseId) {
+	public void subscribeUserToCourse(Integer userId, Integer courseId) throws KnowyCourseSubscriptionException{
 		List<LessonEntity> lessons = lessonRepository.findByCourseId(courseId);
 		if (lessons.isEmpty()){
 			throw new KnowyCourseSubscriptionException("El curso no tiene lecciones disponibles");
