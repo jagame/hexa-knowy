@@ -14,5 +14,5 @@ public class LessonPageDataDTO {
 	private LessonDTO lesson;
 	private String lessonContent;
 	private int lastLesson;
-//	private String level; // texto fijo: "Intermedio"
+	private Integer nextLessonId;
 }

@@ -15,4 +15,5 @@ public class CourseDTO {
 	private List<LessonDTO> lessons;
 	private String description;
 	private String image;
+	private List<String> languages;
 }

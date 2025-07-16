@@ -99,6 +99,7 @@ public class CourseSubscriptionService {
 		List<LessonEntity> lessons = lessonRepository.findByCourseId(courseId);
 		List<LessonDTO> lessonDTOs = new ArrayList<>();
 		int lastCompletedIndex = -1;
+		Integer nextLessonId = null;
 
 		for (int i = 0; i < lessons.size(); i++) {
 			LessonEntity lesson = lessons.get(i);
@@ -113,7 +114,11 @@ public class CourseSubscriptionService {
 					lastCompletedIndex = i;
 					yield LessonDTO.LessonStatus.COMPLETE;
 				}
-				case "in_progress" -> LessonDTO.LessonStatus.NEXT_LESSON;
+				case "in_progress" -> {
+					// Este es el que toca seguir
+					if (nextLessonId == null) nextLessonId = lesson.getId();
+					yield LessonDTO.LessonStatus.NEXT_LESSON;
+				}
 				default -> LessonDTO.LessonStatus.BLOCKED;
 			};
 
@@ -128,14 +133,24 @@ public class CourseSubscriptionService {
 		}
 
 		int progress = getCourseProgress(userId, courseId);
+		List<String> languages = findLanguagesForCourse(course);
 
-		CourseDTO courseDTO = new CourseDTO(course.getTitle(), progress, lessonDTOs, course.getDescription(), course.getImage());
+		CourseDTO courseDTO = new CourseDTO(
+			course.getTitle(),
+			progress,
+			lessonDTOs,
+			course.getDescription(),
+			course.getImage(),
+			languages
+		);
 
+		// Devuelve el DTO extendido con el nextLessonId
 		return new LessonPageDataDTO(
 			courseDTO,
 			null,
 			null,
-			lastCompletedIndex + 2
+			lastCompletedIndex + 2,
+			nextLessonId
 		);
 	}
 	public LessonPageDataDTO getLessonViewData(Integer userId, Integer courseId, Integer lessonId) {

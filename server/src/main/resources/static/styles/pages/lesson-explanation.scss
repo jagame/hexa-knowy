@@ -52,15 +52,17 @@ body {
 	border-radius: $radius-10;
 	background-color: $primary-500;
 	color: white;
+	text-decoration: none;
 }
 .btn-lesson:hover {
 	background-color: $primary-700;
 	color: white;
 }
 
-.btn-lesson:focus, .btn-lesson:active {
-	outline: none;
-	box-shadow: 0 0 10px $primary-700;
+.btn-lesson.disabled {
+	pointer-events: none;
+	opacity: 0.5;
+	cursor: not-allowed;
 }
 
 .title {
