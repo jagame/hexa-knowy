@@ -9,6 +9,40 @@ body {
 	background-color: $neutral-300;
 }
 
+main{
+	font-family: "excalifont", sans-serif;
+}
+
+//LESSON STYLES
+h2{
+	font-family: "caveat-brush", cursive;
+	color: $primary-500;
+}
+
+b{
+	color: $primary-500;
+}
+.code-example{
+	font-family: "inter", sans-serif;
+}
+
+table {
+	border-collapse: collapse; /* Une los bordes de las celdas */
+	width: 90%; /* Opcional: ajusta el ancho de la tabla */
+	margin:1em;
+	align-self:center;
+}
+
+th, td {
+	border: 1px solid black; /* Añade un borde de 1 píxel sólido negro */
+	padding: 8px; /* Añade espacio interno a las celdas */
+	text-align: left; /* Alinea el texto a la izquierda */
+}
+
+.ol, ul, li{
+	font-size: medium;
+}
+
 .img-head {
 	height: 300px;
 	width: 100%;
