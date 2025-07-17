@@ -88,7 +88,6 @@ public interface JpaPublicUserExerciseRepository extends PublicUserExerciseRepos
 	@Override
 	@Query(value = """
     SELECT
-        l.id,
         COALESCE(AVG(public_user_exercise.rate), 0) AS average_rate
     FROM lesson l
         INNER JOIN exercise

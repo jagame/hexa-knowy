@@ -4,6 +4,8 @@ import com.knowy.server.controller.dto.ExerciseDto;
 import com.knowy.server.controller.dto.ExerciseOptionDto;
 import com.knowy.server.entity.PublicUserExerciseEntity;
 import com.knowy.server.service.PublicUserExerciseService;
+import com.knowy.server.service.PublicUserLessonService;
+import com.knowy.server.service.exception.PublicUserLessonException;
 import com.knowy.server.service.exception.UserNotFoundException;
 import com.knowy.server.service.model.ExerciseDifficult;
 import com.knowy.server.service.model.UserSecurityDetails;
@@ -22,14 +24,16 @@ import java.util.List;
 public class ExerciseController {
 
 	private final PublicUserExerciseService publicUserExerciseService;
+	private final PublicUserLessonService publicUserLessonService;
 
 	/**
 	 * The constructor
 	 *
 	 * @param publicUserExerciseService the publicUserExerciseService
 	 */
-	public ExerciseController(PublicUserExerciseService publicUserExerciseService) {
+	public ExerciseController(PublicUserExerciseService publicUserExerciseService, PublicUserLessonService publicUserLessonService) {
 		this.publicUserExerciseService = publicUserExerciseService;
+		this.publicUserLessonService = publicUserLessonService;
 	}
 
 	/**
@@ -107,13 +111,14 @@ public class ExerciseController {
 	 * @return a redirect to the lesson page if average rate >= 80, otherwise to the exercise review page
 	 * @throws ExerciseNotFoundException if the exercise is not found
 	 * @throws UserNotFoundException     if the user is not found
+	 * @throws PublicUserLessonException if the publicUserLesson is not found
 	 */
 	@PostMapping("/course/exercise/evaluate")
 	public String exerciseLessonEvaluate(
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("evaluation") ExerciseDifficult evaluation
-	) throws ExerciseNotFoundException, UserNotFoundException {
+	) throws ExerciseNotFoundException, UserNotFoundException, PublicUserLessonException {
 		PublicUserExerciseEntity publicUserExercise = publicUserExerciseService
 			.getByIdOrCreate(userDetails.getPublicUser().getId(), exerciseId);
 
@@ -121,7 +126,9 @@ public class ExerciseController {
 
 		int lessonId = publicUserExercise.getExerciseEntity().getLesson().getId();
 
-		if (publicUserExerciseService.getAverageRateByLessonId(lessonId) >= 80) {
+		double average = publicUserExerciseService.getAverageRateByLessonId(lessonId);
+		if (average >= 80) {
+			publicUserLessonService.updateLessonStatusToCompleted(userDetails.getPublicUser().getId(), lessonId);
 			return "redirect:/course/%d".formatted(lessonId);
 		}
 		return "redirect:/course/%d/exercise/review".formatted(lessonId);
