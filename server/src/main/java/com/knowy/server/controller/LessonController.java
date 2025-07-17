@@ -46,7 +46,6 @@ public class LessonController {
 		model.addAttribute("lesson", data.getLesson());
 		model.addAttribute("lessonContent", data.getLessonContent());
 		model.addAttribute("lastLesson", data.getLastLesson());
-//		model.addAttribute("level", data.getLevel());
 		model.addAttribute("courseId", courseId);
 		model.addAttribute("isIntro", false);
 

@@ -70,7 +70,11 @@
 		<div class="theory" th:utext="${isIntro} ? ${course.description} : ${lessonContent}">Teoría del curso</div>
 	</div>
 
-	<div class="component" th:replace="~{components/lesson/solutions-component ::solutions-component(${solutions})}">Soluciones</div>
+	<th:block th:if="${!isIntro and lesson != null and lesson.status.name() == 'COMPLETE'}">
+		<div class="component"
+			 th:replace="~{components/lesson/solutions-component ::solutions-component(${solutions})}">
+		</div>
+	</th:block>
 
 	<div class="component" th:replace="~{components/lesson/documents-links ::documentLinkComponent(${LinksList})}">Documentos</div>
 <!--	<div th:replace="~{components/lesson/documents-links :: documentLinkComponent(${LinksLessonList})}"></div>-->

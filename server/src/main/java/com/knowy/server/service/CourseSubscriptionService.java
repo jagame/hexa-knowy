@@ -91,7 +91,6 @@ public class CourseSubscriptionService {
 		return (int) Math.round((completedLessons * 100.0 / totalLessons));
 	}
 
-	// TODO:Terminar de implementar todo sobre el curso y las lecciones
 	public LessonPageDataDTO getCourseOverviewWithLessons(Integer userId, Integer courseId) {
 		CourseEntity course = courseRepository.findById(courseId)
 			.orElseThrow(() -> new RuntimeException("Curso no encontrado"));
@@ -115,7 +114,6 @@ public class CourseSubscriptionService {
 					yield LessonDTO.LessonStatus.COMPLETE;
 				}
 				case "in_progress" -> {
-					// Este es el que toca seguir
 					if (nextLessonId == null) nextLessonId = lesson.getId();
 					yield LessonDTO.LessonStatus.NEXT_LESSON;
 				}
@@ -144,7 +142,6 @@ public class CourseSubscriptionService {
 			languages
 		);
 
-		// Devuelve el DTO extendido con el nextLessonId
 		return new LessonPageDataDTO(
 			courseDTO,
 			null,
