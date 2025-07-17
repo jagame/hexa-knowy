@@ -1,6 +1,6 @@
 <form class="options-quiz" method="post"
-	  th:action="@{/course/exercise/review}"
-	  th:fragment="options-quiz(options, lessonId, exerciseId, mode)"
+	  th:action="@{${formReviewUrl}}"
+	  th:fragment="options-quiz(options, lessonId, exerciseId, mode, formReviewUrl)"
 	  th:if="${mode == 'ANSWERING'}">
 	<button
 		class="exercise-option"
