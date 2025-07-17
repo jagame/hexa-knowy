@@ -81,8 +81,13 @@ public class PublicUserExerciseService {
 		return publicUserExerciseRepository.save(publicUserExerciseEntity);
 	}
 
-	// TODO - JavaDoc And Finish it
-	public void difficultSelect(ExerciseDifficult exerciseDifficult, PublicUserExerciseEntity publicUserExerciseEntity) {
+	// TODO - JavaDoc
+	public PublicUserExerciseEntity processUserAnswer(ExerciseDifficult exerciseDifficult, PublicUserExerciseEntity exerciseEntity) {
+		difficultSelect(exerciseDifficult, exerciseEntity);
+		return save(exerciseEntity);
+	}
+
+	private void difficultSelect(ExerciseDifficult exerciseDifficult, PublicUserExerciseEntity publicUserExerciseEntity) {
 		Objects.requireNonNull(exerciseDifficult, "exerciseDifficult cannot be null");
 		Objects.requireNonNull(publicUserExerciseEntity, "publicUserExerciseEntity cannot be null");
 

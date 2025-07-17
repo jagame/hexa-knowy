@@ -3,11 +3,10 @@ package com.knowy.server.controller;
 import com.knowy.server.controller.dto.ExerciseDto;
 import com.knowy.server.controller.dto.ExerciseOptionDto;
 import com.knowy.server.entity.PublicUserExerciseEntity;
-import com.knowy.server.service.UserFacadeService;
+import com.knowy.server.service.PublicUserExerciseService;
 import com.knowy.server.service.model.ExerciseDifficult;
 import com.knowy.server.service.model.UserSecurityDetails;
 import com.knowy.server.util.exception.ExerciseNotFoundException;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,10 +20,10 @@ import java.util.List;
 @Controller
 public class ExerciseController {
 
-	private final UserFacadeService userFacadeService;
+	private final PublicUserExerciseService publicUserExerciseService;
 
-	public ExerciseController(UserFacadeService userFacadeService) {
-		this.userFacadeService = userFacadeService;
+	public ExerciseController(PublicUserExerciseService publicUserExerciseService) {
+		this.publicUserExerciseService = publicUserExerciseService;
 	}
 
 	@GetMapping("/course/{lessonId}/exercise/review")
@@ -34,8 +33,8 @@ public class ExerciseController {
 		Model model
 	) {
 		try {
-			PublicUserExerciseEntity publicUserExercise = userFacadeService
-				.getNextExercise(userDetails.getPublicUser().getId(), lessonId);
+			PublicUserExerciseEntity publicUserExercise = publicUserExerciseService
+				.getNextExerciseByLessonId(userDetails.getPublicUser().getId(), lessonId);
 
 			model.addAttribute("exercise", ExerciseDto.fromPublicUserExerciseEntity(publicUserExercise));
 			model.addAttribute("mode", "ANSWERING");
@@ -52,8 +51,8 @@ public class ExerciseController {
 		@RequestParam("answerId") int answerId,
 		Model model
 	) throws ExerciseNotFoundException {
-		PublicUserExerciseEntity publicUserExercise = userFacadeService
-			.getPublicUserExerciseById(userDetails.getPublicUser().getId(), exerciseId);
+		PublicUserExerciseEntity publicUserExercise = publicUserExerciseService
+			.getById(userDetails.getPublicUser().getId(), exerciseId);
 
 		ExerciseDto exerciseDto = ExerciseDto
 			.fromPublicUserExerciseEntity(publicUserExercise, answerId);
@@ -79,10 +78,10 @@ public class ExerciseController {
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("evaluation") ExerciseDifficult evaluation
 	) throws ExerciseNotFoundException {
-		PublicUserExerciseEntity publicUserExercise = userFacadeService
-			.getPublicUserExerciseById(userDetails.getPublicUser().getId(), exerciseId);
+		PublicUserExerciseEntity publicUserExercise = publicUserExerciseService
+			.getById(userDetails.getPublicUser().getId(), exerciseId);
 
-		userFacadeService.processUserAnswer(evaluation, publicUserExercise);
+		publicUserExerciseService.processUserAnswer(evaluation, publicUserExercise);
 
 		int lessonId = publicUserExercise.getExerciseEntity().getLesson().getId();
 

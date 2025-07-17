@@ -173,25 +173,4 @@ public class UserFacadeService {
 		MailMessage mailMessage = privateUserService.createRecoveryPasswordEmail(email, recoveryBaseUrl);
 		emailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
 	}
-
-	// TODO - JavaDoc
-	public PublicUserExerciseEntity getNextExercise(int userId, int lessonId) throws ExerciseNotFoundException {
-		return publicUserExerciseService.getNextExerciseByLessonId(userId, lessonId);
-	}
-
-	// TODO - JavaDoc
-	public PublicUserExerciseEntity getNextExercise(int userId) throws ExerciseNotFoundException {
-		return publicUserExerciseService.getNextExerciseByUserId(userId);
-	}
-
-	// TODO - JavaDoc
-	public PublicUserExerciseEntity getPublicUserExerciseById(int userId, int exerciseId) throws ExerciseNotFoundException {
-		return publicUserExerciseService.getById(userId, exerciseId);
-	}
-
-	// TODO - JavaDoc
-	public PublicUserExerciseEntity processUserAnswer(ExerciseDifficult exerciseDifficult, PublicUserExerciseEntity exerciseEntity) {
-		publicUserExerciseService.difficultSelect(exerciseDifficult, exerciseEntity);
-		return publicUserExerciseService.save(exerciseEntity);
-	}
 }
