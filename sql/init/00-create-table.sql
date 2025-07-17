@@ -122,11 +122,27 @@ CREATE TABLE IF NOT EXISTS public.banned_word
 	PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS public.course_language (
+CREATE TABLE IF NOT EXISTS public.course_language
+(
 	id_course INTEGER NOT NULL,
 	id_language INTEGER NOT NULL,
 	PRIMARY KEY (id_course, id_language)
-	);
+);
+
+CREATE TABLE IF NOT EXISTS public.documentation
+(
+	id			serial NOT NULL,
+	title		varchar(100) NOT NULL,
+	link		text NOT NULL,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS public.lesson_documentation
+(
+	id_lesson	integer NOT NULL,
+	id_documentation integer NOT NULL,
+	PRIMARY KEY (id_lesson, id_documentation)
+);
 
 -- FK public_user
 ALTER TABLE IF EXISTS public.public_user
@@ -192,6 +208,7 @@ ALTER TABLE IF EXISTS public.public_user_language
 ALTER TABLE IF EXISTS public.public_user_language
 	ADD FOREIGN KEY	(id_language)
 		REFERENCES	public.language (id);
+
 -- FK course_language
 ALTER TABLE IF EXISTS public.course_language
 	ADD FOREIGN KEY (id_course)
@@ -200,3 +217,12 @@ ALTER TABLE IF EXISTS public.course_language
 ALTER TABLE IF EXISTS public.course_language
 	ADD FOREIGN KEY (id_language)
 	REFERENCES public.language (id);
+
+-- FK lesson_documentation
+ALTER TABLE IF EXISTS public.lesson_documentation
+	ADD FOREIGN KEY (id_lesson)
+	REFERENCES public.lesson (id);
+
+ALTER TABLE IF EXISTS public.lesson_documentation
+	ADD FOREIGN KEY (id_documentation)
+	REFERENCES public.documentation (id);
