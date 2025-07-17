@@ -1,18 +1,55 @@
 package com.knowy.server.controller.dto;
 
+import com.knowy.server.entity.ExerciseEntity;
+import com.knowy.server.entity.PublicUserExerciseEntity;
+
 import java.util.List;
 
 public record ExerciseDto(
-	int courseId,
 	int lessonId,
 	int exerciseId,
-	//QUIZLAYOUTDTO
 	String courseName,
-	int cardStreak,
 	int correctPercentage,
-	//QUESTIONDTO
 	String questionText,
 	String imgPath,
-	List<OptionsDto> options
+	List<ExerciseOptionDto> options
 ) {
+
+	public static ExerciseDto fromPublicUserExerciseEntity(PublicUserExerciseEntity publicUserExercise) {
+		ExerciseEntity exerciseEntity = publicUserExercise.getExerciseEntity();
+
+		List<ExerciseOptionDto> options = exerciseEntity.getOptions()
+			.stream()
+			.map(ExerciseOptionDto::fromEntity)
+			.toList();
+
+		return new ExerciseDto(
+			exerciseEntity.getLesson().getId(),
+			exerciseEntity.getId(),
+			exerciseEntity.getLesson().getCourse().getTitle(),
+			publicUserExercise.getRate(),
+			publicUserExercise.getExerciseEntity().getQuestion(),
+			"TODO",
+			options
+		);
+	}
+
+	public static ExerciseDto fromPublicUserExerciseEntity(PublicUserExerciseEntity publicUserExercise, int answerId) {
+		ExerciseEntity exerciseEntity = publicUserExercise.getExerciseEntity();
+
+		List<ExerciseOptionDto> options = exerciseEntity.getOptions()
+			.stream()
+			.map(option -> ExerciseOptionDto.fromEntity(option, answerId))
+			.toList();
+
+		return new ExerciseDto(
+			exerciseEntity.getLesson().getId(),
+			exerciseEntity.getId(),
+			exerciseEntity.getLesson().getCourse().getTitle(),
+			publicUserExercise.getRate(),
+			publicUserExercise.getExerciseEntity().getQuestion(),
+			"TODO",
+			options
+		);
+	}
 }

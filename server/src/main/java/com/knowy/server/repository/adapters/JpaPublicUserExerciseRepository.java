@@ -35,8 +35,8 @@ public interface JpaPublicUserExerciseRepository extends PublicUserExerciseRepos
 		SELECT
 		    pl.id_public_user AS id_public_user,
 		    ex.id AS id_exercise,
-		    pex.next_review AS next_review,
-		    pex.rate AS rate
+		    COALESCE(pex.next_review, NOW()) AS next_review,
+		    COALESCE(pex.rate, 0) AS rate
 		FROM public_user_lesson pl
 		    INNER JOIN lesson l
 		        ON pl.id_lesson = l.id
@@ -51,8 +51,8 @@ public interface JpaPublicUserExerciseRepository extends PublicUserExerciseRepos
 		    l.id = :lessonId AND
 		    pl.status != 'pending'
 		ORDER BY
-		    pex.rate NULLS FIRST,
 		    pex.next_review NULLS FIRST,
+		    pex.rate NULLS FIRST,
 		    RANDOM()
 		LIMIT(1)
 		""", nativeQuery = true)
@@ -63,8 +63,8 @@ public interface JpaPublicUserExerciseRepository extends PublicUserExerciseRepos
 		SELECT
 		    pl.id_public_user AS id_public_user,
 		    ex.id AS id_exercise,
-		    pex.next_review AS next_review,
-		    pex.rate AS rate
+		    COALESCE(pex.next_review, NOW()) AS next_review,
+		    COALESCE(pex.rate, 0) AS rate
 		FROM public_user_lesson pl
 		    INNER JOIN lesson l
 		        ON pl.id_lesson = l.id
@@ -78,10 +78,26 @@ public interface JpaPublicUserExerciseRepository extends PublicUserExerciseRepos
 		    pl.id_public_user = :userId AND
 		    pl.status != 'pending'
 		ORDER BY
-		    pex.rate NULLS FIRST,
 		    pex.next_review NULLS FIRST,
+		    pex.rate NULLS FIRST,
 		    RANDOM()
 		LIMIT(1)
 		""", nativeQuery = true)
 	Optional<PublicUserExerciseEntity> findNextExerciseByUserId(int userId);
+
+	@Override
+	@Query(value = """
+    SELECT
+        COALESCE(AVG(public_user_exercise.rate), 0) AS average_rate
+    FROM lesson l
+        INNER JOIN exercise
+            ON l.id = exercise.id_lesson
+        LEFT JOIN public_user_exercise
+            ON exercise.id = public_user_exercise.id_exercise
+    WHERE
+        l.id = :lessonId
+    GROUP BY
+        l.id
+    """, nativeQuery = true)
+	Optional<Double> findAverageRateByLessonId(int lessonId);
 }

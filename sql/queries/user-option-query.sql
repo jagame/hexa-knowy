@@ -170,8 +170,8 @@ WHERE
 	pl.id_public_user = 2 AND
 	pl.status != 'pending'
 ORDER BY
-	pex.rate NULLS FIRST,
-	pex.next_review NULLS FIRST;
+	pex.next_review NULLS FIRST,
+	pex.rate NULLS FIRST;
 
 --
 SELECT
@@ -197,3 +197,16 @@ ORDER BY
 	pex.rate NULLS FIRST,
 	pex.next_review NULLS FIRST,
 	RANDOM();
+-- AVERAGE
+SELECT
+	lesson.id,
+	COALESCE(AVG(public_user_exercise.rate), 0) AS average_rate
+FROM lesson
+	INNER JOIN exercise
+		ON lesson.id = exercise.id_lesson
+	LEFT JOIN public.public_user_exercise
+		ON exercise.id = public_user_exercise.id_exercise
+WHERE
+	lesson.id = 5
+GROUP BY
+	lesson.id;

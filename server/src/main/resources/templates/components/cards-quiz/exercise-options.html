@@ -1,0 +1,54 @@
+<form class="options-quiz" method="post"
+	  th:action="@{${formReviewUrl}}"
+	  th:fragment="options-quiz(options, lessonId, exerciseId, mode, formReviewUrl)"
+	  th:if="${mode == 'ANSWERING'}">
+	<button
+		class="exercise-option"
+		name="selectedOption"
+		th:data-option-id="${option.id}"
+		th:each="option : ${options}"
+		th:text="${option.text}"
+		type="button">
+	</button>
+
+	<div class="answer-button">
+		<button class="answer-button__element"
+				data-bs-target="#exampleModal"
+				data-bs-toggle="modal"
+				disabled
+				id="send-btn"
+				type="submit">
+			Responder
+		</button>
+		<input id="answer-id" name="answerId" type="hidden" value="">
+		<input id="exercise-id" name="exerciseId" th:value="${exerciseId}" type="hidden">
+	</div>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", () => {
+			const options = document.querySelectorAll(".exercise-option");
+
+			options.forEach((option) => {
+				option.addEventListener("click", event => {
+					changeTargetColor(event.currentTarget);
+					changeValueOfAnswer(event.currentTarget.dataset.optionId);
+					document.getElementById("send-btn").disabled = false;
+				})
+			})
+
+			function changeTargetColor(target) {
+				options.forEach((option) => option.classList.remove("selected"));
+				target.classList.toggle("selected");
+			}
+
+			function changeValueOfAnswer(value) {
+				document.getElementById("answer-id").setAttribute("value", value);
+			}
+		})
+	</script>
+</form>
+
+
+
+
+

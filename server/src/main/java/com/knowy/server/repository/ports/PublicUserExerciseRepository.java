@@ -19,4 +19,6 @@ public interface PublicUserExerciseRepository {
 	Optional<PublicUserExerciseEntity> findNextExerciseByLessonId(int publicUserId, int lessonId);
 
 	Optional<PublicUserExerciseEntity> findNextExerciseByUserId(int userId);
+
+	Optional<Double> findAverageRateByLessonId(int lessonId);
 }

@@ -1,6 +1,6 @@
 
 	document.addEventListener('DOMContentLoaded', function () {
-	const answeredButtons = document.querySelectorAll('.quiz-option');
+	const answeredButtons = document.querySelectorAll('.exercise-option');
 	const checkButton = document.getElementById('answers-button');
 	let answered = false;
 	let selectedOption = null;
