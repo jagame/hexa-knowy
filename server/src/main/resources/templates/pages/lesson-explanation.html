@@ -36,7 +36,8 @@
 
 		<div th:if="${isIntro}">
 			<a class="btn-lesson mt-3"
-			   th:if="${nextLessonId != null}">
+			   th:if="${nextLessonId != null}"
+			   th:href="@{'/course/' + ${courseId} + '/lesson/' + ${nextLessonId}}">
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 					 viewBox="0 0 24 24" fill="none" stroke="currentColor"
 					 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -51,7 +52,9 @@
 		<a class="btn-lesson mt-3"
 		   th:if="${!isIntro}"
 		   th:classappend="${lesson.status.name() == 'BLOCKED'} ? ' disabled' : ''"
-		   th:attr="aria-disabled=${lesson.status.name() == 'BLOCKED'}">
+		   th:attr="aria-disabled=${lesson.status.name() == 'BLOCKED'}"
+		   th:href="${lesson.status.name() != 'BLOCKED'} ? '/course/' + ${lesson.id} + '/exercise/review' : null">
+
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 				 viewBox="0 0 24 24" fill="none" stroke="currentColor"
 				 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
