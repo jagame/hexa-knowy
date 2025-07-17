@@ -3,12 +3,13 @@ package com.knowy.server.util;
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.util.exception.PasswordFormatException;
 import com.knowy.server.util.exception.WrongPasswordException;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-@Service
+@Component
 public class PasswordCheker {
 
 	public static void assertPasswordFormatIsRight(String password) throws PasswordFormatException {

@@ -242,12 +242,12 @@ public class AccessService {
 			""".formatted(url);
 	}
 
-//	public Optional<PrivateUserEntity> getUserByToken(String token) throws JwtKnowyException {
-//		ReactivateAccountJwt reactivateAccountJwt = jwtService.decodeUnverified(token, ReactivateAccountJwt.class);
-//        PrivateUserEntity privateUser = privateUserRepository.findByEmail(reactivateAccountJwt.getEmail()).orElseThrow( () -> new JwtKnowyException("User not found"));
-//        jwtService.decode(privateUser.getPassword(), token, ReactivateAccountJwt.class);
-//		return Optional.of(privateUser);
-//	}
+	public Optional<PrivateUserEntity> getUserByToken(String token) throws JwtKnowyException {
+		ReactivateAccountJwt reactivateAccountJwt = jwtService.decodeUnverified(token, ReactivateAccountJwt.class);
+        PrivateUserEntity privateUser = privateUserRepository.findByEmail(reactivateAccountJwt.getEmail()).orElseThrow( () -> new JwtKnowyException("User not found"));
+        jwtService.decode(privateUser.getPassword(), token, ReactivateAccountJwt.class);
+		return Optional.of(privateUser);
+	}
 
 	public void deactivateUserAccount (String email,
 									   String deletePassword,

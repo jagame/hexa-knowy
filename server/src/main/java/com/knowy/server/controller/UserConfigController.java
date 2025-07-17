@@ -179,11 +179,6 @@ public class UserConfigController {
 			}
 	}
 
-//	@GetMapping("account-reactivation")
-//	public String accountReactivation() {
-//		return "pages/user-management/account-reactivation";
-//	}
-
 	private String getDomainUrl(HttpServletRequest request) {
 		String scheme = request.getScheme();
 		String serverName = request.getServerName();
