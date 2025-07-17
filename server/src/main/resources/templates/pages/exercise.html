@@ -43,7 +43,7 @@
 		<div th:replace="~{components/cards-quiz/exercise-options-after-response :: options-quiz(
 			options=${exercise.options()},
 			lessonId=${exercise.lessonId()},
-			exerciseId=${mode == 'REVIEWING' ? exercise.exerciseId : null},
+			exerciseId=${exercise.exerciseId()},
 			mode=${mode}
 			)}">
 		</div>
@@ -62,40 +62,40 @@
 					</div>
 					<div class="modal-body d-flex flex-wrap justify-content-evenly">
 						<p>¿Cómo te resultó el ejercicio?</p>
-						<div class="modal-buttons">
-							<a class="btn btn-primary happy" th:href="@{{id}(id=${exercise.exerciseId() +1})}"
-							   type="button">
+						<form class="modal-buttons" method="post" th:action="@{/course/exercise/evaluate}">
+							<input name="exerciseId" th:value="${exercise.exerciseId()}" type="hidden"/>
+
+							<button class="btn btn-primary happy" name="evaluation" type="submit" value="EASY">
 								Fácil
 								<img alt="Facil" class="avatar-selectable rounded-circle img-fluid me-2 w-50"
 									 data-avatar-src-path="/images/profile/knowylogo.svg" data-bs-dismiss="modal"
 									 src="/images/test/mood-happy.svg"
 								/>
-							</a>
+							</button>
 
-							<a class="btn btn-primary empty" th:href="@{{id}(id=${exercise.exerciseId +1})}"
-							   type="button">
+							<button class="btn btn-primary empty" name="evaluation" type="submit" value="MEDIUM">
 								Normal
 								<img alt="Normal" class="avatar-selectable rounded-circle img-fluid me-2 w-50"
 									 data-avatar-src-path="/images/profile/knowylogo_red.svg" data-bs-dismiss="modal"
 									 src="/images/test/mood-empty.svg"
 								/>
-							</a>
+							</button>
 
-							<a class="btn btn-primary sad" th:href="@{{id}(id=${exercise.exerciseId +1})}"
-							   type="button">
+							<button class="btn btn-primary sad" name="evaluation" type="submit" value="HARD">
 								Difícil
 								<img alt="Difícil" class="avatar-selectable rounded-circle img-fluid me-2 w-50"
 									 data-avatar-src-path="/images/profile/knowylogo_blue.svg" data-bs-dismiss="modal"
 									 height="50px" src="/images/test/mood-sad.svg"
 									 width="50px"
 								/>
-							</a>
-						</div>
+							</button>
+						</form>
 						<p>¡Valoración obligatoria!</p>
 					</div>
 				</div>
 			</div>
 		</div>
+
 	</div>
 </main>
 

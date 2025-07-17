@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@Slf4j
 @Controller
 public class ExerciseController {
 
@@ -60,7 +59,6 @@ public class ExerciseController {
 			.fromPublicUserExerciseEntity(publicUserExercise, answerId);
 
 		if (!isCorrectAnswer(exerciseDto.options(), answerId)) {
-			userFacadeService.processUserAnswer(ExerciseDifficult.FAIL, publicUserExercise);
 			model.addAttribute("mode", "FAILING");
 		} else {
 			model.addAttribute("mode", "REVIEWING");
@@ -73,5 +71,21 @@ public class ExerciseController {
 		return options.stream()
 			.filter(option -> option.id() == answer)
 			.anyMatch(option -> option.status() == ExerciseOptionDto.AnswerStatus.RESPONSE_SUCCESS);
+	}
+
+	@PostMapping("/course/exercise/evaluate")
+	public String exerciseEvaluate(
+		@AuthenticationPrincipal UserSecurityDetails userDetails,
+		@RequestParam("exerciseId") int exerciseId,
+		@RequestParam("evaluation") ExerciseDifficult evaluation
+	) throws ExerciseNotFoundException {
+		PublicUserExerciseEntity publicUserExercise = userFacadeService
+			.getPublicUserExerciseById(userDetails.getPublicUser().getId(), exerciseId);
+
+		userFacadeService.processUserAnswer(evaluation, publicUserExercise);
+
+		int lessonId = publicUserExercise.getExerciseEntity().getLesson().getId();
+
+		return "redirect:/course/" + lessonId + "/exercise/review";
 	}
 }

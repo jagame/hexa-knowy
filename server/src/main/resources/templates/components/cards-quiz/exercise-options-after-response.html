@@ -1,7 +1,7 @@
 <div class="options-quiz"
 	 method="post"
 	 th:action="@{/course/exercise/review}"
-	 th:fragment="options-quiz(options, lessonId)"
+	 th:fragment="options-quiz(options, lessonId, exerciseId, mode)"
 	 th:if="${mode == 'REVIEWING' || mode == 'FAILING'}">
 	<button
 		class="exercise-option"
@@ -18,13 +18,10 @@
 			Siguiente Ejercicio ->
 		</button>
 	</div>
-	<a class="answer-button--fail"
-	   th:href="'/course/' + ${lessonId} + '/exercise/review'"
-	   th:if="${mode == 'FAILING'}">
-		Siguiente Ejercicio ->
-	</a>
+	<form class="answer-button" method="post" th:action="@{/course/exercise/evaluate}" th:if="${mode == 'FAILING'}">
+		<input name="exerciseId" th:value="${exerciseId}" type="hidden"/>
+		<button class="answer-button__element" type="submit" value="FAIL" name="evaluation">
+			Siguiente Ejercicio ->
+		</button>
+	</form>
 </div>
-
-
-
-
