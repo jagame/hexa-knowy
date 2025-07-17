@@ -1,15 +1,20 @@
-<div th:fragment="quiz-header">
+<div th:fragment="quiz-header(courseName, lessonId, exerciseId, correctPercentage)">
 	<div class="curso-header">
-		<div class="curso-banner" th:object="${quizLayout}">
-			<h2 th:text="*{courseName}">Angular 19 nivel intermedio + Firebase</h2>
+		<div class="curso-banner">
+			<h2 th:text="${courseName}">Angular 19 nivel intermedio + Firebase</h2>
 		</div>
 
-		<!-- Datos de navegación -->
-		<div class="info-panel" th:object="${quizLayout}">
-			<div class="info-panel__element">Lección: <span class="info-panel__element__content" th:text="*{lessonNumber}">0</span></div>
-			<div class="info-panel__element">Nº Tarjeta: <span class="info-panel__element__content" th:text="*{quizCardNumber}">0</span></div>
-			<div class="info-panel__element">Racha: <span class="info-panel__element__content" th:text="*{cardStreak}">0</span></div>
-			<div class="info-panel__element">Precisión: <span class="info-panel__element__content" th:text="*{correctPercentage} + '%'">0%</span></div>
-		</div>
+		<section class="info-panel">
+			<div class="info-panel__element">Lección:
+				<span class="info-panel__element__content" th:text="${lessonId}">0</span>
+			</div>
+			<div class="info-panel__element">Nº Tarjeta:
+				<span class="info-panel__element__content" th:text="${exerciseId}">0</span>
+			</div>
+			<div class="info-panel__element">Precisión:
+				<span class="info-panel__element__content" th:text="${correctPercentage} + '%'">0%</span>
+			</div>
+		</section>
+
 	</div>
 </div>

@@ -3,10 +3,10 @@ package com.knowy.server.service;
 import com.knowy.server.controller.dto.CourseCardDTO;
 import com.knowy.server.controller.exception.KnowyCourseSubscriptionException;
 import com.knowy.server.entity.*;
-import com.knowy.server.repository.CourseRepository;
-import com.knowy.server.repository.LanguageRepository;
-import com.knowy.server.repository.LessonRepository;
-import com.knowy.server.repository.PublicUserLessonRepository;
+import com.knowy.server.repository.ports.CourseRepository;
+import com.knowy.server.repository.ports.LanguageRepository;
+import com.knowy.server.repository.ports.LessonRepository;
+import com.knowy.server.repository.ports.PublicUserLessonRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

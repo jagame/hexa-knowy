@@ -2,7 +2,7 @@ package com.knowy.server.service;
 
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.entity.PublicUserEntity;
-import com.knowy.server.repository.PrivateUserRepository;
+import com.knowy.server.repository.ports.PrivateUserRepository;
 import com.knowy.server.service.exception.InvalidUserEmailException;
 import com.knowy.server.service.exception.InvalidUserPasswordFormatException;
 import com.knowy.server.service.exception.UnchangedEmailException;

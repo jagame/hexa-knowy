@@ -1,7 +1,7 @@
 package com.knowy.server.service;
 
 import com.knowy.server.entity.LanguageEntity;
-import com.knowy.server.repository.LanguageRepository;
+import com.knowy.server.repository.ports.LanguageRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
