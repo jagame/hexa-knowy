@@ -44,7 +44,7 @@ infraestructura:
 ### 🔧 Backend
 
 - **Java 21** – Lenguaje principal.
-- **Spring Boot 3.4.5** – Framework para construir la API REST y lógica de negocio.
+- **Spring Boot 3.4.5** – Framework para construir la lógica de negocio.
 - **Spring Security** – Seguridad de la aplicación.
 - **Spring Data JPA** – Acceso a datos mediante ORM.
 - **Hibernate** – Implementación de JPA.
@@ -70,6 +70,7 @@ infraestructura:
 - **Thymeleaf** – Motor de plantillas del lado del servidor.
 - **Bootstrap** – Framework CSS para diseño responsivo.
 - **SCSS (Sass)** – Preprocesador CSS para estilos personalizados.
+- **JavaScript** – Lenguaje de programación del lado del cliente para funcionalidades dinámicas e interactivas en la web.
 
 ### 🐳 Contenedores y despliegue
 
@@ -110,6 +111,7 @@ server
 │           │   ├── fonts
 │           │   ├── images
 │           │   │   └── profile
+│           │   │   └── course
 │           │   ├── scripts
 │           │   └── styles
 │           │       ├── components  → Estilos SCSS específicos por componente
@@ -279,3 +281,10 @@ oficial:<br>
 Proyecto desarrollado por:
 
 - [SaraMForte](https://github.com/SaraMForte)
+- [Aarón Helices Martín-Niño](https://github.com/aaronhmn)
+- [David Gil Campos](https://github.com/Sinnick29)
+- [NRichardsF](https://github.com/nrichardsf)
+- [Iván Carvajal Huetor](https://github.com/ivancarvajalhuetor)
+- [Judit Olaya Grima Lorente](https://github.com/JuditoLaya)
+- [Manuel Corvo Belda](https://github.com/Worldlover12)
+- [Jorgazo](https://github.com/JorgeSR95)
