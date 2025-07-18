@@ -5,8 +5,8 @@ VALUES (1, 1);
 -- Lección 2
 INSERT INTO public.lesson_documentation (id_lesson, id_documentation)
 VALUES (2, 1),
-	   (2, 6),
-	   (2, 2);
+	   (2, 2),
+	   (2, 6);
 
 -- Lección 3
 INSERT INTO public.lesson_documentation (id_lesson, id_documentation)

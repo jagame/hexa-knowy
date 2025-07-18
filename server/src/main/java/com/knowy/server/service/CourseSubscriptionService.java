@@ -1,9 +1,6 @@
 package com.knowy.server.service;
 
-import com.knowy.server.controller.dto.CourseCardDTO;
-import com.knowy.server.controller.dto.CourseDTO;
-import com.knowy.server.controller.dto.LessonDTO;
-import com.knowy.server.controller.dto.LessonPageDataDTO;
+import com.knowy.server.controller.dto.*;
 import com.knowy.server.entity.*;
 import com.knowy.server.repository.CourseRepository;
 import com.knowy.server.repository.LessonRepository;
@@ -12,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CourseSubscriptionService {
@@ -169,5 +168,45 @@ public class CourseSubscriptionService {
 			if (lessons.get(i).getTitle().equalsIgnoreCase(title)) return i;
 		}
 		throw new RuntimeException("No se encontró la lección");
+	}
+
+	public List<LinksLessonDto> getLessonDocuments(Integer lessonId) {
+		LessonEntity lesson = lessonRepository.findById(lessonId)
+			.orElseThrow(() -> new RuntimeException("Lección no encontrada"));
+
+		if (lesson.getDocumentations() == null) return List.of();
+
+		return lesson.getDocumentations().stream()
+			.map(this::mapToLinksLessonDto)
+			.toList();
+	}
+
+	public List<LinksLessonDto> getAllCourseDocuments(Integer courseId) {
+		CourseEntity course = courseRepository.findById(courseId)
+			.orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+
+		Set<DocumentationEntity> allDocs = new HashSet<>();
+		List<LessonEntity> lessons = lessonRepository.findByCourseId(courseId);
+		for (LessonEntity lesson : lessons) {
+			if (lesson.getDocumentations() != null) {
+				allDocs.addAll(lesson.getDocumentations());
+			}
+		}
+
+		return allDocs.stream()
+			.map(this::mapToLinksLessonDto)
+			.toList();
+	}
+
+	private LinksLessonDto mapToLinksLessonDto(DocumentationEntity doc) {
+		LinksLessonDto.LinkType type = doc.getLink().startsWith("http")
+			? LinksLessonDto.LinkType.EXTERNAL
+			: LinksLessonDto.LinkType.DOCUMENT;
+
+		String fileName = (type == LinksLessonDto.LinkType.DOCUMENT && doc.getLink().contains("/"))
+			? doc.getLink().substring(doc.getLink().lastIndexOf("/") + 1)
+			: null;
+
+		return new LinksLessonDto(doc.getTitle(), doc.getLink(), type, fileName);
 	}
 }

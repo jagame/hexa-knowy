@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -32,5 +34,11 @@ public class LessonEntity {
 	@Column(name="explanation", length = 250, nullable = false)
 	private String explanation;
 
-
+	@ManyToMany
+	@JoinTable(
+		name = "lesson_documentation",
+		joinColumns = @JoinColumn(name = "id_lesson"),
+		inverseJoinColumns = @JoinColumn(name = "id_documentation")
+	)
+	private List<DocumentationEntity> documentations;
 }
