@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SolutionDto {
-	private String tituloTarjeta;
-	private String pregunta;
-	private String solucion;
+	private String cardTitle;
+	private String question;
+	private String answer;
 }

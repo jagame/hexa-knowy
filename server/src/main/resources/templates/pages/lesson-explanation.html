@@ -34,8 +34,8 @@
 			<span class="language" th:text="${#strings.arrayJoin(course.languages, ', ')}">Idiomas</span>
 		</div>
 
-		<div th:if="${isIntro}">
-			<a class="btn-lesson mt-3"
+		<div th:if="${isIntro}" class="mt-4 ">
+			<a class="btn-lesson"
 			   th:if="${nextLessonId != null}"
 			   th:href="@{'/course/' + ${courseId} + '/lesson/' + ${nextLessonId}}">
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -49,7 +49,7 @@
 			</a>
 		</div>
 
-		<a class="btn-lesson mt-3"
+		<a class="btn-lesson mt-4"
 		   th:if="${!isIntro}"
 		   th:classappend="${lesson.status.name() == 'BLOCKED'} ? ' disabled' : ''"
 		   th:attr="aria-disabled=${lesson.status.name() == 'BLOCKED'}"
