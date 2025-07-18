@@ -1,6 +1,6 @@
 <!-- templates/components/user-home/resume -->
 <section class="home-resume"
-		 th:fragment="example-card-component(username, greeting, streak, fractionProgress, fractionNum, fractionDen)">
+		 th:fragment="example-card-component(username, greeting, fractionProgress, completedCourses, totalCourses)">
 
 	<section class="home-resume__presentation-streak">
 		<h2 class="username" th:text="${greeting} + ', ' + ${username}"></h2>
@@ -16,13 +16,13 @@
 	<section class="home-resume__course-progress">
 		<div class="home-resume__bar-text">
 			<span>Cursos:</span>
-			<span class="home-resume__bar-text--fraction" th:text="${fractionNum} + '/' + ${fractionDen}"></span>
+			<span class="home-resume__bar-text--fraction" th:text="${completedCourses} + '/' + ${totalCourses}"></span>
 		</div>
 		<div class="home-resume__bar-container">
 			<div class="home-resume__bar-container__bar-progress" th:style="'width:' + ${fractionProgress} + '%'"></div>
 		</div>
 
-		<button class="home-resume__course-btn">
+		<a class="home-resume__course-btn" th:href="${'/my-courses'}">
 			<svg class="icon icon-tabler icons-tabler-outline icon-tabler-player-play" fill="none" height="20"
 				 stroke="currentColor" stroke-linecap="round"
 				 stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20"
@@ -31,6 +31,6 @@
 				<path d="M7 4v16l13 -8z"/>
 			</svg>
 			Ir a cursos
-		</button>
+		</a>
 	</section>
 </section>

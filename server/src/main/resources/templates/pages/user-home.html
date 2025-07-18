@@ -15,7 +15,7 @@
 			<div class="col-12 col-lg-5">
 				<div class="d-flex flex-column gap-3">
 					<section
-						th:replace="~{components/user-home/resume :: example-card-component('Anastasia','Bienvenida',10230,20,2,10)}">
+						th:replace="~{components/user-home/resume :: example-card-component('Anastasia','Bienvenida',${fractionProgress},${completedCourses},${totalCourses})}">
 					</section>
 					<div th:insert="~{components/user-home/missionsComponent :: missionsComponent(${missionsList},${lenguageOptions})}">
 					</div>

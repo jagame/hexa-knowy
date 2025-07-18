@@ -2,6 +2,9 @@ package com.knowy.server.controller;
 
 import com.knowy.server.controller.dto.MissionsDto;
 import com.knowy.server.controller.dto.NewsHomeDto;
+import com.knowy.server.service.UserHomeService;
+import com.knowy.server.service.model.UserSecurityDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,8 +15,24 @@ import java.util.List;
 @Controller
 public class UserHomeController {
 
+	private final UserHomeService userHomeService;
+
+	public UserHomeController(UserHomeService userHomeService) {
+		this.userHomeService = userHomeService;
+	}
+
 	@GetMapping("/home")
-	public String userHome(Model model) {
+	public String userHome(Model model,@AuthenticationPrincipal UserSecurityDetails userDetails) {
+		Integer userId = userDetails.getPublicUser().getId();
+		long coursesCompleted = userHomeService.getCoursesCompleted(userId);
+		long totalCourses = userHomeService.getTotalCourses(userId);
+		long percent = userHomeService.getCoursesPercentage(userId);
+
+		model.addAttribute("completedCourses", coursesCompleted);
+		model.addAttribute("totalCourses", totalCourses);
+		model.addAttribute("fractionProgress", percent);
+
+
 		List<NewsHomeDto> newsHome = new ArrayList<>();
 		newsHome.add(new NewsHomeDto(1, "La conspiración de los grillos", "Una historia que no deja dormir",
 			"https://picsum.photos/id/10/900/900", "https://picsum.photos/id/10/900/900"));
