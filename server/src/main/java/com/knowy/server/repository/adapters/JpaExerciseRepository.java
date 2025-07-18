@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface JpaExerciseRepository extends ExerciseRepository, JpaRepository<ExerciseEntity, Integer> {
-
 	Optional<ExerciseEntity> findById(int id);
+	List<ExerciseEntity> findByLessonId(Integer lessonId);
 
 }

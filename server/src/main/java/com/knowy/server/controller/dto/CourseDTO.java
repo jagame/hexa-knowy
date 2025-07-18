@@ -9,7 +9,6 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
 public class CourseDTO {
 	private String name;
 	private int percentageCompleted;

@@ -1,9 +1,9 @@
-package com.knowy.server.repository.ports;
+	package com.knowy.server.repository.ports;
 
-import com.knowy.server.entity.OptionEntity;
+	import com.knowy.server.entity.OptionEntity;
 
-import java.util.List;
+	import java.util.List;
 
-public interface OptionRepository {
+	public interface OptionRepository {
 
-}
+	}

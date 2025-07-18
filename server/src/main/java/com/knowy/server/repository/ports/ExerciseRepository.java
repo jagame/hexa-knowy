@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface ExerciseRepository {
 	Optional<ExerciseEntity> findById(int id);
+	List<ExerciseEntity> findByLessonId(Integer lessonId);
 }

@@ -2,6 +2,7 @@ package com.knowy.server.controller;
 
 import com.knowy.server.controller.dto.LessonPageDataDTO;
 import com.knowy.server.controller.dto.LinksLessonDto;
+import com.knowy.server.controller.dto.SolutionDto;
 import com.knowy.server.service.CourseSubscriptionService;
 import com.knowy.server.service.model.UserSecurityDetails;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,6 +48,7 @@ public class LessonController {
 
 		LessonPageDataDTO data = courseService.getLessonViewData(userId, courseId, lessonId);
 		List<LinksLessonDto> docs = courseService.getLessonDocuments(lessonId);
+		List<SolutionDto> solutions = courseService.getLessonSolutions(lessonId);
 
 		model.addAttribute("course", data.getCourse());
 		model.addAttribute("lesson", data.getLesson());
@@ -55,6 +57,7 @@ public class LessonController {
 		model.addAttribute("courseId", courseId);
 		model.addAttribute("isIntro", false);
 		model.addAttribute("LinksList", docs);
+		model.addAttribute("solutions", solutions);
 
 		return "pages/lesson-explanation";
 	}

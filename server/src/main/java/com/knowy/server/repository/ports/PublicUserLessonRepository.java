@@ -17,7 +17,6 @@ public interface PublicUserLessonRepository {
 	<S extends PublicUserLessonEntity> S save(S entity);
 
 	int countByUserIdAndCourseIdAndStatus(Integer userId, Integer courseId, String status);
-	Optional<PublicUserLessonEntity> findById(PublicUserLessonIdEntity id);
 
 	Optional<PublicUserLessonEntity> findById(PublicUserLessonIdEntity publicUserLessonIdEntity);
 }

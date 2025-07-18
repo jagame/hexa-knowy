@@ -3,18 +3,13 @@ package com.knowy.server.service;
 import com.knowy.server.controller.dto.*;
 import com.knowy.server.controller.exception.KnowyCourseSubscriptionException;
 import com.knowy.server.entity.*;
-import com.knowy.server.repository.ports.CourseRepository;
-import com.knowy.server.repository.ports.LanguageRepository;
-import com.knowy.server.repository.ports.LessonRepository;
-import com.knowy.server.repository.ports.PublicUserLessonRepository;
+import com.knowy.server.repository.ports.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class CourseSubscriptionService {
@@ -22,12 +17,14 @@ public class CourseSubscriptionService {
 	private final LessonRepository lessonRepository;
 	private final PublicUserLessonRepository publicUserLessonRepository;
 	private final LanguageRepository languageRepository;
+	private final ExerciseRepository exerciseRepository;
 
-	public CourseSubscriptionService(CourseRepository courseRepository, LessonRepository lessonRepository, PublicUserLessonRepository publicUserLessonRepository, LanguageRepository languageRepository) {
+	public CourseSubscriptionService(CourseRepository courseRepository, LessonRepository lessonRepository, PublicUserLessonRepository publicUserLessonRepository, LanguageRepository languageRepository, ExerciseRepository exerciseRepository) {
 		this.courseRepository = courseRepository;
 		this.lessonRepository = lessonRepository;
 		this.publicUserLessonRepository = publicUserLessonRepository;
 		this.languageRepository = languageRepository;
+		this.exerciseRepository = exerciseRepository;
 	}
 
 	public List<CourseCardDTO> getUserCourses(Integer userId) {
@@ -41,46 +38,38 @@ public class CourseSubscriptionService {
 
 	public List<CourseCardDTO> getRecommendedCourses(Integer userId) {
 		List<CourseEntity> userCourses = findCoursesByUserId(userId);
-
-		List<Integer> userCourseIds = userCourses.stream()
-			.map(CourseEntity::getId)
-			.toList();
-
 		Set<String> userLanguages = userCourses.stream()
-			.flatMap(course -> findLanguagesForCourse(course).stream())
+			.flatMap(course -> course.getLanguages().stream())
+			.map(LanguageEntity::getName)
 			.collect(Collectors.toSet());
 
-		List<CourseEntity> allCourses = findAllCourses().stream()
+		Set<Integer> userCourseIds = userCourses.stream()
+			.map(CourseEntity::getId)
+			.collect(Collectors.toSet());
+
+		List<CourseEntity> recommendations = findAllCourses().stream()
 			.filter(course -> !userCourseIds.contains(course.getId()))
+			.sorted((a, b) -> {
+				// Ordenar primero los cursos que comparten idioma
+				boolean aMatches = matchesAnyLanguage(a, userLanguages);
+				boolean bMatches = matchesAnyLanguage(b, userLanguages);
+				return Boolean.compare(!aMatches, !bMatches); // true va después
+			})
+			.limit(3)
 			.toList();
 
-		List<CourseEntity> langMatching = allCourses.stream()
-			.filter(course -> {
-				List<String> courseLangs = findLanguagesForCourse(course);
-				return courseLangs.stream().anyMatch(userLanguages::contains);
-			}).toList();
-
-		List<CourseCardDTO> recommendations = langMatching.stream()
-			.limit(3)
+		return recommendations.stream()
 			.map(course -> CourseCardDTO.fromRecommendation(
-				course, findLanguagesForCourse(course), course.getCreationDate()))
-			.collect(Collectors.toList());
+				course,
+				findLanguagesForCourse(course),
+				course.getCreationDate()))
+			.toList();
+	}
 
-		if (recommendations.size() < 3) {
-			List<CourseEntity> remaining = allCourses.stream()
-				.filter(course -> !langMatching.contains(course))
-				.toList();
-
-			for (CourseEntity course : remaining) {
-				if (recommendations.size() >= 3) {
-					break;
-				}
-				recommendations.add(CourseCardDTO.fromRecommendation(
-					course, findLanguagesForCourse(course), course.getCreationDate()
-				));
-			}
-		}
-		return recommendations;
+	private boolean matchesAnyLanguage(CourseEntity course, Set<String> userLanguages) {
+		return course.getLanguages().stream()
+			.map(LanguageEntity::getName)
+			.anyMatch(userLanguages::contains);
 	}
 
 	public void subscribeUserToCourse(Integer userId, Integer courseId) throws KnowyCourseSubscriptionException {
@@ -145,28 +134,19 @@ public class CourseSubscriptionService {
 
 		List<LessonEntity> lessons = lessonRepository.findByCourseId(courseId);
 		List<LessonDTO> lessonDTOs = new ArrayList<>();
+
 		int lastCompletedIndex = -1;
 		Integer nextLessonId = null;
 
 		for (int i = 0; i < lessons.size(); i++) {
 			LessonEntity lesson = lessons.get(i);
-			PublicUserLessonIdEntity id = new PublicUserLessonIdEntity(userId, lesson.getId());
+			LessonDTO.LessonStatus lessonStatus = determineLessonStatus(userId, lesson.getId());
 
-			String status = publicUserLessonRepository.findById(id)
-				.map(PublicUserLessonEntity::getStatus)
-				.orElse("blocked");
-
-			LessonDTO.LessonStatus lessonStatus = switch (status.toLowerCase()) {
-				case "completed" -> {
-					lastCompletedIndex = i;
-					yield LessonDTO.LessonStatus.COMPLETE;
-				}
-				case "in_progress" -> {
-					if (nextLessonId == null) nextLessonId = lesson.getId();
-					yield LessonDTO.LessonStatus.NEXT_LESSON;
-				}
-				default -> LessonDTO.LessonStatus.BLOCKED;
-			};
+			if (lessonStatus == LessonDTO.LessonStatus.COMPLETE) {
+				lastCompletedIndex = i;
+			} else if (lessonStatus == LessonDTO.LessonStatus.NEXT_LESSON && nextLessonId == null) {
+				nextLessonId = lesson.getId();
+			}
 
 			lessonDTOs.add(new LessonDTO(
 				i + 1,
@@ -178,16 +158,13 @@ public class CourseSubscriptionService {
 			));
 		}
 
-		int progress = getCourseProgress(userId, courseId);
-		List<String> languages = findLanguagesForCourse(course);
-
 		CourseDTO courseDTO = new CourseDTO(
 			course.getTitle(),
-			progress,
+			getCourseProgress(userId, courseId),
 			lessonDTOs,
 			course.getDescription(),
 			course.getImage(),
-			languages
+			findLanguagesForCourse(course)
 		);
 
 		return new LessonPageDataDTO(
@@ -197,6 +174,18 @@ public class CourseSubscriptionService {
 			lastCompletedIndex + 2,
 			nextLessonId
 		);
+	}
+
+	private LessonDTO.LessonStatus determineLessonStatus(Integer userId, Integer lessonId) {
+		String status = publicUserLessonRepository.findById(new PublicUserLessonIdEntity(userId, lessonId))
+			.map(PublicUserLessonEntity::getStatus)
+			.orElse("blocked");
+
+		return switch (status.toLowerCase()) {
+			case "completed" -> LessonDTO.LessonStatus.COMPLETE;
+			case "in_progress" -> LessonDTO.LessonStatus.NEXT_LESSON;
+			default -> LessonDTO.LessonStatus.BLOCKED;
+		};
 	}
 
 	public LessonPageDataDTO getLessonViewData(Integer userId, Integer courseId, Integer lessonId) {
@@ -232,28 +221,40 @@ public class CourseSubscriptionService {
 	}
 
 	public List<LinksLessonDto> getAllCourseDocuments(Integer courseId) {
-		Set<DocumentationEntity> allDocs = new HashSet<>();
-		List<LessonEntity> lessons = lessonRepository.findByCourseId(courseId);
-		for (LessonEntity lesson : lessons) {
-			if (lesson.getDocumentations() != null) {
-				allDocs.addAll(lesson.getDocumentations());
-			}
-		}
-
-		return allDocs.stream()
+		return lessonRepository.findByCourseId(courseId).stream()
+			.flatMap(lesson -> Optional.ofNullable(lesson.getDocumentations()).stream().flatMap(Collection::stream))
 			.map(this::mapToLinksLessonDto)
+			.distinct()
 			.toList();
 	}
-
 	private LinksLessonDto mapToLinksLessonDto(DocumentationEntity doc) {
-		LinksLessonDto.LinkType type = doc.getLink().startsWith("http")
-			? LinksLessonDto.LinkType.EXTERNAL
-			: LinksLessonDto.LinkType.DOCUMENT;
-
-		String fileName = (type == LinksLessonDto.LinkType.DOCUMENT && doc.getLink().contains("/"))
+		boolean isExternal = doc.getLink().startsWith("http");
+		String fileName = (!isExternal && doc.getLink().contains("/"))
 			? doc.getLink().substring(doc.getLink().lastIndexOf("/") + 1)
 			: null;
 
-		return new LinksLessonDto(doc.getTitle(), doc.getLink(), type, fileName);
+		return new LinksLessonDto(
+			doc.getTitle(),
+			doc.getLink(),
+			isExternal ? LinksLessonDto.LinkType.EXTERNAL : LinksLessonDto.LinkType.DOCUMENT,
+			fileName
+		);
+	}
+
+	public List<SolutionDto> getLessonSolutions(Integer lessonId) {
+		List<ExerciseEntity> exercises = exerciseRepository.findByLessonId(lessonId);
+
+		return exercises.stream()
+			.map(exercise -> {
+				OptionEntity correct = exercise.getOptions().stream()
+					.filter(OptionEntity::isCorrect)
+					.findFirst()
+					.orElse(null);
+				return correct != null
+					? new SolutionDto("Ejercicio " + (exercises.indexOf(exercise) + 1), exercise.getQuestion(), correct.getOptionText())
+					: null;
+			})
+			.filter(Objects::nonNull)
+			.toList();
 	}
 }

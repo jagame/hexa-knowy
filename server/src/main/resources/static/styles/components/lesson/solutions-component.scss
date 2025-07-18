@@ -2,22 +2,22 @@
 
 
 .solutions-accordion {
-	border: 3px solid $primary-700;
+	border: 3px solid $secundary-700;
 }
 
 .solutions-accordion .accordion-button {
-	background-color: $primary-500;
+	background-color: $secundary-500;
 	color: white;
 	transition: $transition-speed;
 }
 
 .solutions-accordion .accordion-button:hover {
-	background-color: $primary-700;
+	background-color: $secundary-700;
 	color: white;
 }
 
 .solutions-accordion .accordion-button:not(.collapsed) {
-	background-color: $primary-500;
+	background-color: $secundary-500;
 	color: $neutral-100;
 }
 
@@ -33,8 +33,12 @@
 }
 
 .sol-cards {
-	margin-top: 0.25rem;
-	margin-bottom: 0.25rem;
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
+}
+
+#solSub-accordionExample {
+	border: none;
 }
 
 

@@ -14,11 +14,14 @@
 .accordion .accordion-button{
 	font-family: "caveat-brush", cursive;
 	background-color: $info-600;
-	color: $neutral-100;
+	color: white;
 	font-size:24px;
 	padding: 1rem 1.25rem;
 	outline: none;
 	box-shadow: none;
+}
+.accordion .accordion-button:hover{
+	background-color: $info-500;
 }
 .accordion-button:not(.collapsed)::after {
 	filter: brightness(0) invert(1);
@@ -71,15 +74,15 @@
 }
 
 .document-link.external:hover{
-	background-color: $primary-100;
-	border-color: $primary-500;
-	color: $primary-700;
+	background-color: $secundary-100;
+	border-color: $secundary-500;
+	color: $secundary-700;
 }
 .document-link.external:hover .title-link {
-	color: $primary-700;
+	color: $secundary-700;
 
 	.icon-tabler-link {
-		color: $primary-700;
+		color: $secundary-700;
 	}
 }
 
