@@ -8,7 +8,6 @@ import java.util.List;
 @Setter
 @ToString
 @AllArgsConstructor
-@NoArgsConstructor
 public class CourseDTO {
 	private String name;
 	private int percentageCompleted;
