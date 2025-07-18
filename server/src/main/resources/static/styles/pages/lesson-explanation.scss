@@ -1,6 +1,7 @@
 @use "../global-vars" as *;
 @use "../components/lesson/documents-links" as *;
 @use "../pages/course-page" as *;
+@use "../components/lesson/solutions-component" as *;
 
 body {
 	box-sizing: border-box;
@@ -24,7 +25,7 @@ body {
 	font-family: "caveat-brush", cursive;
 	font-weight: normal;
 	color: $info-500;
-	margin-top: 2.5rem;
+	margin-top: 3rem;
 
 }
 .container-flex{
@@ -81,6 +82,7 @@ body {
 
 .theory {
 	margin-top: 1.25rem;
+	margin-bottom: 2rem;
 }
 
 .icon {
