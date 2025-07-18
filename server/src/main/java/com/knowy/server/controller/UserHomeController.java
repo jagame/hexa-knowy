@@ -2,6 +2,8 @@ package com.knowy.server.controller;
 
 import com.knowy.server.controller.dto.MissionsDto;
 import com.knowy.server.controller.dto.NewsHomeDto;
+import com.knowy.server.service.model.UserSecurityDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +15,7 @@ import java.util.List;
 public class UserHomeController {
 
 	@GetMapping("/home")
-	public String userHome(Model model) {
+	public String userHome(Model model, @AuthenticationPrincipal UserSecurityDetails userDetails) {
 		List<NewsHomeDto> newsHome = new ArrayList<>();
 		newsHome.add(new NewsHomeDto(1, "La conspiración de los grillos", "Una historia que no deja dormir",
 			"https://picsum.photos/id/10/900/900", "https://picsum.photos/id/10/900/900"));
@@ -32,6 +34,7 @@ public class UserHomeController {
 
 
 		model.addAttribute("newsHome", newsHome);
+		model.addAttribute("username", userDetails.getPublicUser().getNickname());
 
 		List<MissionsDto> missionsList = new ArrayList<>();
 		MissionsDto mission1 = new MissionsDto();
