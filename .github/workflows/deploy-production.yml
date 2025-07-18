@@ -1,0 +1,34 @@
+name: Deploy to Production
+
+on:
+    push:
+        tags: [ "v*" ]
+
+jobs:
+    build-analyze-deploy:
+        runs-on: self-hosted
+
+        steps:
+            -   name: Checkout code
+                uses: actions/checkout@v4
+
+            -   name: Build & Test with Maven
+                working-directory: ./server
+                run: mvn clean verify
+
+            -   name: Run SonarQube Analysis
+                working-directory: ./server
+                env:
+                    SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+                    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+                    SONAR_PROJECT_KEY: ${{ vars.PROJECT_NAME }}
+                run: |
+                    mvn sonar:sonar \
+                      -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                      -Dsonar.host.url=${SONAR_HOST_URL} \
+                      -Dsonar.login=${SONAR_TOKEN}
+
+            -   name: Deploy with Docker Compose
+                env:
+                    PUERTO_PRODUCCION: ${{ vars.PUERTO_PRODUCCION }}
+                run: docker compose up -d --build

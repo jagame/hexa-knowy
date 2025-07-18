@@ -1,5 +1,5 @@
 services:
-    web-server:
+    java-server:
         build: server
         container_name: kn-server
         ports:
@@ -51,6 +51,8 @@ services:
             MP_DATABASE: /data/knmailpit.db
             MP_SMTP_AUTH_ACCEPT_ANY: 1
             MP_SMTP_AUTH_ALLOW_INSECURE: 1
+        depends_on:
+            - java-server
 
 volumes:
     kn_db_data:

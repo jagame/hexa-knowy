@@ -17,10 +17,6 @@ public interface PublicUserLessonRepository {
 	<S extends PublicUserLessonEntity> S save(S entity);
 
 	int countByUserIdAndCourseIdAndStatus(Integer userId, Integer courseId, String status);
-<<<<<<< Updated upstream
-=======
 
 	Optional<PublicUserLessonEntity> findById(PublicUserLessonIdEntity id);
->>>>>>> Stashed changes
-
 }

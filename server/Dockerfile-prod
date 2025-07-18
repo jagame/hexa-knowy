@@ -1,0 +1,7 @@
+# Dockerfile.dev
+FROM eclipse-temurin:21-jre-jammy
+WORKDIR /app
+COPY server/target/*.jar app.jar
+COPY .env .
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
