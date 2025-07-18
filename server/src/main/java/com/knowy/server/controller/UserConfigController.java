@@ -142,7 +142,7 @@ public class UserConfigController {
 								 RedirectAttributes redirectAttributes,
 								 HttpSession session,
 								 ModelMap interfaceScreen,
-								 HttpServletRequest request) throws WrongPasswordException, JwtKnowyException, MailDispatchException {
+								 HttpServletRequest request) {
 
 		String email = getCurrentEmail(session);
 		String domainUrl = getDomainUrl(request);
