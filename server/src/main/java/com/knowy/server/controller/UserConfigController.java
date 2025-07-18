@@ -3,7 +3,7 @@ package com.knowy.server.controller;
 import com.knowy.server.controller.dto.UserConfigChangeEmailFormDto;
 import com.knowy.server.controller.dto.UserProfileDTO;
 import com.knowy.server.service.LanguageService;
-import com.knowy.server.service.UserService;
+import com.knowy.server.service.UserFacadeService;
 import com.knowy.server.service.exception.*;
 import com.knowy.server.service.model.UserSecurityDetails;
 import com.knowy.server.util.UserSecurityDetailsHelper;
@@ -23,12 +23,23 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class UserConfigController {
 
-	private final UserService userService;
+	private final UserFacadeService userFacadeService;
 	private final LanguageService languageService;
 	private final UserSecurityDetailsHelper userSecurityDetailsHelper;
 
-	public UserConfigController(UserService userService, LanguageService languageService, UserSecurityDetailsHelper userSecurityDetailsHelper) {
-		this.userService = userService;
+	/**
+	 * The constructor
+	 *
+	 * @param userFacadeService         the userFacadeService
+	 * @param languageService           the languageService
+	 * @param userSecurityDetailsHelper the userSecurityDetailsHelper
+	 */
+	public UserConfigController(
+		UserFacadeService userFacadeService,
+		LanguageService languageService,
+		UserSecurityDetailsHelper userSecurityDetailsHelper
+	) {
+		this.userFacadeService = userFacadeService;
 		this.languageService = languageService;
 		this.userSecurityDetailsHelper = userSecurityDetailsHelper;
 	}
@@ -69,7 +80,7 @@ public class UserConfigController {
 		RedirectAttributes redirectAttributes
 	) {
 		try {
-			userService.updateEmail(
+			userFacadeService.updateEmail(
 				userConfigChangeEmailFormDto.getEmail(),
 				userDetails.getPublicUser().getId(),
 				userConfigChangeEmailFormDto.getPassword()
@@ -83,6 +94,8 @@ public class UserConfigController {
 			redirectAttributes.addFlashAttribute("errorEmail", "El nuevo correo debe ser diferente al actual.");
 		} catch (WrongPasswordException e) {
 			redirectAttributes.addFlashAttribute("errorEmail", "La contraseña es incorrecta.");
+		} catch (InvalidUserEmailException e) {
+			redirectAttributes.addFlashAttribute("errorEmail", "El correo ingresado ya está asociado a una cuenta existente.");
 		}
 		return "redirect:/user-account";
 	}
@@ -119,7 +132,7 @@ public class UserConfigController {
 		String newNickname = userProfileDTO.getNickname();
 		if (newNickname != null && !newNickname.isBlank()) {
 			try {
-				userService.updateNickname(newNickname, userDetails.getPublicUser().getId());
+				userFacadeService.updateNickname(newNickname, userDetails.getPublicUser().getId());
 				redirectAttributes.addFlashAttribute("username", newNickname);
 			} catch (UserNotFoundException e) {
 				redirectAttributes.addFlashAttribute("error", "Usuario no encontrado.");
@@ -130,15 +143,15 @@ public class UserConfigController {
 			} catch (NicknameAlreadyTakenException e) {
 				redirectAttributes.addFlashAttribute("error", "El nombre ya está en uso.");
 				return "redirect:/user-profile";
-			} catch (Exception e) {
-				redirectAttributes.addFlashAttribute("error", "Error inesperado al actualizar el nombre.");
+			} catch (InvalidUserNicknameException e) {
+				redirectAttributes.addFlashAttribute("error", "No se permiten apodos en blanco o vacíos.");
 				return "redirect:/user-profile";
 			}
 		}
 
 		if (userProfileDTO.getProfilePictureId() != null && userProfileDTO.getProfilePictureId() > 0) {
 			try {
-				userService.updateProfileImage(userProfileDTO.getProfilePictureId(), userDetails.getPublicUser().getId());
+				userFacadeService.updateProfileImage(userProfileDTO.getProfilePictureId(), userDetails.getPublicUser().getId());
 				redirectAttributes.addFlashAttribute("profilePicture", userProfileDTO.getProfilePictureId());
 				redirectAttributes.addFlashAttribute("profilePictureUrl", userDetails.getPublicUser().getProfileImage().getUrl());
 			} catch (ImageNotFoundException e) {
@@ -153,9 +166,11 @@ public class UserConfigController {
 			}
 		}
 
-		String[] newLanguages = userProfileDTO.getLanguages();
+		String[] newLanguages = userProfileDTO.getLanguages() != null
+			? userProfileDTO.getLanguages()
+			: new String[0];
 		try {
-			userService.updateLanguages(userDetails.getPublicUser().getId(), newLanguages);
+			userFacadeService.updateLanguages(userDetails.getPublicUser().getId(), newLanguages);
 		} catch (UserNotFoundException e) {
 			redirectAttributes.addFlashAttribute("error", "Usuario no encontrado");
 		}

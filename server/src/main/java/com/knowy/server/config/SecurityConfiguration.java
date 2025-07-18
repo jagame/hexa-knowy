@@ -1,7 +1,7 @@
 package com.knowy.server.config;
 
 import com.knowy.server.entity.PrivateUserEntity;
-import com.knowy.server.repository.PrivateUserRepository;
+import com.knowy.server.repository.ports.PrivateUserRepository;
 import com.knowy.server.service.model.UserSecurityDetails;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

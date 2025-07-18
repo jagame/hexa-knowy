@@ -6,9 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -33,6 +33,9 @@ public class CourseEntity {
 
 	@Column(name = "author", length = 250, nullable = false)
 	private String author;
+
+	@Column(name = "creation_date")
+	private LocalDateTime creationDate;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
