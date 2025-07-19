@@ -41,11 +41,7 @@ public class UserConfigController {
 	 * @param languageService           the languageService
 	 * @param userSecurityDetailsHelper the userSecurityDetailsHelper
 	 */
-	public UserConfigController(
-		UserFacadeService userFacadeService,
-		LanguageService languageService,
-		UserSecurityDetailsHelper userSecurityDetailsHelper
-	) {
+	public UserConfigController(UserFacadeService userFacadeService, LanguageService languageService, UserSecurityDetailsHelper userSecurityDetailsHelper) {
 		this.userFacadeService = userFacadeService;
 		this.languageService = languageService;
 		this.userSecurityDetailsHelper = userSecurityDetailsHelper;
@@ -81,17 +77,9 @@ public class UserConfigController {
 	 * @return a redirect to the user account page
 	 */
 	@PostMapping("/update-email")
-	public String updateEmail(
-		@ModelAttribute UserConfigChangeEmailFormDto userConfigChangeEmailFormDto,
-		@AuthenticationPrincipal UserSecurityDetails userDetails,
-		RedirectAttributes redirectAttributes
-	) {
+	public String updateEmail(@ModelAttribute UserConfigChangeEmailFormDto userConfigChangeEmailFormDto, @AuthenticationPrincipal UserSecurityDetails userDetails, RedirectAttributes redirectAttributes) {
 		try {
-			userFacadeService.updateEmail(
-				userConfigChangeEmailFormDto.getEmail(),
-				userDetails.getPublicUser().getId(),
-				userConfigChangeEmailFormDto.getPassword()
-			);
+			userFacadeService.updateEmail(userConfigChangeEmailFormDto.getEmail(), userDetails.getPublicUser().getId(), userConfigChangeEmailFormDto.getPassword());
 
 			userSecurityDetailsHelper.refreshUserAuthenticationById();
 			redirectAttributes.addFlashAttribute("successEmail", "Email actualizado con éxito.");
@@ -107,37 +95,54 @@ public class UserConfigController {
 		return "redirect:/user-account";
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Displays the account deletion advice page with the current user's nickname.
+	 *
+	 * @param interfaceScreen the model map to pass attributes to the view
+	 * @param userDetails     the authenticated user's security details
+	 * @return the view name for the account deletion advice page
+	 */
 	@GetMapping("/delete-account-advise")
 	public String deleteAccountForm(ModelMap interfaceScreen, @AuthenticationPrincipal UserSecurityDetails userDetails) {
 		interfaceScreen.addAttribute("username", userDetails.getPublicUser().getNickname());
 		return "pages/user-management/delete-account";
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Displays the account deletion confirmation page with the current user's nickname.
+	 *
+	 * @param interfaceScreen the model map to pass attributes to the view
+	 * @param userDetails     the authenticated user's security details
+	 * @return the view name for the account deletion confirmation page
+	 */
 	@GetMapping("/delete-account-confirm")
 	public String deleteAccountEnd(ModelMap interfaceScreen, @AuthenticationPrincipal UserSecurityDetails userDetails) {
 		interfaceScreen.addAttribute("username", userDetails.getPublicUser().getNickname());
 		return "pages/user-management/delete-account-confirm";
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Handles the POST request to confirm account deletion. Validates the provided password and confirmation password,
+	 * deactivates the user account if valid, and initiates the recovery email process. On success, redirects to the
+	 * deletion advice page with a success message. On failure, redirects back to the confirmation page with an
+	 * appropriate error message.
+	 *
+	 * @param userDetails        the authenticated user's security details
+	 * @param password           the password provided by the user for confirmation
+	 * @param confirmPassword    the confirmation of the password
+	 * @param redirectAttributes used to pass flash attributes during redirect
+	 * @param request            the HTTP servlet request to build domain URL
+	 * @return redirect URL to either the deletion advice page on success or back to the confirmation page on failure
+	 */
 	@PostMapping("/delete-account-confirm")
-	public String deleteAccount(
-		@AuthenticationPrincipal UserSecurityDetails userDetails,
-		@RequestParam String password,
-		@RequestParam String confirmPassword,
-		RedirectAttributes redirectAttributes,
-		HttpServletRequest request
-	) {
+	public String deleteAccount(@AuthenticationPrincipal UserSecurityDetails userDetails, @RequestParam String password, @RequestParam String confirmPassword, RedirectAttributes redirectAttributes, HttpServletRequest request) {
 		String email = userDetails.getUsername();
 		String domainUrl = getDomainUrl(request);
 		String recoveryBaseUrl = domainUrl + "/reactivate-account";
 
 		try {
 			userFacadeService.desactivateUserAccount(password, confirmPassword, email, recoveryBaseUrl);
-			redirectAttributes.addFlashAttribute(SUCCESS_MODEL_ATTRIBUTE,
-				"Tu cuenta ha sido desactivada correctamente. Dispones de 30 días para recuperarla.");
+			redirectAttributes.addFlashAttribute(SUCCESS_MODEL_ATTRIBUTE, "Tu cuenta ha sido desactivada correctamente. Dispones de 30 días para recuperarla.");
 			return "redirect:delete-advise";
 
 		} catch (WrongPasswordException e) {
@@ -163,7 +168,15 @@ public class UserConfigController {
 	}
 
 
-	// TODO - JavaDoc
+	/**
+	 * Handles the account reactivation process using a token. Attempts to reactivate the user account linked to the
+	 * provided token. On success, shows a success message and returns the reactivation confirmation page. On failure,
+	 * shows an error message and returns an error page.
+	 *
+	 * @param token the reactivation token provided as a request parameter
+	 * @param model the Spring MVC model to pass attributes to the view
+	 * @return the name of the view to be rendered
+	 */
 	@GetMapping("/reactivate-account")
 	public String reactivateAccount(@RequestParam("token") String token, Model model) {
 
@@ -181,13 +194,25 @@ public class UserConfigController {
 		}
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Displays the deletion advice page after account deactivation.
+	 *
+	 * @return the name of the deletion advice view page
+	 */
 	@GetMapping("delete-advise")
 	public String deleteAdvise() {
 		return "pages/user-management/account-reactivation";
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Displays the user profile page. Initializes the user's languages collection to avoid lazy loading issues. Adds
+	 * the public user information and list of all available languages to the model.
+	 *
+	 * @param model          the Spring MVC model to pass attributes to the view
+	 * @param userProfileDTO DTO object representing user profile data (used for form binding)
+	 * @param userDetails    the authenticated user's security details
+	 * @return the name of the user profile view page
+	 */
 	@GetMapping("/user-profile")
 	public String viewUserProfile(Model model, UserProfileDTO userProfileDTO, @AuthenticationPrincipal UserSecurityDetails userDetails) {
 		Hibernate.initialize(userDetails.getPublicUser().getLanguages());
@@ -196,13 +221,19 @@ public class UserConfigController {
 		return "pages/user-management/user-profile";
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Handles the update of the user's profile, including nickname, profile picture, and languages. Validates and
+	 * applies changes to the user's data by invoking the corresponding service methods. Adds appropriate success or
+	 * error messages as flash attributes for feedback in the redirected view. Refreshes the user's authentication
+	 * details after a successful update.
+	 *
+	 * @param userProfileDTO     the DTO containing the updated profile data from the form
+	 * @param redirectAttributes attributes for flash messages to be used after redirect
+	 * @param userDetails        the authenticated user's security details
+	 * @return the redirect URL to the user profile page
+	 */
 	@PostMapping("/update-user-profile")
-	public String updateUserProfile(
-		@ModelAttribute("profileDto") UserProfileDTO userProfileDTO,
-		RedirectAttributes redirectAttributes,
-		@AuthenticationPrincipal UserSecurityDetails userDetails
-	) {
+	public String updateUserProfile(@ModelAttribute("profileDto") UserProfileDTO userProfileDTO, RedirectAttributes redirectAttributes, @AuthenticationPrincipal UserSecurityDetails userDetails) {
 		String newNickname = userProfileDTO.getNickname();
 		if (newNickname != null && !newNickname.isBlank()) {
 			try {
@@ -240,9 +271,7 @@ public class UserConfigController {
 			}
 		}
 
-		String[] newLanguages = userProfileDTO.getLanguages() != null
-			? userProfileDTO.getLanguages()
-			: new String[0];
+		String[] newLanguages = userProfileDTO.getLanguages() != null ? userProfileDTO.getLanguages() : new String[0];
 		try {
 			userFacadeService.updateLanguages(userDetails.getPublicUser().getId(), newLanguages);
 		} catch (UserNotFoundException e) {
