@@ -1,8 +1,7 @@
 package com.knowy.server.controller;
 
-import com.knowy.server.controller.dto.LessonPageDataDTO;
-import com.knowy.server.controller.dto.LinksLessonDto;
-import com.knowy.server.controller.dto.SolutionDto;
+import com.knowy.server.controller.dto.*;
+import com.knowy.server.entity.*;
 import com.knowy.server.service.CourseSubscriptionService;
 import com.knowy.server.service.model.UserSecurityDetails;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/course")
@@ -26,8 +25,57 @@ public class LessonController {
 	public String showCourseIntro(@PathVariable Integer courseId, Model model) {
 		Integer userId = getLoggedInUserId();
 
-		LessonPageDataDTO data = courseService.getCourseOverviewWithLessons(userId, courseId);
-		List<LinksLessonDto> docs = courseService.getAllCourseDocuments(courseId);
+		CourseEntity course = courseService.getCourseById(courseId);
+		List<LessonEntity> lessons = courseService.getLessonsByCourseId(courseId);
+		List<LessonDTO> lessonDTOs = new ArrayList<>();
+
+		int lastCompletedIndex = -1;
+		Integer nextLessonId = null;
+
+		for (int i = 0; i < lessons.size(); i++) {
+			LessonEntity lesson = lessons.get(i);
+			String statusStr = courseService.getLessonStatus(userId, lesson.getId());
+			LessonDTO.LessonStatus status = switch (statusStr.toLowerCase()) {
+				case "completed" -> LessonDTO.LessonStatus.COMPLETE;
+				case "in_progress" -> LessonDTO.LessonStatus.NEXT_LESSON;
+				default -> LessonDTO.LessonStatus.BLOCKED;
+			};
+
+			if (status == LessonDTO.LessonStatus.COMPLETE) {
+				lastCompletedIndex = i;
+			} else if (status == LessonDTO.LessonStatus.NEXT_LESSON && nextLessonId == null) {
+				nextLessonId = lesson.getId();
+			}
+
+			lessonDTOs.add(new LessonDTO(
+				i + 1,
+				lesson.getId(),
+				lesson.getTitle(),
+				null,
+				null,
+				status
+			));
+		}
+
+		CourseDTO courseDTO = new CourseDTO(
+			course.getTitle(),
+			courseService.getCourseProgress(userId, courseId),
+			lessonDTOs,
+			course.getDescription(),
+			course.getImage(),
+			courseService.findLanguagesForCourse(course)
+		);
+
+		LessonPageDataDTO data = new LessonPageDataDTO(
+			courseDTO,
+			null,
+			null,
+			lastCompletedIndex + 2,
+			nextLessonId
+		);
+
+		List<DocumentationEntity> rawDocs = courseService.getAllCourseDocumentsRaw(courseId);
+		List<LinksLessonDto> docs = mapDocsToLinks(rawDocs);
 
 		model.addAttribute("course", data.getCourse());
 		model.addAttribute("lessons", data.getCourse().getLessons());
@@ -46,9 +94,73 @@ public class LessonController {
 							 Model model) {
 		Integer userId = getLoggedInUserId();
 
-		LessonPageDataDTO data = courseService.getLessonViewData(userId, courseId, lessonId);
-		List<LinksLessonDto> docs = courseService.getLessonDocuments(lessonId);
-		List<SolutionDto> solutions = courseService.getLessonSolutions(lessonId);
+		CourseEntity course = courseService.getCourseById(courseId);
+		List<LessonEntity> lessons = courseService.getLessonsByCourseId(courseId);
+		List<LessonDTO> lessonDTOs = new ArrayList<>();
+
+		int lastCompletedIndex = -1;
+		Integer nextLessonId = null;
+
+		for (int i = 0; i < lessons.size(); i++) {
+			LessonEntity lesson = lessons.get(i);
+			String statusStr = courseService.getLessonStatus(userId, lesson.getId());
+			LessonDTO.LessonStatus status = switch (statusStr.toLowerCase()) {
+				case "completed" -> LessonDTO.LessonStatus.COMPLETE;
+				case "in_progress" -> LessonDTO.LessonStatus.NEXT_LESSON;
+				default -> LessonDTO.LessonStatus.BLOCKED;
+			};
+
+			if (status == LessonDTO.LessonStatus.COMPLETE) {
+				lastCompletedIndex = i;
+			} else if (status == LessonDTO.LessonStatus.NEXT_LESSON && nextLessonId == null) {
+				nextLessonId = lesson.getId();
+			}
+
+			lessonDTOs.add(new LessonDTO(
+				i + 1,
+				lesson.getId(),
+				lesson.getTitle(),
+				null,
+				null,
+				status
+			));
+		}
+
+		CourseDTO courseDTO = new CourseDTO(
+			course.getTitle(),
+			courseService.getCourseProgress(userId, courseId),
+			lessonDTOs,
+			course.getDescription(),
+			course.getImage(),
+			courseService.findLanguagesForCourse(course)
+		);
+
+		int indexInList = courseService.findLessonIndexByTitle(lessons, courseService.getLessonById(lessonId).getTitle());
+		LessonDTO currentLessonDTO = lessonDTOs.get(indexInList);
+
+		LessonPageDataDTO data = new LessonPageDataDTO(
+			courseDTO,
+			currentLessonDTO,
+			courseService.getLessonById(lessonId).getExplanation(),
+			lastCompletedIndex + 2,
+			nextLessonId
+		);
+
+		List<LinksLessonDto> docs = mapDocsToLinks(courseService.getLessonDocumentsRaw(lessonId));
+		List<SolutionDto> solutions = courseService.getLessonExercises(lessonId).stream()
+			.map(exercise -> {
+				Optional<OptionEntity> correct = exercise.getOptions().stream()
+					.filter(OptionEntity::isCorrect)
+					.findFirst();
+
+				return correct.map(opt -> new SolutionDto(
+					"Ejercicio " + (courseService.getLessonExercises(lessonId).indexOf(exercise) + 1),
+					exercise.getQuestion(),
+					opt.getOptionText()
+				)).orElse(null);
+			})
+			.filter(Objects::nonNull)
+			.toList();
 
 		model.addAttribute("course", data.getCourse());
 		model.addAttribute("lesson", data.getLesson());
@@ -66,5 +178,21 @@ public class LessonController {
 		UserSecurityDetails userDetails = (UserSecurityDetails)
 			SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return userDetails.getPublicUser().getId();
+	}
+
+	private List<LinksLessonDto> mapDocsToLinks(List<DocumentationEntity> docs) {
+		return docs.stream().map(doc -> {
+			boolean isExternal = doc.getLink().startsWith("http");
+			String fileName = (!isExternal && doc.getLink().contains("/"))
+				? doc.getLink().substring(doc.getLink().lastIndexOf("/") + 1)
+				: null;
+
+			return new LinksLessonDto(
+				doc.getTitle(),
+				doc.getLink(),
+				isExternal ? LinksLessonDto.LinkType.EXTERNAL : LinksLessonDto.LinkType.DOCUMENT,
+				fileName
+			);
+		}).toList();
 	}
 }

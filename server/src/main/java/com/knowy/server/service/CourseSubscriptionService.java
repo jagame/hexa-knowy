@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class CourseSubscriptionService {
@@ -128,133 +127,48 @@ public class CourseSubscriptionService {
 			.toList();
 	}
 
-	public LessonPageDataDTO getCourseOverviewWithLessons(Integer userId, Integer courseId) {
-		CourseEntity course = courseRepository.findById(courseId)
+	public CourseEntity getCourseById(Integer courseId) {
+		return courseRepository.findById(courseId)
 			.orElseThrow(() -> new RuntimeException("Curso no encontrado"));
-
-		List<LessonEntity> lessons = lessonRepository.findByCourseId(courseId);
-		List<LessonDTO> lessonDTOs = new ArrayList<>();
-
-		int lastCompletedIndex = -1;
-		Integer nextLessonId = null;
-
-		for (int i = 0; i < lessons.size(); i++) {
-			LessonEntity lesson = lessons.get(i);
-			LessonDTO.LessonStatus lessonStatus = determineLessonStatus(userId, lesson.getId());
-
-			if (lessonStatus == LessonDTO.LessonStatus.COMPLETE) {
-				lastCompletedIndex = i;
-			} else if (lessonStatus == LessonDTO.LessonStatus.NEXT_LESSON && nextLessonId == null) {
-				nextLessonId = lesson.getId();
-			}
-
-			lessonDTOs.add(new LessonDTO(
-				i + 1,
-				lesson.getId(),
-				lesson.getTitle(),
-				null,
-				null,
-				lessonStatus
-			));
-		}
-
-		CourseDTO courseDTO = new CourseDTO(
-			course.getTitle(),
-			getCourseProgress(userId, courseId),
-			lessonDTOs,
-			course.getDescription(),
-			course.getImage(),
-			findLanguagesForCourse(course)
-		);
-
-		return new LessonPageDataDTO(
-			courseDTO,
-			null,
-			null,
-			lastCompletedIndex + 2,
-			nextLessonId
-		);
 	}
 
-	private LessonDTO.LessonStatus determineLessonStatus(Integer userId, Integer lessonId) {
-		String status = publicUserLessonRepository.findById(new PublicUserLessonIdEntity(userId, lessonId))
+	public List<LessonEntity> getLessonsByCourseId(Integer courseId) {
+		return lessonRepository.findByCourseId(courseId);
+	}
+
+	public String getLessonStatus(Integer userId, Integer lessonId) {
+		return publicUserLessonRepository.findById(new PublicUserLessonIdEntity(userId, lessonId))
 			.map(PublicUserLessonEntity::getStatus)
 			.orElse("blocked");
-
-		return switch (status.toLowerCase()) {
-			case "completed" -> LessonDTO.LessonStatus.COMPLETE;
-			case "in_progress" -> LessonDTO.LessonStatus.NEXT_LESSON;
-			default -> LessonDTO.LessonStatus.BLOCKED;
-		};
 	}
 
-	public LessonPageDataDTO getLessonViewData(Integer userId, Integer courseId, Integer lessonId) {
-		LessonPageDataDTO base = getCourseOverviewWithLessons(userId, courseId);
-
-		LessonEntity currentLesson = lessonRepository.findById(lessonId)
+	public LessonEntity getLessonById(Integer lessonId) {
+		return lessonRepository.findById(lessonId)
 			.orElseThrow(() -> new RuntimeException("Lección no encontrada"));
-
-		int indexInList = findLessonIndex(base.getCourse().getLessons(), currentLesson.getTitle());
-
-		base.setLesson(base.getCourse().getLessons().get(indexInList));
-		base.setLessonContent(currentLesson.getExplanation());
-
-		return base;
 	}
 
-	private int findLessonIndex(List<LessonDTO> lessons, String title) {
+	public int findLessonIndexByTitle(List<LessonEntity> lessons, String title) {
 		for (int i = 0; i < lessons.size(); i++) {
 			if (lessons.get(i).getTitle().equalsIgnoreCase(title)) return i;
 		}
 		throw new RuntimeException("No se encontró la lección");
 	}
 
-	public List<LinksLessonDto> getLessonDocuments(Integer lessonId) {
+	public List<DocumentationEntity> getLessonDocumentsRaw(Integer lessonId) {
 		LessonEntity lesson = lessonRepository.findById(lessonId)
 			.orElseThrow(() -> new RuntimeException("Lección no encontrada"));
-
-		if (lesson.getDocumentations() == null) return List.of();
-
-		return lesson.getDocumentations().stream()
-			.map(this::mapToLinksLessonDto)
-			.toList();
+		return Optional.ofNullable(lesson.getDocumentations()).orElse(List.of());
 	}
 
-	public List<LinksLessonDto> getAllCourseDocuments(Integer courseId) {
+	public List<DocumentationEntity> getAllCourseDocumentsRaw(Integer courseId) {
 		return lessonRepository.findByCourseId(courseId).stream()
 			.flatMap(lesson -> Optional.ofNullable(lesson.getDocumentations()).stream().flatMap(Collection::stream))
-			.map(this::mapToLinksLessonDto)
 			.distinct()
 			.toList();
 	}
-	private LinksLessonDto mapToLinksLessonDto(DocumentationEntity doc) {
-		boolean isExternal = doc.getLink().startsWith("http");
-		String fileName = (!isExternal && doc.getLink().contains("/"))
-			? doc.getLink().substring(doc.getLink().lastIndexOf("/") + 1)
-			: null;
 
-		return new LinksLessonDto(
-			doc.getTitle(),
-			doc.getLink(),
-			isExternal ? LinksLessonDto.LinkType.EXTERNAL : LinksLessonDto.LinkType.DOCUMENT,
-			fileName
-		);
-	}
-
-	public List<SolutionDto> getLessonSolutions(Integer lessonId) {
-		List<ExerciseEntity> exercises = exerciseRepository.findByLessonId(lessonId);
-
-		return exercises.stream()
-			.map(exercise -> {
-				OptionEntity correct = exercise.getOptions().stream()
-					.filter(OptionEntity::isCorrect)
-					.findFirst()
-					.orElse(null);
-				return correct != null
-					? new SolutionDto("Ejercicio " + (exercises.indexOf(exercise) + 1), exercise.getQuestion(), correct.getOptionText())
-					: null;
-			})
-			.filter(Objects::nonNull)
-			.toList();
+	public List<ExerciseEntity> getLessonExercises(Integer lessonId) {
+		return exerciseRepository.findByLessonId(lessonId);
 	}
 }
+
