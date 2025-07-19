@@ -264,7 +264,16 @@ public class PrivateUserService {
 			""".formatted(url);
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Creates an email message with a recovery link for a deleted user account. The recovery link contains a token that
+	 * expires after 30 days.
+	 *
+	 * @param email           the email address of the user whose account was deleted
+	 * @param recoveryBaseUrl the base URL used to generate the account recovery link
+	 * @return a {@link MailMessage} containing the recovery email details (receiver, subject, and body)
+	 * @throws JwtKnowyException     if an error occurs while encoding the JWT token
+	 * @throws UserNotFoundException if no user is found for the given email
+	 */
 	public MailMessage createDeletedAccountEmail(String email, String recoveryBaseUrl)
 		throws JwtKnowyException, UserNotFoundException {
 
@@ -308,7 +317,15 @@ public class PrivateUserService {
 			""".formatted(url);
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Deactivates a user account by verifying the provided password and confirmation password.
+	 *
+	 * @param email           the email address of the user whose account will be deactivated
+	 * @param password        the password entered by the user for verification
+	 * @param confirmPassword the confirmation password to ensure correctness
+	 * @throws WrongPasswordException if the passwords do not match or the password is incorrect
+	 * @throws UserNotFoundException  if no user is found for the given email
+	 */
 	public void deactivateUserAccount(
 		String email,
 		String password,
@@ -327,7 +344,13 @@ public class PrivateUserService {
 		privateUserRepository.save(privateUserEntity);
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Reactivates a user account based on a valid token.
+	 *
+	 * @param token the JWT token used to verify the reactivation request
+	 * @throws JwtKnowyException     if the token is invalid or cannot be processed
+	 * @throws UserNotFoundException if no user is associated with the token
+	 */
 	public void reactivateUserAccount(String token) throws JwtKnowyException, UserNotFoundException {
 		if (!isValidToken(token)) {
 			throw new JwtKnowyException("Invalid token");
