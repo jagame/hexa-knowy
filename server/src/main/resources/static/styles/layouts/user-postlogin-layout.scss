@@ -1,6 +1,7 @@
 @use '../global' as *;
 @use '../components/navbar';
-@use '../components/cards-questionnaire/options-quiz';
+@use '../components/footer';
+@use '../components/toast';
 
 html, body {
 	display: grid;

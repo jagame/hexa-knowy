@@ -5,47 +5,91 @@ body{
 }
 .course-card {
 	width: 22rem;
-	border-radius: $radius-25;
+	height: 24em;
+	border-radius: 0 0 $radius-25 $radius-25;
+	overflow: hidden;
 	background-color: $neutral-100;
 	box-shadow: $card-shadow;
-	margin: 1.5rem auto;
-	padding-bottom: 1.2rem;
+	//margin: 1.5rem auto;
+	display: flex;
+	flex-direction: column;
+	//padding-bottom: 1.2rem;
 }
 
 .course-card__picture-container{
 	position: relative;
 	width: 100%;
 	height: 11rem;
-	overflow: hidden;
+	display:flex;
+	align-items: center;
+	justify-content: center;
 }
+
+.course-card__picture-container img{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	z-index: 0;
+}
+
+.imagen-container::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.2);
+	z-index: 1;
+}
+
 
 .course-card__tags{
 	position: absolute;
+	top: 0.5em;
 	display: flex;
-	gap: 0.7rem;
-	margin: 10px;
+	gap: 1.25em;
+	justify-content: center;
+	z-index: 2;
 }
 
 .course-card-tags__tag{
+	height: 1.25em;
+	width: 5.62em;
+	font-size: 0.75em;
 	background: $info-500;
 	color: $neutral-100;
+	text-align: center;
 	border-radius: $radius-10;
-	font-weight: bold;
-	padding: 0.2em 1.1em;
+	line-height: 1.25em;
+	font-family: "Excalifont", sans-serif;
+}
+
+.course-card__content {
+	padding: 1em 1.2em 1.2em 1.2em;
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 auto;
+	justify-content: space-between;
+	gap: 0.5em;
 }
 
 .course-card__bar-progress{
 	color:$secundary-500;
 	font-size: 0.95em;
-	padding: 0.2em 1.1em;
 }
 
 .course-card-bar-progress__progress{
-	font-family: inter;
+	font-family: inter, sans-serif;
 	color:$secundary-500;
 	margin-top: 0.5em;
-	padding: 0.313em;
+	padding: 0.25em;
 }
+.course-card-bar-progress__progress[data-progress='100']{
+	color: $primary-500;
+}
+
 
 .course-card-bar-progress__progress-bar{
 	color: $secundary-500;
@@ -71,22 +115,43 @@ body{
 }
 
 .course-card__course-creator{
-	font-family: excalifont;
+	font-family: excalifont, sans-serif;
+	font-weight: 500;
 	color:$secundary-700;
-	margin-top:1em;
-	padding: 0.313px;
-	margin-left: 1.2em;
+	margin:0;
+}
+
+.course-card__course-date{
+	color: $neutral-500;
+	font-family: excalifont, sans-serif;
+	font-style: italic;
+	margin-top: 5px;
 }
 
 .course-card__course-name{
-	font-family: excalifont;
+	margin-top: 10px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	line-clamp: 3;
+	-webkit-box-orient: vertical;
+	font-family: excalifont, sans-serif;
 	color: $neutral-900;
-	padding: 0.313px;
-	margin-left: 1.2em;
+}
+.course-card__actions {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
 }
 
-.course-card__button-action{
+.course-card__button-action,
+.course-card__button-action:visited,
+.course-card__button-action:active{
+	border: none;
+	outline: none;
 	display: block;
+	width: 100%;
 	background-color: $primary-500;
 	color: $neutral-100;
 	border-radius: $radius-25;
@@ -96,10 +161,24 @@ body{
 	text-decoration:none;
 	text-align:center;
 	padding: 0.8em 0;
-	margin: 1.5em 1.2em 0 1.2em;
+	margin: 0;
+	box-sizing: border-box;
 }
 
-.course-card__button-action:hover{
+.course-card__button-action:hover,
+.course-card__button-action:focus {
 	background-color: $primary-700;
 	color: $secundary-700;
+	outline: none;
+	text-decoration: none;
+	box-shadow: $card-shadow;
+}
+
+.course-card__button-action:active {
+	transform: translateY(1px);
+}
+
+.course-card_course-description form {
+	margin: 0;
+	padding: 0;
 }

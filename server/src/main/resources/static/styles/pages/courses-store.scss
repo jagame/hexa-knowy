@@ -1,0 +1,298 @@
+@use "../global-vars" as *;
+@use "../components/course-card" as *;
+
+main {
+	padding: 0.5rem;
+}
+
+.container-fluid{
+	max-width: 95%;
+}
+
+.filter-container {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	min-height: 80px;
+	border-radius: $radius-25;
+	background-color: $primary-100;
+	box-shadow: $card-shadow;
+	padding: 20px;
+	margin-top: 30px;
+	margin-bottom: 40px;
+	gap: 20px;
+}
+
+.filters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	width: 100%;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+.filter-select {
+	width: 220px;
+	min-width: 180px;
+	max-width: 100%;
+	margin-bottom: 10px;
+	border: none;
+	background-color: $secundary-500;
+	color: white;
+	border-radius: $radius-10;
+	height: 55px;
+	cursor: pointer;
+	font-size: 18px;
+	font-family: "Excalifont", sans-serif;
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg width='16' height='16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.5 5.5l6 6 6-6' stroke='white' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+}
+
+select.form-select option {
+	color: black;
+	background-color: $neutral-100;
+}
+
+.actions {
+	display: flex;
+	gap: 20px;
+}
+
+.icon-tabler {
+	margin-right: 5px;
+}
+
+.btn-apply {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: $primary-500;
+	color: white;
+	height: 55px;
+	font-family: "Excalifont", sans-serif;
+	font-size: 18px;
+	border: none;
+	border-radius: $radius-10;
+	padding: 15px;
+}
+
+.btn-apply:hover {
+	background-color: $primary-700;
+	color: white;
+}
+
+.btn-delete {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: $danger-600;
+	color: white;
+	height: 55px;
+	font-family: "Excalifont", sans-serif;
+	font-size: 18px;
+	border: none;
+	border-radius: $radius-10;
+	padding: 15px;
+}
+
+.btn-delete:hover {
+	background-color: $danger-500;
+	color: white;
+}
+
+.container {
+	display: flex;
+	align-items: stretch;
+	justify-content: center;
+	padding: 20px;
+	gap: 20px;
+}
+
+.left-column {
+	display: flex;
+	flex: 0 0 80%;
+	flex-direction: column;
+
+}
+
+.right-column {
+	display: flex;
+	overflow-y: auto;
+	flex: 0 0 20%;
+	flex-direction: column;
+	min-height: 0;
+	max-height: 760px;
+	border-radius: $radius-10;
+	box-shadow: $card-shadow;
+}
+
+.courses {
+	padding: 20px;
+	border-radius: $radius-10;
+	background-color: $primary-100;
+	box-shadow: $card-shadow;
+}
+
+.courses-container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+}
+
+.recommendations {
+	overflow-y: auto;
+	max-height: 100vh;
+	padding: 20px;
+	border-radius: $radius-10;
+	background-color: $primary-100;
+	box-shadow: $card-shadow;
+}
+
+/*eliminar, card para test*/
+.card {
+	margin-top: 20px;
+}
+
+.dropdown-categories .dropdown-menu .form-check-input {
+	margin: 5px;
+}
+
+.dropdown-order .dropdown-menu .form-check-input {
+	margin: 5px;
+}
+
+.dropdown-visualization .dropdown-menu .form-check-input {
+	margin: 5px;
+}
+
+.list-group-item input[type="checkbox"]:checked {
+	border-color: $primary-500;
+	background-color: $primary-500;
+}
+
+.form-check-input:focus {
+	border-color: $primary-500;
+	box-shadow: 0 0 0 0.1rem $primary-500;
+}
+
+.pagination > li > a {
+	font-family: "caveat-brush", cursive;
+	color: $secundary-500;
+}
+
+.pagination > li > a:hover,
+.pagination > li > a:focus {
+	color: $bg;
+	background-color: $secundary-500;
+	box-shadow: none;
+}
+
+.btn-categories, .btn-order, .btn-visualization {
+	color: $bg;
+	background-color: $primary-500;
+}
+
+.btn-categories:hover, .btn-order:hover, .btn-visualization:hover {
+	color: $bg;
+	background-color: $primary-700;
+}
+
+.dropdown-toggle[aria-expanded="true"] {
+	color: $bg;
+	border-color: $bg;
+	background-color: $primary-700;
+}
+
+.recommendations > h4 {
+	font-family: "Excalifont", sans-serif;
+	font-weight: bold;
+	color: $secundary-500;
+}
+
+.h2-courses {
+	font-family: "Excalifont", sans-serif;
+	font-weight: bold;
+	color: $primary-500;
+}
+
+@media (max-width: 768px) {
+	.container {
+		display: flex;
+		flex-direction: column;
+		margin: 0;
+		padding: 0;
+	}
+
+	.left-column, .right-column {
+		flex: 0 0 100%;
+		min-width: 100%;
+	}
+
+	.filters, .courses, .recommendations {
+		box-sizing: border-box;
+		width: 100%;
+
+	}
+
+	.filters {
+		flex-direction: column;
+
+	}
+
+	.filters-dropdowns, .filters-buttons {
+		display: block;
+		width: auto;
+		text-align: center;
+
+	}
+
+	.filters-dropdowns > div {
+		display: block;
+		margin: 5px auto;
+
+	}
+
+	.filters-buttons > button {
+		display: block;
+		width: 50%;
+		margin: 5px auto;
+
+	}
+
+	.recommendations {
+		display: flex;
+		flex-direction: column;
+		margin-top: 1rem;
+	}
+
+	.recommendations-cards {
+		display: flex;
+		flex-direction: column;
+		overflow-x: auto;
+		gap: 20px;
+	}
+
+	.recommendation-card-wrapper{
+		padding-bottom: 20px;
+	}
+
+
+	.filter-select {
+		min-width: 100%;
+		margin-bottom: 8px;
+	}
+	.actions {
+		flex-direction: column;
+		gap: 10px;
+		width: 100%;
+	}
+	.btn-apply,
+	.btn-delete {
+		width: 100%;
+		min-width: 0;
+		margin-left: 0;
+	}
+
+}

@@ -1,150 +1,138 @@
 package com.knowy.server.controller;
 
-import com.knowy.server.controller.dto.UserConfigSessionDTO;
-import com.knowy.server.entity.PrivateUserEntity;
-import com.knowy.server.entity.PublicUserEntity;
-import com.knowy.server.repository.JpaPrivateUserRepository;
-import com.knowy.server.repository.JpaPublicUserRepository;
-import com.knowy.server.repository.PrivateUserRepository;
+import com.knowy.server.controller.dto.UserConfigChangeEmailFormDto;
+import com.knowy.server.controller.dto.UserProfileDTO;
 import com.knowy.server.service.AccessService;
-import com.knowy.server.service.UserService;
-import com.knowy.server.util.PasswordCheker;
+import com.knowy.server.service.LanguageService;
+import com.knowy.server.service.UserFacadeService;
+import com.knowy.server.service.exception.*;
+import com.knowy.server.service.model.UserSecurityDetails;
+import com.knowy.server.util.UserSecurityDetailsHelper;
 import com.knowy.server.util.exception.JwtKnowyException;
 import com.knowy.server.util.exception.MailDispatchException;
 import com.knowy.server.util.exception.WrongPasswordException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.jdbc.support.JdbcAccessor;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Optional;
-import java.util.UUID;
-
+@Slf4j
 @Controller
 public class UserConfigController {
 
-	private final UserService userService;
 	private final AccessService accessService;
-	private final JpaPrivateUserRepository jpaPrivateUserRepository;
-	private final PasswordCheker passwordCheker;
-	private final JdbcAccessor jdbcAccessor;
-	private final JpaPublicUserRepository jpaPublicUserRepository;
+	private final UserFacadeService userFacadeService;
+	private final LanguageService languageService;
+	private final UserSecurityDetailsHelper userSecurityDetailsHelper;
 
-	public UserConfigController(UserService userService, AccessService accessService, JpaPrivateUserRepository jpaPrivateUserRepository, PasswordCheker passwordCheker, JdbcAccessor jdbcAccessor, JpaPublicUserRepository jpaPublicUserRepository) {
-		this.userService = userService;
+	/**
+	 * The constructor
+	 *
+	 * @param userFacadeService         the userFacadeService
+	 * @param languageService           the languageService
+	 * @param userSecurityDetailsHelper the userSecurityDetailsHelper
+	 */
+	public UserConfigController(
+		AccessService accessService, UserFacadeService userFacadeService,
+		LanguageService languageService,
+		UserSecurityDetailsHelper userSecurityDetailsHelper
+	) {
 		this.accessService = accessService;
-		this.jpaPrivateUserRepository = jpaPrivateUserRepository;
-		this.passwordCheker = passwordCheker;
-		this.jdbcAccessor = jdbcAccessor;
-		this.jpaPublicUserRepository = jpaPublicUserRepository;
+		this.userFacadeService = userFacadeService;
+		this.languageService = languageService;
+		this.userSecurityDetailsHelper = userSecurityDetailsHelper;
 	}
 
-	String username = "usuario123";
-	//User-Profile
-	@GetMapping("/user-profile")
-	public String viewUserProfile(Model model) {
-		model.addAttribute("username", username);
-		return "pages/user-management/user-profile";
-	}
-
-	//User-Account
+	/**
+	 * Displays the user account page.
+	 *
+	 * <p>Retrieves the authenticated user's public information and adds it to the model.
+	 * Prepares the necessary data for the view to render the user's account details.</p>
+	 *
+	 * @param model       the model to which attributes are added for rendering the view
+	 * @param userDetails the authenticated user's security details provided by Spring Security
+	 * @return the name of the view template for the user account page
+	 */
 	@GetMapping("/user-account")
-	public String viewUserAccount(Model model, HttpSession session) {
-		String email = getCurrentEmail(session);
-		Optional<PrivateUserEntity> privateUser = userService.findPrivateUserByEmail(email);
-		// FixMe: Changing the way we get UserById in the future
-		Optional<PublicUserEntity> publicUser = userService.findPublicUserById(3);
-
-		if (privateUser.isEmpty() || publicUser.isEmpty()) {
-			// Manejo de error: usuario no encontrado
-			model.addAttribute("error", "User information could not be uploaded.");
-			return "pages/user-management/user-account";
-		}
-
-		model.addAttribute("privateUser", privateUser.get());
-		model.addAttribute("publicUser", publicUser.get());
-		session.setAttribute("nickName", publicUser.get().getNickname());
-
-		UserConfigSessionDTO userConfigSessionDTO = new UserConfigSessionDTO();
-		userConfigSessionDTO.setEmail(privateUser.get().getEmail());
-		model.addAttribute("userConfigSessionDTO", userConfigSessionDTO);
+	public String viewUserAccount(Model model, @AuthenticationPrincipal UserSecurityDetails userDetails) {
+		model.addAttribute("publicUser", userDetails.getPublicUser());
 		return "pages/user-management/user-account";
 	}
 
-	private String getCurrentEmail(HttpSession session){
-		String email = (String) session.getAttribute("email");
-		if (email == null) {
-			email = "usuario123@correo.com";
-			session.setAttribute("email", email);
-			// FixMe: Changing the way we get email in the future
-		}
-		return email;
-	}
-	//Method available for use on the other pages of UserConfig
-	private String getCurrentNickname(HttpSession session){
-		String nickname = (String) session.getAttribute("nickname");
-		if(nickname == null) {
-			// FixMe: Changing the way we get UserById in the future
-			Optional<PublicUserEntity> publicUser = userService.findPublicUserById(3);
-			publicUser.ifPresent(publicUserEntity -> session.setAttribute("nickname", publicUserEntity.getNickname()));
-		}
-		return nickname;
-	}
-
-	@PostMapping("/update-Nickname")
-	public String updateNickname(String newNickname, Integer id,
-								 RedirectAttributes redirectAttributes,
-								 HttpSession session) {
-		if(userService.updateNickname(newNickname, id)) {
-			session.setAttribute("nickname", newNickname);
-			redirectAttributes.addFlashAttribute("success", "Nombre de usuario actualizado");
-		}else{
-			redirectAttributes.addFlashAttribute("error", "Nombre no valido");
-		}
-		return "redirect:/user-account";
-	}
-
+	/**
+	 * Handles the request to update a user's email address.
+	 *
+	 * <p>This method receives the new email and current password, verifies the user's identity,
+	 * and attempts to update the email address. Proper error handling is applied for invalid inputs or mismatches.</p>
+	 *
+	 * <p>On success or failure, an appropriate flash message is added for display on redirect.</p>
+	 *
+	 * @param userConfigChangeEmailFormDto the form object containing the new email and current password
+	 * @param userDetails                  the authenticated user's security details, used to retrieve the user ID
+	 * @param redirectAttributes           used to pass flash messages after redirect
+	 * @return a redirect to the user account page
+	 */
 	@PostMapping("/update-email")
-	public String updateEmail(@ModelAttribute UserConfigSessionDTO userConfigSessionDTO,
-							  RedirectAttributes redirectAttributes, HttpSession session){
-		if(userService.updateEmail(userConfigSessionDTO.getEmail(),
-			userConfigSessionDTO.getNewEmail(),
-			userConfigSessionDTO.getCurrentPassword())){
-			session.setAttribute("email", userConfigSessionDTO.getNewEmail());
-			redirectAttributes.addFlashAttribute("successEmail", "Email actualizado");
-		}else{
-			redirectAttributes.addFlashAttribute("errorEmail", "Algo salió mal");
+	public String updateEmail(
+		@ModelAttribute UserConfigChangeEmailFormDto userConfigChangeEmailFormDto,
+		@AuthenticationPrincipal UserSecurityDetails userDetails,
+		RedirectAttributes redirectAttributes
+	) {
+		try {
+			userFacadeService.updateEmail(
+				userConfigChangeEmailFormDto.getEmail(),
+				userDetails.getPublicUser().getId(),
+				userConfigChangeEmailFormDto.getPassword()
+			);
+
+			userSecurityDetailsHelper.refreshUserAuthenticationById();
+			redirectAttributes.addFlashAttribute("successEmail", "Email actualizado con éxito.");
+		} catch (UserNotFoundException e) {
+			redirectAttributes.addFlashAttribute("errorEmail", "Usuario no encontrado.");
+		} catch (UnchangedEmailException e) {
+			redirectAttributes.addFlashAttribute("errorEmail", "El nuevo correo debe ser diferente al actual.");
+		} catch (WrongPasswordException e) {
+			redirectAttributes.addFlashAttribute("errorEmail", "La contraseña es incorrecta.");
+		} catch (InvalidUserEmailException e) {
+			redirectAttributes.addFlashAttribute("errorEmail", "El correo ingresado ya está asociado a una cuenta existente.");
 		}
 		return "redirect:/user-account";
 	}
 
 	// Delete account
 	@GetMapping("/delete-account")
-	public String deleteAccountForm(ModelMap interfaceScreen, HttpSession session) {
-		interfaceScreen.addAttribute("username", username);
+	public String deleteAccountForm(ModelMap interfaceScreen, @AuthenticationPrincipal UserSecurityDetails userDetails) {
+		interfaceScreen.addAttribute("username", userDetails.getPublicUser().getNickname());
 		return "pages/user-management/delete-account";
 	}
 
 	//Delete-Account-End (Finally deleting Account)
-	@GetMapping ("/delete-account-end")
-	public String deleteAccountEnd(ModelMap interfaceScreen, HttpSession session) {
-		interfaceScreen.addAttribute("username", username);
+	@GetMapping("/delete-account-end")
+	public String deleteAccountEnd(ModelMap interfaceScreen, @AuthenticationPrincipal UserSecurityDetails userDetails) {
+		interfaceScreen.addAttribute("username", userDetails.getPublicUser().getNickname());
 		return "pages/user-management/delete-account-end";
 	}
 
 	@PostMapping("/delete-account-end")
-	public String deleteAccount (@RequestParam String deletePassword,
-								 @RequestParam String confirmPassword,
-								 RedirectAttributes redirectAttributes,
-								 HttpSession session,
-								 ModelMap interfaceScreen,
-								 HttpServletRequest request) {
-
-		String email = getCurrentEmail(session);
+	public String deleteAccount(
+		@AuthenticationPrincipal UserSecurityDetails userDetails,
+		@RequestParam String deletePassword,
+		@RequestParam String confirmPassword,
+		RedirectAttributes redirectAttributes,
+		HttpSession session,
+		ModelMap interfaceScreen,
+		HttpServletRequest request
+	) {
+		String email = userDetails.getUsername();
 		String domainUrl = getDomainUrl(request);
 		String recoveryBaseUrl = domainUrl + "/reactivate-account";
 
@@ -153,13 +141,13 @@ public class UserConfigController {
 			redirectAttributes.addFlashAttribute("success", "Tu cuenta ha sido desactivada correctamente. Dispones de 30 días para recuperarla.");
 			return "redirect:/";
 
-		} catch (WrongPasswordException e ) {
+		} catch (WrongPasswordException e) {
 			interfaceScreen.addAttribute("error", "La contraseña es incorrecta o no coincide");
 			return "pages/user-management/delete-account-end";
-		} catch (MailDispatchException e ) {
+		} catch (MailDispatchException e) {
 			interfaceScreen.addAttribute("error", "Error al enviar el email");
 			return "pages/user-management/delete-account-end";
-		} catch (JwtKnowyException e ) {
+		} catch (JwtKnowyException e) {
 			interfaceScreen.addAttribute("error", "Error al recuperar el token");
 			return "pages/user-management/delete-account-end";
 		}
@@ -168,15 +156,15 @@ public class UserConfigController {
 	@GetMapping("/reactivate-account")
 	public String reactivateAccount(@RequestParam("token") String token, Model model) {
 
-			try {
-				accessService.reactivateUserAccount(token);
-				model.addAttribute("success", "Tu cuenta ha sido reactivada correctamente.");
-				return "pages/user-management/account-reactivation";
+		try {
+			accessService.reactivateUserAccount(token);
+			model.addAttribute("success", "Tu cuenta ha sido reactivada correctamente.");
+			return "pages/user-management/account-reactivation";
 
-			} catch (JwtKnowyException e) {
-				model.addAttribute("error", "El token ha expirado o no es válido");
-				return "error/error";
-			}
+		} catch (JwtKnowyException e) {
+			model.addAttribute("error", "El token ha expirado o no es válido");
+			return "error/error";
+		}
 	}
 
 	private String getDomainUrl(HttpServletRequest request) {
@@ -186,4 +174,72 @@ public class UserConfigController {
 		return scheme + "://" + serverName + ":" + serverPort;
 	}
 
+	//User-Profile
+	@GetMapping("/user-profile")
+	public String viewUserProfile(Model model, UserProfileDTO userProfileDTO, @AuthenticationPrincipal UserSecurityDetails userDetails) {
+		Hibernate.initialize(userDetails.getPublicUser().getLanguages());
+		model.addAttribute("publicUser", userDetails.getPublicUser());
+		model.addAttribute("languages", languageService.findAll());
+		return "pages/user-management/user-profile";
+	}
+
+	@PostMapping("/update-user-profile")
+	public String updateUserProfile(
+		@ModelAttribute("profileDto") UserProfileDTO userProfileDTO,
+		RedirectAttributes redirectAttributes,
+		@AuthenticationPrincipal UserSecurityDetails userDetails
+	) {
+		String newNickname = userProfileDTO.getNickname();
+		if (newNickname != null && !newNickname.isBlank()) {
+			try {
+				userFacadeService.updateNickname(newNickname, userDetails.getPublicUser().getId());
+				redirectAttributes.addFlashAttribute("username", newNickname);
+			} catch (UserNotFoundException e) {
+				redirectAttributes.addFlashAttribute("error", "Usuario no encontrado.");
+				return "redirect:/user-profile";
+			} catch (UnchangedNicknameException e) {
+				redirectAttributes.addFlashAttribute("error", "El nuevo nombre debe ser diferente al actual.");
+				return "redirect:/user-profile";
+			} catch (NicknameAlreadyTakenException e) {
+				redirectAttributes.addFlashAttribute("error", "El nombre ya está en uso.");
+				return "redirect:/user-profile";
+			} catch (InvalidUserNicknameException e) {
+				redirectAttributes.addFlashAttribute("error", "No se permiten apodos en blanco o vacíos.");
+				return "redirect:/user-profile";
+			}
+		}
+
+		if (userProfileDTO.getProfilePictureId() != null && userProfileDTO.getProfilePictureId() > 0) {
+			try {
+				userFacadeService.updateProfileImage(userProfileDTO.getProfilePictureId(), userDetails.getPublicUser().getId());
+				redirectAttributes.addFlashAttribute("profilePicture", userProfileDTO.getProfilePictureId());
+				redirectAttributes.addFlashAttribute("profilePictureUrl", userDetails.getPublicUser().getProfileImage().getUrl());
+			} catch (ImageNotFoundException e) {
+				redirectAttributes.addFlashAttribute("error", "Aún no existe una imagen de perfil");
+				return "redirect:/user-profile";
+			} catch (UnchangedImageException e) {
+				redirectAttributes.addFlashAttribute("error", "La imagen debe ser diferente a la actual.");
+				return "redirect:/user-profile";
+			} catch (UserNotFoundException e) {
+				redirectAttributes.addFlashAttribute("error", "Usuario no encontrado");
+				return "redirect:/user-profile";
+			}
+		}
+
+		String[] newLanguages = userProfileDTO.getLanguages() != null
+			? userProfileDTO.getLanguages()
+			: new String[0];
+		try {
+			userFacadeService.updateLanguages(userDetails.getPublicUser().getId(), newLanguages);
+		} catch (UserNotFoundException e) {
+			redirectAttributes.addFlashAttribute("error", "Usuario no encontrado");
+		}
+
+		redirectAttributes.addFlashAttribute("success", "Perfil actualizado correctamente");
+		redirectAttributes.addFlashAttribute("nickname", userProfileDTO.getNickname());
+		redirectAttributes.addFlashAttribute("languages", userProfileDTO.getLanguages());
+
+		userSecurityDetailsHelper.refreshUserAuthentication();
+		return "redirect:/user-profile";
+	}
 }

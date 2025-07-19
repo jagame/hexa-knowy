@@ -14,7 +14,6 @@ import lombok.Setter;
 @Table(name = "private_user")
 public class PrivateUserEntity {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
 	private Integer id;
 

@@ -14,9 +14,7 @@
 }
 
 .missions__missions-title {
-	font-size: 1.5em;
-	font-weight: bold;
-	text-align: left;
+	font-family: caveat-brush, serif;
 	color: $neutral-900;
 }
 
@@ -25,7 +23,7 @@
 	flex-direction: column;
 	padding: 8px;
 	border-radius: $radius-25;
-	background-color: $primary-100;
+	background-color: white;
 	box-shadow: $card-shadow;
 	gap: 5px;
 }
@@ -39,14 +37,14 @@
 }
 
 .mission-container__description {
-	font-weight: bold;
+	font-size: 1.25rem;
 	margin-top: 3px;
 	margin-left: 5px;
-	color: $neutral-900;
+	color: $primary-500;
 }
 
 .mission-instance__progress-text {
-	font-weight: bold;
+	font-size: 0.85rem;
 	color: $neutral-700;
 }
 
@@ -112,13 +110,18 @@
 
 
 .actions-footer__quick-match-button {
-	font-weight: bold;
-	flex-grow: 1;
-	max-height: 2rem;
-	padding: 0.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	font-family: excalifont, serif;
+	font-size: 1.25rem;
+	width: 100%;
+	height: 2.5rem;
+	padding: 0.25rem;
+	margin: 0.75rem 0;
 	cursor: pointer;
 	transition: background-color 0.2s ease;
-	text-align: center;
 	color: $neutral-100;
 	border: none;
 	border-radius: $radius-25;
@@ -127,5 +130,5 @@
 
 
 .actions-footer__quick-match-button:hover {
-	background-color: rgba($primary-500, 0.95);
+	background-color: $primary-700;
 }

@@ -1,7 +1,3 @@
-<html lang="en"
-	  xmlns:th="http://www.thymeleaf.org"
->
-
 <div class="carousel slide h-100 w-100 kn-radius" data-bs-ride="carousel" th:fragment="carousel-news(id, newsList)"
 	 th:id="${id}">
 
@@ -26,7 +22,7 @@
 				 th:src="${newItem.imageUrl}">
 			<div class="carousel-caption text-legible">
 				<h5 class="text-legible--title" th:text="${newItem.title}"></h5>
-				<p class="d-none d-md-block" th:text="${newItem.description}"></p>
+				<p class="d-none d-md-block mb-2" th:text="${newItem.description}"></p>
 			</div>
 		</div>
 	</div>
@@ -42,6 +38,14 @@
 
 </div>
 
-</html>
+<script th:inline="javascript">
+	const carouselId = /*[[${id}]]*/ 'carousel-news-id';
+	const carousel = document.getElementById(carouselId);
+
+	carousel.addEventListener('wheel', function(e) {
+		if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) return;
+		e.stopPropagation();
+	}, { passive: true });
+</script>
 
 

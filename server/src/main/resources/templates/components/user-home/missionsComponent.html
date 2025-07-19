@@ -1,5 +1,5 @@
 <div class="missions-container" th:fragment="missionsComponent(missionsList, lenguageOptions)">
-	<h2 class="missions__missions-title">Retos diarios:</h2>
+	<h3 class="missions__missions-title">¡Retos diarios!</h3>
 
 	<div class="mission-container__mission-instance" th:each="mission : ${missionsList}">
 		<span class="mission-container__description" th:text="${mission.name}"></span>
@@ -13,17 +13,16 @@
 	</div>
 
 	<div class="actions-footer">
-<!--		<div class="actions-footer__language-selector-container">-->
-<!--			<select class="language-selector-container__language-dropdown" name="language" id="languageSelector">-->
-<!--				<option th:each="lang : ${languageOptions}"-->
-<!--						th:value="${lang.value}"-->
-<!--						th:text="${lang.label}"-->
-<!--						th:selected="${lang.value == selectedLanguage}">-->
-<!--					Java-->
-<!--				</option>-->
-<!--			</select>-->
-<!--		</div>-->
-		<button class="actions-footer__quick-match-button">Partida Rápida</button>
+		<button class="actions-footer__quick-match-button">
+			<svg class="icon icon-tabler icons-tabler-outline icon-tabler-player-play" fill="none" height="20"
+				 stroke="currentColor" stroke-linecap="round"
+				 stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20"
+				 xmlns="http://www.w3.org/2000/svg">
+				<path d="M0 0h24v24H0z" fill="none" stroke="none"/>
+				<path d="M7 4v16l13 -8z"/>
+			</svg>
+			Partida Rápida
+		</button>
 	</div>
 
 </div>

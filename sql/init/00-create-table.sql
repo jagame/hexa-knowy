@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS public.public_user
 (
 	id               serial      NOT NULL,
-	id_profile_image integer NOT NULL DEFAULT 1,
+	id_profile_image integer     NOT NULL DEFAULT 1,
 	nickname         varchar(50) NOT NULL UNIQUE,
 	PRIMARY KEY (id)
 );
@@ -34,9 +34,11 @@ CREATE TABLE IF NOT EXISTS public.public_user_mission
 
 CREATE TABLE IF NOT EXISTS public.course
 (
-	id          serial NOT NULL,
-	title       varchar(100),
-	description varchar(250),
+	id            serial    NOT NULL,
+	title         varchar(100),
+	description   varchar(250),
+	author        varchar(250),
+	creation_date timestamp NOT NULL DEFAULT current_timestamp,
 	PRIMARY KEY (id)
 );
 
@@ -60,7 +62,7 @@ CREATE TABLE IF NOT EXISTS public.public_user_lesson
 	PRIMARY KEY (id_public_user, id_lesson)
 );
 
-CREATE TABLE IF NOT EXISTS public.exercises
+CREATE TABLE IF NOT EXISTS public.exercise
 (
 	id        serial  NOT NULL,
 	id_lesson integer NOT NULL,
@@ -77,26 +79,61 @@ CREATE TABLE IF NOT EXISTS public.option
 	PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS public.public_user_option
+CREATE TABLE IF NOT EXISTS public.public_user_exercise
 (
 	id_public_user integer   NOT NULL,
-	id_option      integer   NOT NULL,
-	answer_date    timestamp NOT NULL DEFAULT current_timestamp,
-	rate           numeric   NOT NULL DEFAULT 0,
-	PRIMARY KEY (id_public_user, id_option)
+	id_exercise    integer   NOT NULL,
+	next_review    timestamp NOT NULL DEFAULT current_timestamp,
+	rate           integer   NOT NULL DEFAULT 0,
+	PRIMARY KEY (id_public_user, id_exercise)
 );
 
 CREATE TABLE IF NOT EXISTS public.profile_image
 (
-	id       serial NOT NULL,
-	url      text   NOT NULL,
+	id  serial NOT NULL,
+	url text   NOT NULL,
 	PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS public.banned_word
+(
+	id   serial      NOT NULL,
+	word varchar(50) NOT NULL UNIQUE,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS public.language
+(
+	id   serial      NOT NULL,
+	name varchar(20) NOT NULL UNIQUE,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS public.public_user_language
+(
+	id_public_user integer NOT NULL,
+	id_language    integer NOT NULL,
+	PRIMARY KEY (id_public_user, id_language)
+);
+
+CREATE TABLE IF NOT EXISTS public.banned_word
+(
+	id   serial      NOT NULL,
+	word varchar(40) NOT NULL,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS public.course_language
+(
+	id_course   INTEGER NOT NULL,
+	id_language INTEGER NOT NULL,
+	PRIMARY KEY (id_course, id_language)
 );
 
 -- FK public_user
 ALTER TABLE IF EXISTS public.public_user
 	ADD FOREIGN KEY (id_profile_image)
-	REFERENCES public.profile_image (id);
+		REFERENCES public.profile_image (id);
 
 -- FK private_user
 ALTER TABLE IF EXISTS public.private_user
@@ -130,21 +167,38 @@ ALTER TABLE IF EXISTS public.lesson
 	ADD FOREIGN KEY (id_next_lesson)
 		REFERENCES public.lesson (id);
 
--- FK exercises
-ALTER TABLE IF EXISTS public.exercises
+-- FK exercise
+ALTER TABLE IF EXISTS public.exercise
 	ADD FOREIGN KEY (id_lesson)
 		REFERENCES public.lesson (id);
 
 -- FK option
 ALTER TABLE IF EXISTS public.option
 	ADD FOREIGN KEY (id_exercise)
-		REFERENCES public.exercises (id);
+		REFERENCES public.exercise (id);
 
--- FK public_user_option
-ALTER TABLE IF EXISTS public.public_user_option
+-- FK public_user_exercise
+ALTER TABLE IF EXISTS public.public_user_exercise
 	ADD FOREIGN KEY (id_public_user)
 		REFERENCES public.public_user (id);
 
-ALTER TABLE IF EXISTS public.public_user_option
-	ADD FOREIGN KEY (id_option)
-		REFERENCES public.option (id);
+ALTER TABLE IF EXISTS public.public_user_exercise
+	ADD FOREIGN KEY (id_exercise)
+		REFERENCES public.exercise (id);
+
+--FK public_user_language
+ALTER TABLE IF EXISTS public.public_user_language
+	ADD FOREIGN KEY (id_public_user)
+		REFERENCES public.public_user (id);
+
+ALTER TABLE IF EXISTS public.public_user_language
+	ADD FOREIGN KEY (id_language)
+		REFERENCES public.language (id);
+-- FK course_language
+ALTER TABLE IF EXISTS public.course_language
+	ADD FOREIGN KEY (id_course)
+		REFERENCES public.course (id);
+
+ALTER TABLE IF EXISTS public.course_language
+	ADD FOREIGN KEY (id_language)
+		REFERENCES public.language (id);
