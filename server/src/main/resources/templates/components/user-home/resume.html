@@ -1,16 +1,18 @@
 <!-- templates/components/user-home/resume -->
 <section class="home-resume"
+		 th:fragment="example-card-component(username, greeting, fractionProgress, fractionNum, fractionDen)">
 		 th:fragment="example-card-component(username, greeting, fractionProgress, completedCourses, totalCourses)">
 
+<!--TODO Streak in the future versions-->
 	<section class="home-resume__presentation-streak">
 		<h2 class="username" th:text="${greeting} + ', ' + ${username}"></h2>
-		<div class="streak">
-			<span class="streak__text">Racha</span>
-			<div class="streak__days">
-				<span class="streak__days--text" th:text="${streak}"></span>
-				<p class="streak__days--text">días</p>
-			</div>
-		</div>
+<!--		<div class="streak">-->
+<!--			<span class="streak__text">Racha</span>-->
+<!--			<div class="streak__days">-->
+<!--				<span class="streak__days&#45;&#45;text" th:text="${streak}"></span>-->
+<!--				<p class="streak__days&#45;&#45;text">días</p>-->
+<!--			</div>-->
+<!--		</div>-->
 	</section>
 
 	<section class="home-resume__course-progress">
