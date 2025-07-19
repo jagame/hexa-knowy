@@ -365,21 +365,20 @@ public class PrivateUserService {
 	}
 
 	/**
-	 * Verifies the authenticity and validity of a password reset token and retrieves the corresponding user.
+	 * Verifies the authenticity and validity of a password reset token and retrieves the associated user.
 	 *
-	 * <p>Performs two levels of decoding:
-	 * <ul>
-	 *   <li>First, an unverified decoding to extract the user ID from the token payload.</li>
-	 *   <li>Second, a verified decoding using the user's password as the JWT secret to confirm token validity.</li>
-	 * </ul>
-	 * If both succeed, returns the user associated with the token.</p>
+	 * <p>This method performs two decoding steps:
+	 * <ol>
+	 *   <li>Unverified decoding to extract the user ID from the token payload.</li>
+	 *   <li>Verified decoding using the user's password as the secret key to validate the token's integrity and expiration.</li>
+	 * </ol>
+	 * If both steps succeed, the method returns the corresponding {@code PrivateUserEntity}.</p>
 	 *
 	 * @param token the JWT token to verify
-	 * @return the {@code PrivateUserEntity} associated with the token
-	 * @throws JwtKnowyException     if the token is invalid, expired, or tampered with
+	 * @return the {@code PrivateUserEntity} linked to the token
+	 * @throws JwtKnowyException     if the token is invalid, expired, or has been tampered with
 	 * @throws UserNotFoundException if no user exists for the extracted user ID
 	 */
-	// FIXME - JavaDoc
 	public PrivateUserEntity verifyPasswordToken(String token) throws JwtKnowyException, UserNotFoundException {
 		PasswordResetInfo passwordResetInfo = jwtTools.decodeUnverified(token, PasswordResetInfo.class);
 		PrivateUserEntity privateUser = getPrivateUserById(passwordResetInfo.userId());
