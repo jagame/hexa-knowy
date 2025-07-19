@@ -28,5 +28,6 @@ server:
     error:
         whitelabel:
             enabled: false
-
-
+    servlet:
+        session:
+            timeout: 1m
