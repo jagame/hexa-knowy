@@ -268,18 +268,25 @@ public class PrivateUserService {
 	public MailMessage createDeletedAccountEmail(String email, String recoveryBaseUrl)
 		throws JwtKnowyException, UserNotFoundException {
 
+		final long THIRTY_DAYS_IN_MILLIS = 30L * 24 * 60 * 60 * 1000;
+
 		String subject = "Tu enlace para recuperar la cuenta de Knowy está aquí";
-		String token = createUserTokenByEmail(email);
+		String token = createUserTokenByEmail(email, THIRTY_DAYS_IN_MILLIS);
 		String body = reactivationTokenBody(token, recoveryBaseUrl);
 		return new MailMessage(email, subject, body);
 	}
 
-	private String createUserTokenByEmail(String email) throws UserNotFoundException, JwtKnowyException {
+	private String createUserTokenByEmail(String email, long tokenExpirationTime)
+		throws UserNotFoundException, JwtKnowyException {
 		PrivateUserEntity privateUser = findPrivateUserByEmail(email)
 			.orElseThrow(() -> new UserNotFoundException(String.format("The user with email %s was not found", email)));
 
 		PasswordResetInfo passwordResetInfo = new PasswordResetInfo(privateUser.getId(), privateUser.getEmail());
-		return jwtTools.encode(passwordResetInfo, privateUser.getPassword());
+		return jwtTools.encode(passwordResetInfo, privateUser.getPassword(), tokenExpirationTime);
+	}
+
+	private String createUserTokenByEmail(String email) throws UserNotFoundException, JwtKnowyException {
+		return createUserTokenByEmail(email, 600_000);
 	}
 
 	private String reactivationTokenBody(String token, String appUrl) {
