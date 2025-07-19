@@ -3,14 +3,16 @@ package com.knowy.server.service;
 import com.knowy.server.controller.dto.CourseCardDTO;
 import com.knowy.server.controller.exception.KnowyCourseSubscriptionException;
 import com.knowy.server.entity.*;
-import com.knowy.server.repository.CourseRepository;
-import com.knowy.server.repository.LanguageRepository;
-import com.knowy.server.repository.LessonRepository;
-import com.knowy.server.repository.PublicUserLessonRepository;
+import com.knowy.server.repository.ports.CourseRepository;
+import com.knowy.server.repository.ports.LanguageRepository;
+import com.knowy.server.repository.ports.LessonRepository;
+import com.knowy.server.repository.ports.PublicUserLessonRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class CourseSubscriptionService {
@@ -36,13 +38,47 @@ public class CourseSubscriptionService {
 	}
 
 	public List<CourseCardDTO> getRecommendedCourses(Integer userId) {
-		List<CourseEntity> allCourses = findAllCourses();
 		List<CourseEntity> userCourses = findCoursesByUserId(userId);
-		return allCourses.stream()
-			.filter(course -> !userCourses.contains(course))
+
+		List<Integer> userCourseIds = userCourses.stream()
+			.map(CourseEntity::getId)
+			.toList();
+
+		Set<String> userLanguages = userCourses.stream()
+			.flatMap(course -> findLanguagesForCourse(course).stream())
+			.collect(Collectors.toSet());
+
+		List<CourseEntity> allCourses = findAllCourses().stream()
+			.filter(course -> !userCourseIds.contains(course.getId()))
+			.toList();
+
+		List<CourseEntity> langMatching = allCourses.stream()
+			.filter(course -> {
+				List<String> courseLangs = findLanguagesForCourse(course);
+				return courseLangs.stream().anyMatch(userLanguages::contains);
+			}).toList();
+
+		List<CourseCardDTO> recommendations = langMatching.stream()
+			.limit(3)
 			.map(course -> CourseCardDTO.fromRecommendation(
 				course, findLanguagesForCourse(course), course.getCreationDate()))
-			.toList();
+			.collect(Collectors.toList());
+
+		if (recommendations.size() < 3) {
+			List<CourseEntity> remaining = allCourses.stream()
+				.filter(course -> !langMatching.contains(course))
+				.toList();
+
+			for(CourseEntity course : remaining){
+				if(recommendations.size() >= 3){
+					break;
+				}
+				recommendations.add(CourseCardDTO.fromRecommendation(
+					course, findLanguagesForCourse(course), course.getCreationDate()
+				));
+			}
+		}
+		return recommendations;
 	}
 
 	public void subscribeUserToCourse(Integer userId, Integer courseId) throws KnowyCourseSubscriptionException{

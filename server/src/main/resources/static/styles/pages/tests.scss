@@ -1,83 +1,153 @@
 @use '../global-vars' as *;
-@use '../components/navbar';
+@use '../components/cards-questionnaire/exercise-options';
+@use '../components/cards-questionnaire/quiz-header';
+@use '../components/cards-questionnaire/questionComponent';
 @use '../layouts/quiz-layout';
 
-
-body{
-	font-family:excalifont;
+body {
+	font-family: excalifont;
 }
 
 .test-container {
 	max-width: 800px;
 	margin: 2rem auto;
 	padding: 1.5rem;
-	background-color: $primary-300;
 	border-radius: 20px;
+	background-color: $primary-300;
 }
 
-.answers-container{
+.answers-container {
 	display: flex;
-	justify-content: center;
 	align-items: center;
-	margin:1em;
-}
-.question-container{
-	display: flex;
 	justify-content: center;
-	align-items: center;
-	margin:1em;
+	margin: 1em;
 }
 
-.answer-button{
-	text-align:center;
+.question-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 1em;
+}
+
+.answer-button {
+	text-align: center;
 
 	.answer-button__element {
-		width: 80%;
-		background-color: $primary-500;
-		color: white;
-		border: none;
-		padding: 0.8rem 1.5rem;
 		font-size: 1rem;
 		font-weight: bold;
-		border-radius: 15px;
+		width: 100%;
+		padding: 0.8rem 1.5rem;
 		cursor: pointer;
 		transition: background-color 0.3s;
+		color: white;
+		border: none;
+		border-radius: 15px;
+		background-color: $primary-500;
 
-		&:hover {
+		&:hover:enabled {
 			background-color: $primary-700;
 		}
+	}
+}
+
+.answer-button--fail {
+	font-size: 1rem;
+	font-weight: bold;
+	width: 100%;
+	padding: 0.5rem 1.5rem;
+	cursor: pointer;
+	transition: background-color 0.3s;
+	text-align: center;
+	color: white;
+	border: none;
+	border-radius: 15px;
+	background-color: $primary-500;
+	text-decoration: none;
+
+	&:hover {
+		background-color: $primary-700;
 	}
 }
 
 .navigation-buttons {
-	width:80%;
 	display: flex;
-	align-self:center;
+	align-self: center;
 	justify-content: space-between;
+	width: 80%;
 	margin: 1em auto 1em auto;
 
 	@media (max-width: 576px) {
-		flex-direction: row;
-		gap: 10px;
-		padding:0 10px;
 		align-items: center;
-		width:85%;
+		flex-direction: row;
+		width: 85%;
+		padding: 0 10px;
+		gap: 10px;
 	}
 
 	.navigation-buttons__element {
-		background-color: $primary-500;
-		color: white;
-		border: none;
-		padding: 0.8rem 1.5rem;
 		font-size: 1rem;
 		font-weight: bold;
-		border-radius: 15px;
+		padding: 0.8rem 1.5rem;
 		cursor: pointer;
 		transition: background-color 0.3s;
+		color: white;
+		border: none;
+		border-radius: 15px;
+		background-color: $primary-500;
 
 
 		&:hover {
 			background-color: $primary-700;
 		}
 	}
+
+
+}
+
+.modal-header {
+	display: flex;
+	justify-content: center;
+	color: white;
+	background-color: $primary-500;
+}
+
+.btn.btn-primary.happy,
+.btn.btn-primary.sad,
+.btn.btn-primary.empty {
+	display: flex;
+	flex-direction: row;
+	margin: auto;
+	text-align: center;
+	gap: 1em;
+}
+
+.modal-body.d-flex.flex-wrap.justify-content-evenly {
+	display: flex;
+	flex-direction: column;
+	margin: auto;
+	text-align: center;
+	gap: 1em;
+}
+
+.modal-buttons {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	gap: 1em;
+}
+
+.btn.btn-primary.happy {
+	text-decoration: none;
+	background-color: $info-600;
+}
+
+.btn.btn-primary.empty {
+	text-decoration: none;
+	background-color: $secundary-500;
+}
+
+.btn.btn-primary.sad {
+	text-decoration: none;
+	background-color: $neutral-700;
 }
