@@ -14,7 +14,7 @@ main{
 }
 
 //LESSON STYLES
-h2{
+h2, h3{
 	font-family: "caveat-brush", cursive;
 	color: $primary-500;
 }
@@ -22,26 +22,31 @@ h2{
 b{
 	color: $primary-500;
 }
-.code-example{
-	font-family: "inter", sans-serif;
+
+code{
+	background:none;
+	font-weight:bold;
+	font-size:medium;
 }
 
 table {
 	border-collapse: collapse; /* Une los bordes de las celdas */
 	width: 90%; /* Opcional: ajusta el ancho de la tabla */
-	margin:1em;
+	margin:0.5em;
 	align-self:center;
 }
 
 th, td {
 	border: 1px solid black; /* Añade un borde de 1 píxel sólido negro */
 	padding: 8px; /* Añade espacio interno a las celdas */
-	text-align: left; /* Alinea el texto a la izquierda */
+	text-align: justify;
 }
 
 .ol, ul, li{
 	font-size: medium;
 }
+
+//PAGE STYLES
 
 .img-head {
 	height: 300px;
