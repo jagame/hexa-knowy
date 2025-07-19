@@ -13,11 +13,11 @@
 
 <aside layout:fragment="sidebar" class="kn-aside user-sidebar">
 	<div class="user-info text-center mb-4">
-		<h3 class="mt-3 username-title" th:text="${username}">Usuario</h3>
+		<h3 class="mt-3 username-title" th:text="${#authentication.principal.publicUser.nickname}">Usuario</h3>
 	</div>
 	<div class="sidebar-menu">
 		<a th:href="@{/user-profile}" class="sidebar-link"  data-sidebar-toggler="">Editar Perfil</a>
-		<button  class="sidebar-link" data-sidebar-toggler="" th:classappend="active">Gestión de la Cuenta</button>
+		<a class="sidebar-link" th:href="@{/user-account}">Gestión de la Cuenta</a>
 	</div>
 </aside>
 
@@ -40,7 +40,7 @@
 			</div>
 			<div class="buttons-form-content">
 				<a th:href="@{/user-account}" class="btn btn-inferior">Cancelar</a>
-				<a th:href="@{/delete-account-end}" class="btn btn-delete">Continuar</a>
+				<a th:href="@{/delete-account-confirm}" class="btn btn-delete">Continuar</a>
 			</div>
 		</div>
 	</form>

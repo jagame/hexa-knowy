@@ -2,7 +2,6 @@ package com.knowy.server.controller;
 
 import com.knowy.server.controller.dto.UserConfigChangeEmailFormDto;
 import com.knowy.server.controller.dto.UserProfileDTO;
-import com.knowy.server.service.AccessService;
 import com.knowy.server.service.LanguageService;
 import com.knowy.server.service.UserFacadeService;
 import com.knowy.server.service.exception.*;
@@ -12,7 +11,6 @@ import com.knowy.server.util.exception.JwtKnowyException;
 import com.knowy.server.util.exception.MailDispatchException;
 import com.knowy.server.util.exception.WrongPasswordException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,7 +27,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class UserConfigController {
 
-	private final AccessService accessService;
+	private static final String ERROR_MODEL_ATTRIBUTE = "error";
+	private static final String SUCCESS_MODEL_ATTRIBUTE = "success";
+
 	private final UserFacadeService userFacadeService;
 	private final LanguageService languageService;
 	private final UserSecurityDetailsHelper userSecurityDetailsHelper;
@@ -42,11 +42,10 @@ public class UserConfigController {
 	 * @param userSecurityDetailsHelper the userSecurityDetailsHelper
 	 */
 	public UserConfigController(
-		AccessService accessService, UserFacadeService userFacadeService,
+		UserFacadeService userFacadeService,
 		LanguageService languageService,
 		UserSecurityDetailsHelper userSecurityDetailsHelper
 	) {
-		this.accessService = accessService;
 		this.userFacadeService = userFacadeService;
 		this.languageService = languageService;
 		this.userSecurityDetailsHelper = userSecurityDetailsHelper;
@@ -108,28 +107,27 @@ public class UserConfigController {
 		return "redirect:/user-account";
 	}
 
-	// Delete account
-	@GetMapping("/delete-account")
+	// TODO - JavaDoc
+	@GetMapping("/delete-account-advise")
 	public String deleteAccountForm(ModelMap interfaceScreen, @AuthenticationPrincipal UserSecurityDetails userDetails) {
 		interfaceScreen.addAttribute("username", userDetails.getPublicUser().getNickname());
 		return "pages/user-management/delete-account";
 	}
 
-	//Delete-Account-End (Finally deleting Account)
-	@GetMapping("/delete-account-end")
+	// TODO - JavaDoc
+	@GetMapping("/delete-account-confirm")
 	public String deleteAccountEnd(ModelMap interfaceScreen, @AuthenticationPrincipal UserSecurityDetails userDetails) {
 		interfaceScreen.addAttribute("username", userDetails.getPublicUser().getNickname());
-		return "pages/user-management/delete-account-end";
+		return "pages/user-management/delete-account-confirm";
 	}
 
-	@PostMapping("/delete-account-end")
+	// TODO - JavaDoc
+	@PostMapping("/delete-account-confirm")
 	public String deleteAccount(
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
-		@RequestParam String deletePassword,
+		@RequestParam String password,
 		@RequestParam String confirmPassword,
 		RedirectAttributes redirectAttributes,
-		HttpSession session,
-		ModelMap interfaceScreen,
 		HttpServletRequest request
 	) {
 		String email = userDetails.getUsername();
@@ -137,33 +135,23 @@ public class UserConfigController {
 		String recoveryBaseUrl = domainUrl + "/reactivate-account";
 
 		try {
-			accessService.deactivateUserAccount(email, deletePassword, confirmPassword, recoveryBaseUrl);
-			redirectAttributes.addFlashAttribute("success", "Tu cuenta ha sido desactivada correctamente. Dispones de 30 días para recuperarla.");
-			return "redirect:/";
+			userFacadeService.desactivateUserAccount(password, confirmPassword, email, recoveryBaseUrl);
+			redirectAttributes.addFlashAttribute(SUCCESS_MODEL_ATTRIBUTE,
+				"Tu cuenta ha sido desactivada correctamente. Dispones de 30 días para recuperarla.");
+			return "redirect:delete-advise";
 
 		} catch (WrongPasswordException e) {
-			interfaceScreen.addAttribute("error", "La contraseña es incorrecta o no coincide");
-			return "pages/user-management/delete-account-end";
+			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "La contraseña es incorrecta o no coincide");
+			return "redirect:delete-account-confirm";
 		} catch (MailDispatchException e) {
-			interfaceScreen.addAttribute("error", "Error al enviar el email");
-			return "pages/user-management/delete-account-end";
+			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Error al enviar el email");
+			return "redirect:delete-account-confirm";
 		} catch (JwtKnowyException e) {
-			interfaceScreen.addAttribute("error", "Error al recuperar el token");
-			return "pages/user-management/delete-account-end";
-		}
-	}
-
-	@GetMapping("/reactivate-account")
-	public String reactivateAccount(@RequestParam("token") String token, Model model) {
-
-		try {
-			accessService.reactivateUserAccount(token);
-			model.addAttribute("success", "Tu cuenta ha sido reactivada correctamente.");
-			return "pages/user-management/account-reactivation";
-
-		} catch (JwtKnowyException e) {
-			model.addAttribute("error", "El token ha expirado o no es válido");
-			return "error/error";
+			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Error al recuperar el token");
+			return "redirect:delete-account-confirm";
+		} catch (UserNotFoundException e) {
+			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado");
+			return "redirect:delete-account-confirm";
 		}
 	}
 
@@ -174,7 +162,32 @@ public class UserConfigController {
 		return scheme + "://" + serverName + ":" + serverPort;
 	}
 
-	//User-Profile
+
+	// TODO - JavaDoc
+	@GetMapping("/reactivate-account")
+	public String reactivateAccount(@RequestParam("token") String token, Model model) {
+
+		try {
+			userFacadeService.reactivateUserAccount(token);
+			model.addAttribute(SUCCESS_MODEL_ATTRIBUTE, "Tu cuenta ha sido reactivada correctamente.");
+			return "pages/user-management/account-reactivation";
+
+		} catch (JwtKnowyException e) {
+			model.addAttribute(ERROR_MODEL_ATTRIBUTE, "El token ha expirado o no es válido");
+			return "error/error";
+		} catch (UserNotFoundException e) {
+			model.addAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado");
+			return "error/error";
+		}
+	}
+
+	// TODO - JavaDoc
+	@GetMapping("delete-advise")
+	public String deleteAdvise() {
+		return "pages/user-management/account-reactivation";
+	}
+
+	// TODO - JavaDoc
 	@GetMapping("/user-profile")
 	public String viewUserProfile(Model model, UserProfileDTO userProfileDTO, @AuthenticationPrincipal UserSecurityDetails userDetails) {
 		Hibernate.initialize(userDetails.getPublicUser().getLanguages());
@@ -183,6 +196,7 @@ public class UserConfigController {
 		return "pages/user-management/user-profile";
 	}
 
+	// TODO - JavaDoc
 	@PostMapping("/update-user-profile")
 	public String updateUserProfile(
 		@ModelAttribute("profileDto") UserProfileDTO userProfileDTO,
@@ -195,16 +209,16 @@ public class UserConfigController {
 				userFacadeService.updateNickname(newNickname, userDetails.getPublicUser().getId());
 				redirectAttributes.addFlashAttribute("username", newNickname);
 			} catch (UserNotFoundException e) {
-				redirectAttributes.addFlashAttribute("error", "Usuario no encontrado.");
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado.");
 				return "redirect:/user-profile";
 			} catch (UnchangedNicknameException e) {
-				redirectAttributes.addFlashAttribute("error", "El nuevo nombre debe ser diferente al actual.");
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "El nuevo nombre debe ser diferente al actual.");
 				return "redirect:/user-profile";
 			} catch (NicknameAlreadyTakenException e) {
-				redirectAttributes.addFlashAttribute("error", "El nombre ya está en uso.");
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "El nombre ya está en uso.");
 				return "redirect:/user-profile";
 			} catch (InvalidUserNicknameException e) {
-				redirectAttributes.addFlashAttribute("error", "No se permiten apodos en blanco o vacíos.");
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "No se permiten apodos en blanco o vacíos.");
 				return "redirect:/user-profile";
 			}
 		}
@@ -215,13 +229,13 @@ public class UserConfigController {
 				redirectAttributes.addFlashAttribute("profilePicture", userProfileDTO.getProfilePictureId());
 				redirectAttributes.addFlashAttribute("profilePictureUrl", userDetails.getPublicUser().getProfileImage().getUrl());
 			} catch (ImageNotFoundException e) {
-				redirectAttributes.addFlashAttribute("error", "Aún no existe una imagen de perfil");
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Aún no existe una imagen de perfil");
 				return "redirect:/user-profile";
 			} catch (UnchangedImageException e) {
-				redirectAttributes.addFlashAttribute("error", "La imagen debe ser diferente a la actual.");
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "La imagen debe ser diferente a la actual.");
 				return "redirect:/user-profile";
 			} catch (UserNotFoundException e) {
-				redirectAttributes.addFlashAttribute("error", "Usuario no encontrado");
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado");
 				return "redirect:/user-profile";
 			}
 		}
@@ -232,10 +246,10 @@ public class UserConfigController {
 		try {
 			userFacadeService.updateLanguages(userDetails.getPublicUser().getId(), newLanguages);
 		} catch (UserNotFoundException e) {
-			redirectAttributes.addFlashAttribute("error", "Usuario no encontrado");
+			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado");
 		}
 
-		redirectAttributes.addFlashAttribute("success", "Perfil actualizado correctamente");
+		redirectAttributes.addFlashAttribute(SUCCESS_MODEL_ATTRIBUTE, "Perfil actualizado correctamente");
 		redirectAttributes.addFlashAttribute("nickname", userProfileDTO.getNickname());
 		redirectAttributes.addFlashAttribute("languages", userProfileDTO.getLanguages());
 

@@ -173,4 +173,21 @@ public class UserFacadeService {
 		MailMessage mailMessage = privateUserService.createRecoveryPasswordEmail(email, recoveryBaseUrl);
 		emailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
 	}
+
+	// TODO - JavaDoc
+	public void desactivateUserAccount(
+		String password,
+		String confirmPassword,
+		String email,
+		String recoveryBaseUrl
+	) throws UserNotFoundException, JwtKnowyException, MailDispatchException, WrongPasswordException {
+		privateUserService.deactivateUserAccount(email, password, confirmPassword);
+		MailMessage mailMessage = privateUserService.createDeletedAccountEmail(email, recoveryBaseUrl);
+		emailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
+	}
+
+	// TODO - JavaDoc
+	public void reactivateUserAccount(String token) throws UserNotFoundException, JwtKnowyException {
+		privateUserService.reactivateUserAccount(token);
+	}
 }
