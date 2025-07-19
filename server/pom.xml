@@ -174,7 +174,7 @@
 					</execution>
 					<execution>
 						<id>report</id>
-						<phase>verify</phase> <!-- O 'prepare-package', pero 'verify' es más común -->
+						<phase>verify</phase>
 						<goals>
 							<goal>report</goal>
 						</goals>
