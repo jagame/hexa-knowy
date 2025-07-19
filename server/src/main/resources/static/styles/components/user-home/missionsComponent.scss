@@ -72,6 +72,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	width: 100%;
 }
 
 /*.actions-footer__language-selector-container {
@@ -110,7 +111,7 @@
 
 
 .actions-footer__quick-match-button {
-	display: flex;
+	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	gap: 0.5rem;
@@ -126,9 +127,11 @@
 	border: none;
 	border-radius: $radius-25;
 	background-color: $primary-500;
+	text-decoration: none;
 }
 
 
 .actions-footer__quick-match-button:hover {
 	background-color: $primary-700;
+	text-decoration: none;
 }

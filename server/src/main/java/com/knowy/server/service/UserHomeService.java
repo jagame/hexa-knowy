@@ -31,8 +31,4 @@ public class UserHomeService {
 			: (int) Math.round((coursesCompleted * 100.0) / totalCourses);
 	}
 
-
-
-
-
 }

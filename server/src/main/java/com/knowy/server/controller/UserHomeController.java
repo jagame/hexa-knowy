@@ -5,8 +5,6 @@ import com.knowy.server.controller.dto.NewsHomeDto;
 import com.knowy.server.service.UserHomeService;
 import com.knowy.server.service.model.UserSecurityDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import com.knowy.server.service.model.UserSecurityDetails;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
