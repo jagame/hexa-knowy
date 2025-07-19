@@ -72,7 +72,8 @@ public class SecurityConfiguration {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(request -> request
 			.requestMatchers("/fonts/**", "/scripts/**", "/styles/**", "/images/**", "/error/**", "/favicon.ico").permitAll()
-			.requestMatchers("/", "/login", "/register", "/password-change/email", "/password-change").permitAll()
+			.requestMatchers("/", "/login", "/register", "/password-change/email", "/password-change",
+				"/actuator/health", "/actuator/info").permitAll()
 			.anyRequest().authenticated()
 		);
 

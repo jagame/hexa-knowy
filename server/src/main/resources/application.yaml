@@ -31,3 +31,9 @@ server:
     servlet:
         session:
             timeout: 1m
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: health,info
