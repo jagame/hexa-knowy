@@ -123,6 +123,14 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>5.18.0</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -166,12 +174,15 @@
 					</execution>
 					<execution>
 						<id>report</id>
-						<phase>prepare-package</phase>
+						<phase>verify</phase> <!-- O 'prepare-package', pero 'verify' es más común -->
 						<goals>
 							<goal>report</goal>
 						</goals>
 						<configuration>
 							<outputDirectory>${project.build.directory}/jacoco-report</outputDirectory>
+							<formats>
+								<format>XML</format>
+							</formats>
 						</configuration>
 					</execution>
 				</executions>

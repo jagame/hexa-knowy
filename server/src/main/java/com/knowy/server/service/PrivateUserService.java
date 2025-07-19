@@ -129,32 +129,10 @@ public class PrivateUserService {
 			throw new JwtKnowyException("Passwords do not match");
 		}
 
-		PrivateUserEntity privateUser = verifyPasswordResetToken(token);
+		PrivateUserEntity privateUser = verifyPasswordToken(token);
 
 		privateUser.setPassword(passwordEncoder.encode(password));
 		save(privateUser);
-	}
-
-	/**
-	 * Verifies the authenticity and validity of a password reset token and retrieves the corresponding user.
-	 *
-	 * <p>Performs two levels of decoding:
-	 * <ul>
-	 *   <li>First, an unverified decoding to extract the user ID from the token payload.</li>
-	 *   <li>Second, a verified decoding using the user's password as the JWT secret to confirm token validity.</li>
-	 * </ul>
-	 * If both succeed, returns the user associated with the token.</p>
-	 *
-	 * @param token the JWT token to verify
-	 * @return the {@code PrivateUserEntity} associated with the token
-	 * @throws JwtKnowyException     if the token is invalid, expired, or tampered with
-	 * @throws UserNotFoundException if no user exists for the extracted user ID
-	 */
-	public PrivateUserEntity verifyPasswordResetToken(String token) throws JwtKnowyException, UserNotFoundException {
-		PasswordResetInfo passwordResetInfo = jwtTools.decodeUnverified(token, PasswordResetInfo.class);
-		PrivateUserEntity privateUser = getPrivateUserById(passwordResetInfo.userId());
-		jwtTools.decode(privateUser.getPassword(), token, PasswordResetInfo.class);
-		return privateUser;
 	}
 
 	/**
@@ -176,7 +154,7 @@ public class PrivateUserService {
 	public boolean isValidToken(String token) throws UserNotFoundException {
 		try {
 			Objects.requireNonNull(token, "A not null token is required");
-			verifyPasswordResetToken(token);
+			verifyPasswordToken(token);
 			return true;
 		} catch (JwtKnowyException e) {
 			return false;
@@ -266,14 +244,6 @@ public class PrivateUserService {
 		return new MailMessage(email, subject, body);
 	}
 
-	private String createUserTokenByEmail(String email) throws UserNotFoundException, JwtKnowyException {
-		PrivateUserEntity privateUser = findPrivateUserByEmail(email)
-			.orElseThrow(() -> new UserNotFoundException(String.format("The user with email %s was not found", email)));
-
-		PasswordResetInfo passwordResetInfo = new PasswordResetInfo(privateUser.getId(), privateUser.getEmail());
-		return jwtTools.encode(passwordResetInfo, privateUser.getPassword());
-	}
-
 	private String tokenBody(String token, String appUrl) {
 		String url = "%s?token=%s".formatted(appUrl, token);
 		return """
@@ -292,5 +262,127 @@ public class PrivateUserService {
 			---
 			© 2025 KNOWY, Inc
 			""".formatted(url);
+	}
+
+	/**
+	 * Creates an email message with a recovery link for a deleted user account. The recovery link contains a token that
+	 * expires after 30 days.
+	 *
+	 * @param email           the email address of the user whose account was deleted
+	 * @param recoveryBaseUrl the base URL used to generate the account recovery link
+	 * @return a {@link MailMessage} containing the recovery email details (receiver, subject, and body)
+	 * @throws JwtKnowyException     if an error occurs while encoding the JWT token
+	 * @throws UserNotFoundException if no user is found for the given email
+	 */
+	public MailMessage createDeletedAccountEmail(String email, String recoveryBaseUrl)
+		throws JwtKnowyException, UserNotFoundException {
+
+		final long THIRTY_DAYS_IN_MILLIS = 30L * 24 * 60 * 60 * 1000;
+
+		String subject = "Tu enlace para recuperar la cuenta de Knowy está aquí";
+		String token = createUserTokenByEmail(email, THIRTY_DAYS_IN_MILLIS);
+		String body = reactivationTokenBody(token, recoveryBaseUrl);
+		return new MailMessage(email, subject, body);
+	}
+
+	private String createUserTokenByEmail(String email, long tokenExpirationTime)
+		throws UserNotFoundException, JwtKnowyException {
+		PrivateUserEntity privateUser = findPrivateUserByEmail(email)
+			.orElseThrow(() -> new UserNotFoundException(String.format("The user with email %s was not found", email)));
+
+		PasswordResetInfo passwordResetInfo = new PasswordResetInfo(privateUser.getId(), privateUser.getEmail());
+		return jwtTools.encode(passwordResetInfo, privateUser.getPassword(), tokenExpirationTime);
+	}
+
+	private String createUserTokenByEmail(String email) throws UserNotFoundException, JwtKnowyException {
+		return createUserTokenByEmail(email, 600_000);
+	}
+
+	private String reactivationTokenBody(String token, String appUrl) {
+		String url = "%s?token=%s".formatted(appUrl, token);
+		return """
+			¡Hola, %%$@€#&%%$%%!
+			
+			Tu cuenta de KNOWY ha sido desactivada correctamente.
+			
+			Dispones de 30 días para recuperarla haciendo click en el siguiente enlace:
+			
+			%s
+			
+			Una vez transcurrido este tiempo, tu cuenta será eliminada definitivamente.
+			
+			¡Esperamos verte de vuelta!
+			
+			© 2025 KNOWY, Inc
+			""".formatted(url);
+	}
+
+	/**
+	 * Deactivates a user account by verifying the provided password and confirmation password.
+	 *
+	 * @param email           the email address of the user whose account will be deactivated
+	 * @param password        the password entered by the user for verification
+	 * @param confirmPassword the confirmation password to ensure correctness
+	 * @throws WrongPasswordException if the passwords do not match or the password is incorrect
+	 * @throws UserNotFoundException  if no user is found for the given email
+	 */
+	public void deactivateUserAccount(
+		String email,
+		String password,
+		String confirmPassword
+	) throws WrongPasswordException, UserNotFoundException {
+		if (!password.equals(confirmPassword)) {
+			throw new WrongPasswordException("Passwords do not match");
+		}
+
+		PrivateUserEntity privateUserEntity = findPrivateUserByEmail(email)
+			.orElseThrow(() -> new UserNotFoundException("User not found"));
+
+		passwordChecker.assertHasPassword(privateUserEntity, password);
+
+		privateUserEntity.setActive(false);
+		privateUserRepository.save(privateUserEntity);
+	}
+
+	/**
+	 * Reactivates a user account based on a valid token.
+	 *
+	 * @param token the JWT token used to verify the reactivation request
+	 * @throws JwtKnowyException     if the token is invalid or cannot be processed
+	 * @throws UserNotFoundException if no user is associated with the token
+	 */
+	public void reactivateUserAccount(String token) throws JwtKnowyException, UserNotFoundException {
+		if (!isValidToken(token)) {
+			throw new JwtKnowyException("Invalid token");
+		}
+
+		PrivateUserEntity privateUserEntity = verifyPasswordToken(token);
+
+		if (!privateUserEntity.isActive()) {
+			privateUserEntity.setActive(true);
+			privateUserRepository.save(privateUserEntity);
+		}
+	}
+
+	/**
+	 * Verifies the authenticity and validity of a password reset token and retrieves the associated user.
+	 *
+	 * <p>This method performs two decoding steps:
+	 * <ol>
+	 *   <li>Unverified decoding to extract the user ID from the token payload.</li>
+	 *   <li>Verified decoding using the user's password as the secret key to validate the token's integrity and expiration.</li>
+	 * </ol>
+	 * If both steps succeed, the method returns the corresponding {@code PrivateUserEntity}.</p>
+	 *
+	 * @param token the JWT token to verify
+	 * @return the {@code PrivateUserEntity} linked to the token
+	 * @throws JwtKnowyException     if the token is invalid, expired, or has been tampered with
+	 * @throws UserNotFoundException if no user exists for the extracted user ID
+	 */
+	public PrivateUserEntity verifyPasswordToken(String token) throws JwtKnowyException, UserNotFoundException {
+		PasswordResetInfo passwordResetInfo = jwtTools.decodeUnverified(token, PasswordResetInfo.class);
+		PrivateUserEntity privateUser = getPrivateUserById(passwordResetInfo.userId());
+		jwtTools.decode(privateUser.getPassword(), token, PasswordResetInfo.class);
+		return privateUser;
 	}
 }
