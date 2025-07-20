@@ -29,7 +29,7 @@ public interface JpaPublicUserLessonRepository extends PublicUserLessonRepositor
 
 
 	@Override
-	boolean existsById(PublicUserLessonIdEntity id);
+	boolean existsById(@NonNull PublicUserLessonIdEntity id);
 
 	@Override
 	@NonNull

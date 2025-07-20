@@ -6,7 +6,6 @@ import com.knowy.server.controller.dto.LinksLessonDto;
 import com.knowy.server.controller.dto.SolutionDto;
 import com.knowy.server.entity.DocumentationEntity;
 import com.knowy.server.entity.PublicUserLessonEntity;
-import com.knowy.server.service.CourseSubscriptionService;
 import com.knowy.server.service.PublicUserLessonService;
 import com.knowy.server.service.model.UserSecurityDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,11 +23,9 @@ import java.util.Objects;
 @RequestMapping("/course")
 public class LessonController {
 
-	private final CourseSubscriptionService courseService;
 	private final PublicUserLessonService publicUserLessonService;
 
-	public LessonController(CourseSubscriptionService courseService, PublicUserLessonService publicUserLessonService) {
-		this.courseService = courseService;
+	public LessonController(PublicUserLessonService publicUserLessonService) {
 		this.publicUserLessonService = publicUserLessonService;
 	}
 

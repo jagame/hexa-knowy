@@ -1,13 +1,17 @@
 package com.knowy.server.service;
 
-import com.knowy.server.controller.dto.*;
+import com.knowy.server.controller.dto.CourseCardDTO;
 import com.knowy.server.controller.exception.KnowyCourseSubscriptionException;
 import com.knowy.server.entity.*;
-import com.knowy.server.repository.ports.*;
+import com.knowy.server.repository.ports.CourseRepository;
+import com.knowy.server.repository.ports.LanguageRepository;
+import com.knowy.server.repository.ports.LessonRepository;
+import com.knowy.server.repository.ports.PublicUserLessonRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -16,14 +20,17 @@ public class CourseSubscriptionService {
 	private final LessonRepository lessonRepository;
 	private final PublicUserLessonRepository publicUserLessonRepository;
 	private final LanguageRepository languageRepository;
-	private final ExerciseRepository exerciseRepository;
 
-	public CourseSubscriptionService(CourseRepository courseRepository, LessonRepository lessonRepository, PublicUserLessonRepository publicUserLessonRepository, LanguageRepository languageRepository, ExerciseRepository exerciseRepository) {
+	public CourseSubscriptionService(
+		CourseRepository courseRepository,
+		LessonRepository lessonRepository,
+		PublicUserLessonRepository publicUserLessonRepository,
+		LanguageRepository languageRepository
+	) {
 		this.courseRepository = courseRepository;
 		this.lessonRepository = lessonRepository;
 		this.publicUserLessonRepository = publicUserLessonRepository;
 		this.languageRepository = languageRepository;
-		this.exerciseRepository = exerciseRepository;
 	}
 
 	public List<CourseCardDTO> getUserCourses(Integer userId) {
@@ -125,50 +132,6 @@ public class CourseSubscriptionService {
 			.stream()
 			.map(LanguageEntity::getName)
 			.toList();
-	}
-
-	public CourseEntity getCourseById(Integer courseId) {
-		return courseRepository.findById(courseId)
-			.orElseThrow(() -> new RuntimeException("Curso no encontrado"));
-	}
-
-	public List<LessonEntity> getLessonsByCourseId(Integer courseId) {
-		return lessonRepository.findByCourseId(courseId);
-	}
-
-	public String getLessonStatus(Integer userId, Integer lessonId) {
-		return publicUserLessonRepository.findById(new PublicUserLessonIdEntity(userId, lessonId))
-			.map(PublicUserLessonEntity::getStatus)
-			.orElse("blocked");
-	}
-
-	public LessonEntity getLessonById(Integer lessonId) {
-		return lessonRepository.findById(lessonId)
-			.orElseThrow(() -> new RuntimeException("Lección no encontrada"));
-	}
-
-	public int findLessonIndexByTitle(List<LessonEntity> lessons, String title) {
-		for (int i = 0; i < lessons.size(); i++) {
-			if (lessons.get(i).getTitle().equalsIgnoreCase(title)) return i;
-		}
-		throw new RuntimeException("No se encontró la lección");
-	}
-
-	public List<DocumentationEntity> getLessonDocumentsRaw(Integer lessonId) {
-		LessonEntity lesson = lessonRepository.findById(lessonId)
-			.orElseThrow(() -> new RuntimeException("Lección no encontrada"));
-		return Optional.ofNullable(lesson.getDocumentations()).orElse(List.of());
-	}
-
-	public List<DocumentationEntity> getAllCourseDocumentsRaw(Integer courseId) {
-		return lessonRepository.findByCourseId(courseId).stream()
-			.flatMap(lesson -> Optional.ofNullable(lesson.getDocumentations()).stream().flatMap(Collection::stream))
-			.distinct()
-			.toList();
-	}
-
-	public List<ExerciseEntity> getLessonExercises(Integer lessonId) {
-		return exerciseRepository.findByLessonId(lessonId);
 	}
 }
 

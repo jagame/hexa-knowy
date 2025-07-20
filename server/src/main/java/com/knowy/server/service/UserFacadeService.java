@@ -2,15 +2,14 @@ package com.knowy.server.service;
 
 import com.knowy.server.entity.PrivateUserEntity;
 import com.knowy.server.entity.PublicUserEntity;
-import com.knowy.server.entity.PublicUserExerciseEntity;
 import com.knowy.server.service.exception.*;
-import com.knowy.server.service.model.ExerciseDifficult;
 import com.knowy.server.service.model.MailMessage;
 import com.knowy.server.util.EmailClientTool;
-import com.knowy.server.util.exception.*;
+import com.knowy.server.util.exception.JwtKnowyException;
+import com.knowy.server.util.exception.MailDispatchException;
+import com.knowy.server.util.exception.PasswordFormatException;
+import com.knowy.server.util.exception.WrongPasswordException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class UserFacadeService {
@@ -18,25 +17,22 @@ public class UserFacadeService {
 	private final EmailClientTool emailClientTool;
 	private final PrivateUserService privateUserService;
 	private final PublicUserService publicUserService;
-	private final PublicUserExerciseService publicUserExerciseService;
 
 	/**
 	 * The constructor
 	 *
-	 * @param emailClientTool           the emailClientService
-	 * @param privateUserService        the privateUserService
-	 * @param publicUserService         the publicUserService
-	 * @param publicUserExerciseService the publicUserExerciseService
+	 * @param emailClientTool    the emailClientService
+	 * @param privateUserService the privateUserService
+	 * @param publicUserService  the publicUserService
 	 */
 	public UserFacadeService(
 		EmailClientTool emailClientTool,
 		PrivateUserService privateUserService,
-		PublicUserService publicUserService,
-		PublicUserExerciseService publicUserExerciseService) {
+		PublicUserService publicUserService
+	) {
 		this.emailClientTool = emailClientTool;
 		this.privateUserService = privateUserService;
 		this.publicUserService = publicUserService;
-		this.publicUserExerciseService = publicUserExerciseService;
 	}
 
 	/**
