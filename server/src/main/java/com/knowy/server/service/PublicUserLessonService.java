@@ -35,7 +35,15 @@ public class PublicUserLessonService {
 		return publicUserLessonRepository.findById(new PublicUserLessonIdEntity(userId, lessonId));
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Retrieves all {@link PublicUserLessonEntity} records for a given user and course.
+	 *
+	 * <p>This method returns the user's progress across all lessons within the specified course.</p>
+	 *
+	 * @param userId   The ID of the user.
+	 * @param courseId The ID, of course.
+	 * @return A list of {@link PublicUserLessonEntity} representing the user's lesson data for the course.
+	 */
 	public List<PublicUserLessonEntity> findAllByCourseId(int userId, int courseId) {
 		return publicUserLessonRepository.findAllByCourseId(userId, courseId);
 	}

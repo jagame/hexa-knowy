@@ -29,7 +29,18 @@ public class LessonController {
 		this.publicUserLessonService = publicUserLessonService;
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Handles the request to display the course introduction page for a specific course.
+	 *
+	 * <p>This method gathers all the user's lesson progress for the specified course,
+	 * builds the corresponding DTOs for course, lessons, and related documentation, and populates the model with the
+	 * necessary attributes to render the introduction view.</p>
+	 *
+	 * @param userDetails The authenticated user details.
+	 * @param courseId    The ID of the course being accessed.
+	 * @param model       The Spring MVC model to pass data to the view.
+	 * @return The name of the Thymeleaf template for the course introduction page.
+	 */
 	@GetMapping("/{courseId}")
 	public String courseIntro(
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
@@ -77,7 +88,19 @@ public class LessonController {
 			.orElseThrow();
 	}
 
-	// TODO - JavaDoc
+	/**
+	 * Handles the request to display a specific lesson within a course.
+	 *
+	 * <p>This method retrieves the current user's progress in the specified course,
+	 * identifies the selected lesson, builds the necessary DTOs (lessons, course, documentation, and solutions), and
+	 * populates the model to render the lesson explanation view.</p>
+	 *
+	 * @param userDetails The authenticated user's security details.
+	 * @param courseId    The ID, of course.
+	 * @param lessonId    The ID of the lesson to display.
+	 * @param model       The Spring MVC model used to pass attributes to the view.
+	 * @return The name of the Thymeleaf template for the lesson explanation page.
+	 */
 	@GetMapping("/{courseId}/lesson/{lessonId}")
 	public String lesson(
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
