@@ -1,16 +1,31 @@
 package com.knowy.server.controller.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.knowy.server.entity.ExerciseEntity;
+import com.knowy.server.entity.OptionEntity;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class SolutionDto {
-	private String cardTitle;
-	private String question;
-	private String answer;
+import java.util.Collection;
+import java.util.List;
+
+public record SolutionDto(
+	String cardTitle,
+	String question,
+	List<String> answer
+) {
+
+	public static List<SolutionDto> fromEntities(Collection<ExerciseEntity> exercises) {
+		return exercises.stream()
+			.map(SolutionDto::fromEntity)
+			.toList();
+	}
+
+	public static SolutionDto fromEntity(ExerciseEntity exercise) {
+		return new SolutionDto(
+			"Ejercicio ",
+			exercise.getQuestion(),
+			exercise.getOptions().stream()
+				.filter(OptionEntity::isCorrect)
+				.map(OptionEntity::getOptionText)
+				.toList()
+		);
+	}
 }

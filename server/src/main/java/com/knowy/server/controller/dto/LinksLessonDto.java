@@ -1,8 +1,11 @@
 package com.knowy.server.controller.dto;
 
 import com.knowy.server.entity.DocumentationEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.Collection;
 import java.util.List;
 
 @Data
@@ -13,6 +16,13 @@ public class LinksLessonDto {
 	private String linkUrl;
 	private LinkType type;
 	private String fileName;
+
+	public static List<LinksLessonDto> fromEntities(Collection<DocumentationEntity> docs) {
+		return docs.stream()
+			.map(LinksLessonDto::fromEntity)
+			.distinct()
+			.toList();
+	}
 
 	public static LinksLessonDto fromEntity(DocumentationEntity doc) {
 		boolean isExternal = doc.getLink().startsWith("http");
@@ -28,7 +38,7 @@ public class LinksLessonDto {
 		);
 	}
 
-	public enum LinkType{
+	public enum LinkType {
 		EXTERNAL,
 		DOCUMENT
 	}

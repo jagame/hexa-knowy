@@ -2,6 +2,8 @@ package com.knowy.server.controller.dto;
 
 import com.knowy.server.entity.PublicUserLessonEntity;
 
+import java.util.List;
+
 public record LessonDto(
         int id,
         String title,
@@ -9,6 +11,12 @@ public record LessonDto(
         String duration,
         LessonStatus status
 ) {
+
+    public static List<LessonDto> fromEntities(List<PublicUserLessonEntity> userLessons) {
+        return userLessons.stream()
+                .map(LessonDto::fromEntity)
+                .toList();
+    }
 
     public static LessonDto fromEntity(PublicUserLessonEntity userLesson) {
         return new LessonDto(
