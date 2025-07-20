@@ -91,20 +91,6 @@ public class PublicUserExerciseService {
 		return publicUserExerciseRepository.findById(new PublicUserExerciseId(userId, exerciseId));
 	}
 
-
-	/**
-	 * Retrieves a PublicUserExerciseEntity by user ID and exercise ID.
-	 *
-	 * @param userId     the ID of the user
-	 * @param exerciseId the ID of the exercise
-	 * @return the PublicUserExerciseEntity for the given user and exercise
-	 * @throws ExerciseNotFoundException if no exercise is found for the given user and exercise IDs
-	 */
-	public PublicUserExerciseEntity getById(int userId, int exerciseId) throws ExerciseNotFoundException {
-		return findById(userId, exerciseId)
-			.orElseThrow(() -> new ExerciseNotFoundException("Exercise ID " + exerciseId + " not found for user ID " + userId));
-	}
-
 	/**
 	 * Retrieves the PublicUserExerciseEntity for a given user and exercise. If it does not exist, create a new one.
 	 *
