@@ -4,6 +4,9 @@ import com.knowy.server.controller.dto.CourseDto;
 import com.knowy.server.controller.dto.LessonDto;
 import com.knowy.server.controller.dto.LinksLessonDto;
 import com.knowy.server.controller.dto.SolutionDto;
+import com.knowy.server.controller.exception.CurrentLessonNotFoundException;
+import com.knowy.server.controller.exception.NextLessonNotFoundException;
+import com.knowy.server.controller.exception.NoCompletedLessonFoundException;
 import com.knowy.server.entity.DocumentationEntity;
 import com.knowy.server.entity.PublicUserLessonEntity;
 import com.knowy.server.service.PublicUserLessonService;
@@ -45,7 +48,7 @@ public class LessonController {
 	public String courseIntro(
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		@PathVariable Integer courseId, Model model
-	) {
+	) throws NextLessonNotFoundException, NoCompletedLessonFoundException {
 		List<PublicUserLessonEntity> publicUserLesson = getAllPublicUserLessons(userDetails.getPublicUser().getId(), courseId);
 		List<LessonDto> lessonsDto = LessonDto.fromEntities(publicUserLesson);
 		List<LinksLessonDto> documentationDto = LinksLessonDto.fromEntities(getAllLessonDocumentations(publicUserLesson));
@@ -63,7 +66,7 @@ public class LessonController {
 		Model model, CourseDto courseDto,
 		List<LessonDto> lessonsDto,
 		List<LinksLessonDto> documentationDto
-	) {
+	) throws NextLessonNotFoundException, NoCompletedLessonFoundException {
 		model.addAttribute("course", courseDto);
 		model.addAttribute("lessons", courseDto.lessons());
 		model.addAttribute("lastLesson", getLastCompletedIndex(lessonsDto));
@@ -80,12 +83,12 @@ public class LessonController {
 			.toList();
 	}
 
-	private int getNextLessonId(List<LessonDto> lessons) {
+	private int getNextLessonId(List<LessonDto> lessons) throws NextLessonNotFoundException {
 		return lessons.stream()
 			.filter(lesson -> lesson.status() == LessonDto.LessonStatus.NEXT_LESSON)
 			.findFirst()
 			.map(LessonDto::id)
-			.orElseThrow();
+			.orElseThrow(() -> new NextLessonNotFoundException("No fue posible identificar la próxima lección en el curso actual."));
 	}
 
 	/**
@@ -107,7 +110,7 @@ public class LessonController {
 		@PathVariable Integer courseId,
 		@PathVariable Integer lessonId,
 		Model model
-	) {
+	) throws CurrentLessonNotFoundException, NoCompletedLessonFoundException {
 		List<PublicUserLessonEntity> publicUserLessons = getAllPublicUserLessons(userDetails.getPublicUser().getId(), courseId);
 		List<LessonDto> lessonsDto = LessonDto.fromEntities(publicUserLessons);
 
@@ -129,11 +132,11 @@ public class LessonController {
 			.findAllByCourseId(userId, courseId);
 	}
 
-	private PublicUserLessonEntity getCurrentPublicUserLesson(List<PublicUserLessonEntity> userLessons, int currentLessonId) {
+	private PublicUserLessonEntity getCurrentPublicUserLesson(List<PublicUserLessonEntity> userLessons, int currentLessonId) throws CurrentLessonNotFoundException {
 		return userLessons.stream()
 			.filter(lesson -> Objects.equals(lesson.getLessonId(), currentLessonId))
 			.findFirst()
-			.orElseThrow();
+			.orElseThrow(() -> new CurrentLessonNotFoundException("Lección actual no encontrada"));
 	}
 
 	private void populateLesson(
@@ -143,7 +146,7 @@ public class LessonController {
 		List<LessonDto> lessonsDto,
 		List<LinksLessonDto> documentationDto,
 		List<SolutionDto> solutions
-	) {
+	) throws NoCompletedLessonFoundException {
 		model.addAttribute("course", courseDto);
 		model.addAttribute("lesson", LessonDto.fromEntity(currentUserLesson));
 		model.addAttribute("lessonContent", currentUserLesson.getLessonEntity().getExplanation());
@@ -154,12 +157,12 @@ public class LessonController {
 		model.addAttribute("solutions", solutions);
 	}
 
-	private int getLastCompletedIndex(List<LessonDto> lessons) {
+	private int getLastCompletedIndex(List<LessonDto> lessons) throws NoCompletedLessonFoundException {
 		return lessons.reversed()
 			.stream()
 			.filter(lesson -> lesson.status() == LessonDto.LessonStatus.COMPLETE)
 			.findFirst()
 			.map(LessonDto::id)
-			.orElseThrow();
+			.orElseThrow(() -> new NoCompletedLessonFoundException("No se encontró ninguna lección completada."));
 	}
 }
