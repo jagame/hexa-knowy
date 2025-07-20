@@ -6,13 +6,13 @@ import com.knowy.server.repository.ports.PublicUserLessonRepository;
 import com.knowy.server.service.exception.PublicUserLessonException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class PublicUserLessonService {
 
 	private final PublicUserLessonRepository publicUserLessonRepository;
-
 
 	/**
 	 * The constructor
@@ -33,6 +33,11 @@ public class PublicUserLessonService {
 	 */
 	public Optional<PublicUserLessonEntity> findById(int userId, int lessonId) {
 		return publicUserLessonRepository.findById(new PublicUserLessonIdEntity(userId, lessonId));
+	}
+
+	// TODO - JavaDoc
+	public List<PublicUserLessonEntity> findAllByCourseId(int userId, int courseId) {
+		return publicUserLessonRepository.findAllByCourseId(userId, courseId);
 	}
 
 	/**

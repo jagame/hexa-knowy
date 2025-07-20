@@ -51,4 +51,15 @@ public interface JpaPublicUserLessonRepository extends PublicUserLessonRepositor
 	@Override
 	@NonNull
 	Optional<PublicUserLessonEntity> findById(@NonNull PublicUserLessonIdEntity publicUserLessonIdEntity);
+
+	@Query("""
+		    SELECT pl
+		    FROM PublicUserLessonEntity pl
+		        JOIN pl.lessonEntity l
+		        JOIN l.course c
+		    WHERE
+		        pl.publicUserEntity.id = :userId AND
+		        c.id = :courseId
+		""")
+	List<PublicUserLessonEntity> findAllByCourseId(int userId, int courseId);
 }

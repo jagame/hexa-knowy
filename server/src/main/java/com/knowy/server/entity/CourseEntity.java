@@ -45,4 +45,7 @@ public class CourseEntity {
 	)
 	private List<LanguageEntity> languages = new ArrayList<>();
 
+	@OneToMany(mappedBy = "course")
+	private List<LessonEntity> lessons = new ArrayList<>();
+
 }

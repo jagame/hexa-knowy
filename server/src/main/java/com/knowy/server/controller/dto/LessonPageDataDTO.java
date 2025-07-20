@@ -10,8 +10,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LessonPageDataDTO {
-	private CourseDTO course;
-	private LessonDTO lesson;
+	private CourseDto course;
+	private LessonDto lesson;
 	private String lessonContent;
 	private int lastLesson;
 	private Integer nextLessonId;
