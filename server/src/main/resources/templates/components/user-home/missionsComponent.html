@@ -13,7 +13,10 @@
 <!--	</div>-->
 
 	<div class="actions-footer">
-		<a href="/exercise/review" class="actions-footer__quick-match-button">
+		<a href="/exercise/review"
+		   class="actions-footer__quick-match-button"
+		   th:classappend="${!hasCourses} ? ' disabled' : ''"
+		   th:attr="aria-disabled=${!hasCourses}">
 			<svg class="icon icon-tabler icons-tabler-outline icon-tabler-player-play" fill="none" height="20"
 				 stroke="currentColor" stroke-linecap="round"
 				 stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20"

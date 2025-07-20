@@ -9,6 +9,7 @@ import com.knowy.server.repository.ports.PublicUserLessonRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -91,14 +92,19 @@ public class CourseSubscriptionService {
 			throw new KnowyCourseSubscriptionException("Ya estás suscrito a este curso");
 		}
 
-		for (LessonEntity lesson : lessons) {
+		lessons = lessons.stream()
+		.sorted(Comparator.comparing(LessonEntity::getId))
+		.toList();
+
+		for (int i = 0; i < lessons.size(); i++) {
+			LessonEntity lesson = lessons.get(i);
 			PublicUserLessonIdEntity id = new PublicUserLessonIdEntity(userId, lesson.getId());
 			if (!publicUserLessonRepository.existsById(id)) {
 				PublicUserLessonEntity pul = new PublicUserLessonEntity();
 				pul.setUserId(userId);
 				pul.setLessonId(lesson.getId());
 				pul.setStartDate(LocalDate.now());
-				pul.setStatus("pending");
+				pul.setStatus(i == 0 ? "in_progress" : "pending");
 				publicUserLessonRepository.save(pul);
 			}
 		}

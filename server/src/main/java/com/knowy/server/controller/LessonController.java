@@ -163,6 +163,6 @@ public class LessonController {
 			.filter(lesson -> lesson.status() == LessonDto.LessonStatus.COMPLETE)
 			.findFirst()
 			.map(LessonDto::id)
-			.orElseThrow(() -> new NoCompletedLessonFoundException("No se encontró ninguna lección completada."));
+			.orElse(0);
 	}
 }

@@ -33,19 +33,16 @@ public class CoursesStoreController {
 							   @RequestParam(required = false) String order,
 							   @AuthenticationPrincipal UserSecurityDetails userDetails) {
 		Integer userId = userDetails.getPublicUser().getId();
-		//Get all courses available in the store
+
 		List<CourseEntity> allCourses = courseSubscriptionService.findAllCourses();
 
-		//Get the list of course IDs the user is subscribed to
 		List<Integer> myCourseIds = courseSubscriptionService.findCoursesByUserId(userId)
 			.stream().map(CourseEntity::getId).toList();
 
-		//Filter out courses that the user is already subscribed to
 		List<CourseEntity> availableCourses = allCourses.stream()
 			.filter(course -> !myCourseIds.contains(course.getId()))
 			.toList();
 
-		//Transform CourseEntity to CourseCardDTO
 		List<CourseCardDTO> storeCourses = availableCourses.stream()
 			.map(course -> {
 				CourseCardDTO dto = CourseCardDTO.fromEntity(
@@ -103,7 +100,6 @@ public class CoursesStoreController {
 		} catch(KnowyCourseSubscriptionException e){
 			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Error", e.getMessage(), ToastDto.ToastType.ERROR)));
 		} catch (Exception e) {
-			e.printStackTrace();
 			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Error", "Ocurrió un error inesperado al suscribirte al curso.", ToastDto.ToastType.ERROR)));
 		}
 		return "redirect:/store";

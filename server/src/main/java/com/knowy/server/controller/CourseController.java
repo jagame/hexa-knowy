@@ -37,7 +37,6 @@ public class CourseController {
 		Integer userId = userDetails.getPublicUser().getId();
 		List<CourseEntity> courseEntities = courseSubscriptionService.findCoursesByUserId(userId);
 
-		//Transform CourseEntity to CourseCardDTO
 		List<CourseCardDTO> courses = courseEntities.stream()
 			.map(course -> CourseCardDTO.fromEntity(
 				course, courseSubscriptionService.getCourseProgress(userId, course.getId()),
@@ -45,14 +44,13 @@ public class CourseController {
 				course.getCreationDate()
 			)).toList();
 
-		//Filter by language (category)
+
 		if(category != null && !category.isEmpty()){
 			courses = courses.stream()
 				.filter(c-> c.getLanguages() != null && c.getLanguages().contains(category))
 				.toList();
 		}
 
-		//Order
 		if(order !=null){
 			switch (order){
 				case "alpha_asc" -> courses = courses.stream()
@@ -70,7 +68,6 @@ public class CourseController {
 				case "progress_desc" -> courses = courses.stream()
 					.sorted(Comparator.comparing(CourseCardDTO::getProgress).reversed())
 					.toList();
-
 
 				case "date_asc" -> courses = courses.stream()
 					.sorted(Comparator.comparing(CourseCardDTO::getId))
@@ -114,7 +111,6 @@ public class CourseController {
 		} catch(KnowyCourseSubscriptionException e){
 			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Error", e.getMessage(), ToastDto.ToastType.ERROR)));
 		} catch (Exception e) {
-			e.printStackTrace();
 			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Error", "Ocurrió un error inesperado al suscribirte al curso.", ToastDto.ToastType.ERROR)));
 		}
 		return "redirect:/my-courses";

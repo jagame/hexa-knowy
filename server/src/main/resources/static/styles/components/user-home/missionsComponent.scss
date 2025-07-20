@@ -135,3 +135,9 @@
 	background-color: $primary-700;
 	text-decoration: none;
 }
+
+.actions-footer__quick-match-button.disabled {
+	pointer-events: none;
+	opacity: 0.5;
+	cursor: not-allowed;
+}
