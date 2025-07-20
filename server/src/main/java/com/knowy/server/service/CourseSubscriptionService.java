@@ -20,7 +20,12 @@ public class CourseSubscriptionService {
 	private final PublicUserLessonRepository publicUserLessonRepository;
 	private final LanguageRepository languageRepository;
 
-	public CourseSubscriptionService(CourseRepository courseRepository, LessonRepository lessonRepository, PublicUserLessonRepository publicUserLessonRepository, LanguageRepository languageRepository) {
+	public CourseSubscriptionService(
+		CourseRepository courseRepository,
+		LessonRepository lessonRepository,
+		PublicUserLessonRepository publicUserLessonRepository,
+		LanguageRepository languageRepository
+	) {
 		this.courseRepository = courseRepository;
 		this.lessonRepository = lessonRepository;
 		this.publicUserLessonRepository = publicUserLessonRepository;
@@ -75,14 +80,14 @@ public class CourseSubscriptionService {
 
 	public void subscribeUserToCourse(Integer userId, Integer courseId) throws KnowyCourseSubscriptionException{
 		List<LessonEntity> lessons = lessonRepository.findByCourseId(courseId);
-		if (lessons.isEmpty()){
+		if (lessons.isEmpty()) {
 			throw new KnowyCourseSubscriptionException("El curso no tiene lecciones disponibles");
 		}
 
 		boolean alreadySubscribed = lessons.stream()
 			.allMatch(lesson ->
 				publicUserLessonRepository.existsByUserIdAndLessonId(userId, lesson.getId()));
-		if (alreadySubscribed){
+		if (alreadySubscribed) {
 			throw new KnowyCourseSubscriptionException("Ya estás suscrito a este curso");
 		}
 

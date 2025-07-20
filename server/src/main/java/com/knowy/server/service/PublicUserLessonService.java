@@ -6,13 +6,13 @@ import com.knowy.server.repository.ports.PublicUserLessonRepository;
 import com.knowy.server.service.exception.PublicUserLessonException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class PublicUserLessonService {
 
 	private final PublicUserLessonRepository publicUserLessonRepository;
-
 
 	/**
 	 * The constructor
@@ -33,6 +33,19 @@ public class PublicUserLessonService {
 	 */
 	public Optional<PublicUserLessonEntity> findById(int userId, int lessonId) {
 		return publicUserLessonRepository.findById(new PublicUserLessonIdEntity(userId, lessonId));
+	}
+
+	/**
+	 * Retrieves all {@link PublicUserLessonEntity} records for a given user and course.
+	 *
+	 * <p>This method returns the user's progress across all lessons within the specified course.</p>
+	 *
+	 * @param userId   The ID of the user.
+	 * @param courseId The ID, of course.
+	 * @return A list of {@link PublicUserLessonEntity} representing the user's lesson data for the course.
+	 */
+	public List<PublicUserLessonEntity> findAllByCourseId(int userId, int courseId) {
+		return publicUserLessonRepository.findAllByCourseId(userId, courseId);
 	}
 
 	/**

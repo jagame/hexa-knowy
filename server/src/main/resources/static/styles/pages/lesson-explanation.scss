@@ -1,35 +1,31 @@
 @use "../global-vars" as *;
 @use "../components/lesson/documents-links" as *;
 @use "../pages/course-page" as *;
-@use "../font" as *;
-
+@use "../components/lesson/solutions-component" as *;
 
 body {
 	box-sizing: border-box;
-	background-color: $neutral-300;
+	background-color: $bg;
 }
 
 .img-head {
 	height: 300px;
 	width: 100%;
 	object-fit: cover;
-	border-radius: $card-radius;
+	border-radius: $radius-25;
 }
 .main-content {
 	display:flex;
 	flex-direction: column;
-
 	margin-left: 10px;
 	margin-top: 10px;
 }
 
 .info-course {
 	font-family: "caveat-brush", cursive;
-	color: #2F9E44;
-	font-size: 20px;
-	margin-top: 30px;
-	margin-left: 10px;
-	font-weight: 600;
+	font-weight: normal;
+	color: $info-500;
+	margin-top: 3rem;
 
 }
 .container-flex{
@@ -47,46 +43,46 @@ body {
 
 .btn-lesson {
 	font-family: "Excalifont", sans-serif;
-	font-size: 1.3em;
-	margin-right: 60px;
+	font-size: 1.25rem;
 	padding: 0.4em 1.5em;
 	display: inline-flex;
+	gap: 10px;
 	align-items: center;
 	cursor: pointer;
 	transition: $transition-speed;
-	border-radius: $card-radius;
-	box-shadow: $card-shadow;
+	border-radius: $radius-10;
 	background-color: $primary-500;
-	color:$neutral-100;
+	color: white;
+	text-decoration: none;
 }
 .btn-lesson:hover {
 	background-color: $primary-700;
-	color: $neutral-100;
+	color: white;
 }
 
-.btn-lesson:focus, .btn-lesson:active {
-	outline: none;
-	box-shadow: 0 0 10px $primary-700;
+.btn-lesson.disabled {
+	pointer-events: none;
+	opacity: 0.5;
+	cursor: not-allowed;
 }
 
 .title {
 	color: $primary-500;
-	font-size: 2rem;
-	font-weight: bold;
-	margin: 0.2em;
+	font-family: caveat-brush, sans-serif;
+	font-weight: normal;
+	margin: 0.75rem 0;
 }
 .meta-row{
 	display: flex;
 	align-items: center;
 	gap: 5em;
 	font-size: 1.1rem;
-	margin-top: 1rem;
-
+	margin-top: 2rem;
 }
 
 .theory {
-	margin-top: 30px;
-	margin-left: 10px;
+	margin-top: 1.25rem;
+	margin-bottom: 2rem;
 }
 
 .icon {
@@ -99,7 +95,7 @@ body {
 }
 
 .lesson-content{
-	font-family: "inter", sans-serif;
+	font-family: inter, sans-serif;
 	padding-bottom: 1rem;
 }
 
@@ -109,7 +105,6 @@ body {
 		justify-content: space-between;
 		align-items: center;
 	}
-
 }
 
 @media (max-width: 600px) {
@@ -121,5 +116,4 @@ body {
 	.title, .icon, .info-course {
 		margin-left: 5px;
 	}
-
 }
