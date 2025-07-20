@@ -93,8 +93,10 @@ public class PrivateUserService {
 	 */
 	public void updateEmail(String email, int userId, String password)
 		throws UserNotFoundException, UnchangedEmailException, WrongPasswordException, InvalidUserEmailException {
-		findPrivateUserByEmail(email)
-			.orElseThrow(() -> new InvalidUserEmailException("The provided email is already associated with an existing account."));
+
+		if (findPrivateUserByEmail(email).isPresent()) {
+			throw new InvalidUserEmailException("The provided email is already associated with an existing account.");
+		}
 
 		PrivateUserEntity privateUser = getPrivateUserById(userId);
 		if (Objects.equals(email, privateUser.getEmail())) {

@@ -21,7 +21,12 @@ public class CourseSubscriptionService {
 	private final PublicUserLessonRepository publicUserLessonRepository;
 	private final LanguageRepository languageRepository;
 
-	public CourseSubscriptionService(CourseRepository courseRepository, LessonRepository lessonRepository, PublicUserLessonRepository publicUserLessonRepository, LanguageRepository languageRepository) {
+	public CourseSubscriptionService(
+		CourseRepository courseRepository,
+		LessonRepository lessonRepository,
+		PublicUserLessonRepository publicUserLessonRepository,
+		LanguageRepository languageRepository
+	) {
 		this.courseRepository = courseRepository;
 		this.lessonRepository = lessonRepository;
 		this.publicUserLessonRepository = publicUserLessonRepository;
@@ -39,58 +44,50 @@ public class CourseSubscriptionService {
 
 	public List<CourseCardDTO> getRecommendedCourses(Integer userId) {
 		List<CourseEntity> userCourses = findCoursesByUserId(userId);
-
-		List<Integer> userCourseIds = userCourses.stream()
-			.map(CourseEntity::getId)
-			.toList();
-
 		Set<String> userLanguages = userCourses.stream()
-			.flatMap(course -> findLanguagesForCourse(course).stream())
+			.flatMap(course -> course.getLanguages().stream())
+			.map(LanguageEntity::getName)
 			.collect(Collectors.toSet());
 
-		List<CourseEntity> allCourses = findAllCourses().stream()
+		Set<Integer> userCourseIds = userCourses.stream()
+			.map(CourseEntity::getId)
+			.collect(Collectors.toSet());
+
+		List<CourseEntity> recommendations = findAllCourses().stream()
 			.filter(course -> !userCourseIds.contains(course.getId()))
+			.sorted((a, b) -> {
+				// Ordenar primero los cursos que comparten idioma
+				boolean aMatches = matchesAnyLanguage(a, userLanguages);
+				boolean bMatches = matchesAnyLanguage(b, userLanguages);
+				return Boolean.compare(!aMatches, !bMatches); // true va después
+			})
+			.limit(3)
 			.toList();
 
-		List<CourseEntity> langMatching = allCourses.stream()
-			.filter(course -> {
-				List<String> courseLangs = findLanguagesForCourse(course);
-				return courseLangs.stream().anyMatch(userLanguages::contains);
-			}).toList();
-
-		List<CourseCardDTO> recommendations = langMatching.stream()
-			.limit(3)
+		return recommendations.stream()
 			.map(course -> CourseCardDTO.fromRecommendation(
-				course, findLanguagesForCourse(course), course.getCreationDate()))
-			.collect(Collectors.toList());
-
-		if (recommendations.size() < 3) {
-			List<CourseEntity> remaining = allCourses.stream()
-				.filter(course -> !langMatching.contains(course))
-				.toList();
-
-			for(CourseEntity course : remaining){
-				if(recommendations.size() >= 3){
-					break;
-				}
-				recommendations.add(CourseCardDTO.fromRecommendation(
-					course, findLanguagesForCourse(course), course.getCreationDate()
-				));
-			}
-		}
-		return recommendations;
+				course,
+				findLanguagesForCourse(course),
+				course.getCreationDate()))
+			.toList();
 	}
 
-	public void subscribeUserToCourse(Integer userId, Integer courseId) throws KnowyCourseSubscriptionException{
+	private boolean matchesAnyLanguage(CourseEntity course, Set<String> userLanguages) {
+		return course.getLanguages().stream()
+			.map(LanguageEntity::getName)
+			.anyMatch(userLanguages::contains);
+	}
+
+	public void subscribeUserToCourse(Integer userId, Integer courseId) throws KnowyCourseSubscriptionException {
 		List<LessonEntity> lessons = lessonRepository.findByCourseId(courseId);
-		if (lessons.isEmpty()){
+		if (lessons.isEmpty()) {
 			throw new KnowyCourseSubscriptionException("El curso no tiene lecciones disponibles");
 		}
 
 		boolean alreadySubscribed = lessons.stream()
 			.allMatch(lesson ->
 				publicUserLessonRepository.existsByUserIdAndLessonId(userId, lesson.getId()));
-		if (alreadySubscribed){
+		if (alreadySubscribed) {
 			throw new KnowyCourseSubscriptionException("Ya estás suscrito a este curso");
 		}
 
@@ -129,6 +126,7 @@ public class CourseSubscriptionService {
 		int completedLessons = publicUserLessonRepository.countByUserIdAndCourseIdAndStatus(userId, courseId, "completed");
 		return (int) Math.round((completedLessons * 100.0 / totalLessons));
 	}
+
 	public List<String> findAllLanguages() {
 		return languageRepository.findAll()
 			.stream()
@@ -136,3 +134,4 @@ public class CourseSubscriptionService {
 			.toList();
 	}
 }
+

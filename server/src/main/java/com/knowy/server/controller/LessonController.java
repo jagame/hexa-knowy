@@ -1,142 +1,168 @@
 package com.knowy.server.controller;
 
-
-import com.knowy.server.controller.dto.CourseDTO;
-import com.knowy.server.controller.dto.LessonDTO;
+import com.knowy.server.controller.dto.CourseDto;
+import com.knowy.server.controller.dto.LessonDto;
 import com.knowy.server.controller.dto.LinksLessonDto;
 import com.knowy.server.controller.dto.SolutionDto;
+import com.knowy.server.controller.exception.CurrentLessonNotFoundException;
+import com.knowy.server.controller.exception.NextLessonNotFoundException;
+import com.knowy.server.controller.exception.NoCompletedLessonFoundException;
+import com.knowy.server.entity.DocumentationEntity;
+import com.knowy.server.entity.PublicUserLessonEntity;
+import com.knowy.server.service.PublicUserLessonService;
+import com.knowy.server.service.model.UserSecurityDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
+@RequestMapping("/course")
 public class LessonController {
-	private int valoration;
 
-	@GetMapping("/lesson")
-	public String showLesson(Model model) {
+	private final PublicUserLessonService publicUserLessonService;
 
-		LessonDTO lesson = new LessonDTO(2, "¿Qué es Java y cómo funciona?", "https://picsum.photos/id/0/1280/720", "20min",
-			LessonDTO.LessonStatus.COMPLETE);
-		model.addAttribute("lesson", lesson);
+	public LessonController(PublicUserLessonService publicUserLessonService) {
+		this.publicUserLessonService = publicUserLessonService;
+	}
 
-		CourseDTO course = new CourseDTO();
-		course.setName("Java Básico");
-		course.setPercentageCompleted(40);
+	/**
+	 * Handles the request to display the course introduction page for a specific course.
+	 *
+	 * <p>This method gathers all the user's lesson progress for the specified course,
+	 * builds the corresponding DTOs for course, lessons, and related documentation, and populates the model with the
+	 * necessary attributes to render the introduction view.</p>
+	 *
+	 * @param userDetails The authenticated user details.
+	 * @param courseId    The ID of the course being accessed.
+	 * @param model       The Spring MVC model to pass data to the view.
+	 * @return The name of the Thymeleaf template for the course introduction page.
+	 */
+	@GetMapping("/{courseId}")
+	public String courseIntro(
+		@AuthenticationPrincipal UserSecurityDetails userDetails,
+		@PathVariable Integer courseId, Model model
+	) throws NextLessonNotFoundException, NoCompletedLessonFoundException {
+		List<PublicUserLessonEntity> publicUserLesson = getAllPublicUserLessons(userDetails.getPublicUser().getId(), courseId);
+		List<LessonDto> lessonsDto = LessonDto.fromEntities(publicUserLesson);
+		List<LinksLessonDto> documentationDto = LinksLessonDto.fromEntities(getAllLessonDocumentations(publicUserLesson));
 
-		List<LessonDTO> lessons = List.of(
-			new LessonDTO(1, "Introducción", "https://picsum.photos/seed/picsum/200/300",
-				"20min", LessonDTO.LessonStatus.COMPLETE),
-			new LessonDTO(2, "¿Qué es Java y cómo funciona?", "https://picsum.photos/seed/picsum/200/300",
-				"20min", LessonDTO.LessonStatus.COMPLETE),
-			new LessonDTO(3, "Tipos de datos y variables", "https://picsum.photos/seed/picsum/200/300",
-				"20min", LessonDTO.LessonStatus.COMPLETE),
-			new LessonDTO(4, "Estructuras de control", "https://picsum.photos/seed/picsum/200/300",
-				"20min", LessonDTO.LessonStatus.COMPLETE),
-			new LessonDTO(5, "Bucles", "https://picsum.photos/seed/picsum/200/300", "20min", LessonDTO.LessonStatus.COMPLETE),
-			new LessonDTO(6, "Métodos (funciones)", "https://picsum.photos/seed/picsum/200/300",
-				"20min", LessonDTO.LessonStatus.COMPLETE),
-			new LessonDTO(7, "Arreglos (arrays)", "https://picsum.photos/seed/picsum/200/300",
-				"20min", LessonDTO.LessonStatus.NEXT_LESSON),
-			new LessonDTO(8, "Introducción a la Programación Orientada a Objetos", "https://picsum" +
-				".photos/seed/picsum/200/300", "20min", LessonDTO.LessonStatus.BLOCKED),
-			new LessonDTO(9, "Introducción a la Programación Orientada a Objetos", "https://picsum" +
-				".photos/seed/picsum/200/300", "20min", LessonDTO.LessonStatus.BLOCKED),
-			new LessonDTO(10, "Introducción a la Programación Orientada a Objetos", "https://picsum" +
-				".photos/seed/picsum/200/300", "20min", LessonDTO.LessonStatus.BLOCKED)
+		CourseDto courseDto = CourseDto.fromEntity(
+			publicUserLesson.getFirst().getLessonEntity().getCourse(),
+			lessonsDto
 		);
 
-//		int lastLessonCompleted = -1; // We save the last lesson (as if it were a memory).
-//		for (int i = 0; i < lessons.size(); i++) { // lesson.size() -> Look at the size of the "lessons" list, starting from 0. i = 0
-//			if (lessons.get(i).getStatus() == LessonDTO.LessonStatus.COMPLETE) {
-//				lastLessonCompleted = lessons.get(i).getNumber();
-//			}
-//		}
-
-		int nextLesson = lessons.stream()
-			.filter(le -> le.getStatus() == LessonDTO.LessonStatus.NEXT_LESSON)
-			.findFirst()
-			.orElseThrow()
-			.getNumber();
-
-		String lessonContent = "<p>En <strong>Java</strong>, un arreglo es una estructura de datos que permite "
-			+ "<strong>almacenar múltiples elementos del mismo tipo</strong> en una sola variable.</p>\n"
-			+ "<p>Los arreglos tienen <strong>tamaño fijo</strong> (no se pueden expandir una vez creados) "
-			+ "y cada elemento se accede mediante un <strong>índice que empieza en 0</strong>.</p>\n"
-			+ "<p>Se declaran y crean así:</p>\n"
-			+ "<h6>int[] numeros = new int[5]; // arreglo de 5 enteros</h6>\n"
-			+ "<p>o con valores definidos:</p>\n"
-			+ "<h6>String[] nombres = {\"Ana\", \"Luis\", \"Pedro\"};</h6>";
-
-		course.setLessons(lessons);
-		model.addAttribute("course", course);
-		model.addAttribute("lastLesson", nextLesson);
-		model.addAttribute("lessonContent", lessonContent);
-		model.addAttribute("level", "Intermedio");
-
-		//---------------------------------------------------------
-		List<SolutionDto> solutions = new ArrayList<>();
-		solutions.add(new SolutionDto("Tarjeta 1: JavaScript vs Java", "Pregunta tarjeta 1", "Solución tarjeta 1"));
-		solutions.add(new SolutionDto("Tarjeta 2: PHP", "Pregunta tarjeta 2", "Solución tarjeta 2"));
-		solutions.add(new SolutionDto("Tarjeta 3: Python", "Pregunta tarjeta 3", "Solución tarjeta 3"));
-		model.addAttribute("solutions", solutions);
-
-		//--------------------
-
-
-		// Array of links from each lesson?
-		List<LinksLessonDto> LinksLessonList = new ArrayList<>();
-
-		//External links
-		LinksLessonList.add(new LinksLessonDto(
-			"Ecosia - Buscador ecológico",
-			"https://www.ecosia.org",
-			LinksLessonDto.LinkType.EXTERNAL, ""
-		));
-
-		LinksLessonList.add(new LinksLessonDto(
-			"Wikipedia - Enciclopedia libre",
-			"https://es.wikipedia.org",
-			LinksLessonDto.LinkType.EXTERNAL, ""
-		));
-
-		LinksLessonList.add(new LinksLessonDto(
-			"MDN Web Docs - JavaScript",
-			"https://developer.mozilla.org/es/docs/Web/JavaScript",
-			LinksLessonDto.LinkType.EXTERNAL, ""
-		));
-
-		//Downloadable documents
-		LinksLessonList.add(new LinksLessonDto(
-			"Guía de JavaScript ES6+",
-			"/documents/javascript-es6-guide.pdf",
-			LinksLessonDto.LinkType.DOCUMENT, "javascript-es6-guide.pdf"
-		));
-
-		LinksLessonList.add(new LinksLessonDto(
-			"Ejercicios prácticos",
-			"/documents/javascript-exercises.zip",
-			LinksLessonDto.LinkType.DOCUMENT, "javascript-exercises.zip"
-		));
-
-
-		model.addAttribute("LinksLessonList", LinksLessonList);
-
+		populateCourseIntro(model, courseDto, lessonsDto, documentationDto);
 		return "pages/lesson-explanation";
 	}
 
-	//he usado este controller porque estaba relacionado, si hace falta lo meto en otra pantalla
-	@PostMapping("/feedback/submit")
-	public String submitEval(@RequestParam("dificultad") String dificultad, RedirectAttributes redirectAttributes) {
-		System.out.println("Dificultad seleccionada por el usuario: " + dificultad);
-		valoration = Integer.parseInt(dificultad); //aquí invocaríamos un metodo de cada pregunta para guardar el feedback y luego procesarlo. Debería hacer dto? yo creo que debería ser el dto de la tarjeta guardada.
-		redirectAttributes.addFlashAttribute("mensajeFeedback", "Gracias por tu feedback: " + dificultad);
-		return "redirect:/"; //este redirect irá a la próxima tarjeta de la lección.
+	private void populateCourseIntro(
+		Model model, CourseDto courseDto,
+		List<LessonDto> lessonsDto,
+		List<LinksLessonDto> documentationDto
+	) throws NextLessonNotFoundException, NoCompletedLessonFoundException {
+		model.addAttribute("course", courseDto);
+		model.addAttribute("lessons", courseDto.lessons());
+		model.addAttribute("lastLesson", getLastCompletedIndex(lessonsDto));
+		model.addAttribute("nextLessonId", getNextLessonId(lessonsDto));
+		model.addAttribute("courseId", courseDto.id());
+		model.addAttribute("isIntro", true);
+		model.addAttribute("LinksList", documentationDto);
+	}
+
+	private List<DocumentationEntity> getAllLessonDocumentations(List<PublicUserLessonEntity> publicUserLessonEntities) {
+		return publicUserLessonEntities.stream()
+			.map(lesson -> lesson.getLessonEntity().getDocumentations())
+			.flatMap(Collection::stream)
+			.toList();
+	}
+
+	private int getNextLessonId(List<LessonDto> lessons) throws NextLessonNotFoundException {
+		return lessons.stream()
+			.filter(lesson -> lesson.status() == LessonDto.LessonStatus.NEXT_LESSON)
+			.findFirst()
+			.map(LessonDto::id)
+			.orElseThrow(() -> new NextLessonNotFoundException("No fue posible identificar la próxima lección en el curso actual."));
+	}
+
+	/**
+	 * Handles the request to display a specific lesson within a course.
+	 *
+	 * <p>This method retrieves the current user's progress in the specified course,
+	 * identifies the selected lesson, builds the necessary DTOs (lessons, course, documentation, and solutions), and
+	 * populates the model to render the lesson explanation view.</p>
+	 *
+	 * @param userDetails The authenticated user's security details.
+	 * @param courseId    The ID, of course.
+	 * @param lessonId    The ID of the lesson to display.
+	 * @param model       The Spring MVC model used to pass attributes to the view.
+	 * @return The name of the Thymeleaf template for the lesson explanation page.
+	 */
+	@GetMapping("/{courseId}/lesson/{lessonId}")
+	public String lesson(
+		@AuthenticationPrincipal UserSecurityDetails userDetails,
+		@PathVariable Integer courseId,
+		@PathVariable Integer lessonId,
+		Model model
+	) throws CurrentLessonNotFoundException, NoCompletedLessonFoundException {
+		List<PublicUserLessonEntity> publicUserLessons = getAllPublicUserLessons(userDetails.getPublicUser().getId(), courseId);
+		List<LessonDto> lessonsDto = LessonDto.fromEntities(publicUserLessons);
+
+		PublicUserLessonEntity currentUserLesson = getCurrentPublicUserLesson(publicUserLessons, lessonId);
+		List<LinksLessonDto> documentationDto = LinksLessonDto.fromEntities(currentUserLesson.getLessonEntity().getDocumentations());
+		List<SolutionDto> solutionsDto = SolutionDto.fromEntities(currentUserLesson.getLessonEntity().getExercises());
+
+		CourseDto courseDto = CourseDto.fromEntity(
+			publicUserLessons.getFirst().getLessonEntity().getCourse(),
+			lessonsDto
+		);
+
+		populateLesson(model, currentUserLesson, courseDto, lessonsDto, documentationDto, solutionsDto);
+		return "pages/lesson-explanation";
+	}
+
+	private List<PublicUserLessonEntity> getAllPublicUserLessons(int userId, int courseId) {
+		return publicUserLessonService
+			.findAllByCourseId(userId, courseId);
+	}
+
+	private PublicUserLessonEntity getCurrentPublicUserLesson(List<PublicUserLessonEntity> userLessons, int currentLessonId) throws CurrentLessonNotFoundException {
+		return userLessons.stream()
+			.filter(lesson -> Objects.equals(lesson.getLessonId(), currentLessonId))
+			.findFirst()
+			.orElseThrow(() -> new CurrentLessonNotFoundException("Lección actual no encontrada"));
+	}
+
+	private void populateLesson(
+		Model model,
+		PublicUserLessonEntity currentUserLesson,
+		CourseDto courseDto,
+		List<LessonDto> lessonsDto,
+		List<LinksLessonDto> documentationDto,
+		List<SolutionDto> solutions
+	) throws NoCompletedLessonFoundException {
+		model.addAttribute("course", courseDto);
+		model.addAttribute("lesson", LessonDto.fromEntity(currentUserLesson));
+		model.addAttribute("lessonContent", currentUserLesson.getLessonEntity().getExplanation());
+		model.addAttribute("lastLesson", getLastCompletedIndex(lessonsDto));
+		model.addAttribute("courseId", courseDto.id());
+		model.addAttribute("isIntro", false);
+		model.addAttribute("LinksList", documentationDto);
+		model.addAttribute("solutions", solutions);
+	}
+
+	private int getLastCompletedIndex(List<LessonDto> lessons) throws NoCompletedLessonFoundException {
+		return lessons.reversed()
+			.stream()
+			.filter(lesson -> lesson.status() == LessonDto.LessonStatus.COMPLETE)
+			.findFirst()
+			.map(LessonDto::id)
+			.orElseThrow(() -> new NoCompletedLessonFoundException("No se encontró ninguna lección completada."));
 	}
 }
