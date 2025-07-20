@@ -1,6 +1,5 @@
 package com.knowy.server.service;
 
-import com.knowy.server.controller.dto.CourseCardDTO;
 import com.knowy.server.controller.exception.KnowyCourseSubscriptionException;
 import com.knowy.server.entity.*;
 import com.knowy.server.repository.ports.CourseRepository;
@@ -28,16 +27,13 @@ public class CourseSubscriptionService {
 		this.languageRepository = languageRepository;
 	}
 
-	public List<CourseCardDTO> getUserCourses(Integer userId) {
-		List<CourseEntity> userCourses = findCoursesByUserId(userId);
-		return userCourses.stream()
-			.map(course -> CourseCardDTO.fromEntity(
-				course, getCourseProgress(userId, course.getId()),
-				findLanguagesForCourse(course), course.getCreationDate()))
-			.toList();
+	public List<CourseEntity> findCoursesByUserId(Integer userId) {
+		List<Integer> courseIds = publicUserLessonRepository.findCourseIdsByUserId(userId);
+		if (courseIds.isEmpty()) return List.of();
+		return courseRepository.findByIdIn(courseIds);
 	}
 
-	public List<CourseCardDTO> getRecommendedCourses(Integer userId) {
+	public List<CourseEntity> getRecommendedCourses(Integer userId) {
 		List<CourseEntity> userCourses = findCoursesByUserId(userId);
 
 		List<Integer> userCourseIds = userCourses.stream()
@@ -58,10 +54,8 @@ public class CourseSubscriptionService {
 				return courseLangs.stream().anyMatch(userLanguages::contains);
 			}).toList();
 
-		List<CourseCardDTO> recommendations = langMatching.stream()
+		List<CourseEntity> recommendations = langMatching.stream()
 			.limit(3)
-			.map(course -> CourseCardDTO.fromRecommendation(
-				course, findLanguagesForCourse(course), course.getCreationDate()))
 			.collect(Collectors.toList());
 
 		if (recommendations.size() < 3) {
@@ -73,9 +67,7 @@ public class CourseSubscriptionService {
 				if(recommendations.size() >= 3){
 					break;
 				}
-				recommendations.add(CourseCardDTO.fromRecommendation(
-					course, findLanguagesForCourse(course), course.getCreationDate()
-				));
+				recommendations.add(course);
 			}
 		}
 		return recommendations;
@@ -105,12 +97,6 @@ public class CourseSubscriptionService {
 				publicUserLessonRepository.save(pul);
 			}
 		}
-	}
-
-	public List<CourseEntity> findCoursesByUserId(Integer userId) {
-		List<Integer> courseIds = publicUserLessonRepository.findCourseIdsByUserId(userId);
-		if (courseIds.isEmpty()) return List.of();
-		return courseRepository.findByIdIn(courseIds);
 	}
 
 	public List<CourseEntity> findAllCourses() {

@@ -3,6 +3,7 @@ package com.knowy.server.controller;
 import com.knowy.server.controller.dto.CourseCardDTO;
 import com.knowy.server.controller.dto.ToastDto;
 import com.knowy.server.controller.exception.KnowyCourseSubscriptionException;
+import com.knowy.server.entity.CourseEntity;
 import com.knowy.server.service.CourseSubscriptionService;
 import com.knowy.server.service.model.UserSecurityDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,7 +33,17 @@ public class CourseController {
 							 @RequestParam(required = false) String category,
 							 @RequestParam(required = false) String order,
 							 @AuthenticationPrincipal UserSecurityDetails userDetails) {
-		List<CourseCardDTO> courses = courseSubscriptionService.getUserCourses(userDetails.getPublicUser().getId());
+
+		Integer userId = userDetails.getPublicUser().getId();
+		List<CourseEntity> courseEntities = courseSubscriptionService.findCoursesByUserId(userId);
+
+		//Transform CourseEntity to CourseCardDTO
+		List<CourseCardDTO> courses = courseEntities.stream()
+			.map(course -> CourseCardDTO.fromEntity(
+				course, courseSubscriptionService.getCourseProgress(userId, course.getId()),
+				courseSubscriptionService.findLanguagesForCourse(course),
+				course.getCreationDate()
+			)).toList();
 
 		//Filter by language (category)
 		if(category != null && !category.isEmpty()){
@@ -75,10 +86,16 @@ public class CourseController {
 						.toList();
 			}
 		}
+		List<CourseCardDTO> recommendations = courseSubscriptionService.getRecommendedCourses(userId).stream()
+			.map(course -> CourseCardDTO.fromRecommendation(
+				course,
+				courseSubscriptionService.findLanguagesForCourse(course),
+				course.getCreationDate()
+			)).toList();
 
 		model.addAttribute("allLanguages", courseSubscriptionService.findAllLanguages());
 		model.addAttribute("courses", courses);
-		model.addAttribute("recommendations", courseSubscriptionService.getRecommendedCourses(userDetails.getPublicUser().getId()));
+		model.addAttribute("recommendations", recommendations);
 		model.addAttribute("order", order);
 		model.addAttribute("category", category);
 		model.addAttribute("acquireAction", "/my-courses/subscribe");

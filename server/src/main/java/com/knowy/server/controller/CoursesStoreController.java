@@ -3,6 +3,7 @@ package com.knowy.server.controller;
 import com.knowy.server.controller.dto.CourseCardDTO;
 import com.knowy.server.controller.dto.ToastDto;
 import com.knowy.server.controller.exception.KnowyCourseSubscriptionException;
+import com.knowy.server.entity.CourseEntity;
 import com.knowy.server.service.CourseSubscriptionService;
 import com.knowy.server.service.model.UserSecurityDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,8 +32,32 @@ public class CoursesStoreController {
 							   @RequestParam(required = false) String category,
 							   @RequestParam(required = false) String order,
 							   @AuthenticationPrincipal UserSecurityDetails userDetails) {
+		Integer userId = userDetails.getPublicUser().getId();
+		//Get all courses available in the store
+		List<CourseEntity> allCourses = courseSubscriptionService.findAllCourses();
 
-		List<CourseCardDTO> storeCourses = courseSubscriptionService.getRecommendedCourses(userDetails.getPublicUser().getId());
+		//Get the list of course IDs the user is subscribed to
+		List<Integer> myCourseIds = courseSubscriptionService.findCoursesByUserId(userId)
+			.stream().map(CourseEntity::getId).toList();
+
+		//Filter out courses that the user is already subscribed to
+		List<CourseEntity> availableCourses = allCourses.stream()
+			.filter(course -> !myCourseIds.contains(course.getId()))
+			.toList();
+
+		//Transform CourseEntity to CourseCardDTO
+		List<CourseCardDTO> storeCourses = availableCourses.stream()
+			.map(course -> {
+				CourseCardDTO dto = CourseCardDTO.fromEntity(
+					course,
+					courseSubscriptionService.getCourseProgress(userId, course.getId()),
+					courseSubscriptionService.findLanguagesForCourse(course),
+					course.getCreationDate()
+				);
+				dto.setAction(CourseCardDTO.ActionType.ACQUIRE);
+				return dto;
+			}).toList();
+
 		//Filters
 		if (category != null && !category.isEmpty()) {
 			storeCourses = storeCourses.stream()

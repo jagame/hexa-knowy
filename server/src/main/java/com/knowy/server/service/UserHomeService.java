@@ -1,6 +1,6 @@
 package com.knowy.server.service;
 
-import com.knowy.server.controller.dto.CourseCardDTO;
+import com.knowy.server.entity.CourseEntity;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -13,14 +13,12 @@ public class UserHomeService {
 	}
 
 	public long getCoursesCompleted(int userId) {
-		List<CourseCardDTO> userCourses = courseSubscriptionService.getUserCourses(userId);
-		return userCourses.stream().filter(dto->
-			dto.getProgress() ==100).count();
+		List<CourseEntity> userCourses = courseSubscriptionService.findCoursesByUserId(userId);
+		return userCourses.stream().filter(c-> courseSubscriptionService.getCourseProgress(userId, c.getId())==100).count();
 	}
 
 	public long getTotalCourses(int userId) {
-		List<CourseCardDTO> userCourses = courseSubscriptionService.getUserCourses(userId);
-		return  userCourses.size();
+		return courseSubscriptionService.findCoursesByUserId(userId).size();
 	}
 
 	public long getCoursesPercentage(int userId) {
@@ -30,5 +28,4 @@ public class UserHomeService {
 			? 0
 			: (int) Math.round((coursesCompleted * 100.0) / totalCourses);
 	}
-
 }
