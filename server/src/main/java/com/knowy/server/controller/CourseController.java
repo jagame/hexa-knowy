@@ -35,7 +35,10 @@ public class CourseController {
 							 @RequestParam(defaultValue = "1") int page,
 							 @AuthenticationPrincipal UserSecurityDetails userDetails) {
 		List<CourseCardDTO> courses = courseSubscriptionService.getUserCourses(userDetails.getPublicUser().getId());
-		Page<CourseCardDTO> coursesPage = courseSubscriptionService.getUserCoursesPaginated(userDetails.getPublicUser().getId(), page);
+
+//		Page<CourseCardDTO> coursesPage = courseSubscriptionService.getUserCoursesPaginated(userDetails.getPublicUser().getId(), page);
+//		List<CourseCardDTO> courses  =  coursesPage.getContent();
+
 		//Filter by language (category)
 		if(category != null && !category.isEmpty()){
 			courses = courses.stream()
@@ -72,14 +75,32 @@ public class CourseController {
 					.toList();
 
 				default ->
-					courses = courses.stream()
+					courses = courses = courses.stream()
 						.sorted(Comparator.comparing(CourseCardDTO::getProgress).reversed())
 						.toList();
 			}
 		}
 
+		int pageSize = 9;
+
+		// 3. Calcula totalPages basado en la lista ya filtrada y ordenada
+		int totalPages = (int) Math.ceil((double) courses.size() / pageSize);
+		if (totalPages == 0) totalPages = 1;  // mínimo 1 página
+
+		// 4. Controlar que page esté dentro del rango válido
+		if (page < 1) page = 1;
+		if (page > totalPages) page = totalPages;
+
+		int fromIndex = (page - 1) * pageSize;
+		int toIndex = Math.min(fromIndex + pageSize, courses.size());
+
+		// 5. Paginación correcta
+		List<CourseCardDTO> paginatedCourses = fromIndex >= courses.size() ? List.of() : courses.subList(fromIndex, toIndex);
+
 		model.addAttribute("allLanguages", courseSubscriptionService.findAllLanguages());
-		model.addAttribute("courses", courses);
+		model.addAttribute("courses", paginatedCourses);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("recommendations", courseSubscriptionService.getRecommendedCourses(userDetails.getPublicUser().getId()));
 		model.addAttribute("order", order);
 		model.addAttribute("category", category);
