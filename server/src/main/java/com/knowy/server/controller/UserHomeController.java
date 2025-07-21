@@ -1,37 +1,73 @@
 package com.knowy.server.controller;
 
+import com.knowy.server.controller.dto.CourseBannerDTO;
 import com.knowy.server.controller.dto.MissionsDto;
 import com.knowy.server.controller.dto.NewsHomeDto;
+import com.knowy.server.entity.CourseEntity;
+import com.knowy.server.service.CourseSubscriptionService;
+import com.knowy.server.service.UserHomeService;
+import com.knowy.server.service.model.UserSecurityDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
 public class UserHomeController {
 
+	private final UserHomeService userHomeService;
+	private final CourseSubscriptionService courseSubscriptionService;
+
+	public UserHomeController(
+		UserHomeService userHomeService,
+		CourseSubscriptionService courseSubscriptionService) {
+		this.userHomeService = userHomeService;
+		this.courseSubscriptionService = courseSubscriptionService;
+	}
+
 	@GetMapping("/home")
-	public String userHome(Model model) {
-		List<NewsHomeDto> newsHome = new ArrayList<>();
-		newsHome.add(new NewsHomeDto(1, "La conspiración de los grillos", "Una historia que no deja dormir",
-			"https://picsum.photos/id/10/900/900", "https://picsum.photos/id/10/900/900"));
+	public String userHome(Model model, @AuthenticationPrincipal UserSecurityDetails userDetails) {
+		Integer userId = userDetails.getPublicUser().getId();
+		long coursesCompleted = userHomeService.getCoursesCompleted(userId);
+		long totalCourses = userHomeService.getTotalCourses(userId);
+		long percent = userHomeService.getCoursesPercentage(userId);
+		boolean hasCourses = totalCourses > 0;
 
-		newsHome.add(new NewsHomeDto(2, "El código de las sombras", "Tecnología, misterio y traición",
-			"https://picsum.photos/id/20/900/900", "https://picsum.photos/id/20/900/900"));
+		model.addAttribute("hasCourses", hasCourses);
+		model.addAttribute("completedCourses", coursesCompleted);
+		model.addAttribute("totalCourses", totalCourses);
+		model.addAttribute("fractionProgress", percent);
 
-		newsHome.add(new NewsHomeDto(3, "Viaje al centro del café", "Una travesía entre aromas y secretos",
-			"https://picsum.photos/id/30/900/900", "https://picsum.photos/id/30/900/900"));
+		List<CourseEntity> recommended = courseSubscriptionService.getRecommendedCourses(userId);
+		List<Integer> recommendedIds = recommended.stream()
+			.map(CourseEntity::getId)
+			.toList();
 
-		newsHome.add(new NewsHomeDto(4, "No abras la puerta roja", "Suspenso psicológico en cada página",
-			"https://picsum.photos/id/40/900/900", "https://picsum.photos/id/40/900/900"));
+		List<CourseEntity> fillCourses = courseSubscriptionService.findAllCourses().stream()
+			.filter(c -> !recommendedIds.contains(c.getId()))
+			.sorted(Comparator.comparing(CourseEntity::getCreationDate).reversed())
+			.toList();
 
-		newsHome.add(new NewsHomeDto(5, "La física del silencio", "Cuando el universo conspira para callar",
-			"https://picsum.photos/id/50/900/900", "https://picsum.photos/id/50/900/900"));
+		List<CourseEntity> carouselCourses = new ArrayList<>();
+		carouselCourses.addAll(recommended);
+
+		for (CourseEntity c : fillCourses) {
+			if (carouselCourses.size() >= 4) break;
+			carouselCourses.add(c);
+		}
+
+		List<CourseBannerDTO> banners = carouselCourses.stream()
+			.limit(4)
+			.map(CourseBannerDTO::fromEntity)
+			.toList();
 
 
-		model.addAttribute("newsHome", newsHome);
+		model.addAttribute("newsHome", banners);
+		model.addAttribute("username", userDetails.getPublicUser().getNickname());
 
 		List<MissionsDto> missionsList = new ArrayList<>();
 		MissionsDto mission1 = new MissionsDto();
