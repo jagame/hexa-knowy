@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,7 +43,7 @@ public class CourseSubscriptionService {
 	}
 
 	public Page<CourseCardDTO> getUserCoursesPaginated(Integer userId, int page) {
-		Pageable pageable = PageRequest.of(page - 1, 9);
+		Pageable pageable = PageRequest.of(page - 1, 8);
 		Page<CourseEntity> coursePage = courseRepository.findCoursesByUserId(userId, pageable);
 
 		return coursePage.map(course -> CourseCardDTO.fromEntity(
@@ -75,7 +77,7 @@ public class CourseSubscriptionService {
 			}).toList();
 
 		List<CourseCardDTO> recommendations = langMatching.stream()
-			.limit(9)
+			.limit(3)
 			.map(course -> CourseCardDTO.fromRecommendation(
 				course, findLanguagesForCourse(course), course.getCreationDate()))
 			.collect(Collectors.toList());
@@ -96,6 +98,26 @@ public class CourseSubscriptionService {
 		}
 		return recommendations;
 	}
+
+	public List<CourseCardDTO> getStoreCourses(Integer userId) {
+		List<CourseEntity> userCourses = findCoursesByUserId(userId);
+		Set<Integer> userCourseIds = userCourses.stream()
+			.map(CourseEntity::getId)
+			.collect(Collectors.toSet());
+
+		// Obtener todos los cursos excluyendo los ya suscritos
+		List<CourseEntity> allCourses = findAllCourses().stream()
+			.filter(course -> !userCourseIds.contains(course.getId()))
+			.toList();
+
+		return allCourses.stream()
+			.map(course -> CourseCardDTO.fromEntity(
+				course, getCourseProgress(userId, course.getId()),
+				findLanguagesForCourse(course), course.getCreationDate()))
+			.toList();
+	}
+
+
 
 	public void subscribeUserToCourse(Integer userId, Integer courseId) throws KnowyCourseSubscriptionException{
 		List<LessonEntity> lessons = lessonRepository.findByCourseId(courseId);

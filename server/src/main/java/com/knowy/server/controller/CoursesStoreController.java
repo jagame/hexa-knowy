@@ -33,7 +33,7 @@ public class CoursesStoreController {
 							   @RequestParam(defaultValue = "1") int page,
 							   @AuthenticationPrincipal UserSecurityDetails userDetails) {
 
-		List<CourseCardDTO> storeCourses = courseSubscriptionService.getRecommendedCourses(userDetails.getPublicUser().getId());
+		List<CourseCardDTO> storeCourses = courseSubscriptionService.getStoreCourses(userDetails.getPublicUser().getId());
 		//Filters
 		if (category != null && !category.isEmpty()) {
 			storeCourses = storeCourses.stream()
@@ -60,7 +60,7 @@ public class CoursesStoreController {
 			}
 		}
 
-		int pageSize = 9;
+		int pageSize = 8;
 
 		// 3. CALCULAR TOTAL DE PÁGINAS
 		int totalPages = (int) Math.ceil((double) storeCourses.size() / pageSize);
