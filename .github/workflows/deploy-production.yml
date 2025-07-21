@@ -12,6 +12,13 @@ jobs:
             -   name: Checkout code
                 uses: actions/checkout@v4
 
+            -   name: Set up JDK 21
+                uses: actions/setup-java@v4
+                with:
+                    distribution: 'temurin'
+                    java-version: '21'
+                    cache: 'maven'
+
             -   name: Build & Test with Maven
                 working-directory: ./server
                 run: mvn clean verify
@@ -26,7 +33,7 @@ jobs:
                     mvn sonar:sonar \
                       -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
                       -Dsonar.host.url=${SONAR_HOST_URL} \
-                      -Dsonar.login=${SONAR_TOKEN}
+                      -Dsonar.login=${SONAR_TOKEN} \
                       -Dsonar.coverage.jacoco.xmlReportPaths=target/jacoco-report/jacoco.xml
 
             -   name: Deploy with Docker Compose

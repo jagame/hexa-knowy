@@ -43,7 +43,6 @@ services:
             - kn_mailpit_data:/data
         ports:
             - ${PORT_PROD_MAILPIT_UI:-8025}:8025 #UI mailpit port
-            - ${PORT_PROD_MAILPIT_SMTP:-1025}:1025 #SMTP port
         networks:
             - knowy_net
         environment:

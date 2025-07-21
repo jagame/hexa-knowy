@@ -66,7 +66,7 @@ public class LessonController {
 		Model model, CourseDto courseDto,
 		List<LessonDto> lessonsDto,
 		List<LinksLessonDto> documentationDto
-	) throws NextLessonNotFoundException, NoCompletedLessonFoundException {
+	) throws NextLessonNotFoundException {
 		model.addAttribute("course", courseDto);
 		model.addAttribute("lessons", courseDto.lessons());
 		model.addAttribute("lastLesson", getLastCompletedIndex(lessonsDto));
@@ -146,7 +146,7 @@ public class LessonController {
 		List<LessonDto> lessonsDto,
 		List<LinksLessonDto> documentationDto,
 		List<SolutionDto> solutions
-	) throws NoCompletedLessonFoundException {
+	) {
 		model.addAttribute("course", courseDto);
 		model.addAttribute("lesson", LessonDto.fromEntity(currentUserLesson));
 		model.addAttribute("lessonContent", currentUserLesson.getLessonEntity().getExplanation());
@@ -157,12 +157,12 @@ public class LessonController {
 		model.addAttribute("solutions", solutions);
 	}
 
-	private int getLastCompletedIndex(List<LessonDto> lessons) throws NoCompletedLessonFoundException {
+	private int getLastCompletedIndex(List<LessonDto> lessons) {
 		return lessons.reversed()
 			.stream()
 			.filter(lesson -> lesson.status() == LessonDto.LessonStatus.COMPLETE)
 			.findFirst()
 			.map(LessonDto::id)
-			.orElseThrow(() -> new NoCompletedLessonFoundException("No se encontró ninguna lección completada."));
+			.orElse(0);
 	}
 }

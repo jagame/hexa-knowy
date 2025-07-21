@@ -217,7 +217,7 @@ public class PublicUserServiceTest {
 		// Verify
 		Mockito.verify(publicUserRepo, Mockito.times(1)).findUserById(16);
 
-		// Check result
+		// Check a result
 		Assertions.assertTrue(result.isPresent());
 		Assertions.assertEquals(user, result.get());
 	}

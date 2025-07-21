@@ -2,32 +2,34 @@
 	<div class="accordion solutions-accordion" id="solAccordionExample">
 		<div class="accordion-item">
 			<h2 class="accordion-header" id="solHeadingOne">
-				<button class="accordion-button collapsed"
-						type="button" data-bs-toggle="collapse"
+				<button aria-controls="solCollapseOne"
+						aria-expanded="false" class="accordion-button collapsed"
 						data-bs-target="#solCollapseOne"
-						aria-expanded="false"
-						aria-controls="solCollapseOne">
+						data-bs-toggle="collapse"
+						type="button">
 					Ver soluciones
 				</button>
 			</h2>
-			<div id="solCollapseOne" class="accordion-collapse collapse" aria-labelledby="solHeadingOne"
-				 data-bs-parent="#solAccordionExample">
+			<div aria-labelledby="solHeadingOne" class="accordion-collapse collapse" data-bs-parent="#solAccordionExample"
+				 id="solCollapseOne">
 				<div class="accordion-body">
 					<div class="accordion" id="solSub-accordionExample">
 						<div class="accordion-item"
 							 th:each="solution, iterStat : ${solutions}">
 							<h2 class="accordion-header" th:id="'sub-heading' + ${iterStat.index}">
-								<button class="accordion-button collapsed sol-cards" type="button"
+								<button aria-expanded="false" class="accordion-button collapsed sol-cards"
 										data-bs-toggle="collapse"
 										th:attr="data-bs-target='#sub-collapse' + ${iterStat.index}"
-										aria-expanded="false">
-									<span th:text="${solution.cardTitle}">Titulo tarjeta</span>
+										type="button">
+									<span th:text="${solution.cardTitle} + ' ' + ${iterStat.count}">
+										Titulo tarjeta
+									</span>
 								</button>
 							</h2>
 							<div class="accordion-collapse collapse"
-								 th:id="'sub-collapse' + ${iterStat.index}"
+								 data-bs-parent="#solSub-accordionExample"
 								 th:attr="aria-labelledby='sub-heading' + ${iterStat.index}"
-								 data-bs-parent="#solSub-accordionExample">
+								 th:id="'sub-collapse' + ${iterStat.index}">
 								<div class="accordion-body">
 									<strong>Pregunta:</strong>
 									<p th:text="${solution.question}">Pregunta de la tarjeta 1.</p>

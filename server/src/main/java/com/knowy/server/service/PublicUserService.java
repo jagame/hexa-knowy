@@ -177,4 +177,8 @@ public class PublicUserService {
 	public Optional<PublicUserEntity> findPublicUserByNickname(String nickname) {
 		return publicUserRepository.findByNickname(nickname);
 	}
+
+	public Optional<PublicUserEntity> findPublicUserById(int id) {
+		return publicUserRepository.findUserById(id);
+	}
 }
