@@ -7,6 +7,9 @@ import com.knowy.server.repository.ports.CourseRepository;
 import com.knowy.server.repository.ports.LanguageRepository;
 import com.knowy.server.repository.ports.LessonRepository;
 import com.knowy.server.repository.ports.PublicUserLessonRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -36,6 +39,19 @@ public class CourseSubscriptionService {
 				findLanguagesForCourse(course), course.getCreationDate()))
 			.toList();
 	}
+
+	public Page<CourseCardDTO> getUserCoursesPaginated(Integer userId, int page) {
+		Pageable pageable = PageRequest.of(page - 1, 9);
+		Page<CourseEntity> coursePage = courseRepository.findCoursesByUserId(userId, pageable);
+
+		return coursePage.map(course -> CourseCardDTO.fromEntity(
+			course,
+			getCourseProgress(userId, course.getId()),
+			findLanguagesForCourse(course),
+			course.getCreationDate()
+		));
+	}
+
 
 	public List<CourseCardDTO> getRecommendedCourses(Integer userId) {
 		List<CourseEntity> userCourses = findCoursesByUserId(userId);
