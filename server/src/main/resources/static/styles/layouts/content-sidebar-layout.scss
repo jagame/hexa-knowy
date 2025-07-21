@@ -45,7 +45,7 @@ html, body {
 		pointer-events: none;
 	}
 
-	@media (min-width: 900px) {
+	@media (min-width: 950px) {
 		position: static;
 		width: 70%;
 		height: auto;
@@ -64,9 +64,9 @@ html, body {
 		transform: translateX(0);
 	}
 
-	@media (min-width: 900px) {
+	@media (min-width: 950px) {
 		position: static;
-		width: 25%;
+		width: 30%;
 		transition: none;
 		transform: none;
 	}
@@ -91,7 +91,7 @@ html, body {
 	border-radius: 50%;
 	background: #333333;
 
-	@media (max-width: 900px) {
+	@media (max-width: 950px) {
 		display: block;
 	}
 }
