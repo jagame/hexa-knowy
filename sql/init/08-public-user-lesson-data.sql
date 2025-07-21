@@ -7,7 +7,7 @@ VALUES (1, 1, '2025-06-10', 'completed'),
 
 -- Usuario 2: Curso 2 (lecciones 5-8)
 INSERT INTO public.public_user_lesson (id_public_user, id_lesson, start_date, status)
-VALUES (2, 5, '2025-06-05', 'in_progress'),
-	   (2, 6, '2025-06-05', 'pending'),
+VALUES (2, 5, '2025-06-05', 'completed'),
+	   (2, 6, '2025-06-05', 'in_progress'),
 	   (2, 7, '2025-06-05', 'pending'),
 	   (2, 8, '2025-06-05', 'pending');

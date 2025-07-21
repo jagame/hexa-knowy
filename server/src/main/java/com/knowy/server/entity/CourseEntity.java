@@ -28,6 +28,9 @@ public class CourseEntity {
 	@Column(name = "description", length = 250, nullable = false)
 	private String description;
 
+	@Column(name = "image", nullable = false)
+	private String image;
+
 	@Column(name = "author", length = 250, nullable = false)
 	private String author;
 
@@ -41,5 +44,8 @@ public class CourseEntity {
 		inverseJoinColumns = @JoinColumn(name = "id_language")
 	)
 	private List<LanguageEntity> languages = new ArrayList<>();
+
+	@OneToMany(mappedBy = "course")
+	private List<LessonEntity> lessons = new ArrayList<>();
 
 }

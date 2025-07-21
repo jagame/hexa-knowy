@@ -169,4 +169,39 @@ public class UserFacadeService {
 		MailMessage mailMessage = privateUserService.createRecoveryPasswordEmail(email, recoveryBaseUrl);
 		emailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
 	}
+
+	/**
+	 * Deactivates the user account after validating the password and confirmation. Sends an email with the account
+	 * recovery link using the provided recovery base URL.
+	 *
+	 * @param password        the user's current password for validation
+	 * @param confirmPassword the confirmation of the password
+	 * @param email           the email of the user whose account will be deactivated
+	 * @param recoveryBaseUrl the base URL to be used for account reactivation link
+	 * @throws UserNotFoundException  if the user with the given email does not exist
+	 * @throws JwtKnowyException      if there is an error generating the JWT token
+	 * @throws MailDispatchException  if sending the recovery email fails
+	 * @throws WrongPasswordException if the password and confirmation do not match or are incorrect
+	 */
+	public void desactivateUserAccount(
+		String password,
+		String confirmPassword,
+		String email,
+		String recoveryBaseUrl
+	) throws UserNotFoundException, JwtKnowyException, MailDispatchException, WrongPasswordException {
+		privateUserService.deactivateUserAccount(email, password, confirmPassword);
+		MailMessage mailMessage = privateUserService.createDeletedAccountEmail(email, recoveryBaseUrl);
+		emailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
+	}
+
+	/**
+	 * Reactivates a previously deactivated user account using a valid reactivation token.
+	 *
+	 * @param token the JWT token used to verify and reactivate the user account
+	 * @throws UserNotFoundException if the user associated with the token does not exist
+	 * @throws JwtKnowyException     if the token is invalid or expired
+	 */
+	public void reactivateUserAccount(String token) throws UserNotFoundException, JwtKnowyException {
+		privateUserService.reactivateUserAccount(token);
+	}
 }

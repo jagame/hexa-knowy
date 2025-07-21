@@ -7,7 +7,10 @@ import com.knowy.server.service.UserFacadeService;
 import com.knowy.server.service.exception.*;
 import com.knowy.server.service.model.UserSecurityDetails;
 import com.knowy.server.util.UserSecurityDetailsHelper;
+import com.knowy.server.util.exception.JwtKnowyException;
+import com.knowy.server.util.exception.MailDispatchException;
 import com.knowy.server.util.exception.WrongPasswordException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,11 +20,15 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
 @Controller
 public class UserConfigController {
+
+	private static final String ERROR_MODEL_ATTRIBUTE = "error";
+	private static final String SUCCESS_MODEL_ATTRIBUTE = "success";
 
 	private final UserFacadeService userFacadeService;
 	private final LanguageService languageService;
@@ -34,11 +41,7 @@ public class UserConfigController {
 	 * @param languageService           the languageService
 	 * @param userSecurityDetailsHelper the userSecurityDetailsHelper
 	 */
-	public UserConfigController(
-		UserFacadeService userFacadeService,
-		LanguageService languageService,
-		UserSecurityDetailsHelper userSecurityDetailsHelper
-	) {
+	public UserConfigController(UserFacadeService userFacadeService, LanguageService languageService, UserSecurityDetailsHelper userSecurityDetailsHelper) {
 		this.userFacadeService = userFacadeService;
 		this.languageService = languageService;
 		this.userSecurityDetailsHelper = userSecurityDetailsHelper;
@@ -74,17 +77,9 @@ public class UserConfigController {
 	 * @return a redirect to the user account page
 	 */
 	@PostMapping("/update-email")
-	public String updateEmail(
-		@ModelAttribute UserConfigChangeEmailFormDto userConfigChangeEmailFormDto,
-		@AuthenticationPrincipal UserSecurityDetails userDetails,
-		RedirectAttributes redirectAttributes
-	) {
+	public String updateEmail(@ModelAttribute UserConfigChangeEmailFormDto userConfigChangeEmailFormDto, @AuthenticationPrincipal UserSecurityDetails userDetails, RedirectAttributes redirectAttributes) {
 		try {
-			userFacadeService.updateEmail(
-				userConfigChangeEmailFormDto.getEmail(),
-				userDetails.getPublicUser().getId(),
-				userConfigChangeEmailFormDto.getPassword()
-			);
+			userFacadeService.updateEmail(userConfigChangeEmailFormDto.getEmail(), userDetails.getPublicUser().getId(), userConfigChangeEmailFormDto.getPassword());
 
 			userSecurityDetailsHelper.refreshUserAuthenticationById();
 			redirectAttributes.addFlashAttribute("successEmail", "Email actualizado con éxito.");
@@ -100,21 +95,124 @@ public class UserConfigController {
 		return "redirect:/user-account";
 	}
 
-	// Delete account
-	@GetMapping("/delete-account")
+	/**
+	 * Displays the account deletion advice page with the current user's nickname.
+	 *
+	 * @param interfaceScreen the model map to pass attributes to the view
+	 * @param userDetails     the authenticated user's security details
+	 * @return the view name for the account deletion advice page
+	 */
+	@GetMapping("/delete-account-advise")
 	public String deleteAccountForm(ModelMap interfaceScreen, @AuthenticationPrincipal UserSecurityDetails userDetails) {
 		interfaceScreen.addAttribute("username", userDetails.getPublicUser().getNickname());
 		return "pages/user-management/delete-account";
 	}
 
-	//Delete-Account-End (Finally deleting Account)
-	@GetMapping("/delete-account-end")
+	/**
+	 * Displays the account deletion confirmation page with the current user's nickname.
+	 *
+	 * @param interfaceScreen the model map to pass attributes to the view
+	 * @param userDetails     the authenticated user's security details
+	 * @return the view name for the account deletion confirmation page
+	 */
+	@GetMapping("/delete-account-confirm")
 	public String deleteAccountEnd(ModelMap interfaceScreen, @AuthenticationPrincipal UserSecurityDetails userDetails) {
 		interfaceScreen.addAttribute("username", userDetails.getPublicUser().getNickname());
-		return "pages/user-management/delete-account-end";
+		return "pages/user-management/delete-account-confirm";
 	}
 
-	//User-Profile
+	/**
+	 * Handles the POST request to confirm account deletion. Validates the provided password and confirmation password,
+	 * deactivates the user account if valid, and initiates the recovery email process. On success, redirects to the
+	 * deletion advice page with a success message. On failure, redirects back to the confirmation page with an
+	 * appropriate error message.
+	 *
+	 * @param userDetails        the authenticated user's security details
+	 * @param password           the password provided by the user for confirmation
+	 * @param confirmPassword    the confirmation of the password
+	 * @param redirectAttributes used to pass flash attributes during redirect
+	 * @param request            the HTTP servlet request to build domain URL
+	 * @return redirect URL to either the deletion advice page on success or back to the confirmation page on failure
+	 */
+	@PostMapping("/delete-account-confirm")
+	public String deleteAccount(@AuthenticationPrincipal UserSecurityDetails userDetails, @RequestParam String password, @RequestParam String confirmPassword, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+		String email = userDetails.getUsername();
+		String domainUrl = getDomainUrl(request);
+		String recoveryBaseUrl = domainUrl + "/reactivate-account";
+
+		try {
+			userFacadeService.desactivateUserAccount(password, confirmPassword, email, recoveryBaseUrl);
+			redirectAttributes.addFlashAttribute(SUCCESS_MODEL_ATTRIBUTE, "Tu cuenta ha sido desactivada correctamente. Dispones de 30 días para recuperarla.");
+			return "redirect:delete-advise";
+
+		} catch (WrongPasswordException e) {
+			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "La contraseña es incorrecta o no coincide");
+			return "redirect:delete-account-confirm";
+		} catch (MailDispatchException e) {
+			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Error al enviar el email");
+			return "redirect:delete-account-confirm";
+		} catch (JwtKnowyException e) {
+			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Error al recuperar el token");
+			return "redirect:delete-account-confirm";
+		} catch (UserNotFoundException e) {
+			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado");
+			return "redirect:delete-account-confirm";
+		}
+	}
+
+	private String getDomainUrl(HttpServletRequest request) {
+		String scheme = request.getScheme();
+		String serverName = request.getServerName();
+		int serverPort = request.getServerPort();
+		return scheme + "://" + serverName + ":" + serverPort;
+	}
+
+
+	/**
+	 * Handles the account reactivation process using a token. Attempts to reactivate the user account linked to the
+	 * provided token. On success, shows a success message and returns the reactivation confirmation page. On failure,
+	 * shows an error message and returns an error page.
+	 *
+	 * @param token the reactivation token provided as a request parameter
+	 * @param model the Spring MVC model to pass attributes to the view
+	 * @return the name of the view to be rendered
+	 */
+	@GetMapping("/reactivate-account")
+	public String reactivateAccount(@RequestParam("token") String token, Model model) {
+
+		try {
+			userFacadeService.reactivateUserAccount(token);
+			model.addAttribute(SUCCESS_MODEL_ATTRIBUTE, "Tu cuenta ha sido reactivada correctamente.");
+			return "pages/user-management/account-reactivation";
+
+		} catch (JwtKnowyException e) {
+			model.addAttribute(ERROR_MODEL_ATTRIBUTE, "El token ha expirado o no es válido");
+			return "error/error";
+		} catch (UserNotFoundException e) {
+			model.addAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado");
+			return "error/error";
+		}
+	}
+
+	/**
+	 * Displays the deletion advice page after account deactivation.
+	 *
+	 * @return the name of the deletion advice view page
+	 */
+	@GetMapping("delete-advise")
+	public String deleteAdvise() {
+		return "pages/user-management/account-reactivation";
+	}
+
+	/**
+	 * Displays the user profile page. Initializes the user's languages collection to avoid lazy loading issues. Adds
+	 * the public user information and list of all available languages to the model.
+	 *
+	 * @param model          the Spring MVC model to pass attributes to the view
+	 * @param userProfileDTO DTO object representing user profile data (used for form binding)
+	 * @param userDetails    the authenticated user's security details
+	 * @return the name of the user profile view page
+	 */
 	@GetMapping("/user-profile")
 	public String viewUserProfile(Model model, UserProfileDTO userProfileDTO, @AuthenticationPrincipal UserSecurityDetails userDetails) {
 		Hibernate.initialize(userDetails.getPublicUser().getLanguages());
@@ -123,28 +221,35 @@ public class UserConfigController {
 		return "pages/user-management/user-profile";
 	}
 
+	/**
+	 * Handles the update of the user's profile, including nickname, profile picture, and languages. Validates and
+	 * applies changes to the user's data by invoking the corresponding service methods. Adds appropriate success or
+	 * error messages as flash attributes for feedback in the redirected view. Refreshes the user's authentication
+	 * details after a successful update.
+	 *
+	 * @param userProfileDTO     the DTO containing the updated profile data from the form
+	 * @param redirectAttributes attributes for flash messages to be used after redirect
+	 * @param userDetails        the authenticated user's security details
+	 * @return the redirect URL to the user profile page
+	 */
 	@PostMapping("/update-user-profile")
-	public String updateUserProfile(
-		@ModelAttribute("profileDto") UserProfileDTO userProfileDTO,
-		RedirectAttributes redirectAttributes,
-		@AuthenticationPrincipal UserSecurityDetails userDetails
-	) {
+	public String updateUserProfile(@ModelAttribute("profileDto") UserProfileDTO userProfileDTO, RedirectAttributes redirectAttributes, @AuthenticationPrincipal UserSecurityDetails userDetails) {
 		String newNickname = userProfileDTO.getNickname();
 		if (newNickname != null && !newNickname.isBlank()) {
 			try {
 				userFacadeService.updateNickname(newNickname, userDetails.getPublicUser().getId());
 				redirectAttributes.addFlashAttribute("username", newNickname);
 			} catch (UserNotFoundException e) {
-				redirectAttributes.addFlashAttribute("error", "Usuario no encontrado.");
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado.");
 				return "redirect:/user-profile";
 			} catch (UnchangedNicknameException e) {
-				redirectAttributes.addFlashAttribute("error", "El nuevo nombre debe ser diferente al actual.");
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "El nuevo nombre debe ser diferente al actual.");
 				return "redirect:/user-profile";
 			} catch (NicknameAlreadyTakenException e) {
-				redirectAttributes.addFlashAttribute("error", "El nombre ya está en uso.");
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "El nombre ya está en uso.");
 				return "redirect:/user-profile";
 			} catch (InvalidUserNicknameException e) {
-				redirectAttributes.addFlashAttribute("error", "No se permiten apodos en blanco o vacíos.");
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "No se permiten apodos en blanco o vacíos.");
 				return "redirect:/user-profile";
 			}
 		}
@@ -155,27 +260,25 @@ public class UserConfigController {
 				redirectAttributes.addFlashAttribute("profilePicture", userProfileDTO.getProfilePictureId());
 				redirectAttributes.addFlashAttribute("profilePictureUrl", userDetails.getPublicUser().getProfileImage().getUrl());
 			} catch (ImageNotFoundException e) {
-				redirectAttributes.addFlashAttribute("error", "Aún no existe una imagen de perfil");
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Aún no existe una imagen de perfil");
 				return "redirect:/user-profile";
 			} catch (UnchangedImageException e) {
-				redirectAttributes.addFlashAttribute("error", "La imagen debe ser diferente a la actual.");
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "La imagen debe ser diferente a la actual.");
 				return "redirect:/user-profile";
 			} catch (UserNotFoundException e) {
-				redirectAttributes.addFlashAttribute("error", "Usuario no encontrado");
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado");
 				return "redirect:/user-profile";
 			}
 		}
 
-		String[] newLanguages = userProfileDTO.getLanguages() != null
-			? userProfileDTO.getLanguages()
-			: new String[0];
+		String[] newLanguages = userProfileDTO.getLanguages() != null ? userProfileDTO.getLanguages() : new String[0];
 		try {
 			userFacadeService.updateLanguages(userDetails.getPublicUser().getId(), newLanguages);
 		} catch (UserNotFoundException e) {
-			redirectAttributes.addFlashAttribute("error", "Usuario no encontrado");
+			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado");
 		}
 
-		redirectAttributes.addFlashAttribute("success", "Perfil actualizado correctamente");
+		redirectAttributes.addFlashAttribute(SUCCESS_MODEL_ATTRIBUTE, "Perfil actualizado correctamente");
 		redirectAttributes.addFlashAttribute("nickname", userProfileDTO.getNickname());
 		redirectAttributes.addFlashAttribute("languages", userProfileDTO.getLanguages());
 

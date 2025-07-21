@@ -38,12 +38,15 @@ public class PresentationController {
 		//And I send the list to the screen
 		interfaceScreen.addAttribute("newsList", newsList);
 
+		// FIXME - DOIT
+/*
 
 		List<SolutionDto> solutions = new ArrayList<>();
 		solutions.add(new SolutionDto("Tarjeta 1: JavaScript vs Java", "Pregunta tarjeta 1", "Solución tarjeta 1"));
 		solutions.add(new SolutionDto("Tarjeta 2: PHP", "Pregunta tarjeta 2", "Solución tarjeta 2"));
 		solutions.add(new SolutionDto("Tarjeta 3: Python", "Pregunta tarjeta 3", "Solución tarjeta 3"));
 		interfaceScreen.addAttribute("solutions", solutions);
+*/
 
 		return "pages/landing-page";
 	}
