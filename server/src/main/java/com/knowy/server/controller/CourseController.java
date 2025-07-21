@@ -83,18 +83,18 @@ public class CourseController {
 
 		int pageSize = 9;
 
-		// 3. Calcula totalPages basado en la lista ya filtrada y ordenada
+		// 3. CALCULAR TOTAL DE PÁGINAS
 		int totalPages = (int) Math.ceil((double) courses.size() / pageSize);
 		if (totalPages == 0) totalPages = 1;  // mínimo 1 página
 
-		// 4. Controlar que page esté dentro del rango válido
+		// 4. RANGO DE PAGE
 		if (page < 1) page = 1;
 		if (page > totalPages) page = totalPages;
 
 		int fromIndex = (page - 1) * pageSize;
 		int toIndex = Math.min(fromIndex + pageSize, courses.size());
 
-		// 5. Paginación correcta
+		// 5 PAGINACIÓN
 		List<CourseCardDTO> paginatedCourses = fromIndex >= courses.size() ? List.of() : courses.subList(fromIndex, toIndex);
 
 		model.addAttribute("allLanguages", courseSubscriptionService.findAllLanguages());

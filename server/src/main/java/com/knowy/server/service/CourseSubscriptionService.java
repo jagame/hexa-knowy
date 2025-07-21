@@ -75,7 +75,7 @@ public class CourseSubscriptionService {
 			}).toList();
 
 		List<CourseCardDTO> recommendations = langMatching.stream()
-			.limit(3)
+			.limit(9)
 			.map(course -> CourseCardDTO.fromRecommendation(
 				course, findLanguagesForCourse(course), course.getCreationDate()))
 			.collect(Collectors.toList());
