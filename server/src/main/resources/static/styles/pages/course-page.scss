@@ -12,7 +12,7 @@
 	color: black;
 	text-align: center;
 	align-content: center;
-	font-family: caveat-brush;
+	font-family: caveat-brush, sans-serif;
 }
 
 .course-title__progressbar {
@@ -24,9 +24,9 @@
 
 .progress-bar {
 	width: 100%;
-	max-width:260px;
+	//max-width:260px;
 	height: 10px;
-	background-color: #e0e0e0;
+	background-color: $neutral-100;
 	border-radius: 10px;
 	overflow: hidden;
 	margin: 0.5em 1em;
@@ -39,31 +39,31 @@
 }
 
 .course-title__percentage {
-	margin-top: 0.5em;
+	display: flex;
+	width: 100%;
+	margin-top: 1.75rem;
 	font-weight: 600;
-	font-size: 0.85rem;
-	font-family:inter;
-	font-style: normal;
+	font-size: 0.75rem;
+	font-family: inter, sans-serif;
 }
 
 .introduction-btn--purple{
-	border-radius:$radius-25;
-	background-color:$secundary-700;
-	color:$primary-100;
-	padding:10px 50px ;
-	margin-top: 0.75em;
+	border-radius: $radius-25;
+	background-color: $secundary-500;
+	font-family: Excalifont, sans-serif;
+	font-size: 1.25rem;
+	color: white;
+	padding: 10px 50px ;
+	margin-top: 0.25em;
 	margin-bottom: 1em;
 	transition: 0.2s ease-in-out;
-	text-decoration:none;
+	text-decoration: none;
+	width: 100%;
 }
 .introduction-btn--purple:hover{
-	scale: 1.02;
-	color:$primary-100;
+	color:white;
+	background-color:$secundary-700;
 	text-decoration:none;
-}
-
-.introduction-btn--purple:active{
-	scale: 1;
 }
 
 
