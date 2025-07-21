@@ -21,7 +21,7 @@
 										data-bs-toggle="collapse"
 										th:attr="data-bs-target='#sub-collapse' + ${iterStat.index}"
 										aria-expanded="false">
-									<span th:text="${solution.cardTitle}">Titulo tarjeta</span>
+									<span th:text="${solution.cardTitle} + ' ' + ${iterStat.count}">Titulo tarjeta</span>
 								</button>
 							</h2>
 							<div class="accordion-collapse collapse"
