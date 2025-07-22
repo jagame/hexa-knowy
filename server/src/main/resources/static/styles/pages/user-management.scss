@@ -19,7 +19,7 @@ body {
 .user-information {
 	font-family: 'caveat-brush';
 	padding: 30px;
-	gap: 0.5rem;
+	gap: 2.5rem;
 }
 
 /*Aside bar user-management*/
@@ -149,7 +149,7 @@ body {
 
 .section-title {
 	font-family: 'caveat-brush', sans-serif;
-	color: $primary-500;
+	color: $secundary-500;
 }
 
 .language-item {
@@ -185,20 +185,23 @@ body {
 
 .btn-inferior {
 	color: white;
-	background-color: $neutral-900;
+	background-color: $neutral-700;
 }
 
 .btn-save {
+	font-family: 'caveat-brush', sans-serif;
 	color: white;
 	background-color: $primary-500;
 }
 
 .btn-save:hover {
-	background-color: $primary-300;
+	background-color: $primary-700;
+	color: white;
 }
 
 .btn-inferior:hover {
-	background-color: $neutral-500;
+	background-color: $neutral-900;
+	color: white;
 }
 
 /*User Account*/
@@ -208,19 +211,19 @@ body {
 }
 
 .advice-success {
-	font-family: 'caveat-brush';
+	font-family: 'caveat-brush', sans-serif;
 	font-size: small;
 	color: $primary-500;
 }
 
 .advice-error {
-	font-family: 'caveat-brush';
+	font-family: 'caveat-brush', sans-serif;
 	font-size: small;
 	color: $danger-500;
 }
 
 .title-delete {
-	font-family: excalifont;
+	font-family: excalifont, sans-serif;
 	color: $danger-500;
 }
 
@@ -236,9 +239,9 @@ body {
 }
 
 .btn-delete {
-	font-family: 'caveat-brush';
+	font-family: 'caveat-brush', sans-serif;
 	color: white;
-	background-color: $danger-500;
+	background-color: $danger-600;
 }
 
 .btn-delete:hover {
