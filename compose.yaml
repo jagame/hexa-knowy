@@ -5,13 +5,13 @@ services:
             dockerfile: server/Dockerfile
         container_name: kn-server
         ports:
-            - "${PUERTO_PRODUCCION:-80}:8080"
+            - "80:80"
         networks:
             - knowy_net
         depends_on:
             - postgres
         healthcheck:
-            test: [ "CMD-SHELL", "curl --fail http://localhost:8080/actuator/health || exit 1" ]
+            test: [ "CMD-SHELL", "curl --fail http://localhost:80/actuator/health || exit 1" ]
             interval: 30s
             timeout: 5s
             retries: 3
