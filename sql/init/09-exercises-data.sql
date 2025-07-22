@@ -126,18 +126,251 @@ VALUES
 	(10, 'El constructor debe tener el mismo nombre que la clase. ¿Verdadero o falso?'),
 	(10, 'Un método puede acceder directamente a los atributos de la clase. ¿Verdadero o falso?');
 
-
--- CURSO 2: ENTRECISTA TÉCNICA JAVA
--- Lección 1: Conceptos clave de POO en Java
+-- Lección 11
 INSERT INTO public.exercise (id_lesson, question)
-VALUES
-	(1, '¿Cuál de los siguientes es uno de los pilares fundamentales de la programación orientada a objetos?'),
-	(1, '¿Qué principio de la POO se refiere a ocultar detalles internos y mostrar solo lo necesario?'),
-	(1, '¿Qué palabra clave en Java se utiliza para declarar una clase abstracta?'),
-	(1, '¿Qué sucede cuando una clase hereda de otra en Java?'),
-	(1, '¿Cuál es una ventaja del polimorfismo en la programación orientada a objetos?'),
-	(1, 'Encapsulación permite ocultar los atributos internos de una clase. ¿Verdadero o falso?'),
-	(1, 'La herencia impide la reutilización de código en Java. ¿Verdadero o falso?'),
-	(1, 'En Java, una clase abstracta puede tener métodos sin cuerpo. ¿Verdadero o falso?'),
-	(1, 'Polimorfismo significa que un mismo método puede tener comportamientos distintos. ¿Verdadero o falso?'),
-	(1, 'La abstracción muestra todos los detalles de una clase al usuario. ¿Verdadero o falso?');
+VALUES (11, '¿Qué es la concurrencia en Java y para qué sirve?');
+
+-- Lección 12
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (12, '¿Cuáles son algunas buenas prácticas de programación en Java?');
+
+-- Lección 13
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (13, '¿Qué necesitas para empezar a desarrollar aplicaciones web en Java?');
+
+-- Lección 14
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (14, '¿Qué es un framework en Java y cuál es su utilidad principal?');
+
+-- Lección 15
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (15, '¿Qué pilares forman parte de la Programación Orientada a Objetos en Java?');
+
+-- Lección 16
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (16, '¿Qué ventaja principal ofrece el uso de polimorfismo en Java?');
+
+-- Lección 17
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (17, '¿Qué estructura de datos usarías para almacenar un conjunto sin elementos repetidos?');
+
+-- Lección 18
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (18, '¿Qué diferencia hay entre una lista y un mapa en Java?');
+
+-- Lección 19
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (19, '¿Qué es Spring y cuál es su principal objetivo?');
+
+-- Lección 20
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (20, '¿Qué es la inyección de dependencias en el contexto de Spring?');
+
+-- Lección 21
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (21, '¿Qué herramienta ofrece Spring Boot para ejecutar rápidamente una aplicación?');
+
+-- Lección 22
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (22, '¿Qué anotación en Spring Boot se usa para declarar un servicio REST?');
+
+-- Lección 23
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (23, '¿Cuál es la finalidad principal de un Servlet en Java EE?');
+
+-- Lección 24
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (24, '¿Qué servidor embebido suele usarse para desplegar aplicaciones Java?');
+
+-- Lección 25
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (25, '¿Qué funcionalidad brinda un controlador REST en una API?');
+
+-- Lección 26
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (26, '¿Cómo puede un cliente JavaScript consumir una API REST?');
+
+-- Lección 27
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (27, '¿Para qué se usa la API JPA en Java?');
+
+-- Lección 28
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (28, '¿Cuál es la diferencia entre FetchType.EAGER y FetchType.LAZY en Hibernate?');
+
+-- Lección 29
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (29, '¿Qué librería se utiliza mayormente para pruebas unitarias en Java?');
+
+-- Lección 30
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (30, '¿Qué beneficios ofrece el uso de Mockito en pruebas unitarias?');
+
+-- Lección 31
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (31, '¿Cuál es el primer paso para construir una app en JavaFX?');
+
+-- Lección 32
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (32, '¿Qué componentes permiten interacción con el usuario en JavaFX?');
+
+-- Lección 33
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (33, '¿Qué instrucción imprime texto en la consola en Java?');
+
+-- Lección 34
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (34, '¿Qué tipo de dato usarías para almacenar el nombre de una persona?');
+
+-- Lección 35
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (35, '¿Qué diferencia hay entre <code>let</code> y <code>const</code> en JavaScript?');
+
+-- Lección 36
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (36, '¿Qué es una función flecha en JavaScript?');
+
+-- Lección 37
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (37, '¿Qué problema resuelve el uso de clases en JavaScript moderno?');
+
+-- Lección 38
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (38, '¿Qué palabra clave permite utilizar <em>promesas</em> más fácilmente en JS?');
+
+-- Lección 39
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (39, '¿Qué objeto especial permite interactuar con el DOM en JavaScript?');
+
+-- Lección 40
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (40, '¿Qué método se usa para hacer peticiones HTTP en JavaScript moderno?');
+
+-- Lección 41
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (41, '¿Qué palabra clave define una clase en Java?');
+
+-- Lección 42
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (42, '¿Qué diferencia hay entre una interface y una clase abstracta?');
+
+-- Lección 43
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (43, '¿Qué es una aplicación de múltiples capas (multicapa)?');
+
+-- Lección 44
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (44, '¿Qué permite JDBC en el desarrollo Java?');
+
+-- Lección 45
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (45, '¿Qué etiqueta define la estructura básica de una página HTML?');
+
+-- Lección 46
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (46, '¿Qué elemento se usa para insertar un video en HTML5?');
+
+-- Lección 47
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (47, '¿Qué son las etiquetas <code>ARIA</code> y para qué se usan?');
+
+-- Lección 48
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (48, '¿Qué elementos ayuda al posicionamiento SEO en HTML semántico?');
+
+-- Lección 49
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (49, '¿Qué selector CSS se usa para seleccionar todos los elementos <code>&lt;p&gt;</code>?');
+
+-- Lección 50
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (50, '¿Qué propiedad CSS permite centrar un bloque con <code>margin: auto;</code>?');
+
+-- Lección 51
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (51, '¿Qué ventajas ofrece Flexbox sobre el modelo de caja tradicional?');
+
+-- Lección 52
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (52, '¿Qué propiedad CSS permite una transición suave entre estilos?');
+
+-- Lección 53
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (53, '¿Qué función se usa para imprimir texto en Python?');
+
+-- Lección 54
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (54, '¿Qué palabra clave se usa en Python para escribir una estructura condicional?');
+
+-- Lección 55
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (55, '¿Qué función de Pandas se utiliza para cargar un archivo CSV?');
+
+-- Lección 56
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (56, '¿Qué biblioteca gráfica se usa comúnmente junto con Pandas para visualizaciones?');
+
+-- Lección 57
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (57, '¿Qué función de PHP se usa para imprimir en pantalla?');
+
+-- Lección 58
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (58, '¿Qué superglobal de PHP se utiliza para obtener los datos de un formulario enviado por POST?');
+
+-- Lección 59
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (59, '¿Qué función de PHP permite establecer conexión con una base de datos MySQL?');
+
+-- Lección 60
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (60, '¿Qué significa el acrónimo CRUD?');
+
+-- Lección 61
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (61, '¿Cuál es la función principal del método <code>Main()</code> en C#?');
+
+-- Lección 62
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (62, '¿Qué es un objeto en C# y cómo se declara?');
+
+-- Lección 63
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (63, '¿Qué permite hacer LINQ en colecciones como listas?');
+
+-- Lección 64
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (64, '¿Qué tipo de aplicación permite crear Windows Forms?');
+
+-- Lección 65
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (65, '¿Qué palabra clave define un tipo en TypeScript?');
+
+-- Lección 66
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (66, '¿Para qué se utiliza una interfaz (<code>interface</code>) en TypeScript?');
+
+-- Lección 67
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (67, '¿Qué archivo contiene el metadato y configuración de un proyecto Angular?');
+
+-- Lección 68
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (68, '¿Qué servicio Angular permite manejar peticiones HTTP?');
+
+-- Lección 69
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (69, '¿Qué línea imprime texto en Ruby?');
+
+-- Lección 70
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (70, '¿Qué estructura proporciona Ruby on Rails para organizar una web MVC?');
+
+-- Lección 71
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (71, '¿Qué palabra clave se usa para declarar una constante en Swift?');
+
+-- Lección 72
+INSERT INTO public.exercise (id_lesson, question)
+VALUES (72, '¿Qué herramienta de desarrollo visual ofrece Apple para diseñar interfaces en iOS?');
+
