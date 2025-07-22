@@ -76,11 +76,11 @@ body {
 .user-management-container_main {
 	width: 100%;
 	padding: 30px;
-	background-color: $neutral-100;
+	background-color: $bg;
 }
 
 .title-management {
-	font-family: excalifont;
+	font-family: excalifont, sans-serif;
 	font-weight: bold;
 	color: $primary-500;
 }
@@ -108,6 +108,7 @@ body {
 	padding: 0;
 	border: 3px solid $primary-500;
 	border-radius: 50%;
+	cursor: pointer;
 }
 
 .edit-avatar {
@@ -133,8 +134,8 @@ body {
 }
 
 .edit-pic-btn:hover {
-	color: $neutral-700;
-	background-color: $primary-300;
+	color: white;
+	background-color: $primary-700;
 }
 
 .file-input-overlay {
@@ -147,7 +148,7 @@ body {
 }
 
 .section-title {
-	font-weight: bold;
+	font-family: 'caveat-brush', sans-serif;
 	color: $primary-500;
 }
 
