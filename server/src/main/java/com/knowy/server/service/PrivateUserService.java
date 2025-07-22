@@ -329,7 +329,7 @@ public class PrivateUserService {
 	 * @throws WrongPasswordException if the passwords do not match or the password is incorrect
 	 * @throws UserNotFoundException  if no user is found for the given email
 	 */
-	public void deactivateUserAccount(
+	public void desactivateUserAccount(
 		String email,
 		String password,
 		String confirmPassword
