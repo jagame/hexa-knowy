@@ -36,6 +36,16 @@ public class CourseSubscriptionService {
 		this.languageRepository = languageRepository;
 	}
 
+
+	public List<CourseCardDTO> getUserCourses(Integer userId) {
+		List<CourseEntity> userCourses = findCoursesByUserId(userId);
+		return userCourses.stream()
+			.map(course -> CourseCardDTO.fromEntity(
+				course, getCourseProgress(userId, course.getId()),
+				findLanguagesForCourse(course), course.getCreationDate()))
+			.toList();
+	}
+
 	public List<CourseEntity> findCoursesByUserId(Integer userId) {
 		List<Integer> courseIds = publicUserLessonRepository.findCourseIdsByUserId(userId);
 		if (courseIds.isEmpty()) return List.of();

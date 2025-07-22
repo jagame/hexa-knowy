@@ -177,16 +177,23 @@ select.form-select option {
 	box-shadow: 0 0 0 0.1rem $primary-500;
 }
 
-.pagination > li > a {
+.pagination .page-item .page-link  {
 	font-family: "caveat-brush", cursive;
 	color: $secundary-500;
+	background-color: #e9ecef;
+	outline:none!important;
+	border:none!important;
 }
 
-.pagination > li > a:hover,
-.pagination > li > a:focus {
+
+.pagination .page-item .page-link:hover,
+.pagination .page-item .page-link:focus-visible,
+.pagination .page-item .page-link:focus {
 	color: $bg;
 	background-color: $secundary-500;
 	box-shadow: none;
+	outline:none !important;
+	border:none!important;
 }
 
 .btn-categories, .btn-order, .btn-visualization {

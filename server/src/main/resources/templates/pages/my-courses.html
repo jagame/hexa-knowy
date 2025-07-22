@@ -80,7 +80,7 @@
 
 				<!--page navigation-->
 					<nav aria-label="Page navigation">
-						<ul class="pagination justify-content-center mt-5">
+						<ul class="pagination justify-content-center mt-4">
 							<li th:classappend="${currentPage == 1} ? 'disabled'" class="page-item">
 								<a class="page-link"
 								   th:href="@{'/my-courses'(page=${currentPage - 1}, category=${category}, order=${order})}">&laquo;</a>

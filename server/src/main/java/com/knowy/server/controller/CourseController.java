@@ -34,6 +34,7 @@ public class CourseController {
 							 @RequestParam(required = false) String order,
 							 @RequestParam(defaultValue = "1") int page,
 							 @AuthenticationPrincipal UserSecurityDetails userDetails) {
+		Integer userId = userDetails.getPublicUser().getId();
 		List<CourseCardDTO> courses = courseSubscriptionService.getUserCourses(userDetails.getPublicUser().getId());
 
 		//Filter by language (category)
@@ -78,6 +79,13 @@ public class CourseController {
 			}
 		}
 
+		List<CourseCardDTO> recommendations = courseSubscriptionService.getRecommendedCourses(userId).stream()
+			.map(course -> CourseCardDTO.fromRecommendation(
+				course,
+				courseSubscriptionService.findLanguagesForCourse(course),
+				course.getCreationDate()
+			)).toList();
+
 		int pageSize = 9;
 
 		// 3. CALCULAR TOTAL DE PÁGINAS
@@ -98,7 +106,7 @@ public class CourseController {
 		model.addAttribute("courses", paginatedCourses);
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", totalPages);
-		model.addAttribute("recommendations", courseSubscriptionService.getRecommendedCourses(userDetails.getPublicUser().getId()));
+		model.addAttribute("recommendations", recommendations);
 		model.addAttribute("order", order);
 		model.addAttribute("category", category);
 		model.addAttribute("acquireAction", "/my-courses/subscribe");
