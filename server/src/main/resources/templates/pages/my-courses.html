@@ -71,8 +71,8 @@
 
 				<!--course-->
 				<div class="courses">
-						<span><h2 class="h2-courses">Mis cursos</h2></span>
-					<div class="courses-container">
+					<h2 class="h2-courses">Mis cursos</h2>
+					<div class="courses-container mt-5">
 						<div class="m-1" th:each="course : ${courses}">
 							<div th:replace="~{components/course-card :: course-card(${course}, ${acquireAction})}"></div>
 						</div>
@@ -80,7 +80,7 @@
 
 				<!--page navigation-->
 					<nav aria-label="Page navigation">
-						<ul class="pagination justify-content-center mt-5">
+						<ul class="pagination justify-content-center mt-4">
 							<li class="page-item">
 								<a aria-label="Previous" class="page-link" href="#">
 									<span aria-hidden="true">&laquo;</span>
