@@ -32,25 +32,19 @@ public class CourseController {
 	public String myCourses (Model model,
 							 @RequestParam(required = false) String category,
 							 @RequestParam(required = false) String order,
+							 @RequestParam(defaultValue = "1") int page,
 							 @AuthenticationPrincipal UserSecurityDetails userDetails) {
-
 		Integer userId = userDetails.getPublicUser().getId();
-		List<CourseEntity> courseEntities = courseSubscriptionService.findCoursesByUserId(userId);
+		List<CourseCardDTO> courses = courseSubscriptionService.getUserCourses(userDetails.getPublicUser().getId());
 
-		List<CourseCardDTO> courses = courseEntities.stream()
-			.map(course -> CourseCardDTO.fromEntity(
-				course, courseSubscriptionService.getCourseProgress(userId, course.getId()),
-				courseSubscriptionService.findLanguagesForCourse(course),
-				course.getCreationDate()
-			)).toList();
-
-
+		//Filter by language (category)
 		if(category != null && !category.isEmpty()){
 			courses = courses.stream()
 				.filter(c-> c.getLanguages() != null && c.getLanguages().contains(category))
 				.toList();
 		}
 
+		//Order
 		if(order !=null){
 			switch (order){
 				case "alpha_asc" -> courses = courses.stream()
@@ -69,6 +63,7 @@ public class CourseController {
 					.sorted(Comparator.comparing(CourseCardDTO::getProgress).reversed())
 					.toList();
 
+
 				case "date_asc" -> courses = courses.stream()
 					.sorted(Comparator.comparing(CourseCardDTO::getId))
 					.toList();
@@ -83,6 +78,7 @@ public class CourseController {
 						.toList();
 			}
 		}
+
 		List<CourseCardDTO> recommendations = courseSubscriptionService.getRecommendedCourses(userId).stream()
 			.map(course -> CourseCardDTO.fromRecommendation(
 				course,
@@ -90,8 +86,26 @@ public class CourseController {
 				course.getCreationDate()
 			)).toList();
 
+		int pageSize = 9;
+
+		// 3. CALCULAR TOTAL DE PÁGINAS
+		int totalPages = (int) Math.ceil((double) courses.size() / pageSize);
+		if (totalPages == 0) totalPages = 1;  // mínimo 1 página
+
+		// 4. RANGO DE PAGE
+		if (page < 1) page = 1;
+		if (page > totalPages) page = totalPages;
+
+		int fromIndex = (page - 1) * pageSize;
+		int toIndex = Math.min(fromIndex + pageSize, courses.size());
+
+		// 5 PAGINACIÓN
+		List<CourseCardDTO> paginatedCourses = fromIndex >= courses.size() ? List.of() : courses.subList(fromIndex, toIndex);
+
 		model.addAttribute("allLanguages", courseSubscriptionService.findAllLanguages());
-		model.addAttribute("courses", courses);
+		model.addAttribute("courses", paginatedCourses);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("recommendations", recommendations);
 		model.addAttribute("order", order);
 		model.addAttribute("category", category);
@@ -111,6 +125,7 @@ public class CourseController {
 		} catch(KnowyCourseSubscriptionException e){
 			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Error", e.getMessage(), ToastDto.ToastType.ERROR)));
 		} catch (Exception e) {
+			e.printStackTrace();
 			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Error", "Ocurrió un error inesperado al suscribirte al curso.", ToastDto.ToastType.ERROR)));
 		}
 		return "redirect:/my-courses";

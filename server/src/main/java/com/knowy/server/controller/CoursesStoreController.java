@@ -31,6 +31,7 @@ public class CoursesStoreController {
 	public String storeCourses(Model model,
 							   @RequestParam(required = false) String category,
 							   @RequestParam(required = false) String order,
+							   @RequestParam(defaultValue = "1") int page,
 							   @AuthenticationPrincipal UserSecurityDetails userDetails) {
 		Integer userId = userDetails.getPublicUser().getId();
 
@@ -81,13 +82,30 @@ public class CoursesStoreController {
 			}
 		}
 
+		// PAGINACIÓN
+		int pageSize = 8;
+		int totalPages = (int) Math.ceil((double) storeCourses.size() / pageSize);
+		if (totalPages == 0) totalPages = 1; // mínimo 1 página
+
+		if (page < 1) page = 1;
+		if (page > totalPages) page = totalPages;
+
+		int fromIndex = (page - 1) * pageSize;
+		int toIndex = Math.min(fromIndex + pageSize, storeCourses.size());
+
+		List<CourseCardDTO> paginatedStoreCourses = fromIndex >= storeCourses.size() ? List.of() : storeCourses.subList(fromIndex, toIndex);
+
+
 		model.addAttribute("allLanguages", courseSubscriptionService.findAllLanguages());
-		model.addAttribute("courses", storeCourses);
+		model.addAttribute("courses", paginatedStoreCourses);
 		model.addAttribute("order", order);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("category", category);
 		model.addAttribute("acquireAction", "/store/subscribe");
 		return "pages/courses-store";
 	}
+
 
 
 	@PostMapping("/subscribe")
