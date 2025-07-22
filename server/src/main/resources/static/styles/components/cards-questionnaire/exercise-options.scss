@@ -18,7 +18,7 @@
 
 
 .exercise-option {
-	font-family: excalifont;
+	font-family: excalifont, sans-serif;
 	width: 100%;
 	padding: 15px 20px;
 	transition: $transition-speed;
@@ -29,12 +29,12 @@
 }
 
 .exercise-option:hover {
-	color: $neutral-100;
+	color: black;
 	background: $secundary-300;
 }
 
 .exercise-option.selected {
-	color: $neutral-100;
+	color: white;
 	background: $secundary-500;
 }
 

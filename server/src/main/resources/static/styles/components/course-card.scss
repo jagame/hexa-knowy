@@ -31,6 +31,7 @@ body{
 	height: 100%;
 	object-fit: cover;
 	z-index: 0;
+	filter: brightness(65%);
 }
 
 .imagen-container::after {
@@ -67,6 +68,7 @@ body{
 }
 
 .course-card__content {
+	background-color: $bg;
 	padding: 1em 1.2em 1.2em 1.2em;
 	display: flex;
 	flex-direction: column;
@@ -148,28 +150,27 @@ body{
 .course-card__button-action,
 .course-card__button-action:visited,
 .course-card__button-action:active{
-	border: none;
-	outline: none;
-	display: block;
+	font-family: "Excalifont", sans-serif;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 20px;
+	height: 45px;
 	width: 100%;
 	background-color: $primary-500;
-	color: $neutral-100;
+	color: white;
 	border-radius: $radius-25;
-	font-weight: bold;
 	cursor: pointer;
 	transition: $transition-speed;
 	text-decoration:none;
 	text-align:center;
 	padding: 0.8em 0;
-	margin: 0;
-	box-sizing: border-box;
 }
 
 .course-card__button-action:hover,
 .course-card__button-action:focus {
 	background-color: $primary-700;
-	color: $secundary-700;
-	outline: none;
+	color: white;
 	text-decoration: none;
 	box-shadow: $card-shadow;
 }
