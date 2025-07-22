@@ -3,6 +3,7 @@ package com.knowy.server.controller;
 import com.knowy.server.controller.dto.CourseCardDTO;
 import com.knowy.server.controller.dto.ToastDto;
 import com.knowy.server.controller.exception.KnowyCourseSubscriptionException;
+import com.knowy.server.entity.CourseEntity;
 import com.knowy.server.service.CourseSubscriptionService;
 import com.knowy.server.service.model.UserSecurityDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,8 +33,29 @@ public class CoursesStoreController {
 							   @RequestParam(required = false) String order,
 							   @RequestParam(defaultValue = "1") int page,
 							   @AuthenticationPrincipal UserSecurityDetails userDetails) {
+		Integer userId = userDetails.getPublicUser().getId();
 
-		List<CourseCardDTO> storeCourses = courseSubscriptionService.getStoreCourses(userDetails.getPublicUser().getId());
+		List<CourseEntity> allCourses = courseSubscriptionService.findAllCourses();
+
+		List<Integer> myCourseIds = courseSubscriptionService.findCoursesByUserId(userId)
+			.stream().map(CourseEntity::getId).toList();
+
+		List<CourseEntity> availableCourses = allCourses.stream()
+			.filter(course -> !myCourseIds.contains(course.getId()))
+			.toList();
+
+		List<CourseCardDTO> storeCourses = availableCourses.stream()
+			.map(course -> {
+				CourseCardDTO dto = CourseCardDTO.fromEntity(
+					course,
+					courseSubscriptionService.getCourseProgress(userId, course.getId()),
+					courseSubscriptionService.findLanguagesForCourse(course),
+					course.getCreationDate()
+				);
+				dto.setAction(CourseCardDTO.ActionType.ACQUIRE);
+				return dto;
+			}).toList();
+
 		//Filters
 		if (category != null && !category.isEmpty()) {
 			storeCourses = storeCourses.stream()
@@ -60,20 +82,17 @@ public class CoursesStoreController {
 			}
 		}
 
+		// PAGINACIÓN
 		int pageSize = 8;
-
-		// 3. CALCULAR TOTAL DE PÁGINAS
 		int totalPages = (int) Math.ceil((double) storeCourses.size() / pageSize);
-		if (totalPages == 0) totalPages = 1;  // mínimo 1 página
+		if (totalPages == 0) totalPages = 1; // mínimo 1 página
 
-		// 4. RANGO DE PAGE
 		if (page < 1) page = 1;
 		if (page > totalPages) page = totalPages;
 
 		int fromIndex = (page - 1) * pageSize;
 		int toIndex = Math.min(fromIndex + pageSize, storeCourses.size());
 
-		// 5 PAGINACIÓN
 		List<CourseCardDTO> paginatedStoreCourses = fromIndex >= storeCourses.size() ? List.of() : storeCourses.subList(fromIndex, toIndex);
 
 
@@ -86,6 +105,7 @@ public class CoursesStoreController {
 		model.addAttribute("acquireAction", "/store/subscribe");
 		return "pages/courses-store";
 	}
+
 
 
 	@PostMapping("/subscribe")
