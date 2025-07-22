@@ -1,13 +1,15 @@
 @use '../global-vars' as *;
 @use '../components/navbar';
 @use '../components/footer';
-@use '../components/cards-questionnaire/options-quiz';
-@use '../components/cards-questionnaire/quiz-header';
-@use '../components/cards-questionnaire/questionComponent';
 @use '../components/toast';
 
 html, body {
 	display: grid;
-	grid-template-rows: auto 1fr auto;
 	height: 100dvh;
+	grid-template-rows: auto 1fr;
+}
+
+.layout-body {
+	display: grid;
+	grid-template-rows: 1fr auto;
 }

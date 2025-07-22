@@ -3,9 +3,9 @@ package com.knowy.server.service;
 import com.knowy.server.entity.LanguageEntity;
 import com.knowy.server.entity.ProfileImageEntity;
 import com.knowy.server.entity.PublicUserEntity;
-import com.knowy.server.repository.LanguageRepository;
-import com.knowy.server.repository.ProfileImageRepository;
-import com.knowy.server.repository.PublicUserRepository;
+import com.knowy.server.repository.ports.LanguageRepository;
+import com.knowy.server.repository.ports.ProfileImageRepository;
+import com.knowy.server.repository.ports.PublicUserRepository;
 import com.knowy.server.service.exception.*;
 import com.knowy.server.util.StringUtils;
 import org.springframework.stereotype.Service;
@@ -159,16 +159,6 @@ public class PublicUserService {
 	}
 
 	/**
-	 * Finds a public user by their unique identifier.
-	 *
-	 * @param id the unique ID of the public user
-	 * @return an {@code Optional} containing the {@code PublicUserEntity} if found, or empty if not found
-	 */
-	public Optional<PublicUserEntity> findPublicUserById(Integer id) {
-		return publicUserRepository.findUserById(id);
-	}
-
-	/**
 	 * Finds a profile image by its unique identifier.
 	 *
 	 * @param id the unique ID of the profile image
@@ -186,5 +176,8 @@ public class PublicUserService {
 	 */
 	public Optional<PublicUserEntity> findPublicUserByNickname(String nickname) {
 		return publicUserRepository.findByNickname(nickname);
+	}
+	public Optional<PublicUserEntity> findPublicUserById (int id){
+		return publicUserRepository.findUserById(id);
 	}
 }

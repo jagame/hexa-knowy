@@ -1,20 +1,19 @@
-<div th:fragment="question-component" class="question-component-container">
+<div class="question-component-container" th:fragment="question-component(exerciseId, questionText, imgPath)">
 
 	<div class="enunciado-container">
 		<div class="enunciado-container__enunciado-header">
-			<p th:text="${'Pregunta ' + questionNumber}" class="enunciado-header__text"></p>
+			<p class="enunciado-header__text" th:text="${'Pregunta ' + exerciseId}"></p>
 			<button class="toggle-button" id="toggleEnunciado">
-				<i class="fas fa-chevron-down toggle-icon"></i> </button>
+				<i class="fas fa-chevron-down toggle-icon"></i></button>
 		</div>
 		<div class="enunciado-container__enunciado-content" id="enunciadoContent">
-			<p th:text="${questionText}" id="enunciadoText" class="enunciado-content__text">
+			<p class="enunciado-content__text" id="enunciadoText" th:text="${questionText}">
 			</p>
 		</div>
 	</div>
 
-	<div class="media-container">
-		<img th:src="${imgPath}" alt="Imagen o Video de la Lección" class="lesson-media">
+	<div th:if="${imgPath != null}" class="media-container">
+		<img alt="Imagen o Video de la Lección" class="lesson-media" th:src="${imgPath}">
 	</div>
-
 
 </div>

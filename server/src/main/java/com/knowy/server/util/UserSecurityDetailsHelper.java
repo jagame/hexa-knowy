@@ -1,7 +1,7 @@
 package com.knowy.server.util;
 
 import com.knowy.server.entity.PrivateUserEntity;
-import com.knowy.server.repository.PrivateUserRepository;
+import com.knowy.server.repository.ports.PrivateUserRepository;
 import com.knowy.server.service.model.UserSecurityDetails;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;

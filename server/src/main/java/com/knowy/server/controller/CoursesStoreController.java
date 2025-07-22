@@ -1,6 +1,9 @@
 package com.knowy.server.controller;
 
 import com.knowy.server.controller.dto.CourseCardDTO;
+import com.knowy.server.controller.dto.ToastDto;
+import com.knowy.server.controller.exception.KnowyCourseSubscriptionException;
+import com.knowy.server.entity.CourseEntity;
 import com.knowy.server.service.CourseSubscriptionService;
 import com.knowy.server.service.model.UserSecurityDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,9 +32,30 @@ public class CoursesStoreController {
 							   @RequestParam(required = false) String category,
 							   @RequestParam(required = false) String order,
 							   @AuthenticationPrincipal UserSecurityDetails userDetails) {
+		Integer userId = userDetails.getPublicUser().getId();
 
-		List<CourseCardDTO> storeCourses = courseSubscriptionService.getRecommendedCourses(userDetails.getPublicUser().getId());
-	    //Filters
+		List<CourseEntity> allCourses = courseSubscriptionService.findAllCourses();
+
+		List<Integer> myCourseIds = courseSubscriptionService.findCoursesByUserId(userId)
+			.stream().map(CourseEntity::getId).toList();
+
+		List<CourseEntity> availableCourses = allCourses.stream()
+			.filter(course -> !myCourseIds.contains(course.getId()))
+			.toList();
+
+		List<CourseCardDTO> storeCourses = availableCourses.stream()
+			.map(course -> {
+				CourseCardDTO dto = CourseCardDTO.fromEntity(
+					course,
+					courseSubscriptionService.getCourseProgress(userId, course.getId()),
+					courseSubscriptionService.findLanguagesForCourse(course),
+					course.getCreationDate()
+				);
+				dto.setAction(CourseCardDTO.ActionType.ACQUIRE);
+				return dto;
+			}).toList();
+
+		//Filters
 		if (category != null && !category.isEmpty()) {
 			storeCourses = storeCourses.stream()
 				.filter(c -> c.getLanguages() != null && c.getLanguages().contains(category))
@@ -56,6 +80,7 @@ public class CoursesStoreController {
 					.toList();
 			}
 		}
+
 		model.addAttribute("allLanguages", courseSubscriptionService.findAllLanguages());
 		model.addAttribute("courses", storeCourses);
 		model.addAttribute("order", order);
@@ -65,17 +90,19 @@ public class CoursesStoreController {
 	}
 
 
-
 	@PostMapping("/subscribe")
-		public String subscribeToCourse(@RequestParam Integer courseId,
-										@AuthenticationPrincipal UserSecurityDetails userDetails,
-										RedirectAttributes attrs) {
-		if (!courseSubscriptionService.subscribeUserToCourse(userDetails.getPublicUser().getId(), courseId)) {
-			attrs.addFlashAttribute("error", "Error al adquirir el curso");
-			return "redirect:/store";
+	public String subscribeToCourse(@RequestParam Integer courseId,
+									@AuthenticationPrincipal UserSecurityDetails userDetails,
+									RedirectAttributes attrs) {
+		try{
+			courseSubscriptionService.subscribeUserToCourse(userDetails.getPublicUser().getId(), courseId);
+			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Éxito", "¡Te has suscrito correctamente!", ToastDto.ToastType.SUCCESS)));
+		} catch(KnowyCourseSubscriptionException e){
+			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Error", e.getMessage(), ToastDto.ToastType.ERROR)));
+		} catch (Exception e) {
+			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Error", "Ocurrió un error inesperado al suscribirte al curso.", ToastDto.ToastType.ERROR)));
 		}
-		attrs.addFlashAttribute("success", "¡Curso adquirido con éxito!");
-			return "redirect:/store";
-		}
+		return "redirect:/store";
 	}
+}
 
