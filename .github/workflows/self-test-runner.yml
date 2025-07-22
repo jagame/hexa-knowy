@@ -6,7 +6,7 @@ on:
 
 jobs:
     test:
-        runs-on: [ self-hosted, kn-prod ]
+        runs-on: [ self-hosted ]
         steps:
             -   name: Check runner
                 run: |
