@@ -3,9 +3,9 @@ package com.knowy.server.controller;
 import com.knowy.server.controller.dto.CourseCardDTO;
 import com.knowy.server.controller.dto.ToastDto;
 import com.knowy.server.controller.exception.KnowyCourseSubscriptionException;
+import com.knowy.server.entity.CourseEntity;
 import com.knowy.server.service.CourseSubscriptionService;
 import com.knowy.server.service.model.UserSecurityDetails;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,9 +35,6 @@ public class CourseController {
 							 @RequestParam(defaultValue = "1") int page,
 							 @AuthenticationPrincipal UserSecurityDetails userDetails) {
 		List<CourseCardDTO> courses = courseSubscriptionService.getUserCourses(userDetails.getPublicUser().getId());
-
-//		Page<CourseCardDTO> coursesPage = courseSubscriptionService.getUserCoursesPaginated(userDetails.getPublicUser().getId(), page);
-//		List<CourseCardDTO> courses  =  coursesPage.getContent();
 
 		//Filter by language (category)
 		if(category != null && !category.isEmpty()){
@@ -75,7 +72,7 @@ public class CourseController {
 					.toList();
 
 				default ->
-					courses = courses = courses.stream()
+					courses = courses.stream()
 						.sorted(Comparator.comparing(CourseCardDTO::getProgress).reversed())
 						.toList();
 			}

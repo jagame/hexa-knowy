@@ -71,8 +71,8 @@
 
 				<!--course-->
 				<div class="courses">
-						<span><h2 class="h2-courses">Mis cursos</h2></span>
-					<div class="courses-container">
+					<h2 class="h2-courses">Mis cursos</h2>
+					<div class="courses-container mt-5">
 						<div class="m-1" th:each="course : ${courses}">
 							<div th:replace="~{components/course-card :: course-card(${course}, ${acquireAction})}"></div>
 						</div>

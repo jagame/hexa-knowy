@@ -27,10 +27,6 @@ public interface JpaPublicUserExerciseRepository extends PublicUserExerciseRepos
 	List<PublicUserExerciseEntity> findAll();
 
 	@Override
-	@Query("SELECT p FROM PublicUserExerciseEntity p WHERE p.id = :id")
-	List<PublicUserExerciseEntity> findAllByPublicUserId(int publicUserId);
-
-	@Override
 	@Query(value = """
 		SELECT
 		    pl.id_public_user AS id_public_user,
@@ -87,17 +83,17 @@ public interface JpaPublicUserExerciseRepository extends PublicUserExerciseRepos
 
 	@Override
 	@Query(value = """
-    SELECT
-        COALESCE(AVG(public_user_exercise.rate), 0) AS average_rate
-    FROM lesson l
-        INNER JOIN exercise
-            ON l.id = exercise.id_lesson
-        LEFT JOIN public_user_exercise
-            ON exercise.id = public_user_exercise.id_exercise
-    WHERE
-        l.id = :lessonId
-    GROUP BY
-        l.id
-    """, nativeQuery = true)
+		SELECT
+		    COALESCE(AVG(public_user_exercise.rate), 0) AS average_rate
+		FROM lesson l
+		    INNER JOIN exercise
+		        ON l.id = exercise.id_lesson
+		    LEFT JOIN public_user_exercise
+		        ON exercise.id = public_user_exercise.id_exercise
+		WHERE
+		    l.id = :lessonId
+		GROUP BY
+		    l.id
+		""", nativeQuery = true)
 	Optional<Double> findAverageRateByLessonId(int lessonId);
 }

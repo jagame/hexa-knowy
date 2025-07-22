@@ -17,25 +17,22 @@ public class UserFacadeService {
 	private final EmailClientTool emailClientTool;
 	private final PrivateUserService privateUserService;
 	private final PublicUserService publicUserService;
-	private final PublicUserExerciseService publicUserExerciseService;
 
 	/**
 	 * The constructor
 	 *
-	 * @param emailClientTool           the emailClientService
-	 * @param privateUserService        the privateUserService
-	 * @param publicUserService         the publicUserService
-	 * @param publicUserExerciseService the publicUserExerciseService
+	 * @param emailClientTool    the emailClientService
+	 * @param privateUserService the privateUserService
+	 * @param publicUserService  the publicUserService
 	 */
 	public UserFacadeService(
 		EmailClientTool emailClientTool,
 		PrivateUserService privateUserService,
-		PublicUserService publicUserService,
-		PublicUserExerciseService publicUserExerciseService) {
+		PublicUserService publicUserService
+	) {
 		this.emailClientTool = emailClientTool;
 		this.privateUserService = privateUserService;
 		this.publicUserService = publicUserService;
-		this.publicUserExerciseService = publicUserExerciseService;
 	}
 
 	/**
@@ -192,7 +189,7 @@ public class UserFacadeService {
 		String email,
 		String recoveryBaseUrl
 	) throws UserNotFoundException, JwtKnowyException, MailDispatchException, WrongPasswordException {
-		privateUserService.deactivateUserAccount(email, password, confirmPassword);
+		privateUserService.desactivateUserAccount(email, password, confirmPassword);
 		MailMessage mailMessage = privateUserService.createDeletedAccountEmail(email, recoveryBaseUrl);
 		emailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
 	}

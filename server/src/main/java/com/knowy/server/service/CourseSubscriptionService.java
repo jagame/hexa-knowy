@@ -7,14 +7,12 @@ import com.knowy.server.repository.ports.CourseRepository;
 import com.knowy.server.repository.ports.LanguageRepository;
 import com.knowy.server.repository.ports.LessonRepository;
 import com.knowy.server.repository.ports.PublicUserLessonRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,36 +24,25 @@ public class CourseSubscriptionService {
 	private final PublicUserLessonRepository publicUserLessonRepository;
 	private final LanguageRepository languageRepository;
 
-	public CourseSubscriptionService(CourseRepository courseRepository, LessonRepository lessonRepository, PublicUserLessonRepository publicUserLessonRepository, LanguageRepository languageRepository) {
+	public CourseSubscriptionService(
+		CourseRepository courseRepository,
+		LessonRepository lessonRepository,
+		PublicUserLessonRepository publicUserLessonRepository,
+		LanguageRepository languageRepository
+	) {
 		this.courseRepository = courseRepository;
 		this.lessonRepository = lessonRepository;
 		this.publicUserLessonRepository = publicUserLessonRepository;
 		this.languageRepository = languageRepository;
 	}
 
-	public List<CourseCardDTO> getUserCourses(Integer userId) {
-		List<CourseEntity> userCourses = findCoursesByUserId(userId);
-		return userCourses.stream()
-			.map(course -> CourseCardDTO.fromEntity(
-				course, getCourseProgress(userId, course.getId()),
-				findLanguagesForCourse(course), course.getCreationDate()))
-			.toList();
+	public List<CourseEntity> findCoursesByUserId(Integer userId) {
+		List<Integer> courseIds = publicUserLessonRepository.findCourseIdsByUserId(userId);
+		if (courseIds.isEmpty()) return List.of();
+		return courseRepository.findByIdIn(courseIds);
 	}
 
-	public Page<CourseCardDTO> getUserCoursesPaginated(Integer userId, int page) {
-		Pageable pageable = PageRequest.of(page - 1, 8);
-		Page<CourseEntity> coursePage = courseRepository.findCoursesByUserId(userId, pageable);
-
-		return coursePage.map(course -> CourseCardDTO.fromEntity(
-			course,
-			getCourseProgress(userId, course.getId()),
-			findLanguagesForCourse(course),
-			course.getCreationDate()
-		));
-	}
-
-
-	public List<CourseCardDTO> getRecommendedCourses(Integer userId) {
+	public List<CourseEntity> getRecommendedCourses(Integer userId) {
 		List<CourseEntity> userCourses = findCoursesByUserId(userId);
 
 		List<Integer> userCourseIds = userCourses.stream()
@@ -76,10 +63,8 @@ public class CourseSubscriptionService {
 				return courseLangs.stream().anyMatch(userLanguages::contains);
 			}).toList();
 
-		List<CourseCardDTO> recommendations = langMatching.stream()
+		List<CourseEntity> recommendations = langMatching.stream()
 			.limit(3)
-			.map(course -> CourseCardDTO.fromRecommendation(
-				course, findLanguagesForCourse(course), course.getCreationDate()))
 			.collect(Collectors.toList());
 
 		if (recommendations.size() < 3) {
@@ -91,65 +76,43 @@ public class CourseSubscriptionService {
 				if(recommendations.size() >= 3){
 					break;
 				}
-				recommendations.add(CourseCardDTO.fromRecommendation(
-					course, findLanguagesForCourse(course), course.getCreationDate()
-				));
+				recommendations.add(course);
 			}
 		}
 		return recommendations;
 	}
 
-	public List<CourseCardDTO> getStoreCourses(Integer userId) {
-		List<CourseEntity> userCourses = findCoursesByUserId(userId);
-		Set<Integer> userCourseIds = userCourses.stream()
-			.map(CourseEntity::getId)
-			.collect(Collectors.toSet());
-
-		// Obtener todos los cursos excluyendo los ya suscritos
-		List<CourseEntity> allCourses = findAllCourses().stream()
-			.filter(course -> !userCourseIds.contains(course.getId()))
-			.toList();
-
-		return allCourses.stream()
-			.map(course -> CourseCardDTO.fromEntity(
-				course, getCourseProgress(userId, course.getId()),
-				findLanguagesForCourse(course), course.getCreationDate()))
-			.toList();
-	}
-
-
-
 	public void subscribeUserToCourse(Integer userId, Integer courseId) throws KnowyCourseSubscriptionException{
 		List<LessonEntity> lessons = lessonRepository.findByCourseId(courseId);
-		if (lessons.isEmpty()){
+		if (lessons.isEmpty()) {
 			throw new KnowyCourseSubscriptionException("El curso no tiene lecciones disponibles");
 		}
 
 		boolean alreadySubscribed = lessons.stream()
 			.allMatch(lesson ->
 				publicUserLessonRepository.existsByUserIdAndLessonId(userId, lesson.getId()));
-		if (alreadySubscribed){
+		if (alreadySubscribed) {
 			throw new KnowyCourseSubscriptionException("Ya estás suscrito a este curso");
 		}
 
-		for (LessonEntity lesson : lessons) {
+		lessons = lessons.stream()
+		.sorted(Comparator.comparing(LessonEntity::getId))
+		.toList();
+
+		for (int i = 0; i < lessons.size(); i++) {
+			LessonEntity lesson = lessons.get(i);
 			PublicUserLessonIdEntity id = new PublicUserLessonIdEntity(userId, lesson.getId());
 			if (!publicUserLessonRepository.existsById(id)) {
 				PublicUserLessonEntity pul = new PublicUserLessonEntity();
 				pul.setUserId(userId);
 				pul.setLessonId(lesson.getId());
 				pul.setStartDate(LocalDate.now());
-				pul.setStatus("pending");
+				pul.setStatus(i == 0 ? "in_progress" : "pending");
 				publicUserLessonRepository.save(pul);
 			}
 		}
 	}
 
-	public List<CourseEntity> findCoursesByUserId(Integer userId) {
-		List<Integer> courseIds = publicUserLessonRepository.findCourseIdsByUserId(userId);
-		if (courseIds.isEmpty()) return List.of();
-		return courseRepository.findByIdIn(courseIds);
-	}
 
 	public List<CourseEntity> findAllCourses() {
 		return courseRepository.findAll();

@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface BannedWordsRepository {
 	List<BannedWordsEntity> findAll();
+
 	boolean isWordBanned(@Param("word") String word);
 }

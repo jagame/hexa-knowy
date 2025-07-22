@@ -2,13 +2,11 @@
 
 .lesson-card {
 	width: auto;
-	margin-bottom:5em;
-	border-radius: 12px;
 	padding: 4px;
 	display:flex;
 	flex-direction: column;
 	gap:1em;
-	//align-items: center;
+	margin-top: 1rem;
 }
 .lesson-list {
 	list-style: none;
@@ -17,7 +15,7 @@
 	width:auto;
 	display: flex;
 	flex-direction: column;
-	gap: 0.5em;
+	gap: 1em;
 }
 
 .lesson-item {
@@ -27,13 +25,15 @@
 	transition: background-color 0.3s ease;
 	width: auto;
 	display:flex;
+	padding: 5px 0;
 
 	.lesson-item__lesson-link {
 
 		display: flex;
+		align-items: center;
 		width:100%;
 		text-decoration: none;
-		color: #2c3e50;
+		color: white;
 		padding: 10px 15px;
 		border-radius: 8px;
 		cursor: pointer;
@@ -41,7 +41,6 @@
 
 
 	.lesson-item__lesson-icon {
-		margin-right:auto;
 		flex-shrink: 0;
 		font-size: 1.4rem;
 		width: 32px;
@@ -51,18 +50,17 @@
 
 	.lesson-item__lesson-info {
 		margin-right:auto;
-		display: flex;
-		flex-direction: column;
 
 			.lesson-info__lesson-number {
-				font-weight: 700;
-				font-size: 0.95rem;
+				font-family: Excalifont, sans-serif;
+				font-size: 1.25rem;
 				margin-bottom: 3px;
 			}
 
 			.lesson-info__lesson-name {
-				font-size: 0.9rem;
-				color: #555;
+				font-family: Excalifont, sans-serif;
+				font-size: 1.1rem;
+				color: $neutral-100;
 			}
 
 			.show-sidebar-btn{
@@ -71,20 +69,27 @@
 	}
 }
 
-
 [data-status="COMPLETE"] {
 	background: $primary-500;
 }
 
-[data-status="COMPLETE"].hover {
-	background: $primary-300;
+[data-status="COMPLETE"]:hover {
+	background: $primary-700;
 }
 
 [data-status="NEXT_LESSON"] {
 	background: $secundary-500;
 }
 
+[data-status="NEXT_LESSON"]:hover {
+	background: $secundary-700;
+}
 
 [data-status="BLOCKED"] {
+	background: $danger-600;
+}
+
+[data-status="BLOCKED"]:hover {
 	background: $danger-500;
 }
+

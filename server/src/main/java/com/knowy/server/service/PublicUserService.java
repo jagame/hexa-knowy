@@ -159,16 +159,6 @@ public class PublicUserService {
 	}
 
 	/**
-	 * Finds a public user by their unique identifier.
-	 *
-	 * @param id the unique ID of the public user
-	 * @return an {@code Optional} containing the {@code PublicUserEntity} if found, or empty if not found
-	 */
-	public Optional<PublicUserEntity> findPublicUserById(Integer id) {
-		return publicUserRepository.findUserById(id);
-	}
-
-	/**
 	 * Finds a profile image by its unique identifier.
 	 *
 	 * @param id the unique ID of the profile image
@@ -186,5 +176,8 @@ public class PublicUserService {
 	 */
 	public Optional<PublicUserEntity> findPublicUserByNickname(String nickname) {
 		return publicUserRepository.findByNickname(nickname);
+	}
+	public Optional<PublicUserEntity> findPublicUserById (int id){
+		return publicUserRepository.findUserById(id);
 	}
 }

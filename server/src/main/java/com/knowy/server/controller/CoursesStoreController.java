@@ -118,7 +118,6 @@ public class CoursesStoreController {
 		} catch(KnowyCourseSubscriptionException e){
 			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Error", e.getMessage(), ToastDto.ToastType.ERROR)));
 		} catch (Exception e) {
-			e.printStackTrace();
 			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Error", "Ocurrió un error inesperado al suscribirte al curso.", ToastDto.ToastType.ERROR)));
 		}
 		return "redirect:/store";
