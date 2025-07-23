@@ -23,6 +23,7 @@ public class PresentationController {
 		List<NewsDto> newsList = courseSubscriptionService.findAllCourses()
 			.stream()
 			.map(NewsDto::fromEntity)
+			.limit(3)
 			.toList();
 
 		interfaceScreen.addAttribute("newsList", newsList);
