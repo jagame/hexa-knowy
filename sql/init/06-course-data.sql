@@ -42,9 +42,9 @@ VALUES
 	(27, 'C# para Desarrollo de Software', 'Aprende los fundamentos de la programación con C# y .NET.', 'Andrés Gómez', '/images/languages/c-sharp.png'),
 	(28, 'C# Avanzado', 'Profundiza en el desarrollo de aplicaciones desktop y web con C#.', 'Laura Medina', '/images/languages/c-sharp.png'),
 
-	(29, 'TypeScript desde Cero', 'Conoce TypeScript, un superconjunto de JavaScript para programación tipada.', 'Pablo Sánchez', 'images/languages/typescript.png'),
-	(30, 'TypeScript para Angular', 'Uso de TypeScript específico para desarrollo con Angular.', 'Sergio Castillo', 'images/languages/typescript.png'),
+	(29, 'TypeScript desde Cero', 'Conoce TypeScript, un superconjunto de JavaScript para programación tipada.', 'Pablo Sánchez', '/images/languages/typescript.png'),
+	(30, 'TypeScript para Angular', 'Uso de TypeScript específico para desarrollo con Angular.', 'Sergio Castillo', '/images/languages/typescript.png'),
 
-	(31, 'Ruby para Desarrollo Web', 'Aprende Ruby y su uso para crear aplicaciones web con Ruby on Rails.', 'María Jiménez', 'images/languages/ruby.png'),
+	(31, 'Ruby para Desarrollo Web', 'Aprende Ruby y su uso para crear aplicaciones web con Ruby on Rails.', 'María Jiménez', '/images/languages/ruby.png'),
 
-	(32, 'Swift Básico', 'Curso de introducción a Swift para desarrollo de apps iOS.', 'José Ramírez', 'images/languages/swift.png');
+	(32, 'Swift Básico', 'Curso de introducción a Swift para desarrollo de apps iOS.', 'José Ramírez', '/images/languages/swift.png');

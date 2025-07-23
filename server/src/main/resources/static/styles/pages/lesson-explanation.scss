@@ -15,7 +15,7 @@ main{
 //LESSON STYLES
 h2, h3{
 	font-family: "caveat-brush", cursive;
-	color: $primary-500;
+	color: $primary-700;
 }
 
 b{
@@ -29,15 +29,15 @@ code{
 }
 
 table {
-	border-collapse: collapse; /* Une los bordes de las celdas */
-	width: 90%; /* Opcional: ajusta el ancho de la tabla */
+	border-collapse: collapse;
+	width: 90%;
 	margin:0.5em;
 	align-self:center;
 }
 
 th, td {
-	border: 1px solid black; /* Añade un borde de 1 píxel sólido negro */
-	padding: 8px; /* Añade espacio interno a las celdas */
+	border: 1px solid black;
+	padding: 8px;
 	text-align: justify;
 }
 

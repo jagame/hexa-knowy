@@ -2,3 +2,7 @@
 @use '../components/user-home/resume';
 @use '../components/user-home/missionsComponent';
 @use '../components/user-home/carousel-news';
+
+body {
+	background-color: $bg;
+}

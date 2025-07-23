@@ -82,6 +82,80 @@ VALUES
 	(10, 'Tener paciencia y aceptar los errores como parte del proceso', true),
 	(10, 'Evitar los lenguajes difíciles como Java', false);
 
+-- LECCIÓN 2: ¿Qué es Java y cómo funciona?
+
+-- Ejercicio 11: ¿Qué significa que Java sea "multiplataforma"?
+INSERT INTO public.option (id_exercise, option_text, is_correct)
+VALUES
+	(11, 'Que solo funciona en sistemas operativos Linux y Windows', false),
+	(11, 'Que el mismo programa Java puede ejecutarse en distintos sistemas operativos sin cambios', true),
+	(11, 'Que el código se convierte en lenguaje máquina universal', false),
+	(11, 'Que no necesita compilarse', false);
+
+-- Ejercicio 12: ¿Cuál es el nombre del componente que permite ejecutar el bytecode en cualquier sistema operativo?
+INSERT INTO public.option (id_exercise, option_text, is_correct)
+VALUES
+	(12, 'JDK', false),
+	(12, 'JRE', false),
+	(12, 'JVM', true),
+	(12, 'Editor de código', false);
+
+-- Ejercicio 13: Verdadero o falso: En Java, puedes ejecutar directamente el archivo .java sin compilarlo antes.
+INSERT INTO public.option (id_exercise, option_text, is_correct)
+VALUES
+	(13, 'Verdadero', false),
+	(13, 'Falso', true);
+
+-- Ejercicio 14: ¿Qué papel cumple el JDK (Java Development Kit)?
+INSERT INTO public.option (id_exercise, option_text, is_correct)
+VALUES
+	(14, 'Ejecutar directamente cualquier archivo .java', false),
+	(14, 'Convertir el código fuente en bytecode (.class)', true),
+	(14, 'Traducir bytecode en lenguaje máquina', false),
+	(14, 'Depurar sistemas operativos', false);
+
+-- Ejercicio 15: ¿Qué archivo se genera tras compilar un programa Java?
+INSERT INTO public.option (id_exercise, option_text, is_correct)
+VALUES
+	(15, '.java', false),
+	(15, '.exe', false),
+	(15, '.class', true),
+	(15, '.jar', false);
+
+-- Ejercicio 16: Verdadero o falso: Java es un lenguaje débilmente tipado, por eso no es necesario declarar el tipo de las variables.
+INSERT INTO public.option (id_exercise, option_text, is_correct)
+VALUES
+	(16, 'Verdadero', false),
+	(16, 'Falso', true);
+
+-- Ejercicio 17: ¿Qué ventaja principal ofrece la orientación a objetos en Java?
+INSERT INTO public.option (id_exercise, option_text, is_correct)
+VALUES
+	(17, 'Permite usar código sin organizarlo', false),
+	(17, 'Evita declarar variables', false),
+	(17, 'Permite estructurar el código en clases y objetos, facilitando su reutilización y mantenimiento', true),
+	(17, 'Obliga a usar interfaces gráficas', false);
+
+-- Ejercicio 18: Verdadero o falso: La JVM traduce el código fuente de Java directamente al lenguaje máquina.
+INSERT INTO public.option (id_exercise, option_text, is_correct)
+VALUES
+	(18, 'Verdadero', false),
+	(18, 'Falso', true);
+
+-- Ejercicio 19: ¿Qué extensión tiene un archivo que contiene código fuente en Java?
+INSERT INTO public.option (id_exercise, option_text, is_correct)
+VALUES
+	(19, '.txt', false),
+	(19, '.class', false),
+	(19, '.java', true),
+	(19, '.html', false);
+
+-- Ejercicio 20: Verdadero o falso: Para programar en Java solo necesitas tener instalada la JVM.
+INSERT INTO public.option (id_exercise, option_text, is_correct)
+VALUES
+	(20, 'Verdadero', false),
+	(20, 'Falso', true);
+
 -- LECCIÓN 3: Variables. Estructura básica.
 
 -- Ejercicio 1 (ID 21): ¿Qué es una variable en Java?
