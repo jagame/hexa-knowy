@@ -19,8 +19,7 @@ public class PublicUserLessonIdEntity implements Serializable {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof PublicUserLessonIdEntity)) return false;
-		PublicUserLessonIdEntity that = (PublicUserLessonIdEntity) o;
+		if (!(o instanceof PublicUserLessonIdEntity that)) return false;
 		return Objects.equals(userId, that.userId) &&
 			Objects.equals(lessonId, that.lessonId);
 	}

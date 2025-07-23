@@ -62,11 +62,6 @@ public class CourseController {
 					.sorted(Comparator.comparing(CourseCardDTO::getProgress))
 					.toList();
 
-				case "progress_desc" -> courses = courses.stream()
-					.sorted(Comparator.comparing(CourseCardDTO::getProgress).reversed())
-					.toList();
-
-
 				case "date_asc" -> courses = courses.stream()
 					.sorted(Comparator.comparing(CourseCardDTO::getId))
 					.toList();
@@ -122,17 +117,26 @@ public class CourseController {
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		RedirectAttributes attrs
 	) {
+		handleCourseSubscription(courseId, userDetails, attrs, courseSubscriptionService, TOAST_MODEL_ATTRIBUTE);
+		return "redirect:/my-courses";
+	}
+
+	static void handleCourseSubscription(
+		@RequestParam Integer courseId,
+		@AuthenticationPrincipal UserSecurityDetails userDetails,
+		RedirectAttributes attrs, CourseSubscriptionService courseSubscriptionService,
+		String toastModelAttribute
+	) {
 		try {
 			courseSubscriptionService.subscribeUserToCourse(userDetails.getPublicUser().getId(), courseId);
-			attrs.addFlashAttribute(TOAST_MODEL_ATTRIBUTE, List.of(new ToastDto("Éxito",
+			attrs.addFlashAttribute(toastModelAttribute, List.of(new ToastDto("Éxito",
 				"¡Te has suscrito correctamente!", ToastDto.ToastType.SUCCESS)));
 		} catch (KnowyCourseSubscriptionException e) {
-			attrs.addFlashAttribute(TOAST_MODEL_ATTRIBUTE, List.of(new ToastDto("Error", e.getMessage(), ToastDto.ToastType.ERROR)));
+			attrs.addFlashAttribute(toastModelAttribute, List.of(new ToastDto("Error", e.getMessage(), ToastDto.ToastType.ERROR)));
 		} catch (Exception e) {
-			attrs.addFlashAttribute(TOAST_MODEL_ATTRIBUTE, List.of(new ToastDto("Error",
+			attrs.addFlashAttribute(toastModelAttribute, List.of(new ToastDto("Error",
 				"Ocurrió un error inesperado al suscribirte al curso.", ToastDto.ToastType.ERROR)));
 		}
-		return "redirect:/my-courses";
 	}
 
 }

@@ -24,10 +24,10 @@ public class PublicUserLessonEntity {
 	@Column(name = "id_lesson", nullable = false)
 	private Integer lessonId;
 
-	@Column(name="start_date", nullable = false)
+	@Column(name = "start_date", nullable = false)
 	private LocalDate startDate;
 
-	@Column(name="status", nullable = false)
+	@Column(name = "status", nullable = false)
 	private String status;
 
 	@ManyToOne(fetch = FetchType.LAZY)

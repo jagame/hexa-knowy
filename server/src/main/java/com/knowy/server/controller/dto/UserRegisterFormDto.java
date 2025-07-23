@@ -3,9 +3,8 @@ package com.knowy.server.controller.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-
 public class UserRegisterFormDto {
-	@NotBlank(message = "El nickname no pueede estar vacío")
+	@NotBlank(message = "El nickname no puede estar vacío")
 	private String nickname;
 
 	@NotBlank(message = "El email no puede estar vacío")

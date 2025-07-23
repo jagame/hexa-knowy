@@ -2,8 +2,6 @@ package com.knowy.server.controller.dto;
 
 import lombok.*;
 
-import java.util.Set;
-
 @Getter
 @Setter
 @AllArgsConstructor

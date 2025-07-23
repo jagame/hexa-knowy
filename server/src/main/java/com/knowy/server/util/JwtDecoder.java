@@ -1,6 +1,5 @@
 package com.knowy.server.util;
 
-import com.knowy.server.util.exception.JwtKnowyException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;

@@ -22,7 +22,7 @@ public class ExerciseEntity {
 	private Integer id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="id_lesson", nullable = false)
+	@JoinColumn(name = "id_lesson", nullable = false)
 	private LessonEntity lesson;
 
 	@Column(name = "question", length = 100, nullable = false)
