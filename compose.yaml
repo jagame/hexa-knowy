@@ -1,13 +1,24 @@
 services:
-    web-server:
-        build: server
+    java-server:
         container_name: kn-server
+        environment:
+            - SSL_KEY=${SSL_KEY}
+            - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+        build:
+            context: .
+            dockerfile: server/Dockerfile
         ports:
-            - "8080:8080"
+            - "443:443"
         networks:
             - knowy_net
         depends_on:
-            -   postgres
+            - postgres
+        healthcheck:
+            test: [ "CMD-SHELL", "curl --fail http://localhost:80/actuator/health || exit 1" ]
+            interval: 30s
+            timeout: 5s
+            retries: 3
+            start_period: 10s
 
     postgres:
         image: postgres:17
@@ -16,21 +27,25 @@ services:
             POSTGRES_USER: knowy
             POSTGRES_PASSWORD: knowy
             POSTGRES_DB: knowydb
-        ports:
-            - "5434:5432"
         networks:
             - knowy_net
         volumes:
             - kn_db_data:/var/lib/postgresql/data
             - ./sql/init:/docker-entrypoint-initdb.d
+        healthcheck:
+            test: [ "CMD-SHELL", "pg_isready -U knowy -d knowydb" ]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 30s
+
     mailpit:
         container_name: kn-mailpit
         image: axllent/mailpit
         volumes:
             - kn_mailpit_data:/data
         ports:
-            - 8025:8025 #UI mailpit port
-            - 1025:1025 #SMTP port
+            - ${PORT_PROD_MAILPIT_UI:-8025}:8025 #UI mailpit port
         networks:
             - knowy_net
         environment:
@@ -38,6 +53,14 @@ services:
             MP_DATABASE: /data/knmailpit.db
             MP_SMTP_AUTH_ACCEPT_ANY: 1
             MP_SMTP_AUTH_ALLOW_INSECURE: 1
+        depends_on:
+            - java-server
+        healthcheck:
+            test: [ "CMD-SHELL", "curl -f http://localhost:8025 || exit 1" ]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 30s
 
 volumes:
     kn_db_data:

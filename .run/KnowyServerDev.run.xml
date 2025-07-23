@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="KnowyServerDev" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <option name="ACTIVE_PROFILES" value="dev" />
+    <option name="ACTIVE_PROFILES" value="local-dev" />
     <module name="server" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.knowy.server.KnowyServerApplication" />
-    <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/server" />
+    <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />
       <option name="IS_SUBST" value="false" />

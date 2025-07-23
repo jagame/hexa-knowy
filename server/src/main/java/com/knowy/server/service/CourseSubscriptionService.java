@@ -10,8 +10,6 @@ import com.knowy.server.repository.ports.PublicUserLessonRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -52,6 +50,10 @@ public class CourseSubscriptionService {
 		return courseRepository.findByIdIn(courseIds);
 	}
 
+	public List<CourseEntity> findAllRandom() {
+		return courseRepository.findAllRandom();
+	}
+
 	public List<CourseEntity> getRecommendedCourses(Integer userId) {
 		List<CourseEntity> userCourses = findCoursesByUserId(userId);
 
@@ -82,8 +84,8 @@ public class CourseSubscriptionService {
 				.filter(course -> !langMatching.contains(course))
 				.toList();
 
-			for(CourseEntity course : remaining){
-				if(recommendations.size() >= 3){
+			for (CourseEntity course : remaining) {
+				if (recommendations.size() >= 3) {
 					break;
 				}
 				recommendations.add(course);
@@ -92,7 +94,7 @@ public class CourseSubscriptionService {
 		return recommendations;
 	}
 
-	public void subscribeUserToCourse(Integer userId, Integer courseId) throws KnowyCourseSubscriptionException{
+	public void subscribeUserToCourse(Integer userId, Integer courseId) throws KnowyCourseSubscriptionException {
 		List<LessonEntity> lessons = lessonRepository.findByCourseId(courseId);
 		if (lessons.isEmpty()) {
 			throw new KnowyCourseSubscriptionException("El curso no tiene lecciones disponibles");
@@ -106,8 +108,8 @@ public class CourseSubscriptionService {
 		}
 
 		lessons = lessons.stream()
-		.sorted(Comparator.comparing(LessonEntity::getId))
-		.toList();
+			.sorted(Comparator.comparing(LessonEntity::getId))
+			.toList();
 
 		for (int i = 0; i < lessons.size(); i++) {
 			LessonEntity lesson = lessons.get(i);
@@ -128,7 +130,7 @@ public class CourseSubscriptionService {
 		return courseRepository.findAll();
 	}
 
-	public String findCourseImage(CourseEntity course){
+	public String findCourseImage(CourseEntity course) {
 		return course.getImage() != null ? course.getImage() : "https://picsum.photos/seed/picsum/200/300";
 	}
 
@@ -144,6 +146,7 @@ public class CourseSubscriptionService {
 		int completedLessons = publicUserLessonRepository.countByUserIdAndCourseIdAndStatus(userId, courseId, "completed");
 		return (int) Math.round((completedLessons * 100.0 / totalLessons));
 	}
+
 	public List<String> findAllLanguages() {
 		return languageRepository.findAll()
 			.stream()

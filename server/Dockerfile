@@ -1,9 +1,10 @@
 FROM maven:3.9.9-eclipse-temurin-21-jammy AS build
 RUN mkdir -p /app
-COPY src /app/src
-COPY pom.xml /app
+COPY server/src /app/src
+COPY server/pom.xml /app
 WORKDIR /app
-RUN mvn verify -DskipTests
+
+RUN mvn verify
 
 FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app

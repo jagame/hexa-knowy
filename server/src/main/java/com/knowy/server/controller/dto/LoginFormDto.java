@@ -4,7 +4,6 @@ public class LoginFormDto {
 	private String email;
 	private String password;
 
-	// Getters y setters (obligatorios)
 	public String getEmail() {
 		return email;
 	}

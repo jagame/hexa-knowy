@@ -30,6 +30,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class AccessController {
 
+	private static final String ERROR_MODEL_ATTRIBUTE = "error";
+	private static final String LOGIN_REDIRECT_URL = "/login";
+
 	private final UserSecurityDetailsHelper userSecurityDetailsHelper;
 	private final UserFacadeService accessService;
 
@@ -105,7 +108,7 @@ public class AccessController {
 			return "redirect:/home";
 		} catch (InvalidUserException e) {
 			redirectAttributes.addFlashAttribute("user", user);
-			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, e.getMessage());
 			return "redirect:/register";
 		}
 	}
@@ -151,9 +154,9 @@ public class AccessController {
 	) {
 		try {
 			accessService.sendRecoveryPasswordEmail(email.getEmail(), getPasswordChangeUrl(httpServletRequest));
-			return "redirect:/login";
+			return LOGIN_REDIRECT_URL;
 		} catch (UserNotFoundException | JwtKnowyException | MailDispatchException e) {
-			redirectAttributes.addFlashAttribute("error",
+			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE,
 				"Se ha producido un error al enviar el email. Intente lo más tarde");
 			return "redirect:/password-change/email";
 		}
@@ -219,12 +222,12 @@ public class AccessController {
 				userPasswordFormDto.getPassword(),
 				userPasswordFormDto.getConfirmPassword()
 			);
-			return "redirect:/login";
+			return LOGIN_REDIRECT_URL;
 		} catch (UserNotFoundException | JwtKnowyException e) {
-			redirectAttributes.addAttribute("error", "Se ha producido un error al actualizar la contraseña");
-			return "redirect:/login";
+			redirectAttributes.addAttribute(ERROR_MODEL_ATTRIBUTE, "Se ha producido un error al actualizar la contraseña");
+			return LOGIN_REDIRECT_URL;
 		} catch (PasswordFormatException e) {
-			redirectAttributes.addAttribute("error", """
+			redirectAttributes.addAttribute(ERROR_MODEL_ATTRIBUTE, """
 				Formato de contraseña inválido. Debe tener al menos:
 				- 8 caracteres
 				- 1 mayúscula, 1 minúscula

@@ -1,13 +1,24 @@
 services:
-    web-server:
-        build: server
+    java-server:
+        build:
+            context: .
+            dockerfile: server/Dockerfile
         container_name: kn-server
         ports:
-            - "8080:8080"
+            - "${PUERTO_PRODUCCION:-8080}:8080"
         networks:
             - knowy_net
         depends_on:
-            -   postgres
+            - postgres
+            - mailpit
+        healthcheck:
+            test: [ "CMD-SHELL", "curl --fail http://localhost:8080/actuator/health || exit 1" ]
+            interval: 30s
+            timeout: 5s
+            retries: 3
+            start_period: 10s
+        environment:
+            - SPRING_PROFILES_ACTIVE=dev
 
     postgres:
         image: postgres:17
@@ -23,6 +34,12 @@ services:
         volumes:
             - kn_db_data:/var/lib/postgresql/data
             - ./sql/init:/docker-entrypoint-initdb.d
+        healthcheck:
+            test: [ "CMD-SHELL", "pg_isready -U knowy -d knowydb" ]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 30s
 
     pgadmin:
         image: dpage/pgadmin4:9.4
@@ -36,14 +53,21 @@ services:
             - knowy_net
         depends_on:
             - postgres
+        healthcheck:
+            test: [ "CMD-SHELL", "curl -f http://localhost/ || exit 1" ]
+            interval: 30s
+            timeout: 5s
+            retries: 3
+            start_period: 10s
+
     mailpit:
         container_name: kn-mailpit
         image: axllent/mailpit
         volumes:
             - kn_mailpit_data:/data
         ports:
-            - 8025:8025 #UI mailpit port
-            - 1025:1025 #SMTP port
+            - "8025:8025" #UI mailpit port
+            - "1025:1025" #SMTP port
         networks:
             - knowy_net
         environment:

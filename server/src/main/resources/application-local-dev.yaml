@@ -2,7 +2,7 @@ spring:
     config:
         import: "file:.env[.properties]"
     datasource:
-        url: jdbc:postgresql://postgres:5432/knowydb
+        url: jdbc:postgresql://localhost:5434/knowydb
         username: knowy
         password: knowy
     mail:
@@ -23,8 +23,3 @@ logging:
         org:
             springframework:
                 security: debug
-
-management:
-    health:
-        mail:
-            enabled: false

@@ -1,8 +1,6 @@
 package com.knowy.server.controller;
 
 import com.knowy.server.controller.dto.CourseCardDTO;
-import com.knowy.server.controller.dto.ToastDto;
-import com.knowy.server.controller.exception.KnowyCourseSubscriptionException;
 import com.knowy.server.entity.CourseEntity;
 import com.knowy.server.service.CourseSubscriptionService;
 import com.knowy.server.service.model.UserSecurityDetails;
@@ -21,6 +19,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/store")
 public class CoursesStoreController {
+
+	private static final String TOAST_MODEL_ATTRIBUTE = "toast";
+
 	private final CourseSubscriptionService courseSubscriptionService;
 
 	public CoursesStoreController(CourseSubscriptionService courseSubscriptionService) {
@@ -65,9 +66,6 @@ public class CoursesStoreController {
 		}
 		if (order != null) {
 			switch (order) {
-				case "alpha_asc" -> storeCourses = storeCourses.stream()
-					.sorted(Comparator.comparing(CourseCardDTO::getName, String.CASE_INSENSITIVE_ORDER))
-					.toList();
 				case "alpha_desc" -> storeCourses = storeCourses.stream()
 					.sorted(Comparator.comparing(CourseCardDTO::getName, String.CASE_INSENSITIVE_ORDER).reversed())
 					.toList();
@@ -97,8 +95,8 @@ public class CoursesStoreController {
 		List<CourseCardDTO> paginatedStoreCourses = fromIndex >= storeCourses.size() ? List.of() : storeCourses.subList(fromIndex, toIndex);
 
 
-		model.addAttribute("allLanguages", courseSubscriptionService.findAllLanguages());
 		model.addAttribute("courses", paginatedStoreCourses);
+		model.addAttribute("allLanguages", courseSubscriptionService.findAllLanguages());
 		model.addAttribute("order", order);
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", totalPages);
@@ -107,20 +105,11 @@ public class CoursesStoreController {
 		return "pages/courses-store";
 	}
 
-
-
 	@PostMapping("/subscribe")
 	public String subscribeToCourse(@RequestParam Integer courseId,
 									@AuthenticationPrincipal UserSecurityDetails userDetails,
 									RedirectAttributes attrs) {
-		try{
-			courseSubscriptionService.subscribeUserToCourse(userDetails.getPublicUser().getId(), courseId);
-			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Éxito", "¡Te has suscrito correctamente!", ToastDto.ToastType.SUCCESS)));
-		} catch(KnowyCourseSubscriptionException e){
-			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Error", e.getMessage(), ToastDto.ToastType.ERROR)));
-		} catch (Exception e) {
-			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Error", "Ocurrió un error inesperado al suscribirte al curso.", ToastDto.ToastType.ERROR)));
-		}
+		CourseController.handleCourseSubscription(courseId, userDetails, attrs, courseSubscriptionService, TOAST_MODEL_ATTRIBUTE);
 		return "redirect:/store";
 	}
 }

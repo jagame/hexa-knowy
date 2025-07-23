@@ -11,43 +11,54 @@
 	<link rel="stylesheet" th:href="@{/styles/pages/error.css}">
 </head>
 <body layout:fragment="main-content">
-	<main class="error-card">
-		<section class="logo-container">
-			<img src="/images/logoWoutText.png" alt="Logo Knowy">
-			<span class="kn-logo--text">KNOWY</span>
-		</section>
+<main class="error-card">
+	<section class="logo-container">
+		<img alt="Logo Knowy" src="/images/logoWoutText.png">
+		<span class="kn-logo--text">KNOWY</span>
+	</section>
 
-		<h2 class="error-title">
-			Error 500 - Error interno del servidor
-			<svg xmlns="http://www.w3.org/2000/svg"  width="42"  height="42"  viewBox="0 0 24 24"  fill="none"
-				 stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"
-				 class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad-dizzy">
-				<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
-				<path d="M14.5 16.05a3.5 3.5 0 0 0 -5 0" /><path d="M8 9l2 2" /><path d="M10 9l-2 2" />
-				<path d="M14 9l2 2" /><path d="M16 9l-2 2" />
-			</svg>
-		</h2>
+	<h2 class="error-title">
+		Error 500 - Error interno del servidor
+		<svg class="icon icon-tabler icons-tabler-outline icon-tabler-mood-sad-dizzy" fill="none" height="42" stroke="currentColor" stroke-linecap="round"
+			 stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="42"
+			 xmlns="http://www.w3.org/2000/svg">
+			<path d="M0 0h24v24H0z" fill="none" stroke="none"/>
+			<path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/>
+			<path d="M14.5 16.05a3.5 3.5 0 0 0 -5 0"/>
+			<path d="M8 9l2 2"/>
+			<path d="M10 9l-2 2"/>
+			<path d="M14 9l2 2"/>
+			<path d="M16 9l-2 2"/>
+		</svg>
+	</h2>
 
-		<h5 class="error-message">Algo salió mal en el servidor. Estamos trabajando para solucionarlo.</h5>
+	<h5 class="error-message">Algo salió mal en el servidor. Estamos trabajando para solucionarlo.</h5>
+	<h5 class="error-message" th:text="'Codigo de Error: ' + ${errorMessage}"></h5>
 
-		<a th:if="${nickname != null}" th:href="@{/home}" class="error-btn">
+	<a class="error-btn" th:href="@{/home}" th:if="${nickname != null}">
 
-			<svg xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"
-				 stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"
-				 class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left">
-				<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" />
-				<path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
-			Ir a Inicio
-		</a>
+		<svg class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round"
+			 stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
+			 xmlns="http://www.w3.org/2000/svg">
+			<path d="M0 0h24v24H0z" fill="none" stroke="none"/>
+			<path d="M5 12l14 0"/>
+			<path d="M5 12l6 6"/>
+			<path d="M5 12l6 -6"/>
+		</svg>
+		Ir a Inicio
+	</a>
 
-		<a th:if="${nickname == null}" th:href="@{/}" class="error-btn">
-			<svg xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"
-				 stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"
-				 class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left">
-				<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" />
-				<path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
-			Ir a Página Principal
-		</a>
-	</main>
+	<a class="error-btn" th:href="@{/}" th:if="${nickname == null}">
+		<svg class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round"
+			 stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
+			 xmlns="http://www.w3.org/2000/svg">
+			<path d="M0 0h24v24H0z" fill="none" stroke="none"/>
+			<path d="M5 12l14 0"/>
+			<path d="M5 12l6 6"/>
+			<path d="M5 12l6 -6"/>
+		</svg>
+		Ir a Página Principal
+	</a>
+</main>
 </body>
 </html>

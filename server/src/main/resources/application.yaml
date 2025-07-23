@@ -1,6 +1,4 @@
 spring:
-    config:
-        import: "file:.env[.properties]"
     datasource:
         url: jdbc:postgresql://postgres:5432/knowydb
         username: knowy
@@ -24,10 +22,22 @@ spring:
     jwt:
         key: ${JWT_SECRET_KEY}
 server:
-    port: 8080
+    port: 443
+    ssl:
+        enabled: true
+        key-store: classpath:keystore.p12
+        key-store-password: ${SSL_KEY}
+        key-store-type: PKCS12
+        key-alias: knowy-server
     error:
         whitelabel:
             enabled: false
     servlet:
         session:
             timeout: 1d
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: health,info

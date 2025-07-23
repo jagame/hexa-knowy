@@ -18,9 +18,9 @@ import java.util.Optional;
 import java.util.Set;
 
 
-public class PublicUserServiceTest {
+class PublicUserServiceTest {
 
-// NICKNAME
+	// NICKNAME
 	@Test
 	void givenExistingNicknameExpectAlreadyExistException() {
 		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
@@ -184,9 +184,9 @@ public class PublicUserServiceTest {
 	}
 
 
-// PROFILE IMAGE
+	// PROFILE IMAGE
 	@Test
-		//UserID doesn't exist so can't update ProfileImage
+	//UserID doesn't exist so can't update ProfileImage
 	void givenInvalidUserIdExpectUserNotFoundExceptionProfileImage() {
 		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
 		ProfileImageRepository imageRepo = Mockito.mock(ProfileImageRepository.class);
@@ -244,7 +244,8 @@ public class PublicUserServiceTest {
 	}
 
 
-	@Test //Happy path
+	@Test
+		//Happy path
 	void givenNewImageExpectUpdateProfileImage() throws Exception {
 		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
 		ProfileImageRepository imageRepo = Mockito.mock(ProfileImageRepository.class);
@@ -268,7 +269,7 @@ public class PublicUserServiceTest {
 	}
 
 
-//	LANGUAGES
+	//	LANGUAGES
 	@Test
 	void givenInvalidUserIdExpectUserNotFoundExceptionLanguages() {
 		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
@@ -299,7 +300,8 @@ public class PublicUserServiceTest {
 	}
 
 
-	@Test //Happy path
+	//Happy path
+	@Test
 	void givenLanguagesExpectUpdateUserLanguages() throws Exception {
 		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
 		ProfileImageRepository imageRepo = Mockito.mock(ProfileImageRepository.class);
@@ -309,7 +311,6 @@ public class PublicUserServiceTest {
 		PublicUserEntity user = new PublicUserEntity();
 		Mockito.when(publicUserRepo.findUserById(42)).thenReturn(Optional.of(user));
 
-		// Mock: create repo Set.of() wich will be returned when arrayLanguages={"Java", "Python", "C++"}
 		LanguageEntity java = new LanguageEntity();
 		java.setName("Java");
 		LanguageEntity python = new LanguageEntity();

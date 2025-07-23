@@ -5,8 +5,6 @@ import com.knowy.server.controller.dto.LessonDto;
 import com.knowy.server.controller.dto.LinksLessonDto;
 import com.knowy.server.controller.dto.SolutionDto;
 import com.knowy.server.controller.exception.CurrentLessonNotFoundException;
-import com.knowy.server.controller.exception.NextLessonNotFoundException;
-import com.knowy.server.controller.exception.NoCompletedLessonFoundException;
 import com.knowy.server.entity.DocumentationEntity;
 import com.knowy.server.entity.PublicUserLessonEntity;
 import com.knowy.server.service.PublicUserLessonService;
@@ -21,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/course")
@@ -48,7 +47,7 @@ public class LessonController {
 	public String courseIntro(
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		@PathVariable Integer courseId, Model model
-	) throws NextLessonNotFoundException, NoCompletedLessonFoundException {
+	) {
 		List<PublicUserLessonEntity> publicUserLesson = getAllPublicUserLessons(userDetails.getPublicUser().getId(), courseId);
 		List<LessonDto> lessonsDto = LessonDto.fromEntities(publicUserLesson);
 		List<LinksLessonDto> documentationDto = LinksLessonDto.fromEntities(getAllLessonDocumentations(publicUserLesson));
@@ -66,7 +65,7 @@ public class LessonController {
 		Model model, CourseDto courseDto,
 		List<LessonDto> lessonsDto,
 		List<LinksLessonDto> documentationDto
-	) throws NextLessonNotFoundException, NoCompletedLessonFoundException {
+	) {
 		model.addAttribute("course", courseDto);
 		model.addAttribute("lessons", courseDto.lessons());
 		model.addAttribute("lastLesson", getLastCompletedIndex(lessonsDto));
@@ -83,12 +82,11 @@ public class LessonController {
 			.toList();
 	}
 
-	private int getNextLessonId(List<LessonDto> lessons) throws NextLessonNotFoundException {
+	private Optional<Integer> getNextLessonId(List<LessonDto> lessons) {
 		return lessons.stream()
 			.filter(lesson -> lesson.status() == LessonDto.LessonStatus.NEXT_LESSON)
-			.findFirst()
 			.map(LessonDto::id)
-			.orElseThrow(() -> new NextLessonNotFoundException("No fue posible identificar la próxima lección en el curso actual."));
+			.findFirst();
 	}
 
 	/**
@@ -110,7 +108,7 @@ public class LessonController {
 		@PathVariable Integer courseId,
 		@PathVariable Integer lessonId,
 		Model model
-	) throws CurrentLessonNotFoundException, NoCompletedLessonFoundException {
+	) throws CurrentLessonNotFoundException {
 		List<PublicUserLessonEntity> publicUserLessons = getAllPublicUserLessons(userDetails.getPublicUser().getId(), courseId);
 		List<LessonDto> lessonsDto = LessonDto.fromEntities(publicUserLessons);
 
@@ -146,7 +144,7 @@ public class LessonController {
 		List<LessonDto> lessonsDto,
 		List<LinksLessonDto> documentationDto,
 		List<SolutionDto> solutions
-	) throws NoCompletedLessonFoundException {
+	) {
 		model.addAttribute("course", courseDto);
 		model.addAttribute("lesson", LessonDto.fromEntity(currentUserLesson));
 		model.addAttribute("lessonContent", currentUserLesson.getLessonEntity().getExplanation());
@@ -157,7 +155,7 @@ public class LessonController {
 		model.addAttribute("solutions", solutions);
 	}
 
-	private int getLastCompletedIndex(List<LessonDto> lessons) throws NoCompletedLessonFoundException {
+	private int getLastCompletedIndex(List<LessonDto> lessons) {
 		return lessons.reversed()
 			.stream()
 			.filter(lesson -> lesson.status() == LessonDto.LessonStatus.COMPLETE)

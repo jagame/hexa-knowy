@@ -26,9 +26,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class PrivateUserServiceTest {
+class PrivateUserServiceTest {
 
-// CREATE
+	// CREATE
 	@Test
 	void givenExistingEmailExpectInvalidUserEmailException() {
 		PrivateUserRepository repo = mock(PrivateUserRepository.class);
@@ -68,7 +68,8 @@ public class PrivateUserServiceTest {
 		assertEquals("Invalid password format", ex.getMessage());
 	}
 
-	@Test 	//Happy Path
+	@Test
+		//Happy Path
 	void givenValidEmailAndPasswordExpectUserSaved() throws Exception {
 		PrivateUserRepository repo = Mockito.mock(PrivateUserRepository.class);
 		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
@@ -92,7 +93,7 @@ public class PrivateUserServiceTest {
 	}
 
 
-// UPDATE EMAIL
+	// UPDATE EMAIL
 	@Test
 	void givenSameEmailExpectUnchangedEmailException() {
 		PrivateUserRepository repo = Mockito.mock(PrivateUserRepository.class);
@@ -173,7 +174,8 @@ public class PrivateUserServiceTest {
 		Assertions.assertEquals("Wrong password for user with id: 16", ex.getMessage());
 	}
 
-	@Test	// Happy Path
+	@Test
+		// Happy Path
 	void givenValidEmailAndCorrectPasswordExpectEmailUpdated() throws Exception {
 		PrivateUserRepository repo = Mockito.mock(PrivateUserRepository.class);
 		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
@@ -196,7 +198,7 @@ public class PrivateUserServiceTest {
 	}
 
 
-// IS VALID TOKEN
+	// IS VALID TOKEN
 	@Test
 	void givenNullTokenExpectNullPointerException() {
 		PrivateUserRepository repo = Mockito.mock(PrivateUserRepository.class);
@@ -250,7 +252,7 @@ public class PrivateUserServiceTest {
 	}
 
 
-// RESET PASSWORD
+	// RESET PASSWORD
 	@Test
 	void givenMismatchedPasswordsExpectJwtKnowyException() {
 		PrivateUserRepository repo = mock(PrivateUserRepository.class);
@@ -384,7 +386,7 @@ public class PrivateUserServiceTest {
 	}
 
 
-// CREATE RECOVERY PASSWORD EMAIL
+	// CREATE RECOVERY PASSWORD EMAIL
 	@Test
 	void givenNonExistentEmailExpectUserNotFoundException() {
 		PrivateUserRepository repo = Mockito.mock(PrivateUserRepository.class);
@@ -459,9 +461,9 @@ public class PrivateUserServiceTest {
 	}
 
 
-// TOKEN BODY
+	// TOKEN BODY
 	@Test
-	void givenUnknownEmailExpectUserNotFoundException() throws JwtKnowyException {
+	void givenUnknownEmailExpectUserNotFoundException() {
 		PrivateUserRepository repo = Mockito.mock(PrivateUserRepository.class);
 		JwtTools jwtTools = Mockito.mock(JwtTools.class);
 		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
@@ -531,7 +533,7 @@ public class PrivateUserServiceTest {
 	}
 
 
-//CREATE DELETED ACCOUNT EMAIL
+	//CREATE DELETED ACCOUNT EMAIL
 	@Test
 	void givenNonExistingEmailWhenCreateDeletedAccountEmailThenThrowsUserNotFoundException() {
 		PrivateUserRepository repo = Mockito.mock(PrivateUserRepository.class);
@@ -579,7 +581,7 @@ public class PrivateUserServiceTest {
 	}
 
 
-// DESACTIVATE USER ACCOUNT
+	// DESACTIVATE USER ACCOUNT
 	@Test
 	void givenNonexistentUserExpectUserNotFoundException() {
 		PrivateUserRepository repo = Mockito.mock(PrivateUserRepository.class);
@@ -621,7 +623,7 @@ public class PrivateUserServiceTest {
 	}
 
 	@Test
-	void givenValidEmailAndWrongPasswordExpectWrongPasswordException() throws Exception {
+	void givenValidEmailAndWrongPasswordExpectWrongPasswordException() {
 		PrivateUserRepository repo = Mockito.mock(PrivateUserRepository.class);
 		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
 		JwtTools jwt = Mockito.mock(JwtTools.class);
@@ -673,7 +675,7 @@ public class PrivateUserServiceTest {
 	}
 
 
-// REACTIVATE USER ACCOUNT
+	// REACTIVATE USER ACCOUNT
 	@Test
 	void givenInvalidTokenExpectThrowsJwtKnowyException() throws Exception {
 		PrivateUserRepository repo = Mockito.mock(PrivateUserRepository.class);

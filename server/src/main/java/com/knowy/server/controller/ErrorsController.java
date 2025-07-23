@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.util.UUID;
+
 @Slf4j
 @ControllerAdvice
 public class ErrorsController {
@@ -24,12 +26,14 @@ public class ErrorsController {
 
 	@ExceptionHandler(Exception.class)
 	public ModelAndView handleServerError(Exception ex) {
-		log.error(ex.getMessage(), ex);
+		String errorCode = UUID.randomUUID().toString();
+
+		log.error("Error Code: {}\n{}", errorCode, ex.getMessage(), ex);
 
 		ModelAndView mv = new ModelAndView("error/500");
 		mv.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 		mv.addObject("statusCode", 500);
-		mv.addObject("errorMessage", ex.getMessage());
+		mv.addObject("errorMessage", UUID.randomUUID().toString());
 		return mv;
 	}
 }

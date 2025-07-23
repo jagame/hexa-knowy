@@ -17,15 +17,15 @@ public interface JpaBannedWordsRepository extends BannedWordsRepository, JpaRepo
 
 	@Query(value = """
 		SELECT
-			CASE
-				WHEN EXISTS (
-					SELECT banned_word.word
-					FROM banned_word
-					WHERE :word ILIKE CONCAT('%', banned_word.word, '%')
-				)
-				THEN true
-				ELSE false
-				END AS is_banned;
+		    CASE
+		        WHEN EXISTS (
+		            SELECT bw.word
+		            FROM banned_word bw
+		            WHERE :word ILIKE CONCAT('%', bw.word, '%')
+		        )
+		        THEN true
+		        ELSE false
+		    END AS is_banned
 		""", nativeQuery = true)
 	boolean isWordBanned(@Param("word") String word);
 }
