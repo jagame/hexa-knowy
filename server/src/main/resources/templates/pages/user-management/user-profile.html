@@ -25,19 +25,28 @@
 <main layout:fragment="main-content">
 	<form id="profileForm" method="post" th:action="@{/update-user-profile}">
 		<div class="user-management-container_main ">
-			<div class="description-card">
+			<div class="description-card px-4">
 				<h1 class="title-management">Editar Perfil</h1>
 				<p class="description-management mt-3">Configura tus preferencias y recuerda mantener la privacidad de tus datos personales. </p>
 			</div>
 
 			<!--messages for username update-->
-			<div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
-			<div class="alert alert-success" th:if="${success}" th:text="${success}"></div>
+			<div class="alert alert-danger alert-dismissible fade show mt-3" role="alert"
+				 th:if="${error}">
+				<span th:text="${error}"></span>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+
+			<div class="alert alert-success alert-dismissible fade show mt-3" role="alert"
+				 th:if="${success}">
+				<span th:text="${success}"></span>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
 
 			<div class="row user-information">
 				<!--PHOTO-->
 				<div class="picture-edit-container col-lg-3" data-bs-target="#exampleModal" data-bs-toggle="modal">
-					<img class="edit-avatar" id="profilePicture">
+					<img th:src="${#authentication?.principal?.publicUser?.profileImage?.url}" class="edit-avatar" id="profilePicture">
 
 					<label class="edit-pic-btn" for="profile-pic-id">
 						<i class="bi bi-person-bounding-box"></i>

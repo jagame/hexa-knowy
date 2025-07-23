@@ -44,31 +44,27 @@ body {
 	font-size: 1rem;
 	display: inline-block;
 	padding: 0.5rem 0.75rem;
-	transition: $transition-speed;
+	//transition: $transition-speed;
 	text-align: center;
 	vertical-align: middle;
 	text-decoration: none;
 	color: black;
 	box-shadow: $card-shadow;
-	background-color: $neutral-100;
+	background-color: $bg;
 	font-family: 'caveat-brush', sans-serif;
 	border-radius: $radius-25;
 }
 
 .sidebar-link:hover {
-	color: $neutral-900;
-	background-color: $secundary-300;
-}
-
-.sidebar-link.active {
 	color: white;
 	background-color: $primary-500;
 }
 
-.sidebar-link.active:hover {
-	background-color: $primary-500;
+.sidebar-link.active {
+	color: white;
+	background-color: $primary-700;
+	height: 40px;
 }
-
 
 .user-management-container_main {
 	width: 100%;
@@ -211,6 +207,11 @@ body {
 .modal-header {
 	background-color: $primary-500;
 	color: white;
+
+	.btn-close {
+		filter: brightness(0) invert(1);
+	}
+
 }
 
 /*User Account*/
