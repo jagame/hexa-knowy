@@ -72,6 +72,24 @@ html, body {
 	}
 }
 
+.kn-aside-setting {
+	z-index: 0;
+	overflow: auto;
+	transform: translateX(-100%);
+
+	&--active {
+		z-index: 2;
+		transform: translateX(0);
+	}
+
+	@media (min-width: 950px) {
+		position: static;
+		width: 20%;
+		transition: none;
+		transform: none;
+	}
+}
+
 .show-sidebar-btn {
 	position: sticky;
 	z-index: 10;
