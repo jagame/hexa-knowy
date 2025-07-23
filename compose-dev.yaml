@@ -10,12 +10,15 @@ services:
             - knowy_net
         depends_on:
             - postgres
+            - mailpit
         healthcheck:
             test: [ "CMD-SHELL", "curl --fail http://localhost:8080/actuator/health || exit 1" ]
             interval: 30s
             timeout: 5s
             retries: 3
             start_period: 10s
+        environment:
+            - SPRING_PROFILES_ACTIVE=dev
 
     postgres:
         image: postgres:17
@@ -24,6 +27,8 @@ services:
             POSTGRES_USER: knowy
             POSTGRES_PASSWORD: knowy
             POSTGRES_DB: knowydb
+        ports:
+            - "5434:5432"
         networks:
             - knowy_net
         volumes:
@@ -61,8 +66,8 @@ services:
         volumes:
             - kn_mailpit_data:/data
         ports:
-            - ${PORT_PROD_MAILPIT_UI:-8025}:8025 #UI mailpit port
-            - ${PORT_PROD_MAILPIT_SMTP:-1025}:1025 #SMTP port
+            - "8025:8025" #UI mailpit port
+            - "1025:1025" #SMTP port
         networks:
             - knowy_net
         environment:
@@ -70,14 +75,6 @@ services:
             MP_DATABASE: /data/knmailpit.db
             MP_SMTP_AUTH_ACCEPT_ANY: 1
             MP_SMTP_AUTH_ALLOW_INSECURE: 1
-        depends_on:
-            - java-server
-        healthcheck:
-            test: [ "CMD-SHELL", "curl -f http://localhost:8025 || exit 1" ]
-            interval: 30s
-            timeout: 10s
-            retries: 3
-            start_period: 30s
 
 volumes:
     kn_db_data:

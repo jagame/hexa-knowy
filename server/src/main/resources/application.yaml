@@ -1,6 +1,4 @@
 spring:
-    config:
-        import: "file:.env[.properties]"
     datasource:
         url: jdbc:postgresql://postgres:5432/knowydb
         username: knowy

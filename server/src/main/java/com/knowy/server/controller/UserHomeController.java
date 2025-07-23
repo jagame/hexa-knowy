@@ -44,6 +44,7 @@ public class UserHomeController {
 		List<CourseEntity> recommended = courseSubscriptionService.getRecommendedCourses(userId);
 		List<Integer> recommendedIds = recommended.stream()
 			.map(CourseEntity::getId)
+			.limit(3)
 			.toList();
 
 		List<CourseEntity> fillCourses = courseSubscriptionService.findAllCourses().stream()
