@@ -32,7 +32,7 @@
 			<form th:if="${courseItem.action.name() == 'ACQUIRE'}"
 				  th:action="${acquireAction}" method="post">
 				<input type="hidden" name="courseId" th:value="${courseItem.getId()}"/>
-				<button type="submit" class="course-card__button-action">🛒 Adquirir curso</button>
+				<button type="submit" class="course-card__button-action">+ Adquirir curso</button>
 			</form>
 			<a th:if="${courseItem.action.name() == 'START'}"
 			   th:href="@{/course/{courseId}(courseId=${courseItem.getId()})}"
