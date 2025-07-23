@@ -125,11 +125,12 @@ public class ExerciseController {
 		publicUserExerciseService.processUserAnswer(evaluation, publicUserExercise);
 
 		int lessonId = publicUserExercise.getExerciseEntity().getLesson().getId();
+		int courseId = publicUserExercise.getExerciseEntity().getLesson().getCourse().getId();
 
 		double average = publicUserExerciseService.getAverageRateByLessonId(lessonId);
 		if (average >= 80) {
 			publicUserLessonService.updateLessonStatusToCompleted(userDetails.getPublicUser().getId(), lessonId);
-			return "redirect:/course/%d".formatted(lessonId);
+			return "redirect:/course/%d".formatted(courseId);
 		}
 		return "redirect:/course/%d/exercise/review".formatted(lessonId);
 	}

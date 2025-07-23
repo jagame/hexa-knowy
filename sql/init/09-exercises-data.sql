@@ -1,4 +1,19 @@
 TRUNCATE TABLE public.exercise RESTART IDENTITY CASCADE;
+
+-- Lección 1: Introducción al curso
+INSERT INTO public.exercise (id_lesson, question)
+VALUES
+	(1, '¿Qué lenguajes tienen influencia o relación directa con Java?'),
+	(1, '¿Qué ejemplos de aplicaciones se mencionan que utilizan Java en su backend?'),
+	(1, '¿Qué empresa usó Java completamente para su versión original del juego Minecraft?'),
+	(1, '¿Cuál es uno de los objetivos principales de este curso de Java básico?'),
+	(1, '¿Qué mensaje transmite el curso sobre cometer errores mientras aprendes a programar?'),
+	(1, '¿Por qué puede considerarse útil aprender al menos un lenguaje de programación?'),
+	(1, '¿Qué ventaja se menciona de Java para el desarrollo de videojuegos como Minecraft?'),
+	(1, '¿Verdadero o falso: Aprender a programar significa que debes evitar errores a toda costa.'),
+	(1, '¿Qué áreas del desarrollo de software se mencionan como posibles aplicaciones de Java?'),
+	(1, '¿Qué actitud recomienda el curso adoptar al estudiar programación por primera vez?');
+
 -- Lección 2: ¿Qué es Java y cómo funciona?
 INSERT INTO public.exercise (id_lesson, question)
 VALUES (2, '¿Qué significa que Java sea "multiplataforma"?'),

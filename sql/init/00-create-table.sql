@@ -215,8 +215,8 @@ ALTER TABLE IF EXISTS public.course_language
 -- FK lesson_documentation
 ALTER TABLE IF EXISTS public.lesson_documentation
 	ADD FOREIGN KEY (id_lesson)
-	REFERENCES public.lesson (id);
+		REFERENCES public.lesson (id);
 
 ALTER TABLE IF EXISTS public.lesson_documentation
 	ADD FOREIGN KEY (id_documentation)
-	REFERENCES public.documentation (id);
+		REFERENCES public.documentation (id);

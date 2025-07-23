@@ -3,7 +3,7 @@
 		<div class="course-card__tags">
 			<span class="course-card-tags__tag" th:each="language: ${courseItem.languages}" th:text="${language}"></span>
 		</div>
-		<img src="https://picsum.photos/370/200" alt="">
+		<img th:src="${courseItem.image}" class="card-img-top" alt="">
 	</div>
 
 	<div class="course-card__content">
@@ -35,6 +35,7 @@
 				<button type="submit" class="course-card__button-action">🛒 Adquirir curso</button>
 			</form>
 			<a th:if="${courseItem.action.name() == 'START'}"
+			   th:href="@{/course/{courseId}(courseId=${courseItem.getId()})}"
 			   class="course-card__button-action">
 				▷ Empezar curso
 			</a>

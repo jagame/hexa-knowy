@@ -21,7 +21,7 @@ public class CourseCardDTO {
 	private int progress;
 	private ActionType action;
 	private ArrayList<String> languages;
-	private String imageUrl;
+	private String image;
 	private LocalDateTime creationDate;
 
 	public enum ActionType {
@@ -29,7 +29,7 @@ public class CourseCardDTO {
 		ACQUIRE
 	}
 
-	public static CourseCardDTO fromEntity(CourseEntity course, int progress, List<String> languages, LocalDateTime creationDate) {
+	public static CourseCardDTO fromEntity(CourseEntity course, int progress, List<String> languages, String image, LocalDateTime creationDate) {
 		CourseCardDTO dto = new CourseCardDTO();
 		dto.setId(course.getId());
 		dto.setName(course.getTitle());
@@ -37,11 +37,12 @@ public class CourseCardDTO {
 		dto.setProgress(progress);
 		dto.setAction(ActionType.START);
 		dto.setLanguages(new ArrayList<>(languages));
+		dto.setImage(image);
 		dto.setCreationDate(creationDate);
 		return dto;
 	}
 
-	public static CourseCardDTO fromRecommendation(CourseEntity course, List<String> languages, LocalDateTime creationDate
+	public static CourseCardDTO fromRecommendation(CourseEntity course, List<String> languages, String image, LocalDateTime creationDate
 	) {
 		CourseCardDTO dto = new CourseCardDTO();
 		dto.setId(course.getId());
@@ -50,6 +51,7 @@ public class CourseCardDTO {
 		dto.setProgress(0);
 		dto.setAction(ActionType.ACQUIRE);
 		dto.setLanguages(new ArrayList<>(languages));
+		dto.setImage(image);
 		dto.setCreationDate(creationDate);
 		return dto;
 	}
