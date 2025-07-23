@@ -42,7 +42,7 @@ public class CourseSubscriptionService {
 		return userCourses.stream()
 			.map(course -> CourseCardDTO.fromEntity(
 				course, getCourseProgress(userId, course.getId()),
-				findLanguagesForCourse(course), course.getCreationDate()))
+				findLanguagesForCourse(course), findCourseImage(course), course.getCreationDate()))
 			.toList();
 	}
 
@@ -126,6 +126,10 @@ public class CourseSubscriptionService {
 
 	public List<CourseEntity> findAllCourses() {
 		return courseRepository.findAll();
+	}
+
+	public String findCourseImage(CourseEntity course){
+		return course.getImage() != null ? course.getImage() : "https://picsum.photos/seed/picsum/200/300";
 	}
 
 	public List<String> findLanguagesForCourse(CourseEntity course) {

@@ -83,6 +83,7 @@ public class CourseController {
 			.map(course -> CourseCardDTO.fromRecommendation(
 				course,
 				courseSubscriptionService.findLanguagesForCourse(course),
+				courseSubscriptionService.findCourseImage(course),
 				course.getCreationDate()
 			)).toList();
 

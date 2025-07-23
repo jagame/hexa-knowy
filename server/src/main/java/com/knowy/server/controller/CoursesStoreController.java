@@ -50,6 +50,7 @@ public class CoursesStoreController {
 					course,
 					courseSubscriptionService.getCourseProgress(userId, course.getId()),
 					courseSubscriptionService.findLanguagesForCourse(course),
+					courseSubscriptionService.findCourseImage(course),
 					course.getCreationDate()
 				);
 				dto.setAction(CourseCardDTO.ActionType.ACQUIRE);

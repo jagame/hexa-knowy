@@ -31,7 +31,7 @@
 		<img alt="Imagen del curso" class="img-head" th:src="${course.image}">
 		<h2 class="title" th:text="${course.name}">Título del curso</h2>
 		<div class="meta-row">
-			<span class="language" th:text="${#strings.arrayJoin(course.languages, ', ')}">Idiomas</span>
+			<span class="language badge rounded-pill bg-primary"  th:text="${#strings.arrayJoin(course.languages, ', ')}">Idiomas</span>
 		</div>
 
 		<div th:if="${isIntro}" class="mt-4 ">
