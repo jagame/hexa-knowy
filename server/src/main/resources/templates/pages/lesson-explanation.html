@@ -1,107 +1,85 @@
 <!DOCTYPE html>
 <html lang="es"
-	  layout:decorate="~{layouts/content-sidebar-layout}"
+	  layout:decorate="~{layouts/content-sidebar-layout.html}"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>Explicación de la lección</title>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-	<link rel="stylesheet"
-		  href="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/css/tabler.min.css"/>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
 	<link rel="stylesheet" th:href="@{/styles/pages/lesson-explanation.css}">
+	<title>Explicación de la lección</title>
 </head>
 <body>
 <aside class="kn-aside" layout:fragment="sidebar">
 	<div class="lessons-component">
 		<div class="course-title">
-			<h2 th:text="${course.name}">Nombre del Curso</h2>
+			<h3 th:text="${course.name}">Nombre del Curso</h3>
 			<div class="course-title__progressbar">
 				<span class="course-title__percentage" th:text="${course.percentageCompleted + '% completado'}"></span>
 
 				<div class="progress-bar">
 					<div class="progress" th:style="'width:' + ${course.percentageCompleted} + '%'"></div>
 				</div>
-				<a class="introduction-btn--purple">Introducción al curso</a>
+				<a th:href="@{'/course/' + ${courseId}}" class="introduction-btn--purple">Introducción al curso</a>
 			</div>
 		</div>
-		<div th:replace="~{components/lessonscard ::lessonscard(${course})}"></div>
+		<div th:replace="~{components/lessonscard ::lessonscard(${course}, ${courseId})}"></div>
 	</div>
 </aside>
 
 <main class="main-content" layout:fragment="main-content">
 
-	<img alt="Imagen" class="img-head" th:src="${lesson.image}">
-
-	<div class="pe-2">
-		<div class="container-flex mt-3">
-			<div>
-				<h4 class="title" th:text="${lesson.title}">Título de la lección</h4>
-				<div class="meta-row">
-					<span class="icon">
-						<i class="bi bi-clock-fill"></i>
-						<span class="duration" th:text="${lesson.duration}">Duración de la lección</span>
-					  </span>
-					<span class="meta" th:text="'Nivel: '+${level}">Nivel: Intermedio</span>
-					<span class="meta">Categoría</span>
-				</div>
-
-			</div>
-			<a class="btn btn-lesson me-2">Iniciar lección</a>
+	<div class="py-2 px-5">
+		<img alt="Imagen del curso" class="img-head" th:src="${course.image}">
+		<h2 class="title" th:text="${course.name}">Título del curso</h2>
+		<div class="meta-row">
+			<span class="language" th:text="${#strings.arrayJoin(course.languages, ', ')}">Idiomas</span>
 		</div>
-		<p class="info-course">Información del curso</p>
-		<div class="theory" th:utext="${lessonContent}">Teoría del curso</div>
 
+		<div th:if="${isIntro}" class="mt-4 ">
+			<a class="btn-lesson"
+			   th:if="${nextLessonId != null}"
+			   th:href="@{'/course/' + ${courseId} + '/lesson/' + ${nextLessonId}}">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+					 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+					 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+					 class="icon icon-tabler icons-tabler-outline icon-tabler-player-play">
+					<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+					<path d="M7 4v16l13 -8z" />
+				</svg>
+				<span th:text="${course.percentageCompleted == 0} ? 'Iniciar curso' : 'Seguir curso'"></span>
+			</a>
+		</div>
 
+		<a class="btn-lesson mt-4"
+		   th:if="${!isIntro}"
+		   th:classappend="${lesson.status.name() == 'BLOCKED'} ? ' disabled' : ''"
+		   th:attr="aria-disabled=${lesson.status.name() == 'BLOCKED'}"
+		   th:href="${lesson.status.name() != 'BLOCKED'} ? '/course/' + ${lesson.id} + '/exercise/review' : null">
+
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+				 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+				 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+				 class="icon icon-tabler icons-tabler-outline icon-tabler-player-play">
+				<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+				<path d="M7 4v16l13 -8z" />
+			</svg>
+			Iniciar lección
+		</a>
+
+		<h3 class="info-course"
+			th:text="${isIntro} ? 'Introducción al curso' : 'Introducción a la lección - ' + ${lesson.title}">
+			Título dinámico
+		</h3>
+
+		<div class="theory" th:utext="${isIntro} ? ${course.description} : ${lessonContent}">Teoría del curso</div>
 	</div>
 
-	<div class="component" th:replace="~{components/lesson/solutions-component ::solutions-component(${solutions})}">Soluciones</div>
+	<th:block th:if="${!isIntro and lesson != null and lesson.status.name() == 'COMPLETE'}">
+		<div class="component"
+			 th:replace="~{components/lesson/solutions-component ::solutions-component(${solutions})}">
+		</div>
+	</th:block>
 
-<!--	<div class="component" th:replace="~{components/lesson/documents-links ::documentLinkComponent(${LinksList})}">Documentos</div>-->
-	<div th:replace="~{components/lesson/documents-links :: documentLinkComponent(${LinksLessonList})}"></div>
-	<h2>Constantes</h2>
-	<p>
-		En ocasiones, necesitamos almacenar valores que no deben cambiar durante la ejecución del programa. Para ello, Java permite definir constantes utilizando la palabra clave
-		<code style="color:#ff9900">final</code>. Una vez asignado, el valor de una constante no puede ser modificado.
-	</p>
-
-	<p><b>Ejemplo</b></p>
-	<code style="color:#ff9900">final</code> <code style="color:#ff9900">double</code> <code>PI = </code><code style="color:#4a86e8;">3.14</code>;
-
-	<p>
-		Aquí, <code>PI</code> es una constante. <b>Por convención, los identificadores de constantes se escriben en mayúsculas y, si incluyen varias palabras, se separan con guiones bajos</b> (<code>MAX_USUARIOS</code>, <code>PI</code>, etc.) para diferenciarlas fácilmente.
-	</p>
-
-	<h3>¿Para qué se emplean?</h3>
-	<p>
-		Las constantes se usan para valores fijos, como el valor de <code>PI</code>, límites de un rango, configuraciones que no deben cambiar, mensajes de error, etc. Esto mejora la legibilidad y reduce el riesgo de errores, ya que el valor de una constante no puede modificarse accidentalmente.
-	</p>
-
-	<h3>Buenas prácticas: nombrar variables</h3>
-	<p>
-		En Java, los nombres de las variables deben ser claros y representativos de lo que almacenan. Así, el código es más fácil de entender y mantener.
-	</p>
-
-	<h4>Convención lowerCamelCase</h4>
-	<p>
-		Java utiliza la convención <b>lowerCamelCase</b> para nombrar variables, que consiste en:
-	</p>
-	<ul>
-		<li>Empezar el nombre con letra minúscula.</li>
-		<li>
-			Si el nombre tiene varias palabras, cada palabra adicional comienza con mayúscula
-			(sin espacios ni guiones).
-		</li>
-	</ul>
-
-	<p><b>Ejemplos</b></p>
-	<code style="color:#ff9900">String</code> <code>nombreCompleto = </code><code style="color:#2F9E44;">"Alonso Pérez Pérez"</code>;
-	<br>
-	<code style="color:#ff9900">boolean</code> <code>estaActivo;</code> <span style="color: #888">(su valor por defecto es false)</span>
-
-	<p>
-		Esta forma de nombrar es una norma no obligatoria, pero muy recomendada porque facilita la lectura y el mantenimiento del código.
-	</p>
+	<div class="component" th:replace="~{components/lesson/documents-links ::documentLinkComponent(${LinksList})}">Documentos</div>
 </main>
 </body>
 </html>

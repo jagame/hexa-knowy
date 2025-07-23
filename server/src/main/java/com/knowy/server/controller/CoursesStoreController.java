@@ -3,6 +3,7 @@ package com.knowy.server.controller;
 import com.knowy.server.controller.dto.CourseCardDTO;
 import com.knowy.server.controller.dto.ToastDto;
 import com.knowy.server.controller.exception.KnowyCourseSubscriptionException;
+import com.knowy.server.entity.CourseEntity;
 import com.knowy.server.service.CourseSubscriptionService;
 import com.knowy.server.service.model.UserSecurityDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,9 +31,31 @@ public class CoursesStoreController {
 	public String storeCourses(Model model,
 							   @RequestParam(required = false) String category,
 							   @RequestParam(required = false) String order,
+							   @RequestParam(defaultValue = "1") int page,
 							   @AuthenticationPrincipal UserSecurityDetails userDetails) {
+		Integer userId = userDetails.getPublicUser().getId();
 
-		List<CourseCardDTO> storeCourses = courseSubscriptionService.getRecommendedCourses(userDetails.getPublicUser().getId());
+		List<CourseEntity> allCourses = courseSubscriptionService.findAllCourses();
+
+		List<Integer> myCourseIds = courseSubscriptionService.findCoursesByUserId(userId)
+			.stream().map(CourseEntity::getId).toList();
+
+		List<CourseEntity> availableCourses = allCourses.stream()
+			.filter(course -> !myCourseIds.contains(course.getId()))
+			.toList();
+
+		List<CourseCardDTO> storeCourses = availableCourses.stream()
+			.map(course -> {
+				CourseCardDTO dto = CourseCardDTO.fromEntity(
+					course,
+					courseSubscriptionService.getCourseProgress(userId, course.getId()),
+					courseSubscriptionService.findLanguagesForCourse(course),
+					course.getCreationDate()
+				);
+				dto.setAction(CourseCardDTO.ActionType.ACQUIRE);
+				return dto;
+			}).toList();
+
 		//Filters
 		if (category != null && !category.isEmpty()) {
 			storeCourses = storeCourses.stream()
@@ -59,13 +82,30 @@ public class CoursesStoreController {
 			}
 		}
 
+		// PAGINACIÓN
+		int pageSize = 8;
+		int totalPages = (int) Math.ceil((double) storeCourses.size() / pageSize);
+		if (totalPages == 0) totalPages = 1; // mínimo 1 página
+
+		if (page < 1) page = 1;
+		if (page > totalPages) page = totalPages;
+
+		int fromIndex = (page - 1) * pageSize;
+		int toIndex = Math.min(fromIndex + pageSize, storeCourses.size());
+
+		List<CourseCardDTO> paginatedStoreCourses = fromIndex >= storeCourses.size() ? List.of() : storeCourses.subList(fromIndex, toIndex);
+
+
 		model.addAttribute("allLanguages", courseSubscriptionService.findAllLanguages());
-		model.addAttribute("courses", storeCourses);
+		model.addAttribute("courses", paginatedStoreCourses);
 		model.addAttribute("order", order);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("category", category);
 		model.addAttribute("acquireAction", "/store/subscribe");
 		return "pages/courses-store";
 	}
+
 
 
 	@PostMapping("/subscribe")
@@ -78,7 +118,6 @@ public class CoursesStoreController {
 		} catch(KnowyCourseSubscriptionException e){
 			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Error", e.getMessage(), ToastDto.ToastType.ERROR)));
 		} catch (Exception e) {
-			e.printStackTrace();
 			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Error", "Ocurrió un error inesperado al suscribirte al curso.", ToastDto.ToastType.ERROR)));
 		}
 		return "redirect:/store";

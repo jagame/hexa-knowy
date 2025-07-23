@@ -93,13 +93,16 @@ public class PrivateUserService {
 	 */
 	public void updateEmail(String email, int userId, String password)
 		throws UserNotFoundException, UnchangedEmailException, WrongPasswordException, InvalidUserEmailException {
-		findPrivateUserByEmail(email)
-			.orElseThrow(() -> new InvalidUserEmailException("The provided email is already associated with an existing account."));
 
 		PrivateUserEntity privateUser = getPrivateUserById(userId);
 		if (Objects.equals(email, privateUser.getEmail())) {
 			throw new UnchangedEmailException("Email must be different from the current one.");
 		}
+
+		if (findPrivateUserByEmail(email).isPresent()) {
+			throw new InvalidUserEmailException("The provided email is already associated with an existing account.");
+		}
+
 		passwordChecker.assertHasPassword(privateUser, password);
 
 		privateUser.setEmail(email);
@@ -326,7 +329,7 @@ public class PrivateUserService {
 	 * @throws WrongPasswordException if the passwords do not match or the password is incorrect
 	 * @throws UserNotFoundException  if no user is found for the given email
 	 */
-	public void deactivateUserAccount(
+	public void desactivateUserAccount(
 		String email,
 		String password,
 		String confirmPassword

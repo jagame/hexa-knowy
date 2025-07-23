@@ -14,14 +14,6 @@ public interface JpaPrivateUserRepository extends JpaRepository<PrivateUserEntit
 	Optional<PrivateUserEntity> findByEmail(String email);
 
 	@Override
-	default void updateEmail(String email, String newEmail) {
-		findByEmail(email).ifPresent(user -> {
-			user.setEmail(newEmail);
-			save(user);
-		});
-	}
-
-	@Override
 	@NonNull
 	<S extends PrivateUserEntity> S save(@NonNull S user);
 
