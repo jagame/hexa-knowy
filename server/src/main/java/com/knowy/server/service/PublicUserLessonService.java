@@ -1,5 +1,6 @@
 package com.knowy.server.service;
 
+import com.knowy.server.entity.LessonEntity;
 import com.knowy.server.entity.PublicUserLessonEntity;
 import com.knowy.server.entity.PublicUserLessonIdEntity;
 import com.knowy.server.repository.ports.PublicUserLessonRepository;
@@ -61,15 +62,15 @@ public class PublicUserLessonService {
 			.orElseThrow(() -> new PublicUserLessonException("Relation public user lesson not found"));
 		publicUserLesson.setStatus("completed");
 
-		Optional<PublicUserLessonEntity> publicUserLessonNext = findById(
-			userId,
-			publicUserLesson.getLessonEntity().getNextLesson().getId()
-		);
-
-		publicUserLessonNext.ifPresent(nextLesson ->
-			nextLesson.setStatus("in_progress")
-		);
+		Optional.ofNullable(publicUserLesson.getLessonEntity().getNextLesson())
+			.map(LessonEntity::getId)
+			.flatMap(id -> findById(userId, id))
+			.ifPresent(nextLesson -> {
+				nextLesson.setStatus("in_progress");
+				publicUserLessonRepository.save(nextLesson);
+			});
 
 		publicUserLessonRepository.save(publicUserLesson);
 	}
+
 }
