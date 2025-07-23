@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -44,15 +45,21 @@ public class UserHomeController {
 		List<CourseEntity> recommended = courseSubscriptionService.getRecommendedCourses(userId);
 		List<Integer> recommendedIds = recommended.stream()
 			.map(CourseEntity::getId)
-			.limit(3)
 			.toList();
 
-		List<CourseEntity> fillCourses = courseSubscriptionService.findAllCourses().stream()
+		List<CourseEntity> fillCoursesImmutable = courseSubscriptionService.findAllCourses().stream()
 			.filter(c -> !recommendedIds.contains(c.getId()))
 			.sorted(Comparator.comparing(CourseEntity::getCreationDate).reversed())
 			.toList();
 
-		List<CourseEntity> carouselCourses = new ArrayList<>(recommended);
+		List<CourseEntity> recommendedShuffled = new ArrayList<>(recommended);
+		List<CourseEntity> fillCourses = new ArrayList<>(fillCoursesImmutable);
+
+		Collections.shuffle(recommendedShuffled);
+		Collections.shuffle(fillCourses);
+
+		List<CourseEntity> carouselCourses = new ArrayList<>();
+		carouselCourses.addAll(recommended);
 
 		for (CourseEntity c : fillCourses) {
 			if (carouselCourses.size() >= 4) break;

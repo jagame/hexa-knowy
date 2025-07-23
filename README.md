@@ -110,7 +110,7 @@ server
 │           ├── static              → Archivos estáticos públicos (CSS, JS, imágenes)
 │           │   ├── fonts
 │           │   ├── images
-│           │   │   └── profile
+│           │   │   ├── profile
 │           │   │   └── course
 │           │   ├── scripts
 │           │   └── styles
