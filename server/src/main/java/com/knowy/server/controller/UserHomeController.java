@@ -2,7 +2,6 @@ package com.knowy.server.controller;
 
 import com.knowy.server.controller.dto.CourseBannerDTO;
 import com.knowy.server.controller.dto.MissionsDto;
-import com.knowy.server.controller.dto.NewsHomeDto;
 import com.knowy.server.entity.CourseEntity;
 import com.knowy.server.service.CourseSubscriptionService;
 import com.knowy.server.service.UserHomeService;
@@ -52,8 +51,7 @@ public class UserHomeController {
 			.sorted(Comparator.comparing(CourseEntity::getCreationDate).reversed())
 			.toList();
 
-		List<CourseEntity> carouselCourses = new ArrayList<>();
-		carouselCourses.addAll(recommended);
+		List<CourseEntity> carouselCourses = new ArrayList<>(recommended);
 
 		for (CourseEntity c : fillCourses) {
 			if (carouselCourses.size() >= 4) break;
@@ -69,6 +67,13 @@ public class UserHomeController {
 		model.addAttribute("newsHome", banners);
 		model.addAttribute("username", userDetails.getPublicUser().getNickname());
 
+		List<MissionsDto> missionsList = getMissionsDto();
+
+		model.addAttribute("missionsList", missionsList);
+		return "pages/user-home";
+	}
+
+	private List<MissionsDto> getMissionsDto() {
 		List<MissionsDto> missionsList = new ArrayList<>();
 		MissionsDto mission1 = new MissionsDto();
 		mission1.setName("Completa 3 lecciones");
@@ -88,27 +93,6 @@ public class UserHomeController {
 		mission3.setTotalProgress(5);
 
 		missionsList.add(mission3);
-
-		model.addAttribute("missionsList", missionsList);
-
-//		List<MissionsDto> languageOptions = new ArrayList<>();
-
-//		MissionsDto language1 = new MissionsDto();
-//		language1.setLabel("Java");
-//		language1.setValue("Java");
-//		languageOptions.add(language1);
-
-//		MissionsDto language2 = new MissionsDto();  In case we need the controller for language selector.
-//		language2.setLabel("Phyton");
-//		language2.setValue("Phyton");
-//		languageOptions.add(language2);
-//
-//		MissionsDto language3 = new MissionsDto();
-//		language3.setLabel("C#");
-//		language3.setValue("C#");
-//		languageOptions.add(language3);
-//
-//		interfaceScreen.addAttribute("languageOptions", languageOptions);
-		return "pages/user-home";
+		return missionsList;
 	}
 }

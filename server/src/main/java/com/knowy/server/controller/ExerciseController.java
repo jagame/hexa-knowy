@@ -23,6 +23,9 @@ import java.util.List;
 @Controller
 public class ExerciseController {
 
+	private static final String EXERCISE_MODEL_ATTRIBUTE = "exercise";
+	private static final String EXERCISE_HTML_URL = "pages/exercise";
+
 	private final PublicUserExerciseService publicUserExerciseService;
 	private final PublicUserLessonService publicUserLessonService;
 
@@ -54,10 +57,10 @@ public class ExerciseController {
 			PublicUserExerciseEntity publicUserExercise = publicUserExerciseService
 				.getNextExerciseByLessonId(userDetails.getPublicUser().getId(), lessonId);
 
-			model.addAttribute("exercise", ExerciseDto.fromPublicUserExerciseEntity(publicUserExercise));
+			model.addAttribute(EXERCISE_MODEL_ATTRIBUTE, ExerciseDto.fromPublicUserExerciseEntity(publicUserExercise));
 			model.addAttribute("mode", "ANSWERING");
 			model.addAttribute("formReviewUrl", "/course/exercise/review");
-			return "pages/exercise";
+			return EXERCISE_HTML_URL;
 		} catch (ExerciseNotFoundException e) {
 			return "error/error";
 		}
@@ -91,9 +94,9 @@ public class ExerciseController {
 		} else {
 			model.addAttribute("mode", "REVIEWING");
 		}
-		model.addAttribute("exercise", exerciseDto);
+		model.addAttribute(EXERCISE_MODEL_ATTRIBUTE, exerciseDto);
 		model.addAttribute("formEvaluateUrl", "/course/exercise/evaluate");
-		return "pages/exercise";
+		return EXERCISE_HTML_URL;
 	}
 
 	private boolean isCorrectAnswer(List<ExerciseOptionDto> options, int answer) {
@@ -151,10 +154,10 @@ public class ExerciseController {
 			PublicUserExerciseEntity publicUserExercise = publicUserExerciseService
 				.getNextExerciseByUserId(userDetails.getPublicUser().getId());
 
-			model.addAttribute("exercise", ExerciseDto.fromPublicUserExerciseEntity(publicUserExercise));
+			model.addAttribute(EXERCISE_MODEL_ATTRIBUTE, ExerciseDto.fromPublicUserExerciseEntity(publicUserExercise));
 			model.addAttribute("mode", "ANSWERING");
 			model.addAttribute("formReviewUrl", "/exercise/review");
-			return "pages/exercise";
+			return EXERCISE_HTML_URL;
 		} catch (ExerciseNotFoundException e) {
 			return "error/error";
 		}
@@ -188,9 +191,9 @@ public class ExerciseController {
 		} else {
 			model.addAttribute("mode", "REVIEWING");
 		}
-		model.addAttribute("exercise", exerciseDto);
+		model.addAttribute(EXERCISE_MODEL_ATTRIBUTE, exerciseDto);
 		model.addAttribute("formEvaluateUrl", "/exercise/evaluate");
-		return "pages/exercise";
+		return EXERCISE_HTML_URL;
 	}
 
 

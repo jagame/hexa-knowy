@@ -3,7 +3,6 @@ package com.knowy.server.controller;
 import com.knowy.server.controller.dto.CourseCardDTO;
 import com.knowy.server.controller.dto.ToastDto;
 import com.knowy.server.controller.exception.KnowyCourseSubscriptionException;
-import com.knowy.server.entity.CourseEntity;
 import com.knowy.server.service.CourseSubscriptionService;
 import com.knowy.server.service.model.UserSecurityDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,6 +21,8 @@ import java.util.List;
 @RequestMapping("/my-courses")
 public class CourseController {
 
+	private static final String TOAST_MODEL_ATTRIBUTE = "toast";
+
 	private final CourseSubscriptionService courseSubscriptionService;
 
 	public CourseController(CourseSubscriptionService courseSubscriptionService) {
@@ -29,24 +30,26 @@ public class CourseController {
 	}
 
 	@GetMapping("")
-	public String myCourses (Model model,
-							 @RequestParam(required = false) String category,
-							 @RequestParam(required = false) String order,
-							 @RequestParam(defaultValue = "1") int page,
-							 @AuthenticationPrincipal UserSecurityDetails userDetails) {
+	public String myCourses(
+		Model model,
+		@RequestParam(required = false) String category,
+		@RequestParam(required = false) String order,
+		@RequestParam(defaultValue = "1") int page,
+		@AuthenticationPrincipal UserSecurityDetails userDetails
+	) {
 		Integer userId = userDetails.getPublicUser().getId();
 		List<CourseCardDTO> courses = courseSubscriptionService.getUserCourses(userDetails.getPublicUser().getId());
 
 		//Filter by language (category)
-		if(category != null && !category.isEmpty()){
+		if (category != null && !category.isEmpty()) {
 			courses = courses.stream()
-				.filter(c-> c.getLanguages() != null && c.getLanguages().contains(category))
+				.filter(c -> c.getLanguages() != null && c.getLanguages().contains(category))
 				.toList();
 		}
 
 		//Order
-		if(order !=null){
-			switch (order){
+		if (order != null) {
+			switch (order) {
 				case "alpha_asc" -> courses = courses.stream()
 					.sorted(Comparator.comparing(CourseCardDTO::getName, String.CASE_INSENSITIVE_ORDER))
 					.toList();
@@ -72,10 +75,9 @@ public class CourseController {
 					.sorted(Comparator.comparing(CourseCardDTO::getId).reversed())
 					.toList();
 
-				default ->
-					courses = courses.stream()
-						.sorted(Comparator.comparing(CourseCardDTO::getProgress).reversed())
-						.toList();
+				default -> courses = courses.stream()
+					.sorted(Comparator.comparing(CourseCardDTO::getProgress).reversed())
+					.toList();
 			}
 		}
 
@@ -119,15 +121,16 @@ public class CourseController {
 		@RequestParam Integer courseId,
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		RedirectAttributes attrs
-	){
-		try{
+	) {
+		try {
 			courseSubscriptionService.subscribeUserToCourse(userDetails.getPublicUser().getId(), courseId);
-			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Éxito", "¡Te has suscrito correctamente!", ToastDto.ToastType.SUCCESS)));
-		} catch(KnowyCourseSubscriptionException e){
-			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Error", e.getMessage(), ToastDto.ToastType.ERROR)));
+			attrs.addFlashAttribute(TOAST_MODEL_ATTRIBUTE, List.of(new ToastDto("Éxito",
+				"¡Te has suscrito correctamente!", ToastDto.ToastType.SUCCESS)));
+		} catch (KnowyCourseSubscriptionException e) {
+			attrs.addFlashAttribute(TOAST_MODEL_ATTRIBUTE, List.of(new ToastDto("Error", e.getMessage(), ToastDto.ToastType.ERROR)));
 		} catch (Exception e) {
-			e.printStackTrace();
-			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Error", "Ocurrió un error inesperado al suscribirte al curso.", ToastDto.ToastType.ERROR)));
+			attrs.addFlashAttribute(TOAST_MODEL_ATTRIBUTE, List.of(new ToastDto("Error",
+				"Ocurrió un error inesperado al suscribirte al curso.", ToastDto.ToastType.ERROR)));
 		}
 		return "redirect:/my-courses";
 	}

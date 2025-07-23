@@ -18,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
 
 	private final PrivateUserRepository privateUserRepository;
+	private static final String LOGIN_URL = "/login";
 
 	public SecurityConfiguration(PrivateUserRepository privateUserRepository) {
 		this.privateUserRepository = privateUserRepository;
@@ -72,17 +73,17 @@ public class SecurityConfiguration {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(request -> request
 			.requestMatchers("/fonts/**", "/scripts/**", "/styles/**", "/images/**", "/error/**", "/favicon.ico").permitAll()
-			.requestMatchers("/", "/login", "/register", "/password-change/email", "/password-change",
+			.requestMatchers("/", LOGIN_URL, "/register", "/password-change/email", "/password-change",
 				"/actuator/health", "/actuator/info").permitAll()
 			.anyRequest().authenticated()
 		);
 
 		http.formLogin(form -> form
-			.loginPage("/login")
+			.loginPage(LOGIN_URL)
 			.usernameParameter("email")
 			.passwordParameter("password")
-			.loginProcessingUrl("/login")
-			.failureUrl("/login?error")
+			.loginProcessingUrl(LOGIN_URL)
+			.failureUrl(LOGIN_URL + "?error")
 			.defaultSuccessUrl("/home")
 			.permitAll());
 

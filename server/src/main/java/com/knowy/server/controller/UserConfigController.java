@@ -29,6 +29,9 @@ public class UserConfigController {
 
 	private static final String ERROR_MODEL_ATTRIBUTE = "error";
 	private static final String SUCCESS_MODEL_ATTRIBUTE = "success";
+	private static final String USERNAME_MODEL_ATTRIBUTE = "username";
+	private static final String DELETE_ACCOUNT_CONFIRM_REDIRECT_URL = "redirect:delete-account-confirm";
+	private static final String USER_NOT_FOUND_ERROR_MESSAGE = "Usuario no encontrado";
 
 	private final UserFacadeService userFacadeService;
 	private final LanguageService languageService;
@@ -82,15 +85,15 @@ public class UserConfigController {
 			userFacadeService.updateEmail(userConfigChangeEmailFormDto.getEmail(), userDetails.getPublicUser().getId(), userConfigChangeEmailFormDto.getPassword());
 
 			userSecurityDetailsHelper.refreshUserAuthenticationById();
-			redirectAttributes.addFlashAttribute("successEmail", "Email actualizado con éxito.");
+			redirectAttributes.addFlashAttribute(SUCCESS_MODEL_ATTRIBUTE, "Email actualizado con éxito.");
 		} catch (UserNotFoundException e) {
-			redirectAttributes.addFlashAttribute("errorEmail", "Usuario no encontrado.");
+			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado.");
 		} catch (UnchangedEmailException e) {
-			redirectAttributes.addFlashAttribute("errorEmail", "El nuevo correo debe ser diferente al actual.");
+			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "El nuevo correo debe ser diferente al actual.");
 		} catch (WrongPasswordException e) {
-			redirectAttributes.addFlashAttribute("errorEmail", "La contraseña es incorrecta.");
+			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "La contraseña es incorrecta.");
 		} catch (InvalidUserEmailException e) {
-			redirectAttributes.addFlashAttribute("errorEmail", "El correo ingresado ya está asociado a una cuenta existente.");
+			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "El correo ingresado ya está asociado a una cuenta existente.");
 		}
 		return "redirect:/user-account";
 	}
@@ -104,7 +107,7 @@ public class UserConfigController {
 	 */
 	@GetMapping("/delete-account-advise")
 	public String deleteAccountForm(ModelMap interfaceScreen, @AuthenticationPrincipal UserSecurityDetails userDetails) {
-		interfaceScreen.addAttribute("username", userDetails.getPublicUser().getNickname());
+		interfaceScreen.addAttribute(USERNAME_MODEL_ATTRIBUTE, userDetails.getPublicUser().getNickname());
 		return "pages/user-management/delete-account";
 	}
 
@@ -117,7 +120,7 @@ public class UserConfigController {
 	 */
 	@GetMapping("/delete-account-confirm")
 	public String deleteAccountEnd(ModelMap interfaceScreen, @AuthenticationPrincipal UserSecurityDetails userDetails) {
-		interfaceScreen.addAttribute("username", userDetails.getPublicUser().getNickname());
+		interfaceScreen.addAttribute(USERNAME_MODEL_ATTRIBUTE, userDetails.getPublicUser().getNickname());
 		return "pages/user-management/delete-account-confirm";
 	}
 
@@ -147,16 +150,16 @@ public class UserConfigController {
 
 		} catch (WrongPasswordException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "La contraseña es incorrecta o no coincide");
-			return "redirect:delete-account-confirm";
+			return DELETE_ACCOUNT_CONFIRM_REDIRECT_URL;
 		} catch (MailDispatchException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Error al enviar el email");
-			return "redirect:delete-account-confirm";
+			return DELETE_ACCOUNT_CONFIRM_REDIRECT_URL;
 		} catch (JwtKnowyException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Error al recuperar el token");
-			return "redirect:delete-account-confirm";
+			return DELETE_ACCOUNT_CONFIRM_REDIRECT_URL;
 		} catch (UserNotFoundException e) {
-			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado");
-			return "redirect:delete-account-confirm";
+			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, USER_NOT_FOUND_ERROR_MESSAGE);
+			return DELETE_ACCOUNT_CONFIRM_REDIRECT_URL;
 		}
 	}
 
@@ -189,7 +192,7 @@ public class UserConfigController {
 			model.addAttribute(ERROR_MODEL_ATTRIBUTE, "El token ha expirado o no es válido");
 			return "error/error";
 		} catch (UserNotFoundException e) {
-			model.addAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado");
+			model.addAttribute(ERROR_MODEL_ATTRIBUTE, USER_NOT_FOUND_ERROR_MESSAGE);
 			return "error/error";
 		}
 	}
@@ -233,50 +236,16 @@ public class UserConfigController {
 	 * @return the redirect URL to the user profile page
 	 */
 	@PostMapping("/update-user-profile")
-	public String updateUserProfile(@ModelAttribute("profileDto") UserProfileDTO userProfileDTO, RedirectAttributes redirectAttributes, @AuthenticationPrincipal UserSecurityDetails userDetails) {
-		String newNickname = userProfileDTO.getNickname();
-		if (newNickname != null && !newNickname.isBlank()) {
-			try {
-				userFacadeService.updateNickname(newNickname, userDetails.getPublicUser().getId());
-				redirectAttributes.addFlashAttribute("username", newNickname);
-			} catch (UserNotFoundException e) {
-				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado.");
-				return "redirect:/user-profile";
-			} catch (UnchangedNicknameException e) {
-				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "El nuevo nombre debe ser diferente al actual.");
-				return "redirect:/user-profile";
-			} catch (NicknameAlreadyTakenException e) {
-				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "El nombre ya está en uso.");
-				return "redirect:/user-profile";
-			} catch (InvalidUserNicknameException e) {
-				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "No se permiten apodos en blanco o vacíos.");
-				return "redirect:/user-profile";
-			}
-		}
+	public String updateUserProfile(
+		@ModelAttribute("profileDto") UserProfileDTO userProfileDTO,
+		RedirectAttributes redirectAttributes,
+		@AuthenticationPrincipal UserSecurityDetails userDetails) {
 
-		if (userProfileDTO.getProfilePictureId() != null && userProfileDTO.getProfilePictureId() > 0) {
-			try {
-				userFacadeService.updateProfileImage(userProfileDTO.getProfilePictureId(), userDetails.getPublicUser().getId());
-				redirectAttributes.addFlashAttribute("profilePicture", userProfileDTO.getProfilePictureId());
-				redirectAttributes.addFlashAttribute("profilePictureUrl", userDetails.getPublicUser().getProfileImage().getUrl());
-			} catch (ImageNotFoundException e) {
-				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Aún no existe una imagen de perfil");
-				return "redirect:/user-profile";
-			} catch (UnchangedImageException e) {
-				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "La imagen debe ser diferente a la actual.");
-				return "redirect:/user-profile";
-			} catch (UserNotFoundException e) {
-				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado");
-				return "redirect:/user-profile";
-			}
-		}
+		Integer userId = userDetails.getPublicUser().getId();
 
-		String[] newLanguages = userProfileDTO.getLanguages() != null ? userProfileDTO.getLanguages() : new String[0];
-		try {
-			userFacadeService.updateLanguages(userDetails.getPublicUser().getId(), newLanguages);
-		} catch (UserNotFoundException e) {
-			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado");
-		}
+		updateNickname(userProfileDTO.getNickname(), userId, redirectAttributes);
+		updateProfileImage(userProfileDTO.getProfilePictureId(), userDetails, userId, redirectAttributes);
+		updateLanguages(userProfileDTO.getLanguages(), userId, redirectAttributes);
 
 		redirectAttributes.addFlashAttribute(SUCCESS_MODEL_ATTRIBUTE, "Perfil actualizado correctamente");
 		redirectAttributes.addFlashAttribute("nickname", userProfileDTO.getNickname());
@@ -285,4 +254,55 @@ public class UserConfigController {
 		userSecurityDetailsHelper.refreshUserAuthentication();
 		return "redirect:/user-profile";
 	}
+
+	private void updateNickname(
+		String newNickname,
+		Integer userId,
+		RedirectAttributes redirectAttributes
+	) {
+		if (newNickname != null && !newNickname.isBlank()) {
+			try {
+				userFacadeService.updateNickname(newNickname, userId);
+				redirectAttributes.addFlashAttribute(USERNAME_MODEL_ATTRIBUTE, newNickname);
+			} catch (UserNotFoundException e) {
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado.");
+			} catch (UnchangedNicknameException e) {
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "El nuevo nombre debe ser diferente al actual.");
+			} catch (NicknameAlreadyTakenException e) {
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "El nombre ya está en uso.");
+			} catch (InvalidUserNicknameException e) {
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "No se permiten apodos en blanco o vacíos.");
+			}
+		}
+	}
+
+	private void updateProfileImage(
+		Integer profilePictureId, UserSecurityDetails userDetails,
+		int userId,
+		RedirectAttributes redirectAttributes
+	) {
+		if (profilePictureId != null && profilePictureId > 0) {
+			try {
+				userFacadeService.updateProfileImage(profilePictureId, userId);
+				redirectAttributes.addFlashAttribute("profilePicture", profilePictureId);
+				redirectAttributes.addFlashAttribute("profilePictureUrl", userDetails.getPublicUser().getProfileImage().getUrl());
+			} catch (ImageNotFoundException e) {
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Aún no existe una imagen de perfil");
+			} catch (UnchangedImageException e) {
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "La imagen debe ser diferente a la actual.");
+			} catch (UserNotFoundException e) {
+				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, USER_NOT_FOUND_ERROR_MESSAGE);
+			}
+		}
+	}
+
+	private void updateLanguages(String[] languages, int userId, RedirectAttributes redirectAttributes) {
+		String[] newLanguages = languages != null ? languages : new String[0];
+		try {
+			userFacadeService.updateLanguages(userId, newLanguages);
+		} catch (UserNotFoundException e) {
+			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, USER_NOT_FOUND_ERROR_MESSAGE);
+		}
+	}
+
 }

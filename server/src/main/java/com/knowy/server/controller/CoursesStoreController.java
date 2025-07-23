@@ -21,6 +21,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/store")
 public class CoursesStoreController {
+
+	private static final String TOAST_MODEL_ATTRIBUTE = "toast";
+
 	private final CourseSubscriptionService courseSubscriptionService;
 
 	public CoursesStoreController(CourseSubscriptionService courseSubscriptionService) {
@@ -108,18 +111,19 @@ public class CoursesStoreController {
 	}
 
 
-
 	@PostMapping("/subscribe")
 	public String subscribeToCourse(@RequestParam Integer courseId,
 									@AuthenticationPrincipal UserSecurityDetails userDetails,
 									RedirectAttributes attrs) {
-		try{
+		try {
 			courseSubscriptionService.subscribeUserToCourse(userDetails.getPublicUser().getId(), courseId);
-			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Éxito", "¡Te has suscrito correctamente!", ToastDto.ToastType.SUCCESS)));
-		} catch(KnowyCourseSubscriptionException e){
-			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Error", e.getMessage(), ToastDto.ToastType.ERROR)));
+			attrs.addFlashAttribute(TOAST_MODEL_ATTRIBUTE, List.of(new ToastDto("Éxito",
+				"¡Te has suscrito correctamente!", ToastDto.ToastType.SUCCESS)));
+		} catch (KnowyCourseSubscriptionException e) {
+			attrs.addFlashAttribute(TOAST_MODEL_ATTRIBUTE, List.of(new ToastDto("Error", e.getMessage(), ToastDto.ToastType.ERROR)));
 		} catch (Exception e) {
-			attrs.addFlashAttribute("toasts", List.of(new ToastDto("Error", "Ocurrió un error inesperado al suscribirte al curso.", ToastDto.ToastType.ERROR)));
+			attrs.addFlashAttribute(TOAST_MODEL_ATTRIBUTE, List.of(new ToastDto("Error",
+				"Ocurrió un error inesperado al suscribirte al curso.", ToastDto.ToastType.ERROR)));
 		}
 		return "redirect:/store";
 	}
