@@ -185,7 +185,7 @@ body {
 
 .btn-inferior {
 	color: white;
-	background-color: $neutral-700;
+	background-color: $secundary-500;
 }
 
 .btn-save {
@@ -200,7 +200,7 @@ body {
 }
 
 .btn-inferior:hover {
-	background-color: $neutral-900;
+	background-color: $secundary-700;
 	color: white;
 }
 
@@ -256,10 +256,10 @@ label {
 
 .user-account-tittle-section{
 	font-family: excalifont, sans-serif;
-	color: $secundary-500;
+	color: $info-500;
 
 	svg {
-		fill: $secundary-500;
+		fill: $info-500;
 	}
 }
 
