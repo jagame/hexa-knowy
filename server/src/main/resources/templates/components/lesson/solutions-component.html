@@ -1,4 +1,4 @@
-<div class="documentContainer" th:fragment="solutions-component(solutions)">
+<div class="px-5 py-3" th:fragment="solutions-component(solutions)">
 	<div class="accordion solutions-accordion" id="solAccordionExample">
 		<div class="accordion-item">
 			<h2 class="accordion-header" id="solHeadingOne">
@@ -21,7 +21,7 @@
 										data-bs-toggle="collapse"
 										th:attr="data-bs-target='#sub-collapse' + ${iterStat.index}"
 										aria-expanded="false">
-									<span th:text="${solution.cardTitle}">Titulo tarjeta</span>
+									<span th:text="${solution.cardTitle} + ' ' + ${iterStat.count}">Titulo tarjeta</span>
 								</button>
 							</h2>
 							<div class="accordion-collapse collapse"

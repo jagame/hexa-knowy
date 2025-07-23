@@ -189,7 +189,7 @@ public class UserFacadeService {
 		String email,
 		String recoveryBaseUrl
 	) throws UserNotFoundException, JwtKnowyException, MailDispatchException, WrongPasswordException {
-		privateUserService.deactivateUserAccount(email, password, confirmPassword);
+		privateUserService.desactivateUserAccount(email, password, confirmPassword);
 		MailMessage mailMessage = privateUserService.createDeletedAccountEmail(email, recoveryBaseUrl);
 		emailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
 	}

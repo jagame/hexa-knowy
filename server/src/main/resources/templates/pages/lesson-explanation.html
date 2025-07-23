@@ -5,13 +5,13 @@
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
 	<link rel="stylesheet" th:href="@{/styles/pages/lesson-explanation.css}">
-	<title>Explicación de la lección</title>
+	<title>Knowy - Lessons</title>
 </head>
 <body>
 <aside class="kn-aside" layout:fragment="sidebar">
 	<div class="lessons-component">
 		<div class="course-title">
-			<h2 th:text="${course.name}">Nombre del Curso</h2>
+			<h3 th:text="${course.name}">Nombre del Curso</h3>
 			<div class="course-title__progressbar">
 				<span class="course-title__percentage" th:text="${course.percentageCompleted + '% completado'}"></span>
 
@@ -27,11 +27,11 @@
 
 <main class="main-content" layout:fragment="main-content">
 
-	<div class="container">
+	<div class="py-2 px-5">
 		<img alt="Imagen del curso" class="img-head" th:src="${course.image}">
-		<h1 class="title" th:text="${course.name}">Título del curso</h1>
+		<h2 class="title" th:text="${course.name}">Título del curso</h2>
 		<div class="meta-row">
-			<span class="language" th:text="${#strings.arrayJoin(course.languages, ', ')}">Idiomas</span>
+			<span class="language badge rounded-pill bg-primary"  th:text="${#strings.arrayJoin(course.languages, ', ')}">Idiomas</span>
 		</div>
 
 		<div th:if="${isIntro}" class="mt-4 ">
@@ -65,10 +65,10 @@
 			Iniciar lección
 		</a>
 
-		<h2 class="info-course"
+		<h3 class="info-course"
 			th:text="${isIntro} ? 'Introducción al curso' : 'Introducción a la lección - ' + ${lesson.title}">
 			Título dinámico
-		</h2>
+		</h3>
 
 		<div class="theory" th:utext="${isIntro} ? ${course.description} : ${lessonContent}">Teoría del curso</div>
 	</div>

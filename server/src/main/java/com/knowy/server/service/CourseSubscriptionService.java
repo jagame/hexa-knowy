@@ -1,5 +1,6 @@
 package com.knowy.server.service;
 
+import com.knowy.server.controller.dto.CourseCardDTO;
 import com.knowy.server.controller.exception.KnowyCourseSubscriptionException;
 import com.knowy.server.entity.*;
 import com.knowy.server.repository.ports.CourseRepository;
@@ -9,6 +10,8 @@ import com.knowy.server.repository.ports.PublicUserLessonRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +34,16 @@ public class CourseSubscriptionService {
 		this.lessonRepository = lessonRepository;
 		this.publicUserLessonRepository = publicUserLessonRepository;
 		this.languageRepository = languageRepository;
+	}
+
+
+	public List<CourseCardDTO> getUserCourses(Integer userId) {
+		List<CourseEntity> userCourses = findCoursesByUserId(userId);
+		return userCourses.stream()
+			.map(course -> CourseCardDTO.fromEntity(
+				course, getCourseProgress(userId, course.getId()),
+				findLanguagesForCourse(course), findCourseImage(course), course.getCreationDate()))
+			.toList();
 	}
 
 	public List<CourseEntity> findCoursesByUserId(Integer userId) {
@@ -110,8 +123,13 @@ public class CourseSubscriptionService {
 		}
 	}
 
+
 	public List<CourseEntity> findAllCourses() {
 		return courseRepository.findAll();
+	}
+
+	public String findCourseImage(CourseEntity course){
+		return course.getImage() != null ? course.getImage() : "https://picsum.photos/seed/picsum/200/300";
 	}
 
 	public List<String> findLanguagesForCourse(CourseEntity course) {

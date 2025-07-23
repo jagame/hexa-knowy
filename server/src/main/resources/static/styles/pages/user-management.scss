@@ -1,7 +1,7 @@
 @use '../global-vars' as *;
 
 body {
-	font-family: 'inter';
+	font-family: 'inter', sans-serif;
 	background-color: $bg;
 }
 
@@ -17,71 +17,63 @@ body {
 }
 
 .user-information {
-	font-family: 'caveat-brush';
+	font-family: 'caveat-brush', sans-serif;
 	padding: 30px;
-	gap: 0.5rem;
+	gap: 2.5rem;
 }
 
 /*Aside bar user-management*/
 .username-title {
-	font-family: 'excalifont';
+	font-family: 'excalifont', sans-serif;
 }
 
 .user-sidebar {
-	padding: 20px;
-	background-color: $neutral-300;
+	padding: 40px;
+	background-color: $primary-300;
 	box-shadow: $card-shadow;
 }
 
 .sidebar-menu {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 20px;
 }
 
 .sidebar-link {
+	border: none;
 	font-size: 1rem;
-	font-weight: bold;
-	line-height: 1.5;
 	display: inline-block;
-	padding: 0.375rem 0.75rem;
-	transition: $transition-speed;
+	padding: 0.5rem 0.75rem;
+	//transition: $transition-speed;
 	text-align: center;
 	vertical-align: middle;
 	text-decoration: none;
-	color: $neutral-900;
+	color: black;
 	box-shadow: $card-shadow;
-	background-color: $neutral-100;
-	font-family: 'caveat-brush';
-	border-radius: 5px;
+	background-color: $bg;
+	font-family: 'caveat-brush', sans-serif;
+	border-radius: $radius-25;
 }
 
 .sidebar-link:hover {
-	font-weight: bold;
-	color: $neutral-900;
-	background-color: $secundary-300;
-}
-
-.sidebar-link.active {
-	font-weight: bold;
 	color: white;
 	background-color: $primary-500;
 }
 
-.sidebar-link.active:hover {
-	background-color: $primary-300;
+.sidebar-link.active {
+	color: white;
+	background-color: $primary-700;
+	height: 40px;
 }
-
 
 .user-management-container_main {
 	width: 100%;
 	padding: 30px;
-	background-color: $neutral-100;
+	background-color: $bg;
 }
 
 .title-management {
-	font-family: excalifont;
-	font-weight: bold;
+	font-family: caveat-brush, sans-serif;
 	color: $primary-500;
 }
 
@@ -92,7 +84,7 @@ body {
 }
 
 .description-management {
-	font-family: 'inter';
+	font-family: 'inter', sans-serif;
 	color: $neutral-900;
 }
 
@@ -108,6 +100,7 @@ body {
 	padding: 0;
 	border: 3px solid $primary-500;
 	border-radius: 50%;
+	cursor: pointer;
 }
 
 .edit-avatar {
@@ -133,8 +126,8 @@ body {
 }
 
 .edit-pic-btn:hover {
-	color: $neutral-700;
-	background-color: $primary-300;
+	color: white;
+	background-color: $primary-700;
 }
 
 .file-input-overlay {
@@ -147,8 +140,16 @@ body {
 }
 
 .section-title {
-	font-weight: bold;
-	color: $primary-500;
+	font-family: 'caveat-brush', sans-serif;
+	color: $secundary-500;
+}
+
+#languages {
+	height: 150px;
+}
+
+.language {
+	padding: 5px 0;
 }
 
 .language-item {
@@ -176,7 +177,7 @@ body {
 	font-size: 1rem;
 	line-height: 1.5;
 	padding: 0.375rem 0.75rem;
-	font-family: 'caveat-brush';
+	font-family: 'caveat-brush', sans-serif;
 	min-width: 150px;
 	text-align: center;
 	justify-content: center;
@@ -184,43 +185,67 @@ body {
 
 .btn-inferior {
 	color: white;
-	background-color: $neutral-900;
+	background-color: $secundary-500;
 }
 
 .btn-save {
+	font-family: 'caveat-brush', sans-serif;
 	color: white;
 	background-color: $primary-500;
 }
 
 .btn-save:hover {
-	background-color: $primary-300;
+	background-color: $primary-700;
+	color: white;
 }
 
 .btn-inferior:hover {
-	background-color: $neutral-500;
+	background-color: $secundary-700;
+	color: white;
+}
+
+.modal-title {
+	font-family: 'caveat-brush', sans-serif;
+}
+
+label {
+	font-family: 'Excalifont', sans-serif;
+	font-size: 18px;
+}
+
+.modal-header {
+	background-color: $primary-500;
+	color: white;
+
+	.btn-close {
+		filter: brightness(0) invert(1);
+	}
 }
 
 /*User Account*/
-
 .form-fields {
 	margin-bottom: 1.1rem;
 }
 
 .advice-success {
-	font-family: 'caveat-brush';
+	font-family: 'caveat-brush', sans-serif;
 	font-size: small;
 	color: $primary-500;
 }
 
 .advice-error {
-	font-family: 'caveat-brush';
+	font-family: 'caveat-brush', sans-serif;
 	font-size: small;
 	color: $danger-500;
 }
 
 .title-delete {
-	font-family: excalifont;
+	font-family: excalifont, sans-serif;
 	color: $danger-500;
+
+	svg {
+		fill: $danger-500;
+	}
 }
 
 .user-account-section {
@@ -230,14 +255,18 @@ body {
 }
 
 .user-account-tittle-section{
-	font-family: excalifont;
-	color: $primary-500;
+	font-family: excalifont, sans-serif;
+	color: $info-500;
+
+	svg {
+		fill: $info-500;
+	}
 }
 
 .btn-delete {
-	font-family: 'caveat-brush';
+	font-family: 'caveat-brush', sans-serif;
 	color: white;
-	background-color: $danger-500;
+	background-color: $danger-600;
 }
 
 .btn-delete:hover {
@@ -245,9 +274,23 @@ body {
 	background-color: $danger-500;
 }
 
+.form-control {
+	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+}
+
+input.form-control:focus {
+	border-color: $primary-500;
+	box-shadow: 0 0 0 0.2rem rgba(47, 158, 68, 0.5);
+}
+
+select.form-control:focus {
+	border-color: $primary-500;
+	box-shadow: 0 0 0 0.2rem rgba(47, 158, 68, 0.5);
+}
+
 /*delete-account*/
 .delete-warning {
-	font-family: 'inter';
+	font-family: 'inter', sans-serif;
 	padding: 30px;
 	color: $danger-600;
 	border: 1px solid $danger-500;

@@ -28,8 +28,10 @@ document.addEventListener('DOMContentLoaded', function () {
 	function buildSpanLanguageOptions(language) {
 		const span = document.createElement('span');
 		span.dataset.language = language;
-		span.className = 'badge badge-info mr-1 mb-1 selected-language';
+		span.className = 'badge badge-info my-3 mx-2 selected-language';
 		span.style.cursor = 'pointer';
+		span.style.fontWeight = 'normal';
+		span.style.fontSize = '16px';
 		span.textContent = language;
 		return span;
 	}

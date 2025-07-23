@@ -1,3 +1,4 @@
-INSERT INTO public.public_user (nickname, id_profile_image) VALUES ('tumorenito19', 1); -- id=1
-INSERT INTO public.public_user (nickname, id_profile_image) VALUES ('princesa', 2);
-INSERT INTO public.public_user (nickname, id_profile_image) VALUES ('usuario123', 2);  -- id=2
+TRUNCATE TABLE public.public_user RESTART IDENTITY CASCADE;
+INSERT INTO public.public_user (nickname, id_profile_image) VALUES ('knowyuser', 1); -- id=1
+INSERT INTO public.public_user (nickname, id_profile_image) VALUES ('knowyuser2', 2);
+INSERT INTO public.public_user (nickname, id_profile_image) VALUES ('knowyuser3', 2);  -- id=2
