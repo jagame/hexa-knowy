@@ -52,8 +52,10 @@ public class UserHomeController {
 			.filter(c -> !recommendedIds.contains(c.getId()))
 			.toList();
 
+		List<CourseEntity> recommendedShuffled = new ArrayList<>(recommended);
 		List<CourseEntity> fillCourses = new ArrayList<>(fillCoursesImmutable);
 
+		Collections.shuffle(recommendedShuffled);
 		Collections.shuffle(fillCourses);
 
 		List<CourseEntity> carouselCourses = new ArrayList<>();
