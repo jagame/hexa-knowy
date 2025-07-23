@@ -117,6 +117,10 @@ public class CourseSubscriptionService {
 		return courseRepository.findAll();
 	}
 
+	public String findCourseImageUrl(CourseEntity course){
+		return course.getImageUrl() != null ? course.getImageUrl() : "https://picsum.photos/seed/picsum/200/300";
+	}
+
 	public List<String> findLanguagesForCourse(CourseEntity course) {
 		return course.getLanguages().stream()
 			.map(LanguageEntity::getName)

@@ -21,6 +21,7 @@ public class CourseCardDTO {
 	private int progress;
 	private ActionType action;
 	private ArrayList<String> languages;
+	private String imageUrl;
 	private LocalDateTime creationDate;
 
 	public enum ActionType {
