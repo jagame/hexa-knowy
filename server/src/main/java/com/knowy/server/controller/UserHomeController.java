@@ -2,7 +2,6 @@ package com.knowy.server.controller;
 
 import com.knowy.server.controller.dto.CourseBannerDTO;
 import com.knowy.server.controller.dto.MissionsDto;
-import com.knowy.server.entity.CourseEntity;
 import com.knowy.server.service.CourseSubscriptionService;
 import com.knowy.server.service.UserHomeService;
 import com.knowy.server.service.model.UserSecurityDetails;
@@ -12,8 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -37,45 +34,21 @@ public class UserHomeController {
 		long percent = userHomeService.getCoursesPercentage(userId);
 		boolean hasCourses = totalCourses > 0;
 
-		model.addAttribute("hasCourses", hasCourses);
-		model.addAttribute("completedCourses", coursesCompleted);
-		model.addAttribute("totalCourses", totalCourses);
-		model.addAttribute("fractionProgress", percent);
 
-		List<CourseEntity> recommended = courseSubscriptionService.getRecommendedCourses(userId);
-		List<Integer> recommendedIds = recommended.stream()
-			.map(CourseEntity::getId)
-			.toList();
-
-		List<CourseEntity> fillCoursesImmutable = courseSubscriptionService.findAllCourses().stream()
-			.filter(c -> !recommendedIds.contains(c.getId()))
-			.sorted(Comparator.comparing(CourseEntity::getCreationDate).reversed())
-			.toList();
-
-		List<CourseEntity> recommendedShuffled = new ArrayList<>(recommended);
-		List<CourseEntity> fillCourses = new ArrayList<>(fillCoursesImmutable);
-
-		Collections.shuffle(recommendedShuffled);
-		Collections.shuffle(fillCourses);
-
-		List<CourseEntity> carouselCourses = new ArrayList<>();
-		carouselCourses.addAll(recommended);
-
-		for (CourseEntity c : fillCourses) {
-			if (carouselCourses.size() >= 4) break;
-			carouselCourses.add(c);
-		}
-
-		List<CourseBannerDTO> banners = carouselCourses.stream()
+		List<CourseBannerDTO> banners = courseSubscriptionService.findAllRandom()
+			.stream()
 			.limit(4)
 			.map(CourseBannerDTO::fromEntity)
 			.toList();
 
+		List<MissionsDto> missionsList = getMissionsDto();
 
+		model.addAttribute("hasCourses", hasCourses);
+		model.addAttribute("completedCourses", coursesCompleted);
+		model.addAttribute("totalCourses", totalCourses);
+		model.addAttribute("fractionProgress", percent);
 		model.addAttribute("newsHome", banners);
 		model.addAttribute("username", userDetails.getPublicUser().getNickname());
-
-		List<MissionsDto> missionsList = getMissionsDto();
 
 		model.addAttribute("missionsList", missionsList);
 		return "pages/user-home";
