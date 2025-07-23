@@ -204,6 +204,15 @@ body {
 	color: white;
 }
 
+.modal-title {
+	font-family: 'caveat-brush', sans-serif;
+}
+
+label {
+	font-family: 'Excalifont', sans-serif;
+	font-size: 18px;
+}
+
 .modal-header {
 	background-color: $primary-500;
 	color: white;
@@ -265,6 +274,11 @@ body {
 .btn-delete:hover {
 	color: white;
 	background-color: $danger-500;
+}
+
+input.form-control:focus {
+	border-color: $primary-500;
+	box-shadow: 0 0 0 0.2rem rgba(47, 158, 68, 0.5);
 }
 
 /*delete-account*/
