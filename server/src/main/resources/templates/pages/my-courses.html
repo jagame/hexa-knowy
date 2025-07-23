@@ -71,8 +71,8 @@
 
 				<!--course-->
 				<div class="courses">
-						<span><h2 class="h2-courses">Mis cursos</h2></span>
-					<div class="courses-container">
+					<h2 class="h2-courses">Mis cursos</h2>
+					<div class="courses-container mt-5">
 						<div class="m-1" th:each="course : ${courses}">
 							<div th:replace="~{components/course-card :: course-card(${course}, ${acquireAction})}"></div>
 						</div>
@@ -80,21 +80,22 @@
 
 				<!--page navigation-->
 					<nav aria-label="Page navigation">
-						<ul class="pagination justify-content-center mt-5">
-							<li class="page-item">
-								<a aria-label="Previous" class="page-link" href="#">
-									<span aria-hidden="true">&laquo;</span>
-									<span class="sr-only"></span>
-								</a>
+						<ul class="pagination justify-content-center mt-4">
+							<li th:classappend="${currentPage == 1} ? 'disabled'" class="page-item">
+								<a class="page-link"
+								   th:href="@{'/my-courses'(page=${currentPage - 1}, category=${category}, order=${order})}">&laquo;</a>
 							</li>
-							<li class="page-item"><a class="page-link" href="#">1</a></li>
-							<li class="page-item"><a class="page-link" href="#">2</a></li>
-							<li class="page-item"><a class="page-link" href="#">3</a></li>
-							<li class="page-item">
-								<a aria-label="Next" class="page-link" href="#">
-									<span aria-hidden="true">&raquo;</span>
-									<span class="sr-only"></span>
-								</a>
+
+							<li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}"
+								th:classappend="${i == currentPage} ? 'active'">
+								<a class="page-link"
+								   th:href="@{'/my-courses'(page=${i}, category=${category}, order=${order})}"
+								   th:text="${i}"></a>
+							</li>
+
+							<li th:classappend="${currentPage == totalPages} ? 'disabled'" class="page-item">
+								<a class="page-link"
+								   th:href="@{'/my-courses'(page=${currentPage + 1}, category=${category}, order=${order})}">&raquo;</a>
 							</li>
 						</ul>
 					</nav>

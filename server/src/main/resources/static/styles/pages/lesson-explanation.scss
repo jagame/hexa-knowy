@@ -8,6 +8,45 @@ body {
 	background-color: $bg;
 }
 
+main{
+	font-family: "excalifont", sans-serif;
+}
+
+//LESSON STYLES
+h2, h3{
+	font-family: "caveat-brush", cursive;
+	color: $primary-500;
+}
+
+b{
+	color: $primary-500;
+}
+
+code{
+	background:none;
+	font-weight:bold;
+	font-size:medium;
+}
+
+table {
+	border-collapse: collapse; /* Une los bordes de las celdas */
+	width: 90%; /* Opcional: ajusta el ancho de la tabla */
+	margin:0.5em;
+	align-self:center;
+}
+
+th, td {
+	border: 1px solid black; /* Añade un borde de 1 píxel sólido negro */
+	padding: 8px; /* Añade espacio interno a las celdas */
+	text-align: justify;
+}
+
+.ol, ul, li{
+	font-size: medium;
+}
+
+//PAGE STYLES
+
 .img-head {
 	height: 300px;
 	width: 100%;
@@ -70,7 +109,7 @@ body {
 	color: $primary-500;
 	font-family: caveat-brush, sans-serif;
 	font-weight: normal;
-	margin: 0.75rem 0;
+	margin: 1.5rem 0;
 }
 .meta-row{
 	display: flex;
@@ -82,7 +121,6 @@ body {
 
 .theory {
 	margin-top: 1.25rem;
-	margin-bottom: 2rem;
 }
 
 .icon {

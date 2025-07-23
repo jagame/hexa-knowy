@@ -4,7 +4,7 @@ INSERT INTO public.language (name) VALUES ('HTML');
 INSERT INTO public.language (name) VALUES ('CSS');
 INSERT INTO public.language (name) VALUES ('Python');
 INSERT INTO public.language (name) VALUES ('PHP');
-INSERT INTO public.language (name) VALUES ('#C');
+INSERT INTO public.language (name) VALUES ('C#');
 INSERT INTO public.language (name) VALUES ('Typescript');
 INSERT INTO public.language (name) VALUES ('Ruby');
 INSERT INTO public.language (name) VALUES ('Swift');

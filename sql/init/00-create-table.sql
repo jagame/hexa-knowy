@@ -117,13 +117,6 @@ CREATE TABLE IF NOT EXISTS public.public_user_language
 	PRIMARY KEY (id_public_user, id_language)
 );
 
-CREATE TABLE IF NOT EXISTS public.banned_word
-(
-	id   serial      NOT NULL,
-	word varchar(40) NOT NULL,
-	PRIMARY KEY (id)
-);
-
 CREATE TABLE IF NOT EXISTS public.course_language
 (
 	id_course   INTEGER NOT NULL,
@@ -222,8 +215,8 @@ ALTER TABLE IF EXISTS public.course_language
 -- FK lesson_documentation
 ALTER TABLE IF EXISTS public.lesson_documentation
 	ADD FOREIGN KEY (id_lesson)
-	REFERENCES public.lesson (id);
+		REFERENCES public.lesson (id);
 
 ALTER TABLE IF EXISTS public.lesson_documentation
 	ADD FOREIGN KEY (id_documentation)
-	REFERENCES public.documentation (id);
+		REFERENCES public.documentation (id);

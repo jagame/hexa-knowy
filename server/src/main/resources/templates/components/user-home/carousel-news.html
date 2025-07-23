@@ -16,13 +16,14 @@
 		<div class="carousel-item h-100 w-100"
 		   th:classappend="${statItem.index == 0} ? 'active' : ''"
 		   th:each="newItem, statItem : ${newsList}"
-		   th:href="${newItem.linkUrl}"
+
 		>
 			<img alt="..." class="d-block w-100 h-100 object-fit-cover kn-radius"
 				 th:src="${newItem.imageUrl}">
 			<div class="carousel-caption text-legible">
 				<h5 class="text-legible--title" th:text="${newItem.title}"></h5>
 				<p class="d-none d-md-block mb-2" th:text="${newItem.description}"></p>
+				<p class="d-none d-md-block small fst-italic" th:text="'Por ' + ${newItem.author}" th:if="${newItem.author}"></p>
 			</div>
 		</div>
 	</div>

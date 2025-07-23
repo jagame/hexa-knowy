@@ -36,7 +36,7 @@ server:
             enabled: false
     servlet:
         session:
-            timeout: 1m
+            timeout: 1d
 
 management:
     endpoints:

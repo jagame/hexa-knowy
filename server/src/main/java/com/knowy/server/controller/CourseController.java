@@ -3,6 +3,7 @@ package com.knowy.server.controller;
 import com.knowy.server.controller.dto.CourseCardDTO;
 import com.knowy.server.controller.dto.ToastDto;
 import com.knowy.server.controller.exception.KnowyCourseSubscriptionException;
+import com.knowy.server.entity.CourseEntity;
 import com.knowy.server.service.CourseSubscriptionService;
 import com.knowy.server.service.model.UserSecurityDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,7 +32,9 @@ public class CourseController {
 	public String myCourses (Model model,
 							 @RequestParam(required = false) String category,
 							 @RequestParam(required = false) String order,
+							 @RequestParam(defaultValue = "1") int page,
 							 @AuthenticationPrincipal UserSecurityDetails userDetails) {
+		Integer userId = userDetails.getPublicUser().getId();
 		List<CourseCardDTO> courses = courseSubscriptionService.getUserCourses(userDetails.getPublicUser().getId());
 
 		//Filter by language (category)
@@ -76,9 +79,35 @@ public class CourseController {
 			}
 		}
 
+		List<CourseCardDTO> recommendations = courseSubscriptionService.getRecommendedCourses(userId).stream()
+			.map(course -> CourseCardDTO.fromRecommendation(
+				course,
+				courseSubscriptionService.findLanguagesForCourse(course),
+				courseSubscriptionService.findCourseImage(course),
+				course.getCreationDate()
+			)).toList();
+
+		int pageSize = 9;
+
+		// 3. CALCULAR TOTAL DE PÁGINAS
+		int totalPages = (int) Math.ceil((double) courses.size() / pageSize);
+		if (totalPages == 0) totalPages = 1;  // mínimo 1 página
+
+		// 4. RANGO DE PAGE
+		if (page < 1) page = 1;
+		if (page > totalPages) page = totalPages;
+
+		int fromIndex = (page - 1) * pageSize;
+		int toIndex = Math.min(fromIndex + pageSize, courses.size());
+
+		// 5 PAGINACIÓN
+		List<CourseCardDTO> paginatedCourses = fromIndex >= courses.size() ? List.of() : courses.subList(fromIndex, toIndex);
+
 		model.addAttribute("allLanguages", courseSubscriptionService.findAllLanguages());
-		model.addAttribute("courses", courses);
-		model.addAttribute("recommendations", courseSubscriptionService.getRecommendedCourses(userDetails.getPublicUser().getId()));
+		model.addAttribute("courses", paginatedCourses);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", totalPages);
+		model.addAttribute("recommendations", recommendations);
 		model.addAttribute("order", order);
 		model.addAttribute("category", category);
 		model.addAttribute("acquireAction", "/my-courses/subscribe");

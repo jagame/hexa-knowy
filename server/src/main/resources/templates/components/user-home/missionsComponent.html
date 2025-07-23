@@ -1,19 +1,22 @@
 <div class="missions-container" th:fragment="missionsComponent(missionsList, lenguageOptions)">
-	<h3 class="missions__missions-title">¡Retos diarios!</h3>
+	<h3 class="missions__missions-title">¡Partida rápida!</h3>
 
-	<div class="mission-container__mission-instance" th:each="mission : ${missionsList}">
-		<span class="mission-container__description" th:text="${mission.name}"></span>
-		<div class="mission-instance__details">
-			<span class="mission-instance__progress-text" th:text="${mission.currentProgress + '/' + mission.totalProgress}"></span>
-		</div>
-		<div class="mission-instance__progress-bar-background">
-			<div class="progress-bar-background__progress-bar-foreground"
-				 th:style="'width: ' + ${mission.getFractionProgress} + '%;'"></div>
-		</div>
-	</div>
+<!--	<div class="mission-container__mission-instance" th:each="mission : ${missionsList}">-->
+<!--		<span class="mission-container__description" th:text="${mission.name}"></span>-->
+<!--		<div class="mission-instance__details">-->
+<!--			<span class="mission-instance__progress-text" th:text="${mission.currentProgress + '/' + mission.totalProgress}"></span>-->
+<!--		</div>-->
+<!--		<div class="mission-instance__progress-bar-background">-->
+<!--			<div class="progress-bar-background__progress-bar-foreground"-->
+<!--				 th:style="'width: ' + ${mission.getFractionProgress} + '%;'"></div>-->
+<!--		</div>-->
+<!--	</div>-->
 
 	<div class="actions-footer">
-		<button class="actions-footer__quick-match-button">
+		<a href="/exercise/review"
+		   class="actions-footer__quick-match-button"
+		   th:classappend="${!hasCourses} ? ' disabled' : ''"
+		   th:attr="aria-disabled=${!hasCourses}">
 			<svg class="icon icon-tabler icons-tabler-outline icon-tabler-player-play" fill="none" height="20"
 				 stroke="currentColor" stroke-linecap="round"
 				 stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20"
@@ -22,7 +25,8 @@
 				<path d="M7 4v16l13 -8z"/>
 			</svg>
 			Partida Rápida
-		</button>
+		</a>
 	</div>
+
 
 </div>

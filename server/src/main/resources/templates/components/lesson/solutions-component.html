@@ -1,35 +1,33 @@
-<div class="documentContainer" th:fragment="solutions-component(solutions)">
+<div class="px-5 py-3" th:fragment="solutions-component(solutions)">
 	<div class="accordion solutions-accordion" id="solAccordionExample">
 		<div class="accordion-item">
 			<h2 class="accordion-header" id="solHeadingOne">
-				<button aria-controls="solCollapseOne"
-						aria-expanded="false" class="accordion-button collapsed"
+				<button class="accordion-button collapsed"
+						type="button" data-bs-toggle="collapse"
 						data-bs-target="#solCollapseOne"
-						data-bs-toggle="collapse"
-						type="button">
+						aria-expanded="false"
+						aria-controls="solCollapseOne">
 					Ver soluciones
 				</button>
 			</h2>
-			<div aria-labelledby="solHeadingOne" class="accordion-collapse collapse" data-bs-parent="#solAccordionExample"
-				 id="solCollapseOne">
+			<div id="solCollapseOne" class="accordion-collapse collapse" aria-labelledby="solHeadingOne"
+				 data-bs-parent="#solAccordionExample">
 				<div class="accordion-body">
 					<div class="accordion" id="solSub-accordionExample">
 						<div class="accordion-item"
 							 th:each="solution, iterStat : ${solutions}">
 							<h2 class="accordion-header" th:id="'sub-heading' + ${iterStat.index}">
-								<button aria-expanded="false" class="accordion-button collapsed sol-cards"
+								<button class="accordion-button collapsed sol-cards" type="button"
 										data-bs-toggle="collapse"
 										th:attr="data-bs-target='#sub-collapse' + ${iterStat.index}"
-										type="button">
-									<span th:text="${solution.cardTitle} + ' ' + ${iterStat.count}">
-										Titulo tarjeta
-									</span>
+										aria-expanded="false">
+									<span th:text="${solution.cardTitle} + ' ' + ${iterStat.count}">Titulo tarjeta</span>
 								</button>
 							</h2>
 							<div class="accordion-collapse collapse"
-								 data-bs-parent="#solSub-accordionExample"
+								 th:id="'sub-collapse' + ${iterStat.index}"
 								 th:attr="aria-labelledby='sub-heading' + ${iterStat.index}"
-								 th:id="'sub-collapse' + ${iterStat.index}">
+								 data-bs-parent="#solSub-accordionExample">
 								<div class="accordion-body">
 									<strong>Pregunta:</strong>
 									<p th:text="${solution.question}">Pregunta de la tarjeta 1.</p>

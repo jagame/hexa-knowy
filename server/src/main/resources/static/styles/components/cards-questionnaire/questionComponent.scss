@@ -5,7 +5,6 @@
 	width: 80%;
 	display:flex;
 	flex-direction: column;
-
 }
 
 .enunciado-container {
@@ -22,10 +21,8 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	font-weight: bold;
-	font-size: 1.1em;
+	font-size: 1.25rem;
 	cursor: pointer;
-	//border-radius: $radius-8 $radius-8 0 0;
 }
 
 .enunciado-header__text {
@@ -37,7 +34,6 @@
 	background: none;
 	border: none;
 	color: white;
-	font-size: 1.2em;
 	cursor: pointer;
 	padding: 5px;
 	transition: transform $transition-speed ease;
@@ -55,7 +51,6 @@
 	color: $neutral-700;
 	max-height: 500px;
 	opacity: 1;
-	transition: max-height $transition-speed ease-out, opacity $transition-speed ease-out, padding $transition-speed ease-out;
 	box-sizing: border-box;
 }
 
