@@ -6,7 +6,7 @@
 <head>
 
 	<link rel="stylesheet" th:href="@{/styles/pages/user-management.css}">
-	<title>User profile</title>
+	<title>Knowy - Settings</title>
 </head>
 
 <body>
@@ -26,24 +26,24 @@
 		<div class="user-management-container_main ">
 			<div class="description-card">
 				<h1 class="title-management">Eliminar Cuenta</h1>
-				<p class="description-management">Para confirmar la eliminación de su cuenta, por favor, ingrese su contraseña: </p>
+				<p class="description-management mt-4">Para confirmar la eliminación de su cuenta, por favor, ingrese su contraseña: </p>
 			</div>
 			<form th:action="@{delete-account-confirm}" method="POST" id="DeleteAccountForm">
 				<div class="row user-information">
 					<div class="form-fields">
-						<label for="password" class="section-title">Contraseña: 🔑</label>
-						<input type="password" class="form-control" id="password" name="password">
+						<label for="password" class="section-title">Contraseña:</label>
+						<input type="password" class="form-control mt-2" id="password" name="password">
 					</div>
 
 					<div class="form-fields">
-						<label for="confirmPassword" class="section-title">Confirmar Contraseña: 🔑</label>
-						<input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+						<label for="confirmPassword" class="section-title">Confirmar Contraseña:</label>
+						<input type="password" class="form-control mt-2" id="confirmPassword" name="confirmPassword">
 					</div>
 				</div>
 				<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 				<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
 				<div class="buttons-form-content">
-					<a th:href="@{/delete-account}" class="btn btn-inferior">Volver</a>
+					<a th:href="@{/delete-account-advise}" class="btn btn-inferior">Volver</a>
 					<button type="submit" class="btn btn-delete">Eliminar Cuenta</button>
 				</div>
 
