@@ -3,8 +3,6 @@ name: Deploy to Production
 on:
     push:
         tags: [ "v*" ]
-        branches:
-            - KNOWY-206
 
 jobs:
     build-analyze-deploy:
