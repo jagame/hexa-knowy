@@ -3,6 +3,8 @@ name: Deploy to Production
 on:
     push:
         tags: [ "v*" ]
+        branches: [ main ]
+    workflow_dispatch:
 
 jobs:
     build-analyze-deploy:
