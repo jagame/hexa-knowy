@@ -34,16 +34,16 @@ public class AccessController {
 	private static final String LOGIN_REDIRECT_URL = "/login";
 
 	private final UserSecurityDetailsHelper userSecurityDetailsHelper;
-	private final UserFacadeService accessService;
+	private final UserFacadeService userFacadeService;
 
 	/**
 	 * The constructor
 	 *
-	 * @param accessService             the accessService
+	 * @param userFacadeService         the accessService
 	 * @param userSecurityDetailsHelper the userSecurityDetailsService
 	 */
-	public AccessController(UserFacadeService accessService, UserSecurityDetailsHelper userSecurityDetailsHelper) {
-		this.accessService = accessService;
+	public AccessController(UserFacadeService userFacadeService, UserSecurityDetailsHelper userSecurityDetailsHelper) {
+		this.userFacadeService = userFacadeService;
 		this.userSecurityDetailsHelper = userSecurityDetailsHelper;
 	}
 
@@ -101,7 +101,7 @@ public class AccessController {
 		try {
 			validateFieldErrors(errors);
 
-			PrivateUserEntity privateUser = accessService
+			PrivateUserEntity privateUser = userFacadeService
 				.registerNewUser(user.getNickname(), user.getEmail(), user.getPassword());
 
 			userSecurityDetailsHelper.autoLoginUserByEmail(privateUser.getEmail());
@@ -153,7 +153,7 @@ public class AccessController {
 		HttpServletRequest httpServletRequest
 	) {
 		try {
-			accessService.sendRecoveryPasswordEmail(email.getEmail(), getPasswordChangeUrl(httpServletRequest));
+			userFacadeService.sendRecoveryPasswordEmail(email.getEmail(), getPasswordChangeUrl(httpServletRequest));
 			return LOGIN_REDIRECT_URL;
 		} catch (UserNotFoundException | JwtKnowyException | MailDispatchException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE,
@@ -187,7 +187,7 @@ public class AccessController {
 		@RequestParam String token,
 		Model model
 	) throws UserNotFoundException {
-		if (!accessService.isValidToken(token)) {
+		if (!userFacadeService.isValidToken(token)) {
 			return "redirect:/";
 		}
 		model.addAttribute("token", token);
@@ -217,7 +217,7 @@ public class AccessController {
 		RedirectAttributes redirectAttributes
 	) {
 		try {
-			accessService.updatePassword(
+			userFacadeService.updatePassword(
 				token,
 				userPasswordFormDto.getPassword(),
 				userPasswordFormDto.getConfirmPassword()
