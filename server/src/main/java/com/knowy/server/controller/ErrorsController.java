@@ -33,7 +33,7 @@ public class ErrorsController {
 		ModelAndView mv = new ModelAndView("error/500");
 		mv.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 		mv.addObject("statusCode", 500);
-		mv.addObject("errorMessage", UUID.randomUUID().toString());
+		mv.addObject("errorMessage", errorCode);
 		return mv;
 	}
 }
