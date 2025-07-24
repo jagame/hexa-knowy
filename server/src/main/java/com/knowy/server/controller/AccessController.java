@@ -93,7 +93,7 @@ public class AccessController {
 	 * @return a redirect URL string: either back to "/register" on error or to "/home" on successful registration
 	 */
 	@PostMapping("/register")
-	public String procesarFormulario(
+	public String processRegisterForm(
 		@Valid @ModelAttribute UserRegisterFormDto user,
 		RedirectAttributes redirectAttributes,
 		Errors errors
