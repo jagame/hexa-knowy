@@ -31,7 +31,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AccessController {
 
 	private static final String ERROR_MODEL_ATTRIBUTE = "error";
-	private static final String LOGIN_REDIRECT_URL = "/login";
+	private static final String LOGIN_REDIRECT_URL = "redirect:/login";
 
 	private final UserSecurityDetailsHelper userSecurityDetailsHelper;
 	private final UserFacadeService userFacadeService;
@@ -93,16 +93,11 @@ public class AccessController {
 	 * @return a redirect URL string: either back to "/register" on error or to "/home" on successful registration
 	 */
 	@PostMapping("/register")
-	public String processRegisterForm(
-		@Valid @ModelAttribute UserRegisterFormDto user,
-		RedirectAttributes redirectAttributes,
-		Errors errors
-	) throws ImageNotFoundException {
+	public String processRegisterForm(@Valid @ModelAttribute UserRegisterFormDto user, RedirectAttributes redirectAttributes, Errors errors) throws ImageNotFoundException {
 		try {
 			validateFieldErrors(errors);
 
-			PrivateUserEntity privateUser = userFacadeService
-				.registerNewUser(user.getNickname(), user.getEmail(), user.getPassword());
+			PrivateUserEntity privateUser = userFacadeService.registerNewUser(user.getNickname(), user.getEmail(), user.getPassword());
 
 			userSecurityDetailsHelper.autoLoginUserByEmail(privateUser.getEmail());
 			return "redirect:/home";
@@ -121,8 +116,7 @@ public class AccessController {
 
 		String message = firstError.getDefaultMessage();
 		if (message == null || message.isEmpty()) {
-			throw new InvalidUserException("Hubo un problema con la información proporcionada. Por favor, revise los " +
-				"campos y vuelva a intentarlo.");
+			throw new InvalidUserException("Hubo un problema con la información proporcionada. Por favor, revise los " + "campos y vuelva a intentarlo.");
 		}
 		throw new InvalidUserException(message);
 	}
@@ -147,17 +141,12 @@ public class AccessController {
 	 * @return a redirect string to either the login page on success or back to the email form on failure
 	 */
 	@PostMapping("/password-change/email")
-	public String passwordChangeEmail(
-		@ModelAttribute("emailForm") UserEmailFormDto email,
-		RedirectAttributes redirectAttributes,
-		HttpServletRequest httpServletRequest
-	) {
+	public String passwordChangeEmail(@ModelAttribute("emailForm") UserEmailFormDto email, RedirectAttributes redirectAttributes, HttpServletRequest httpServletRequest) {
 		try {
 			userFacadeService.sendRecoveryPasswordEmail(email.getEmail(), getPasswordChangeUrl(httpServletRequest));
 			return LOGIN_REDIRECT_URL;
 		} catch (UserNotFoundException | JwtKnowyException | MailDispatchException e) {
-			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE,
-				"Se ha producido un error al enviar el email. Intente lo más tarde");
+			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Se ha producido un error al enviar el email. Intente lo más tarde");
 			return "redirect:/password-change/email";
 		}
 	}
@@ -183,10 +172,7 @@ public class AccessController {
 	 * @return the name of the password change view if the token is registered, otherwise redirects to the home page
 	 */
 	@GetMapping("/password-change")
-	public String passwordChange(
-		@RequestParam String token,
-		Model model
-	) throws UserNotFoundException {
+	public String passwordChange(@RequestParam String token, Model model) throws UserNotFoundException {
 		if (!userFacadeService.isValidToken(token)) {
 			return "redirect:/";
 		}
@@ -211,17 +197,9 @@ public class AccessController {
 	 * @return a redirect string to the login page, whether the operation succeeds or fails
 	 */
 	@PostMapping("/password-change")
-	public String passwordChange(
-		@RequestParam("token") String token,
-		@ModelAttribute("passwordForm") UserPasswordFormDto userPasswordFormDto,
-		RedirectAttributes redirectAttributes
-	) {
+	public String passwordChange(@RequestParam("token") String token, @ModelAttribute("passwordForm") UserPasswordFormDto userPasswordFormDto, RedirectAttributes redirectAttributes) {
 		try {
-			userFacadeService.updatePassword(
-				token,
-				userPasswordFormDto.getPassword(),
-				userPasswordFormDto.getConfirmPassword()
-			);
+			userFacadeService.updatePassword(token, userPasswordFormDto.getPassword(), userPasswordFormDto.getConfirmPassword());
 			return LOGIN_REDIRECT_URL;
 		} catch (UserNotFoundException | JwtKnowyException e) {
 			redirectAttributes.addAttribute(ERROR_MODEL_ATTRIBUTE, "Se ha producido un error al actualizar la contraseña");
