@@ -38,8 +38,7 @@ conocimiento con un toque divertido y cercano.
 
 ## 🛠️ Tecnologías y herramientas utilizadas
 
-Knowy está construido utilizando una arquitectura moderna dividida en backend, frontend y herramientas de
-infraestructura:
+Knowy está construido utilizando una arquitectura moderna dividida en backend, frontend y herramientas de infraestructura:
 
 ### 🔧 Backend
 
@@ -47,41 +46,55 @@ infraestructura:
 - **Spring Boot 3.4.5** – Framework para construir la lógica de negocio.
 - **Spring Security** – Seguridad de la aplicación.
 - **Spring Data JPA** – Acceso a datos mediante ORM.
-- **Hibernate** – Implementación de JPA.
+- **Hibernate** – Implementación de JPA (incluida implícitamente).
+- **Spring Validation** – Validaciones del lado del backend.
 - **Thymeleaf** – Motor de plantillas del lado del servidor.
 - **Thymeleaf Layout Dialect** – Extensión para diseño de plantillas reutilizables.
+- **Thymeleaf Extras Spring Security 6** – Integración de seguridad en plantillas.
 - **Spring Mail** – Envío de correos electrónicos.
 - **JJWT (JSON Web Token)** – Autenticación basada en tokens (JWT).
 - **Lombok** – Reducción de código boilerplate mediante anotaciones.
+- **Spring Boot Actuator** – Monitorización y métricas del sistema.
 
 ### 📦 Construcción y gestión de dependencias
 
 - **Maven** – Sistema de construcción y gestión de dependencias.
-- **Maven Compiler Plugin** – Compilación y anotaciones (Lombok).
+- **Maven Compiler Plugin** – Configuración del compilador y procesamiento de anotaciones (Lombok).
 - **Spring Boot Maven Plugin** – Empaquetado de la aplicación.
-- **Sass CLI Maven Plugin** – Compilación de estilos Sass a CSS.
+- **Sass CLI Maven Plugin** – Compilación de estilos SCSS (Sass) a CSS.
+- **Jacoco Maven Plugin** – Generación de reportes de cobertura de pruebas.
 
 ### 💾 Bases de datos y almacenamiento
 
-- **PostgreSQL** – Base de datos relacional.
+- **PostgreSQL** – Base de datos relacional utilizada en tiempo de ejecución.
 
 ### 🖥️ Frontend
 
-- **Thymeleaf** – Motor de plantillas del lado del servidor.
+- **Thymeleaf** – Motor de plantillas HTML del lado del servidor.
 - **Bootstrap** – Framework CSS para diseño responsivo.
 - **SCSS (Sass)** – Preprocesador CSS para estilos personalizados.
-- **JavaScript** – Lenguaje de programación del lado del cliente para funcionalidades dinámicas e interactivas en la web.
+- **JavaScript** – Para funcionalidades dinámicas e interactivas en la web.
+
+### 🧪 Pruebas
+
+- **Spring Boot Test** – Framework de pruebas para Spring.
+- **Spring Security Test** – Pruebas de seguridad.
+- **Mockito** – Framework de mocking para pruebas unitarias.
 
 ### 🐳 Contenedores y despliegue
 
-- **Docker** – Contenedorización de la aplicación.
+- **Docker** – Contenerización de la aplicación.
 - **Docker Compose** – Orquestación de servicios backend/frontend/db.
 - **Mailpit** – Servidor SMTP para desarrollo y pruebas de envío de correos.
+- **Sonar** – Análisis estático de código para asegurar la calidad y mantener buenas prácticas.
+- **Certbot (Let's Encrypt)** – Generación y renovación automática de certificados SSL para asegurar las comunicaciones HTTPS.
+- **Spring Security + SSL** – Integración de los certificados SSL en la configuración del backend.
 
-## Requisitos
+## ✅ Requisitos
 
-- **Java 21** (JDK 21 o superior)
-- **Docker**
+- **Java 21** (JDK 21 o superior)  
+- **Maven 3.9+**  
+- **Docker**  
 - **Docker Compose**
 
 ## Arquitectura del proyecto
