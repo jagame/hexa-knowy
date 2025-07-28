@@ -1,8 +1,8 @@
 package com.knowy.server.util;
 
-import com.knowy.server.entity.PrivateUserEntity;
-import com.knowy.server.repository.ports.PrivateUserRepository;
-import com.knowy.server.service.model.UserSecurityDetails;
+import com.knowy.server.infrastructure.adapters.repository.entity.PrivateUserEntity;
+import com.knowy.server.application.ports.UserPrivateRepository;
+import com.knowy.server.application.service.model.UserSecurityDetails;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +21,7 @@ import java.util.function.UnaryOperator;
 public class UserSecurityDetailsHelper {
 
 	private final UserDetailsService userDetailsService;
-	private final PrivateUserRepository privateUserRepository;
+	private final UserPrivateRepository privateUserRepository;
 	private final HttpSession httpSession;
 
 	/**
@@ -30,7 +30,7 @@ public class UserSecurityDetailsHelper {
 	 * @param privateUserRepository the privateUserRepository
 	 * @param httpSession           the httpSession
 	 */
-	public UserSecurityDetailsHelper(UserDetailsService userDetailsService, PrivateUserRepository privateUserRepository, HttpSession httpSession) {
+	public UserSecurityDetailsHelper(UserDetailsService userDetailsService, UserPrivateRepository privateUserRepository, HttpSession httpSession) {
 		this.userDetailsService = userDetailsService;
 		this.privateUserRepository = privateUserRepository;
 		this.httpSession = httpSession;

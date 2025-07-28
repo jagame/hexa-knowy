@@ -1,6 +1,6 @@
 package com.knowy.server.util;
 
-import com.knowy.server.entity.PrivateUserEntity;
+import com.knowy.server.application.domain.UserPrivate;
 import com.knowy.server.util.exception.PasswordFormatException;
 import com.knowy.server.util.exception.WrongPasswordException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,14 +29,14 @@ public class PasswordChecker {
 		return Pattern.matches(regex, password);
 	}
 
-	public void assertHasPassword(PrivateUserEntity user, String password) throws WrongPasswordException {
+	public void assertHasPassword(UserPrivate user, String password) throws WrongPasswordException {
 		if (!hasPassword(user, password)) {
-			throw new WrongPasswordException("Wrong password for user with id: " + user.getId());
+			throw new WrongPasswordException("Wrong password for user with id: " + user.id());
 		}
 	}
 
-	public boolean hasPassword(PrivateUserEntity user, String password) {
+	public boolean hasPassword(UserPrivate user, String password) {
 		Objects.requireNonNull(user, "Can't check user password of null user");
-		return passwordEncoder.matches(password, user.getPassword());
+		return passwordEncoder.matches(password, user.password());
 	}
 }

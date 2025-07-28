@@ -1,15 +1,13 @@
 package com.knowy.server.service;
 
-import com.knowy.server.entity.LanguageEntity;
-import com.knowy.server.entity.ProfileImageEntity;
-import com.knowy.server.entity.PublicUserEntity;
-import com.knowy.server.repository.ports.LanguageRepository;
-import com.knowy.server.repository.ports.ProfileImageRepository;
-import com.knowy.server.repository.ports.PublicUserRepository;
-import com.knowy.server.service.exception.ImageNotFoundException;
-import com.knowy.server.service.exception.InvalidUserNicknameException;
-import com.knowy.server.service.exception.UnchangedImageException;
-import com.knowy.server.service.exception.UserNotFoundException;
+import com.knowy.server.application.ports.UserRepository;
+import com.knowy.server.application.service.UserService;
+import com.knowy.server.application.service.exception.*;
+import com.knowy.server.infrastructure.adapters.repository.entity.LanguageEntity;
+import com.knowy.server.infrastructure.adapters.repository.entity.ProfileImageEntity;
+import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserEntity;
+import com.knowy.server.application.ports.CategoryRepository;
+import com.knowy.server.application.ports.ProfileImageRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -23,10 +21,10 @@ class PublicUserServiceTest {
 	// NICKNAME
 	@Test
 	void givenExistingNicknameExpectAlreadyExistException() {
-		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
+		UserRepository publicUserRepo = Mockito.mock(UserRepository.class);
 		ProfileImageRepository imageRepo = Mockito.mock(ProfileImageRepository.class);
-		LanguageRepository languageRepo = Mockito.mock(LanguageRepository.class);
-		PublicUserService service = new PublicUserService(publicUserRepo, languageRepo, imageRepo);
+		CategoryRepository languageRepo = Mockito.mock(CategoryRepository.class);
+		UserService service = new UserService(publicUserRepo, languageRepo, imageRepo);
 
 		Mockito.when(publicUserRepo.findByNickname("ExistNickname")).thenReturn(Optional.of(new PublicUserEntity()));
 
@@ -38,10 +36,10 @@ class PublicUserServiceTest {
 
 	@Test
 	void givenNoDefaultImageExpectNotFoundException() {
-		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
+		UserRepository publicUserRepo = Mockito.mock(UserRepository.class);
 		ProfileImageRepository imageRepo = Mockito.mock(ProfileImageRepository.class);
-		LanguageRepository languageRepo = Mockito.mock(LanguageRepository.class);
-		PublicUserService service = new PublicUserService(publicUserRepo, languageRepo, imageRepo);
+		CategoryRepository languageRepo = Mockito.mock(CategoryRepository.class);
+		UserService service = new UserService(publicUserRepo, languageRepo, imageRepo);
 
 		Mockito.when(publicUserRepo.findByNickname("ValidNickname")).thenReturn(Optional.empty());
 
@@ -55,16 +53,16 @@ class PublicUserServiceTest {
 
 	@Test
 	void givenSameNicknameExpectUnchangedException() {
-		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
+		UserRepository publicUserRepo = Mockito.mock(UserRepository.class);
 		ProfileImageRepository imageRepo = Mockito.mock(ProfileImageRepository.class);
-		LanguageRepository languageRepo = Mockito.mock(LanguageRepository.class);
-		PublicUserService service = new PublicUserService(publicUserRepo, languageRepo, imageRepo);
+		CategoryRepository languageRepo = Mockito.mock(CategoryRepository.class);
+		UserService service = new UserService(publicUserRepo, languageRepo, imageRepo);
 
 		PublicUserEntity user = new PublicUserEntity();
 		user.setNickname("SameNickname");
 		Mockito.when(publicUserRepo.findUserById(1)).thenReturn(Optional.of(user));
 
-		Exception ex = Assertions.assertThrows(com.knowy.server.service.exception.UnchangedNicknameException.class, () ->
+		Exception ex = Assertions.assertThrows(UnchangedNicknameException.class, () ->
 			service.updateNickname("SameNickname", 1)
 		);
 		Assertions.assertEquals("Nickname must be different from the current one.", ex.getMessage());
@@ -72,10 +70,10 @@ class PublicUserServiceTest {
 
 	@Test
 	void givenExistingNicknameExpectAlreadyTakenException() {
-		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
+		UserRepository publicUserRepo = Mockito.mock(UserRepository.class);
 		ProfileImageRepository imageRepo = Mockito.mock(ProfileImageRepository.class);
-		LanguageRepository languageRepo = Mockito.mock(LanguageRepository.class);
-		PublicUserService service = new PublicUserService(publicUserRepo, languageRepo, imageRepo);
+		CategoryRepository languageRepo = Mockito.mock(CategoryRepository.class);
+		UserService service = new UserService(publicUserRepo, languageRepo, imageRepo);
 
 		PublicUserEntity user = new PublicUserEntity();
 		user.setNickname("judit");
@@ -83,7 +81,7 @@ class PublicUserServiceTest {
 		Mockito.when(publicUserRepo.existsByNickname("nuevo")).thenReturn(true);
 
 		Exception ex = Assertions.assertThrows(
-			com.knowy.server.service.exception.NicknameAlreadyTakenException.class,
+			NicknameAlreadyTakenException.class,
 			() -> service.updateNickname("nuevo", 1)
 		);
 		Assertions.assertEquals("Nickname is already in use.", ex.getMessage());
@@ -91,11 +89,11 @@ class PublicUserServiceTest {
 
 	@Test
 	void givenBlankNicknameExpectNotAllowException() {
-		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
+		UserRepository publicUserRepo = Mockito.mock(UserRepository.class);
 		ProfileImageRepository imageRepo = Mockito.mock(ProfileImageRepository.class);
-		LanguageRepository languageRepo = Mockito.mock(LanguageRepository.class);
+		CategoryRepository languageRepo = Mockito.mock(CategoryRepository.class);
 
-		PublicUserService service = new PublicUserService(publicUserRepo, languageRepo, imageRepo);
+		UserService service = new UserService(publicUserRepo, languageRepo, imageRepo);
 
 		InvalidUserNicknameException ex = Assertions.assertThrows(
 			InvalidUserNicknameException.class, () ->
@@ -106,10 +104,10 @@ class PublicUserServiceTest {
 
 	@Test
 	void givenValidNicknameExpectFindUser() throws Exception {
-		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
+		UserRepository publicUserRepo = Mockito.mock(UserRepository.class);
 		ProfileImageRepository imageRepo = Mockito.mock(ProfileImageRepository.class);
-		LanguageRepository languageRepo = Mockito.mock(LanguageRepository.class);
-		PublicUserService service = new PublicUserService(publicUserRepo, languageRepo, imageRepo);
+		CategoryRepository languageRepo = Mockito.mock(CategoryRepository.class);
+		UserService service = new UserService(publicUserRepo, languageRepo, imageRepo);
 
 		Mockito.when(publicUserRepo.findByNickname("judit")).thenReturn(Optional.empty());
 
@@ -128,10 +126,10 @@ class PublicUserServiceTest {
 
 	@Test
 	void givenUserWhenSaveExpectRepoUserReturned() {
-		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
+		UserRepository publicUserRepo = Mockito.mock(UserRepository.class);
 		ProfileImageRepository imageRepo = Mockito.mock(ProfileImageRepository.class);
-		LanguageRepository languageRepo = Mockito.mock(LanguageRepository.class);
-		PublicUserService service = new PublicUserService(publicUserRepo, languageRepo, imageRepo);
+		CategoryRepository languageRepo = Mockito.mock(CategoryRepository.class);
+		UserService service = new UserService(publicUserRepo, languageRepo, imageRepo);
 
 		PublicUserEntity userToSave = new PublicUserEntity();
 		userToSave.setNickname("SaveMe");
@@ -148,10 +146,10 @@ class PublicUserServiceTest {
 
 	@Test
 	void givenValidNewNicknameExpectUpdateRepo() throws Exception {
-		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
+		UserRepository publicUserRepo = Mockito.mock(UserRepository.class);
 		ProfileImageRepository imageRepo = Mockito.mock(ProfileImageRepository.class);
-		LanguageRepository languageRepo = Mockito.mock(LanguageRepository.class);
-		PublicUserService service = new PublicUserService(publicUserRepo, languageRepo, imageRepo);
+		CategoryRepository languageRepo = Mockito.mock(CategoryRepository.class);
+		UserService service = new UserService(publicUserRepo, languageRepo, imageRepo);
 
 		PublicUserEntity existingUser = new PublicUserEntity();
 		existingUser.setNickname("old");
@@ -167,10 +165,10 @@ class PublicUserServiceTest {
 
 	@Test
 	void givenUserIdExpectUserFromRepo() {
-		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
+		UserRepository publicUserRepo = Mockito.mock(UserRepository.class);
 		ProfileImageRepository imageRepo = Mockito.mock(ProfileImageRepository.class);
-		LanguageRepository languageRepo = Mockito.mock(LanguageRepository.class);
-		PublicUserService service = new PublicUserService(publicUserRepo, languageRepo, imageRepo);
+		CategoryRepository languageRepo = Mockito.mock(CategoryRepository.class);
+		UserService service = new UserService(publicUserRepo, languageRepo, imageRepo);
 
 		PublicUserEntity user = new PublicUserEntity();
 		Mockito.when(publicUserRepo.findUserById(16)).thenReturn(Optional.of(user));
@@ -188,10 +186,10 @@ class PublicUserServiceTest {
 	@Test
 	//UserID doesn't exist so can't update ProfileImage
 	void givenInvalidUserIdExpectUserNotFoundExceptionProfileImage() {
-		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
+		UserRepository publicUserRepo = Mockito.mock(UserRepository.class);
 		ProfileImageRepository imageRepo = Mockito.mock(ProfileImageRepository.class);
-		LanguageRepository languageRepo = Mockito.mock(LanguageRepository.class);
-		PublicUserService service = new PublicUserService(publicUserRepo, languageRepo, imageRepo);
+		CategoryRepository languageRepo = Mockito.mock(CategoryRepository.class);
+		UserService service = new UserService(publicUserRepo, languageRepo, imageRepo);
 
 		Mockito.when(publicUserRepo.findUserById(16)).thenReturn(Optional.empty());
 
@@ -203,10 +201,10 @@ class PublicUserServiceTest {
 
 	@Test
 	void givenInvalidImageIdExpectImageNotFoundException() {
-		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
+		UserRepository publicUserRepo = Mockito.mock(UserRepository.class);
 		ProfileImageRepository imageRepo = Mockito.mock(ProfileImageRepository.class);
-		LanguageRepository languageRepo = Mockito.mock(LanguageRepository.class);
-		PublicUserService service = new PublicUserService(publicUserRepo, languageRepo, imageRepo);
+		CategoryRepository languageRepo = Mockito.mock(CategoryRepository.class);
+		UserService service = new UserService(publicUserRepo, languageRepo, imageRepo);
 
 		PublicUserEntity user = new PublicUserEntity();
 		ProfileImageEntity currentImage = new ProfileImageEntity();
@@ -224,10 +222,10 @@ class PublicUserServiceTest {
 
 	@Test
 	void givenSameImageIdExpectUnchangedImageException() {
-		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
+		UserRepository publicUserRepo = Mockito.mock(UserRepository.class);
 		ProfileImageRepository imageRepo = Mockito.mock(ProfileImageRepository.class);
-		LanguageRepository languageRepo = Mockito.mock(LanguageRepository.class);
-		PublicUserService service = new PublicUserService(publicUserRepo, languageRepo, imageRepo);
+		CategoryRepository languageRepo = Mockito.mock(CategoryRepository.class);
+		UserService service = new UserService(publicUserRepo, languageRepo, imageRepo);
 
 		ProfileImageEntity img = new ProfileImageEntity();
 		img.setId(5);
@@ -247,10 +245,10 @@ class PublicUserServiceTest {
 	@Test
 		//Happy path
 	void givenNewImageExpectUpdateProfileImage() throws Exception {
-		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
+		UserRepository publicUserRepo = Mockito.mock(UserRepository.class);
 		ProfileImageRepository imageRepo = Mockito.mock(ProfileImageRepository.class);
-		LanguageRepository languageRepo = Mockito.mock(LanguageRepository.class);
-		PublicUserService service = new PublicUserService(publicUserRepo, languageRepo, imageRepo);
+		CategoryRepository languageRepo = Mockito.mock(CategoryRepository.class);
+		UserService service = new UserService(publicUserRepo, languageRepo, imageRepo);
 
 		ProfileImageEntity oldImage = new ProfileImageEntity();
 		oldImage.setId(1);
@@ -272,10 +270,10 @@ class PublicUserServiceTest {
 	//	LANGUAGES
 	@Test
 	void givenInvalidUserIdExpectUserNotFoundExceptionLanguages() {
-		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
+		UserRepository publicUserRepo = Mockito.mock(UserRepository.class);
 		ProfileImageRepository imageRepo = Mockito.mock(ProfileImageRepository.class);
-		LanguageRepository languageRepo = Mockito.mock(LanguageRepository.class);
-		PublicUserService service = new PublicUserService(publicUserRepo, languageRepo, imageRepo);
+		CategoryRepository languageRepo = Mockito.mock(CategoryRepository.class);
+		UserService service = new UserService(publicUserRepo, languageRepo, imageRepo);
 
 		Mockito.when(publicUserRepo.findUserById(232)).thenReturn(Optional.empty());
 
@@ -288,10 +286,10 @@ class PublicUserServiceTest {
 
 	@Test
 	void givenNullLanguageArrayExpectSelectLenguageException() {
-		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
+		UserRepository publicUserRepo = Mockito.mock(UserRepository.class);
 		ProfileImageRepository imageRepo = Mockito.mock(ProfileImageRepository.class);
-		LanguageRepository languageRepo = Mockito.mock(LanguageRepository.class);
-		PublicUserService service = new PublicUserService(publicUserRepo, languageRepo, imageRepo);
+		CategoryRepository languageRepo = Mockito.mock(CategoryRepository.class);
+		UserService service = new UserService(publicUserRepo, languageRepo, imageRepo);
 
 		NullPointerException ex = Assertions.assertThrows(NullPointerException.class, () ->
 			service.updateLanguages(1, null)
@@ -303,10 +301,10 @@ class PublicUserServiceTest {
 	//Happy path
 	@Test
 	void givenLanguagesExpectUpdateUserLanguages() throws Exception {
-		PublicUserRepository publicUserRepo = Mockito.mock(PublicUserRepository.class);
+		UserRepository publicUserRepo = Mockito.mock(UserRepository.class);
 		ProfileImageRepository imageRepo = Mockito.mock(ProfileImageRepository.class);
-		LanguageRepository languageRepo = Mockito.mock(LanguageRepository.class);
-		PublicUserService service = new PublicUserService(publicUserRepo, languageRepo, imageRepo);
+		CategoryRepository languageRepo = Mockito.mock(CategoryRepository.class);
+		UserService service = new UserService(publicUserRepo, languageRepo, imageRepo);
 
 		PublicUserEntity user = new PublicUserEntity();
 		Mockito.when(publicUserRepo.findUserById(42)).thenReturn(Optional.of(user));
