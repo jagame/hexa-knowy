@@ -1,7 +1,7 @@
 package com.knowy.server.infrastructure.controller.dto;
 
 import com.knowy.server.infrastructure.adapters.repository.entity.CourseEntity;
-import com.knowy.server.infrastructure.adapters.repository.entity.LanguageEntity;
+import com.knowy.server.infrastructure.adapters.repository.entity.CategoryEntity;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public record CourseDto(
 			course.getDescription(),
 			course.getImage(),
 			course.getLanguages().stream()
-				.map(LanguageEntity::getName)
+				.map(CategoryEntity::getName)
 				.toList()
 		);
 	}

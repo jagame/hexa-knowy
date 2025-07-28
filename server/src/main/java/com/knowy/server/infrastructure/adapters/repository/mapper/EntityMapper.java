@@ -1,4 +1,12 @@
 package com.knowy.server.infrastructure.adapters.repository.mapper;
 
-public class EntityMapper {
+/**
+ * @param <T> The domain type
+ * @param <E> The entity type
+ */
+public interface EntityMapper<T, E> {
+
+	T toDomain(E entity);
+
+	E toEntity(T domain);
 }

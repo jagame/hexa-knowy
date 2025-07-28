@@ -3,7 +3,7 @@ package com.knowy.server.service;
 import com.knowy.server.application.ports.UserRepository;
 import com.knowy.server.application.service.UserService;
 import com.knowy.server.application.service.exception.*;
-import com.knowy.server.infrastructure.adapters.repository.entity.LanguageEntity;
+import com.knowy.server.infrastructure.adapters.repository.entity.CategoryEntity;
 import com.knowy.server.infrastructure.adapters.repository.entity.ProfileImageEntity;
 import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserEntity;
 import com.knowy.server.application.ports.CategoryRepository;
@@ -309,13 +309,13 @@ class PublicUserServiceTest {
 		PublicUserEntity user = new PublicUserEntity();
 		Mockito.when(publicUserRepo.findUserById(42)).thenReturn(Optional.of(user));
 
-		LanguageEntity java = new LanguageEntity();
+		CategoryEntity java = new CategoryEntity();
 		java.setName("Java");
-		LanguageEntity python = new LanguageEntity();
+		CategoryEntity python = new CategoryEntity();
 		python.setName("Python");
-		LanguageEntity cpp = new LanguageEntity();
+		CategoryEntity cpp = new CategoryEntity();
 		cpp.setName("C++");
-		Set<LanguageEntity> newLanguages = Set.of(java, python, cpp);
+		Set<CategoryEntity> newLanguages = Set.of(java, python, cpp);
 		Mockito.when(languageRepo.findByNameInIgnoreCase(new String[]{"Java", "Python", "C++"})).thenReturn(newLanguages);
 
 		service.updateLanguages(42, new String[]{"Java", "Python", "C++"});

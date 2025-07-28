@@ -43,7 +43,7 @@ public class CourseEntity {
 		joinColumns = @JoinColumn(name = "id_course"),
 		inverseJoinColumns = @JoinColumn(name = "id_language")
 	)
-	private List<LanguageEntity> languages = new ArrayList<>();
+	private List<CategoryEntity> languages = new ArrayList<>();
 
 	@OneToMany(mappedBy = "course")
 	private List<LessonEntity> lessons = new ArrayList<>();

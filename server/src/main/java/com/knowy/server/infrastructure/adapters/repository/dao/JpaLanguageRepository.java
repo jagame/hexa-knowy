@@ -1,6 +1,6 @@
 package com.knowy.server.infrastructure.adapters.repository.dao;
 
-import com.knowy.server.infrastructure.adapters.repository.entity.LanguageEntity;
+import com.knowy.server.infrastructure.adapters.repository.entity.CategoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.Set;
 
 @Repository
-public interface JpaLanguageRepository extends JpaRepository<LanguageEntity, Integer> {
+public interface JpaLanguageRepository extends JpaRepository<CategoryEntity, Integer> {
 	@Query(value = "SELECT id, name FROM language l WHERE l.name ILIKE ANY (ARRAY[:names])", nativeQuery = true)
-	Set<LanguageEntity> findByNameInIgnoreCase(@Param("names") String[] names);
+	Set<CategoryEntity> findByNameInIgnoreCase(@Param("names") String[] names);
 
 	@NonNull
-	List<LanguageEntity> findAll();
+	List<CategoryEntity> findAll();
 }

@@ -33,6 +33,6 @@ public class PublicUserEntity implements Serializable {
 		name = "public_user_language",
 		joinColumns = @JoinColumn(name = "id_public_user"),
 		inverseJoinColumns = @JoinColumn(name = "id_language"))
-	private Set<LanguageEntity> languages;
+	private Set<CategoryEntity> languages;
 
 }

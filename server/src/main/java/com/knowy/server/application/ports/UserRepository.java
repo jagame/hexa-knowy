@@ -9,7 +9,7 @@ public interface UserRepository {
 
 	void updateNickname(String nickname, int id);
 
-	<S extends User> S save(S user);
+	User save(User user);
 
 	Optional<User> findByNickname(String nickname);
 

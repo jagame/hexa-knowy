@@ -137,7 +137,7 @@ public class CourseSubscriptionService {
 
 	public List<String> findLanguagesForCourse(CourseEntity course) {
 		return course.getLanguages().stream()
-			.map(LanguageEntity::getName)
+			.map(CategoryEntity::getName)
 			.toList();
 	}
 
