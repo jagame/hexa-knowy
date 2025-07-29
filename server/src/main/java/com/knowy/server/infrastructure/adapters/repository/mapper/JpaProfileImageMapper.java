@@ -6,10 +6,7 @@ import com.knowy.server.infrastructure.adapters.repository.entity.ProfileImageEn
 public class JpaProfileImageMapper implements EntityMapper<ProfileImage, ProfileImageEntity> {
 	@Override
 	public ProfileImage toDomain(ProfileImageEntity entity) {
-		ProfileImage profileImage = new ProfileImage();
-		profileImage.setId(entity.getId());
-		profileImage.setUrl(entity.getUrl());
-		return profileImage;
+		return new ProfileImage(entity.getId(), entity.getUrl());
 	}
 
 	@Override

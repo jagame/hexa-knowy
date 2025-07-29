@@ -7,8 +7,10 @@ import com.knowy.server.application.ports.CategoryRepository;
 import com.knowy.server.application.ports.ProfileImageRepository;
 import com.knowy.server.application.ports.UserRepository;
 import com.knowy.server.application.service.exception.*;
+import com.knowy.server.application.service.model.NewUserCommand;
 import com.knowy.server.util.StringUtils;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -47,18 +49,19 @@ public class UserService {
 	 * @throws InvalidUserException   if the nickname is already in use
 	 * @throws ImageNotFoundException if the default profile image (ID 1) does not exist
 	 */
-	public User create(String nickname) throws InvalidUserException, ImageNotFoundException {
+	public NewUserCommand create(String nickname) throws InvalidUserException, ImageNotFoundException {
 		assertNotBlankNickname(nickname);
 
 		if (findPublicUserByNickname(nickname).isPresent()) {
 			throw new InvalidUserNicknameException("Nickname already exists");
 		}
 
-		User user = new User();
-		user.setNickname(nickname);
-		user.setProfileImage(profileImageRepository.findById(1)
-			.orElseThrow(() -> new ImageNotFoundException("Not found profile image")));
-		return user;
+		return new NewUserCommand(
+			nickname,
+			profileImageRepository.findById(1)
+				.orElseThrow(() -> new ImageNotFoundException("Not found profile image")),
+			new HashSet<>()
+		);
 	}
 
 	/**
@@ -131,8 +134,8 @@ public class UserService {
 			throw new UnchangedImageException("Image must be different from the current one.");
 		}
 
-		user.setProfileImage(img);
-		userRepository.save(user);
+		User newUser = new User(user.id(), user.nickname(), img, user.categories());
+		userRepository.save(newUser);
 	}
 
 	/**
@@ -152,8 +155,8 @@ public class UserService {
 			.orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 		Set<Category> newCategories = languageRepository.findByNameInIgnoreCase(languages);
 
-		user.setCategories(newCategories);
-		userRepository.save(user);
+		User newUser = new User(user.id(), user.nickname(), user.profileImage(), newCategories);
+		userRepository.save(newUser);
 	}
 
 	/**

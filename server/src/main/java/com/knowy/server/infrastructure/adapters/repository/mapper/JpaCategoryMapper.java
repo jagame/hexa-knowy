@@ -9,10 +9,7 @@ public class JpaCategoryMapper implements EntityMapper<Category, CategoryEntity>
 
 	@Override
 	public Category toDomain(CategoryEntity entity) {
-		Category category = new Category();
-		category.setId(entity.getId());
-		category.setName(entity.getName());
-		return category;
+		return new Category(entity.getId(), entity.getName());
 	}
 
 	@Override

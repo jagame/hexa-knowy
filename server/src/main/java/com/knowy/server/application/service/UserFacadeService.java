@@ -4,6 +4,7 @@ import com.knowy.server.application.domain.User;
 import com.knowy.server.application.domain.UserPrivate;
 import com.knowy.server.application.service.exception.*;
 import com.knowy.server.application.service.model.MailMessage;
+import com.knowy.server.application.service.model.NewUserCommand;
 import com.knowy.server.util.EmailClientTool;
 import com.knowy.server.util.exception.JwtKnowyException;
 import com.knowy.server.util.exception.MailDispatchException;
@@ -48,7 +49,7 @@ public class UserFacadeService {
 	 */
 	public UserPrivate registerNewUser(String nickname, String email, String password)
 		throws InvalidUserException, ImageNotFoundException {
-		User newPublicUser = userService.create(nickname);
+		NewUserCommand newPublicUser = userService.create(nickname);
 		return privateUserService.create(email, password, newPublicUser);
 	}
 

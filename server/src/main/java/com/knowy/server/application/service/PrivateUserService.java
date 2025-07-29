@@ -1,13 +1,13 @@
 package com.knowy.server.application.service;
 
 import com.knowy.server.application.domain.UserPrivate;
-import com.knowy.server.application.domain.User;
 import com.knowy.server.application.ports.UserPrivateRepository;
 import com.knowy.server.application.service.exception.InvalidUserEmailException;
 import com.knowy.server.application.service.exception.InvalidUserPasswordFormatException;
 import com.knowy.server.application.service.exception.UnchangedEmailException;
 import com.knowy.server.application.service.exception.UserNotFoundException;
 import com.knowy.server.application.service.model.MailMessage;
+import com.knowy.server.application.service.model.NewUserCommand;
 import com.knowy.server.application.service.model.PasswordResetInfo;
 import com.knowy.server.util.JwtTools;
 import com.knowy.server.util.PasswordChecker;
@@ -57,7 +57,7 @@ public class PrivateUserService {
 	 * @throws InvalidUserEmailException          if the email is already associated with another user
 	 * @throws InvalidUserPasswordFormatException if the password does not meet formatting requirements
 	 */
-	public UserPrivate create(String email, String password, User user)
+	public UserPrivate create(String email, String password, NewUserCommand user)
 		throws InvalidUserPasswordFormatException, InvalidUserEmailException {
 
 		if (findPrivateUserByEmail(email).isPresent()) {
@@ -68,10 +68,15 @@ public class PrivateUserService {
 			throw new InvalidUserPasswordFormatException("Invalid password format");
 		}
 
-		UserPrivate userPrivate = new UserPrivate(user);
-		userPrivate.setEmail(email);
-		userPrivate.setPassword(passwordEncoder.encode(password));
-
+		UserPrivate userPrivate = new UserPrivate(
+			null,
+			user.nickname(),
+			user.profileImage(),
+			user.categories(),
+			email,
+			passwordEncoder.encode(password),
+			true
+		);
 		return save(userPrivate);
 	}
 
@@ -102,8 +107,8 @@ public class PrivateUserService {
 
 		passwordChecker.assertHasPassword(userPrivate, password);
 
-		userPrivate.setEmail(email);
-		privateUserRepository.save(userPrivate);
+		UserPrivate newUserPrivate = new UserPrivate(userPrivate.cropToUser(), email, userPrivate.password());
+		privateUserRepository.save(newUserPrivate);
 	}
 
 	/**
@@ -131,8 +136,10 @@ public class PrivateUserService {
 
 		UserPrivate userPrivate = verifyPasswordToken(token);
 
-		userPrivate.setPassword(passwordEncoder.encode(password));
-		save(userPrivate);
+		String encodedPassword = passwordEncoder.encode(password);
+		UserPrivate newUserPrivate = new UserPrivate(userPrivate.cropToUser(), userPrivate.email(), encodedPassword);
+
+		save(newUserPrivate);
 	}
 
 	/**
@@ -340,8 +347,12 @@ public class PrivateUserService {
 
 		passwordChecker.assertHasPassword(userPrivate, password);
 
-		userPrivate.setActive(false);
-		privateUserRepository.save(userPrivate);
+		UserPrivate newUserPrivate = new UserPrivate(
+			userPrivate.cropToUser(),
+			userPrivate.email(),
+			userPrivate.password(),
+			false);
+		privateUserRepository.save(newUserPrivate);
 	}
 
 	/**
@@ -359,8 +370,12 @@ public class PrivateUserService {
 		UserPrivate userPrivate = verifyPasswordToken(token);
 
 		if (!userPrivate.active()) {
-			userPrivate.setActive(true);
-			privateUserRepository.save(userPrivate);
+			UserPrivate newUserPrivate = new UserPrivate(
+				userPrivate.cropToUser(),
+				userPrivate.email(),
+				userPrivate.password()
+			);
+			privateUserRepository.save(newUserPrivate);
 		}
 	}
 

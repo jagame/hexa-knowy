@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface JpaPrivateUserDao extends JpaRepository<PrivateUserEntity, Integer> {
+public interface JpaUserPrivateDao extends JpaRepository<PrivateUserEntity, Integer> {
 	Optional<PrivateUserEntity> findByEmail(String email);
 
 	@NonNull

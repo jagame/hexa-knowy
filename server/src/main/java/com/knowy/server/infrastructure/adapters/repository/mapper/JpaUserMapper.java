@@ -19,15 +19,14 @@ public class JpaUserMapper implements EntityMapper<User, PublicUserEntity> {
 
 	@Override
 	public User toDomain(PublicUserEntity entity) {
-		User user = new User();
-		user.setId(entity.getId());
-		user.setNickname(entity.getNickname());
-		user.setProfileImage(jpaProfileImageMapper.toDomain(entity.getProfileImage()));
-		user.setCategories(entity.getLanguages().stream()
-			.map(jpaCategoryMapper::toDomain)
-			.collect(Collectors.toSet())
+		return new User(
+			entity.getId(),
+			entity.getNickname(),
+			jpaProfileImageMapper.toDomain(entity.getProfileImage()),
+			entity.getLanguages().stream()
+				.map(jpaCategoryMapper::toDomain)
+				.collect(Collectors.toSet())
 		);
-		return user;
 	}
 
 	@Override
