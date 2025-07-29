@@ -2,7 +2,7 @@ package com.knowy.server.application.service;
 
 import com.knowy.server.application.domain.UserExercise;
 import com.knowy.server.application.ports.ExerciseRepository;
-import com.knowy.server.application.ports.PublicUserExerciseRepository;
+import com.knowy.server.application.ports.UserExerciseRepository;
 import com.knowy.server.application.ports.UserRepository;
 import com.knowy.server.application.service.exception.UserNotFoundException;
 import com.knowy.server.application.service.model.ExerciseDifficult;
@@ -16,19 +16,19 @@ import java.util.Optional;
 @Service
 public class PublicUserExerciseService {
 
-	private final PublicUserExerciseRepository publicUserExerciseRepository;
+	private final UserExerciseRepository userExerciseRepository;
 	private final UserRepository userRepository;
 	private final ExerciseRepository exerciseRepository;
 
 	/**
 	 * The constructor
 	 *
-	 * @param publicUserExerciseRepository the publicUserExerciseRepository
+	 * @param userExerciseRepository the publicUserExerciseRepository
 	 * @param userRepository               the publicUserRepository
 	 * @param exerciseRepository           the exerciseRepository
 	 */
-	public PublicUserExerciseService(PublicUserExerciseRepository publicUserExerciseRepository, UserRepository userRepository, ExerciseRepository exerciseRepository) {
-		this.publicUserExerciseRepository = publicUserExerciseRepository;
+	public PublicUserExerciseService(UserExerciseRepository userExerciseRepository, UserRepository userRepository, ExerciseRepository exerciseRepository) {
+		this.userExerciseRepository = userExerciseRepository;
 		this.userRepository = userRepository;
 		this.exerciseRepository = exerciseRepository;
 	}
@@ -41,7 +41,7 @@ public class PublicUserExerciseService {
 	 * @return an {@code Optional} containing the next exercise if available, or empty if none is found.
 	 */
 	public Optional<UserExercise> findNextExerciseByLessonId(int userId, int lessonId) {
-		return publicUserExerciseRepository.findNextExerciseByLessonId(userId, lessonId);
+		return userExerciseRepository.findNextExerciseByLessonId(userId, lessonId);
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class PublicUserExerciseService {
 	 * @return an {@code Optional} containing the next exercise if available, or empty if none is found.
 	 */
 	public Optional<UserExercise> findNextExerciseByUserId(int userId) {
-		return publicUserExerciseRepository.findNextExerciseByUserId(userId);
+		return userExerciseRepository.findNextExerciseByUserId(userId);
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class PublicUserExerciseService {
 	 * @return an Optional containing the PublicUserExerciseEntity if found, otherwise empty
 	 */
 	public Optional<UserExercise> findById(int userId, int exerciseId) {
-		return publicUserExerciseRepository.findById(userId, exerciseId);
+		return userExerciseRepository.findById(userId, exerciseId);
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class PublicUserExerciseService {
 	 * @return an Optional containing the average rate, or empty if none found
 	 */
 	public Optional<Double> findAverageRateByLessonId(int lessonId) {
-		return publicUserExerciseRepository.findAverageRateByLessonId(lessonId);
+		return userExerciseRepository.findAverageRateByLessonId(lessonId);
 	}
 
 	/**
@@ -152,7 +152,7 @@ public class PublicUserExerciseService {
 	 */
 	public UserExercise save(UserExercise userExercise) {
 		Objects.requireNonNull(userExercise, "publicUserExerciseEntity cannot be null");
-		return publicUserExerciseRepository.save(userExercise);
+		return userExerciseRepository.save(userExercise);
 	}
 
 	/**

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface JpaPublicUserExerciseRepository extends JpaRepository<PublicUserExerciseEntity, PublicUserExerciseId> {
+public interface JpaUserExerciseDao extends JpaRepository<PublicUserExerciseEntity, PublicUserExerciseId> {
 
 	@NonNull
 	<S extends PublicUserExerciseEntity> S save(@NonNull S publicUserExerciseEntity);

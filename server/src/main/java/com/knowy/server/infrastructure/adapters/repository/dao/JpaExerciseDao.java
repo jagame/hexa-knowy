@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface JpaExerciseRepository extends JpaRepository<ExerciseEntity, Integer> {
+public interface JpaExerciseDao extends JpaRepository<ExerciseEntity, Integer> {
 	Optional<ExerciseEntity> findById(int id);
 }

@@ -5,9 +5,9 @@ import com.knowy.server.application.domain.UserExercise;
 import java.util.List;
 import java.util.Optional;
 
-public interface PublicUserExerciseRepository {
+public interface UserExerciseRepository {
 
-	<S extends UserExercise> S save(S entity);
+	UserExercise save(UserExercise entity);
 
 	Optional<UserExercise> findById(int userId, int exerciseId);
 

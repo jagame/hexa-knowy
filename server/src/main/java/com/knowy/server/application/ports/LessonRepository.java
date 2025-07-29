@@ -1,15 +1,15 @@
 package com.knowy.server.application.ports;
 
-import com.knowy.server.infrastructure.adapters.repository.entity.LessonEntity;
+import com.knowy.server.application.domain.Lesson;
 
 import java.util.List;
 import java.util.Optional;
 
 
 public interface LessonRepository {
-	List<LessonEntity> findByCourseId(Integer courseId);
+	List<Lesson> findByCourseId(Integer courseId);
 
 	int countByCourseId(Integer courseId);
 
-	Optional<LessonEntity> findById(Integer id);
+	Optional<Lesson> findById(Integer id);
 }

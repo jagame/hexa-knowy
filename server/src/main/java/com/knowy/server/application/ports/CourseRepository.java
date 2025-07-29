@@ -1,16 +1,16 @@
 package com.knowy.server.application.ports;
 
-import com.knowy.server.infrastructure.adapters.repository.entity.CourseEntity;
+import com.knowy.server.application.domain.Course;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CourseRepository {
-	List<CourseEntity> findByIdIn(List<Integer> ids);
+	List<Course> findByIdIn(List<Integer> ids);
 
-	List<CourseEntity> findAll();
+	List<Course> findAll();
 
-	Optional<CourseEntity> findById(Integer id);
+	Optional<Course> findById(Integer id);
 
-	List<CourseEntity> findAllRandom();
+	List<Course> findAllRandom();
 }
