@@ -1,13 +1,15 @@
 package com.knowy.server.infrastructure.adapters.repository;
 
 import com.knowy.server.application.domain.UserExercise;
+import com.knowy.server.application.exception.KnowyInconsistentDataException;
 import com.knowy.server.application.ports.UserExerciseRepository;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaExerciseDao;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaUserDao;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaUserExerciseDao;
-import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserEntity;
 import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserExerciseEntity;
 import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserExerciseId;
+import com.knowy.server.infrastructure.adapters.repository.exception.JpaExerciseNotFoundException;
+import com.knowy.server.infrastructure.adapters.repository.exception.JpaUserNotFoundException;
 import com.knowy.server.infrastructure.adapters.repository.mapper.EntityMapper;
 
 import java.util.List;
@@ -28,8 +30,9 @@ public class JpaUserExerciseRepository implements UserExerciseRepository {
 	}
 
 	@Override
-	public UserExercise save(UserExercise entity) {
-		return
+	public UserExercise save(UserExercise userExercise) throws KnowyInconsistentDataException {
+		PublicUserExerciseEntity userSaved = jpaUserExerciseDao.save(jpaUserExerciseMapper.toEntity(userExercise));
+		return jpaUserExerciseMapper.toDomain(userSaved);
 	}
 
 	@Override
@@ -40,22 +43,27 @@ public class JpaUserExerciseRepository implements UserExerciseRepository {
 
 	@Override
 	public List<UserExercise> findAll() {
-		return List.of();
+		return jpaUserExerciseDao.findAll()
+			.stream()
+			.map(jpaUserExerciseMapper::toDomain)
+			.toList();
 	}
 
 	@Override
-	public Optional<UserExercise> findNextExerciseByLessonId(int publicUserId, int lessonId) {
-		return Optional.empty();
+	public Optional<UserExercise> findNextExerciseByLessonId(int userId, int lessonId) {
+		return jpaUserExerciseDao.findNextExerciseByLessonId(userId, lessonId)
+			.map(jpaUserExerciseMapper::toDomain);
 	}
 
 	@Override
 	public Optional<UserExercise> findNextExerciseByUserId(int userId) {
-		return Optional.empty();
+		return jpaUserExerciseDao.findNextExerciseByUserId(userId)
+			.map(jpaUserExerciseMapper::toDomain);
 	}
 
 	@Override
 	public Optional<Double> findAverageRateByLessonId(int lessonId) {
-		return Optional.empty();
+		return jpaUserExerciseDao.findAverageRateByLessonId(lessonId);
 	}
 
 	public class JpaUserExerciseMapper implements EntityMapper<UserExercise, PublicUserExerciseEntity> {
@@ -70,12 +78,16 @@ public class JpaUserExerciseRepository implements UserExerciseRepository {
 		}
 
 		@Override
-		public PublicUserExerciseEntity toEntity(UserExercise domain) {
+		public PublicUserExerciseEntity toEntity(UserExercise domain) throws JpaUserNotFoundException, JpaExerciseNotFoundException {
 			return new PublicUserExerciseEntity(
 				new PublicUserExerciseId(domain.userId(), domain.exerciseId()),
 				domain.rate(),
 				domain.nextReview(),
-
+				jpaUserDao.findById(domain.userId())
+					.orElseThrow(() -> new JpaUserNotFoundException("User with ID " + domain.userId() + " not found")),
+				jpaExerciseDao.findById(domain.exerciseId())
+					.orElseThrow(() -> new JpaExerciseNotFoundException("Exercise with ID: " + domain.exerciseId() +
+						" not found"))
 			);
 		}
 	}

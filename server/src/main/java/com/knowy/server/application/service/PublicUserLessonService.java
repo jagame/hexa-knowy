@@ -1,6 +1,6 @@
 package com.knowy.server.application.service;
 
-import com.knowy.server.application.ports.PublicUserLessonRepository;
+import com.knowy.server.application.ports.UserLessonRepository;
 import com.knowy.server.application.service.exception.PublicUserLessonException;
 import com.knowy.server.infrastructure.adapters.repository.entity.LessonEntity;
 import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserLessonEntity;
@@ -13,14 +13,14 @@ import java.util.Optional;
 @Service
 public class PublicUserLessonService {
 
-	private final PublicUserLessonRepository publicUserLessonRepository;
+	private final UserLessonRepository publicUserLessonRepository;
 
 	/**
 	 * The constructor
 	 *
 	 * @param publicUserLessonRepository the publicUserLessonRepository
 	 */
-	public PublicUserLessonService(PublicUserLessonRepository publicUserLessonRepository) {
+	public PublicUserLessonService(UserLessonRepository publicUserLessonRepository) {
 		this.publicUserLessonRepository = publicUserLessonRepository;
 	}
 

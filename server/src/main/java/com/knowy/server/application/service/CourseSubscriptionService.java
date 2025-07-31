@@ -4,7 +4,7 @@ import com.knowy.server.application.domain.Category;
 import com.knowy.server.application.ports.CategoryRepository;
 import com.knowy.server.application.ports.CourseRepository;
 import com.knowy.server.application.ports.LessonRepository;
-import com.knowy.server.application.ports.PublicUserLessonRepository;
+import com.knowy.server.application.ports.UserLessonRepository;
 import com.knowy.server.infrastructure.adapters.repository.entity.*;
 import com.knowy.server.infrastructure.controller.dto.CourseCardDTO;
 import com.knowy.server.infrastructure.controller.exception.KnowyCourseSubscriptionException;
@@ -20,13 +20,13 @@ import java.util.stream.Collectors;
 public class CourseSubscriptionService {
 	private final CourseRepository courseRepository;
 	private final LessonRepository lessonRepository;
-	private final PublicUserLessonRepository publicUserLessonRepository;
+	private final UserLessonRepository publicUserLessonRepository;
 	private final CategoryRepository languageRepository;
 
 	public CourseSubscriptionService(
 		CourseRepository courseRepository,
 		LessonRepository lessonRepository,
-		PublicUserLessonRepository publicUserLessonRepository,
+		UserLessonRepository publicUserLessonRepository,
 		CategoryRepository languageRepository
 	) {
 		this.courseRepository = courseRepository;

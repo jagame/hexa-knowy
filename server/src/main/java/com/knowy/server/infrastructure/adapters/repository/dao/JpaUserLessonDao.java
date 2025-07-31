@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface JpaPublicUserLessonRepository extends JpaRepository<PublicUserLessonEntity, PublicUserLessonIdEntity> {
+public interface JpaUserLessonDao extends JpaRepository<PublicUserLessonEntity, PublicUserLessonIdEntity> {
 
 	boolean existsByUserIdAndLessonId(Integer userId, Integer lessonId);
 

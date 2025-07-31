@@ -6,7 +6,7 @@ package com.knowy.server.infrastructure.adapters.repository.mapper;
  */
 public interface EntityMapper<T, E> {
 
-	T toDomain(E entity);
+	T toDomain(E entity) throws Exception;
 
-	E toEntity(T domain);
+	E toEntity(T domain) throws Exception;
 }
