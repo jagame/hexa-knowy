@@ -16,7 +16,7 @@ public record Course(
 	String image,
 	String author,
 	LocalDateTime creationDate,
-	Set<Category> languages,
+	Set<Category> categories,
 	List<LessonEntity> lessons
 ) {
 	public Course(

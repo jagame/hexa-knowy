@@ -141,7 +141,7 @@ public class CourseSubscriptionService {
 	}
 
 	public List<String> findLanguagesForCourse(Course course) {
-		return course.languages().stream()
+		return course.categories().stream()
 			.map(Category::name)
 			.toList();
 	}

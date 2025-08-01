@@ -1,10 +1,11 @@
 package com.knowy.server.infrastructure.controller;
 
+import com.knowy.server.application.exception.KnowyInconsistentDataException;
+import com.knowy.server.application.service.CourseSubscriptionService;
+import com.knowy.server.application.service.model.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseCardDTO;
 import com.knowy.server.infrastructure.controller.dto.ToastDto;
 import com.knowy.server.infrastructure.controller.exception.KnowyCourseSubscriptionException;
-import com.knowy.server.application.service.CourseSubscriptionService;
-import com.knowy.server.application.service.model.UserSecurityDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +30,24 @@ public class CourseController {
 		this.courseSubscriptionService = courseSubscriptionService;
 	}
 
+	static void handleCourseSubscription(
+		@RequestParam Integer courseId,
+		@AuthenticationPrincipal UserSecurityDetails userDetails,
+		RedirectAttributes attrs, CourseSubscriptionService courseSubscriptionService,
+		String toastModelAttribute
+	) {
+		try {
+			courseSubscriptionService.subscribeUserToCourse(userDetails.getPublicUser().getId(), courseId);
+			attrs.addFlashAttribute(toastModelAttribute, List.of(new ToastDto("Éxito",
+				"¡Te has suscrito correctamente!", ToastDto.ToastType.SUCCESS)));
+		} catch (KnowyCourseSubscriptionException e) {
+			attrs.addFlashAttribute(toastModelAttribute, List.of(new ToastDto("Error", e.getMessage(), ToastDto.ToastType.ERROR)));
+		} catch (Exception e) {
+			attrs.addFlashAttribute(toastModelAttribute, List.of(new ToastDto("Error",
+				"Ocurrió un error inesperado al suscribirte al curso.", ToastDto.ToastType.ERROR)));
+		}
+	}
+
 	@GetMapping("")
 	public String myCourses(
 		Model model,
@@ -36,14 +55,20 @@ public class CourseController {
 		@RequestParam(required = false) String order,
 		@RequestParam(defaultValue = "1") int page,
 		@AuthenticationPrincipal UserSecurityDetails userDetails
-	) {
-		Integer userId = userDetails.getPublicUser().getId();
-		List<CourseCardDTO> courses = courseSubscriptionService.getUserCourses(userDetails.getPublicUser().getId());
+	) throws KnowyInconsistentDataException {
+		List<CourseCardDTO> courses = courseSubscriptionService.getUserCourses(userDetails.getPublicUser().getId())
+			.stream()
+			.map(course -> CourseCardDTO.fromDomain(
+				course,
+				courseSubscriptionService.getCourseProgress(userDetails.getPublicUser().getId(), course.id()),
+				CourseCardDTO.ActionType.START
+			))
+			.toList();
 
 		//Filter by language (category)
 		if (category != null && !category.isEmpty()) {
 			courses = courses.stream()
-				.filter(c -> c.getLanguages() != null && c.getLanguages().contains(category))
+				.filter(card -> card.categories() != null && card.categories().contains(category))
 				.toList();
 		}
 
@@ -51,37 +76,38 @@ public class CourseController {
 		if (order != null) {
 			switch (order) {
 				case "alpha_asc" -> courses = courses.stream()
-					.sorted(Comparator.comparing(CourseCardDTO::getName, String.CASE_INSENSITIVE_ORDER))
+					.sorted(Comparator.comparing(CourseCardDTO::name, String.CASE_INSENSITIVE_ORDER))
 					.toList();
 
 				case "alpha_desc" -> courses = courses.stream()
-					.sorted(Comparator.comparing(CourseCardDTO::getName, String.CASE_INSENSITIVE_ORDER).reversed())
+					.sorted(Comparator.comparing(CourseCardDTO::name, String.CASE_INSENSITIVE_ORDER).reversed())
 					.toList();
 
 				case "progress_asc" -> courses = courses.stream()
-					.sorted(Comparator.comparing(CourseCardDTO::getProgress))
+					.sorted(Comparator.comparing(CourseCardDTO::progress))
 					.toList();
 
 				case "date_asc" -> courses = courses.stream()
-					.sorted(Comparator.comparing(CourseCardDTO::getId))
+					.sorted(Comparator.comparing(CourseCardDTO::id))
 					.toList();
 
 				case "date_desc" -> courses = courses.stream()
-					.sorted(Comparator.comparing(CourseCardDTO::getId).reversed())
+					.sorted(Comparator.comparing(CourseCardDTO::id).reversed())
 					.toList();
 
 				default -> courses = courses.stream()
-					.sorted(Comparator.comparing(CourseCardDTO::getProgress).reversed())
+					.sorted(Comparator.comparing(CourseCardDTO::progress).reversed())
 					.toList();
 			}
 		}
 
-		List<CourseCardDTO> recommendations = courseSubscriptionService.getRecommendedCourses(userId).stream()
-			.map(course -> CourseCardDTO.fromRecommendation(
+		List<CourseCardDTO> recommendations = courseSubscriptionService
+			.getRecommendedCourses(userDetails.getPublicUser().getId())
+			.stream()
+			.map(course -> CourseCardDTO.fromDomain(
 				course,
-				courseSubscriptionService.findLanguagesForCourse(course),
-				courseSubscriptionService.findCourseImage(course),
-				course.getCreationDate()
+				courseSubscriptionService.getCourseProgress(userDetails.getPublicUser().getId(), course.id()),
+				CourseCardDTO.ActionType.START
 			)).toList();
 
 		int pageSize = 9;
@@ -119,24 +145,6 @@ public class CourseController {
 	) {
 		handleCourseSubscription(courseId, userDetails, attrs, courseSubscriptionService, TOAST_MODEL_ATTRIBUTE);
 		return "redirect:/my-courses";
-	}
-
-	static void handleCourseSubscription(
-		@RequestParam Integer courseId,
-		@AuthenticationPrincipal UserSecurityDetails userDetails,
-		RedirectAttributes attrs, CourseSubscriptionService courseSubscriptionService,
-		String toastModelAttribute
-	) {
-		try {
-			courseSubscriptionService.subscribeUserToCourse(userDetails.getPublicUser().getId(), courseId);
-			attrs.addFlashAttribute(toastModelAttribute, List.of(new ToastDto("Éxito",
-				"¡Te has suscrito correctamente!", ToastDto.ToastType.SUCCESS)));
-		} catch (KnowyCourseSubscriptionException e) {
-			attrs.addFlashAttribute(toastModelAttribute, List.of(new ToastDto("Error", e.getMessage(), ToastDto.ToastType.ERROR)));
-		} catch (Exception e) {
-			attrs.addFlashAttribute(toastModelAttribute, List.of(new ToastDto("Error",
-				"Ocurrió un error inesperado al suscribirte al curso.", ToastDto.ToastType.ERROR)));
-		}
 	}
 
 }

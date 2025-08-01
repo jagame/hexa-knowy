@@ -294,7 +294,7 @@ class PublicUserServiceTest {
 		NullPointerException ex = Assertions.assertThrows(NullPointerException.class, () ->
 			service.updateLanguages(1, null)
 		);
-		Assertions.assertEquals("A not null languages array is required, if no languages are selected use an empty array instead of null", ex.getMessage());
+		Assertions.assertEquals("A not null categories array is required, if no categories are selected use an empty array instead of null", ex.getMessage());
 	}
 
 

@@ -208,8 +208,8 @@ public class UserConfigController {
 	}
 
 	/**
-	 * Displays the user profile page. Initializes the user's languages collection to avoid lazy loading issues. Adds
-	 * the public user information and list of all available languages to the model.
+	 * Displays the user profile page. Initializes the user's categories collection to avoid lazy loading issues. Adds
+	 * the public user information and list of all available categories to the model.
 	 *
 	 * @param model          the Spring MVC model to pass attributes to the view
 	 * @param userProfileDTO DTO object representing user profile data (used for form binding)
@@ -220,12 +220,12 @@ public class UserConfigController {
 	public String viewUserProfile(Model model, UserProfileDTO userProfileDTO, @AuthenticationPrincipal UserSecurityDetails userDetails) {
 		Hibernate.initialize(userDetails.getPublicUser().getLanguages());
 		model.addAttribute("publicUser", userDetails.getPublicUser());
-		model.addAttribute("languages", categoryService.findAll());
+		model.addAttribute("categories", categoryService.findAll());
 		return "pages/user-management/user-profile";
 	}
 
 	/**
-	 * Handles the update of the user's profile, including nickname, profile picture, and languages. Validates and
+	 * Handles the update of the user's profile, including nickname, profile picture, and categories. Validates and
 	 * applies changes to the user's data by invoking the corresponding service methods. Adds appropriate success or
 	 * error messages as flash attributes for feedback in the redirected view. Refreshes the user's authentication
 	 * details after a successful update.
@@ -249,7 +249,7 @@ public class UserConfigController {
 
 		redirectAttributes.addFlashAttribute(SUCCESS_MODEL_ATTRIBUTE, "Perfil actualizado correctamente");
 		redirectAttributes.addFlashAttribute("nickname", userProfileDTO.getNickname());
-		redirectAttributes.addFlashAttribute("languages", userProfileDTO.getLanguages());
+		redirectAttributes.addFlashAttribute("categories", userProfileDTO.getLanguages());
 
 		userSecurityDetailsHelper.refreshUserAuthentication();
 		return "redirect:/user-profile";

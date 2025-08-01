@@ -1,14 +1,14 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.server.infrastructure.controller.dto.LoginFormDto;
-import com.knowy.server.infrastructure.controller.dto.UserEmailFormDto;
-import com.knowy.server.infrastructure.controller.dto.UserPasswordFormDto;
-import com.knowy.server.infrastructure.controller.dto.UserRegisterFormDto;
-import com.knowy.server.infrastructure.adapters.repository.entity.PrivateUserEntity;
+import com.knowy.server.application.domain.UserPrivate;
 import com.knowy.server.application.service.UserFacadeService;
 import com.knowy.server.application.service.exception.ImageNotFoundException;
 import com.knowy.server.application.service.exception.InvalidUserException;
 import com.knowy.server.application.service.exception.UserNotFoundException;
+import com.knowy.server.infrastructure.controller.dto.LoginFormDto;
+import com.knowy.server.infrastructure.controller.dto.UserEmailFormDto;
+import com.knowy.server.infrastructure.controller.dto.UserPasswordFormDto;
+import com.knowy.server.infrastructure.controller.dto.UserRegisterFormDto;
 import com.knowy.server.util.UserSecurityDetailsHelper;
 import com.knowy.server.util.exception.JwtKnowyException;
 import com.knowy.server.util.exception.MailDispatchException;
@@ -93,13 +93,21 @@ public class AccessController {
 	 * @return a redirect URL string: either back to "/register" on error or to "/home" on successful registration
 	 */
 	@PostMapping("/register")
-	public String processRegisterForm(@Valid @ModelAttribute UserRegisterFormDto user, RedirectAttributes redirectAttributes, Errors errors) throws ImageNotFoundException {
+	public String processRegisterForm(
+		@Valid @ModelAttribute UserRegisterFormDto user,
+		RedirectAttributes redirectAttributes,
+		Errors errors
+	) throws ImageNotFoundException {
 		try {
 			validateFieldErrors(errors);
 
-			PrivateUserEntity privateUser = userFacadeService.registerNewUser(user.getNickname(), user.getEmail(), user.getPassword());
+			UserPrivate userPrivate = userFacadeService.registerNewUser(
+				user.getNickname(),
+				user.getEmail(),
+				user.getPassword()
+			);
 
-			userSecurityDetailsHelper.autoLoginUserByEmail(privateUser.getEmail());
+			userSecurityDetailsHelper.autoLoginUserByEmail(userPrivate.email());
 			return "redirect:/home";
 		} catch (InvalidUserException e) {
 			redirectAttributes.addFlashAttribute("user", user);
@@ -141,7 +149,11 @@ public class AccessController {
 	 * @return a redirect string to either the login page on success or back to the email form on failure
 	 */
 	@PostMapping("/password-change/email")
-	public String passwordChangeEmail(@ModelAttribute("emailForm") UserEmailFormDto email, RedirectAttributes redirectAttributes, HttpServletRequest httpServletRequest) {
+	public String passwordChangeEmail(
+		@ModelAttribute("emailForm") UserEmailFormDto email,
+		RedirectAttributes redirectAttributes,
+		HttpServletRequest httpServletRequest
+	) {
 		try {
 			userFacadeService.sendRecoveryPasswordEmail(email.getEmail(), getPasswordChangeUrl(httpServletRequest));
 			return LOGIN_REDIRECT_URL;
@@ -150,7 +162,6 @@ public class AccessController {
 			return "redirect:/password-change/email";
 		}
 	}
-
 
 	private String getPasswordChangeUrl(HttpServletRequest httpServletRequest) {
 		return getDomainUrl(httpServletRequest) + "/password-change";
@@ -197,7 +208,11 @@ public class AccessController {
 	 * @return a redirect string to the login page, whether the operation succeeds or fails
 	 */
 	@PostMapping("/password-change")
-	public String passwordChange(@RequestParam("token") String token, @ModelAttribute("passwordForm") UserPasswordFormDto userPasswordFormDto, RedirectAttributes redirectAttributes) {
+	public String passwordChange(
+		@RequestParam("token") String token,
+		@ModelAttribute("passwordForm") UserPasswordFormDto userPasswordFormDto,
+		RedirectAttributes redirectAttributes
+	) {
 		try {
 			userFacadeService.updatePassword(token, userPasswordFormDto.getPassword(), userPasswordFormDto.getConfirmPassword());
 			return LOGIN_REDIRECT_URL;

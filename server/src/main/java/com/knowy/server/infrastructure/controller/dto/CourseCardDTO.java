@@ -1,58 +1,43 @@
 package com.knowy.server.infrastructure.controller.dto;
 
-import com.knowy.server.infrastructure.adapters.repository.entity.CourseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.knowy.server.application.domain.Category;
+import com.knowy.server.application.domain.Course;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class CourseCardDTO {
-	private Integer id;
-	private String name;
-	private String author;
-	private int progress;
-	private ActionType action;
-	private ArrayList<String> languages;
-	private String image;
-	private LocalDateTime creationDate;
+public record CourseCardDTO(
+	Integer id,
+	String name,
+	String author,
+	int progress,
+	ActionType action,
+	List<String> categories,
+	String image,
+	LocalDateTime creationDate
+) {
+
+	public static CourseCardDTO fromDomain(Course course, int progress, ActionType actionType) {
+		Objects.requireNonNull(actionType, "ActionType must not be null");
+
+		return new CourseCardDTO(
+			course.id(),
+			course.title(),
+			course.author(),
+			progress,
+			actionType,
+			course.categories()
+				.stream()
+				.map(Category::name)
+				.toList(),
+			course.image(),
+			course.creationDate()
+		);
+	}
 
 	public enum ActionType {
 		START,
 		ACQUIRE
-	}
-
-	public static CourseCardDTO fromEntity(CourseEntity course, int progress, List<String> languages, String image, LocalDateTime creationDate) {
-		CourseCardDTO dto = new CourseCardDTO();
-		dto.setId(course.getId());
-		dto.setName(course.getTitle());
-		dto.setAuthor(course.getAuthor());
-		dto.setProgress(progress);
-		dto.setAction(ActionType.START);
-		dto.setLanguages(new ArrayList<>(languages));
-		dto.setImage(image);
-		dto.setCreationDate(creationDate);
-		return dto;
-	}
-
-	public static CourseCardDTO fromRecommendation(CourseEntity course, List<String> languages, String image, LocalDateTime creationDate
-	) {
-		CourseCardDTO dto = new CourseCardDTO();
-		dto.setId(course.getId());
-		dto.setName(course.getTitle());
-		dto.setAuthor(course.getAuthor());
-		dto.setProgress(0);
-		dto.setAction(ActionType.ACQUIRE);
-		dto.setLanguages(new ArrayList<>(languages));
-		dto.setImage(image);
-		dto.setCreationDate(creationDate);
-		return dto;
 	}
 }

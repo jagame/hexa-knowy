@@ -1,9 +1,10 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.server.infrastructure.controller.dto.CourseCardDTO;
-import com.knowy.server.infrastructure.adapters.repository.entity.CourseEntity;
+import com.knowy.server.application.domain.Course;
+import com.knowy.server.application.exception.KnowyInconsistentDataException;
 import com.knowy.server.application.service.CourseSubscriptionService;
 import com.knowy.server.application.service.model.UserSecurityDetails;
+import com.knowy.server.infrastructure.controller.dto.CourseCardDTO;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,54 +30,51 @@ public class CoursesStoreController {
 	}
 
 	@GetMapping("")
-	public String storeCourses(Model model,
-							   @RequestParam(required = false) String category,
-							   @RequestParam(required = false) String order,
-							   @RequestParam(defaultValue = "1") int page,
-							   @AuthenticationPrincipal UserSecurityDetails userDetails) {
-		Integer userId = userDetails.getPublicUser().getId();
+	public String storeCourses(
+		Model model,
+		@RequestParam(required = false) String category,
+		@RequestParam(required = false) String order,
+		@RequestParam(defaultValue = "1") int page,
+		@AuthenticationPrincipal UserSecurityDetails userDetails
+	) throws KnowyInconsistentDataException {
 
-		List<CourseEntity> allCourses = courseSubscriptionService.findAllCourses();
+		List<Course> allCourses = courseSubscriptionService.findAllCourses();
 
-		List<Integer> myCourseIds = courseSubscriptionService.findCoursesByUserId(userId)
-			.stream().map(CourseEntity::getId).toList();
+		List<Integer> myCourseIds = courseSubscriptionService.findCoursesByUserId(userDetails.getPublicUser().getId())
+			.stream()
+			.map(Course::id)
+			.toList();
 
-		List<CourseEntity> availableCourses = allCourses.stream()
-			.filter(course -> !myCourseIds.contains(course.getId()))
+		List<Course> availableCourses = allCourses.stream()
+			.filter(course -> !myCourseIds.contains(course.id()))
 			.toList();
 
 		List<CourseCardDTO> storeCourses = availableCourses.stream()
-			.map(course -> {
-				CourseCardDTO dto = CourseCardDTO.fromEntity(
-					course,
-					courseSubscriptionService.getCourseProgress(userId, course.getId()),
-					courseSubscriptionService.findLanguagesForCourse(course),
-					courseSubscriptionService.findCourseImage(course),
-					course.getCreationDate()
-				);
-				dto.setAction(CourseCardDTO.ActionType.ACQUIRE);
-				return dto;
-			}).toList();
+			.map(course -> CourseCardDTO.fromDomain(
+				course,
+				courseSubscriptionService.getCourseProgress(userDetails.getPublicUser().getId(), course.id()),
+				CourseCardDTO.ActionType.ACQUIRE)
+			).toList();
 
 		//Filters
 		if (category != null && !category.isEmpty()) {
 			storeCourses = storeCourses.stream()
-				.filter(c -> c.getLanguages() != null && c.getLanguages().contains(category))
+				.filter(card -> card.categories() != null && card.categories().contains(category))
 				.toList();
 		}
 		if (order != null) {
 			switch (order) {
 				case "alpha_desc" -> storeCourses = storeCourses.stream()
-					.sorted(Comparator.comparing(CourseCardDTO::getName, String.CASE_INSENSITIVE_ORDER).reversed())
+					.sorted(Comparator.comparing(CourseCardDTO::name, String.CASE_INSENSITIVE_ORDER).reversed())
 					.toList();
 				case "date_asc" -> storeCourses = storeCourses.stream()
-					.sorted(Comparator.comparing(CourseCardDTO::getId))
+					.sorted(Comparator.comparing(CourseCardDTO::id))
 					.toList();
 				case "date_desc" -> storeCourses = storeCourses.stream()
-					.sorted(Comparator.comparing(CourseCardDTO::getId).reversed())
+					.sorted(Comparator.comparing(CourseCardDTO::id).reversed())
 					.toList();
 				default -> storeCourses = storeCourses.stream()
-					.sorted(Comparator.comparing(CourseCardDTO::getName, String.CASE_INSENSITIVE_ORDER))
+					.sorted(Comparator.comparing(CourseCardDTO::name, String.CASE_INSENSITIVE_ORDER))
 					.toList();
 			}
 		}
@@ -106,9 +104,11 @@ public class CoursesStoreController {
 	}
 
 	@PostMapping("/subscribe")
-	public String subscribeToCourse(@RequestParam Integer courseId,
-									@AuthenticationPrincipal UserSecurityDetails userDetails,
-									RedirectAttributes attrs) {
+	public String subscribeToCourse(
+		@RequestParam Integer courseId,
+		@AuthenticationPrincipal UserSecurityDetails userDetails,
+		RedirectAttributes attrs
+	) {
 		CourseController.handleCourseSubscription(courseId, userDetails, attrs, courseSubscriptionService, TOAST_MODEL_ATTRIBUTE);
 		return "redirect:/store";
 	}

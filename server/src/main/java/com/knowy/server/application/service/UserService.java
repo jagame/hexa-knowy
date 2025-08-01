@@ -139,17 +139,17 @@ public class UserService {
 	}
 
 	/**
-	 * Updates the set of languages associated with a public user.
+	 * Updates the set of categories associated with a public user.
 	 *
-	 * <p>Fetches language entities by their names (case-insensitive) and updates the user's languages.
+	 * <p>Fetches language entities by their names (case-insensitive) and updates the user's categories.
 	 * Throws an exception if the user is not found.</p>
 	 *
-	 * @param userId    the ID of the user whose languages should be updated
+	 * @param userId    the ID of the user whose categories should be updated
 	 * @param languages an array of language names to assign to the user
 	 * @throws UserNotFoundException if no user exists with the given ID
 	 */
 	public void updateLanguages(Integer userId, String[] languages) throws UserNotFoundException {
-		Objects.requireNonNull(languages, "A not null languages array is required, if no languages are selected use an empty array instead of null");
+		Objects.requireNonNull(languages, "A not null categories array is required, if no categories are selected use an empty array instead of null");
 
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));

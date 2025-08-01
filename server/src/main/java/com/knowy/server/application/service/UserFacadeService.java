@@ -87,13 +87,13 @@ public class UserFacadeService {
 	}
 
 	/**
-	 * Updates the list of favorite languages for the specified public user.
+	 * Updates the list of favorite categories for the specified public user.
 	 *
 	 * <p>Delegates the update operation to the {@code PublicUserService}.
 	 * Replaces the user's current language list with the provided one.</p>
 	 *
-	 * @param userId    the ID of the user whose languages are to be updated
-	 * @param languages an array of language representing the user's spoken languages
+	 * @param userId    the ID of the user whose categories are to be updated
+	 * @param languages an array of language representing the user's spoken categories
 	 * @throws UserNotFoundException if the user does not exist
 	 */
 	public void updateLanguages(int userId, String[] languages) throws UserNotFoundException {
