@@ -1,6 +1,5 @@
 package com.knowy.server.application.service;
 
-import com.knowy.server.application.domain.User;
 import com.knowy.server.application.domain.UserPrivate;
 import com.knowy.server.application.service.exception.*;
 import com.knowy.server.application.service.model.MailMessage;

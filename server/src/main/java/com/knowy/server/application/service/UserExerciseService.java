@@ -1,6 +1,7 @@
 package com.knowy.server.application.service;
 
 import com.knowy.server.application.domain.UserExercise;
+import com.knowy.server.application.exception.KnowyDataAccessException;
 import com.knowy.server.application.ports.ExerciseRepository;
 import com.knowy.server.application.ports.UserExerciseRepository;
 import com.knowy.server.application.ports.UserRepository;
@@ -9,12 +10,13 @@ import com.knowy.server.application.service.model.ExerciseDifficult;
 import com.knowy.server.util.exception.ExerciseNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class PublicUserExerciseService {
+public class UserExerciseService {
 
 	private final UserExerciseRepository userExerciseRepository;
 	private final UserRepository userRepository;
@@ -24,10 +26,10 @@ public class PublicUserExerciseService {
 	 * The constructor
 	 *
 	 * @param userExerciseRepository the publicUserExerciseRepository
-	 * @param userRepository               the publicUserRepository
-	 * @param exerciseRepository           the exerciseRepository
+	 * @param userRepository         the publicUserRepository
+	 * @param exerciseRepository     the exerciseRepository
 	 */
-	public PublicUserExerciseService(UserExerciseRepository userExerciseRepository, UserRepository userRepository, ExerciseRepository exerciseRepository) {
+	public UserExerciseService(UserExerciseRepository userExerciseRepository, UserRepository userRepository, ExerciseRepository exerciseRepository) {
 		this.userExerciseRepository = userExerciseRepository;
 		this.userRepository = userRepository;
 		this.exerciseRepository = exerciseRepository;
@@ -40,7 +42,7 @@ public class PublicUserExerciseService {
 	 * @param lessonId the ID of the lesson.
 	 * @return an {@code Optional} containing the next exercise if available, or empty if none is found.
 	 */
-	public Optional<UserExercise> findNextExerciseByLessonId(int userId, int lessonId) {
+	public Optional<UserExercise> findNextExerciseByLessonId(int userId, int lessonId) throws KnowyDataAccessException {
 		return userExerciseRepository.findNextExerciseByLessonId(userId, lessonId);
 	}
 
@@ -52,7 +54,7 @@ public class PublicUserExerciseService {
 	 * @return the next PublicUserExerciseEntity for the user in the lesson
 	 * @throws ExerciseNotFoundException if no next exercise is found for the user in the specified lesson
 	 */
-	public UserExercise getNextExerciseByLessonId(int userId, int lessonId) throws ExerciseNotFoundException {
+	public UserExercise getNextExerciseByLessonId(int userId, int lessonId) throws ExerciseNotFoundException, KnowyDataAccessException {
 		return findNextExerciseByLessonId(userId, lessonId)
 			.orElseThrow(() -> new ExerciseNotFoundException("No next exercise found for user ID " + userId + " in lesson ID " + lessonId));
 	}
@@ -63,7 +65,7 @@ public class PublicUserExerciseService {
 	 * @param userId the ID of the public user.
 	 * @return an {@code Optional} containing the next exercise if available, or empty if none is found.
 	 */
-	public Optional<UserExercise> findNextExerciseByUserId(int userId) {
+	public Optional<UserExercise> findNextExerciseByUserId(int userId) throws KnowyDataAccessException {
 		return userExerciseRepository.findNextExerciseByUserId(userId);
 	}
 
@@ -74,7 +76,7 @@ public class PublicUserExerciseService {
 	 * @return the next PublicUserExerciseEntity for the user
 	 * @throws ExerciseNotFoundException if no next exercise is found for the user
 	 */
-	public UserExercise getNextExerciseByUserId(int userId) throws ExerciseNotFoundException {
+	public UserExercise getNextExerciseByUserId(int userId) throws ExerciseNotFoundException, KnowyDataAccessException {
 		return findNextExerciseByUserId(userId)
 			.orElseThrow(() -> new ExerciseNotFoundException("No next exercise found for user ID " + userId));
 	}
@@ -86,7 +88,7 @@ public class PublicUserExerciseService {
 	 * @param exerciseId the ID of the exercise
 	 * @return an Optional containing the PublicUserExerciseEntity if found, otherwise empty
 	 */
-	public Optional<UserExercise> findById(int userId, int exerciseId) {
+	public Optional<UserExercise> findById(int userId, int exerciseId) throws KnowyDataAccessException {
 		return userExerciseRepository.findById(userId, exerciseId);
 	}
 
@@ -99,7 +101,9 @@ public class PublicUserExerciseService {
 	 * @throws UserNotFoundException     if the user is not found
 	 * @throws ExerciseNotFoundException if the exercise is not found
 	 */
-	public UserExercise getByIdOrCreate(int userId, int exerciseId) throws UserNotFoundException, ExerciseNotFoundException {
+	public UserExercise getByIdOrCreate(int userId, int exerciseId)
+		throws UserNotFoundException, ExerciseNotFoundException, KnowyDataAccessException {
+
 		Optional<UserExercise> publicUserExercise = findById(userId, exerciseId);
 		if (publicUserExercise.isEmpty()) {
 			return createUserExerciseEntity(userId, exerciseId);
@@ -110,14 +114,16 @@ public class PublicUserExerciseService {
 	private UserExercise createUserExerciseEntity(int userId, int exerciseId)
 		throws UserNotFoundException, ExerciseNotFoundException {
 
-		UserExercise result = new UserExercise();
-		result.setUserId(userRepository.findById(userId)
-			.orElseThrow(() -> new UserNotFoundException("User " + userId + " not found"))
-			.id());
-		result.setExerciseId(exerciseRepository.findById(exerciseId)
-			.orElseThrow(() -> new ExerciseNotFoundException("Exercise " + exerciseId + " not found"))
-			.id());
-		return result;
+		return new UserExercise(
+			userRepository.findById(userId)
+				.orElseThrow(() -> new UserNotFoundException("User " + userId + " not found"))
+				.id(),
+			exerciseRepository.findById(exerciseId)
+				.orElseThrow(() -> new ExerciseNotFoundException("Exercise " + exerciseId + " not found"))
+				.id(),
+			0,
+			LocalDateTime.now()
+		);
 	}
 
 	/**
@@ -126,7 +132,7 @@ public class PublicUserExerciseService {
 	 * @param lessonId the ID of the lesson
 	 * @return an Optional containing the average rate, or empty if none found
 	 */
-	public Optional<Double> findAverageRateByLessonId(int lessonId) {
+	public Optional<Double> findAverageRateByLessonId(int lessonId) throws KnowyDataAccessException {
 		return userExerciseRepository.findAverageRateByLessonId(lessonId);
 	}
 
@@ -138,7 +144,7 @@ public class PublicUserExerciseService {
 	 * @return the average rate for the lesson
 	 * @throws ExerciseNotFoundException if no average rate is found for the lesson
 	 */
-	public double getAverageRateByLessonId(int lessonId) throws ExerciseNotFoundException {
+	public double getAverageRateByLessonId(int lessonId) throws ExerciseNotFoundException, KnowyDataAccessException {
 		return findAverageRateByLessonId(lessonId)
 			.orElseThrow(() -> new ExerciseNotFoundException(
 				"No average rate found for lesson ID " + lessonId));
@@ -150,7 +156,7 @@ public class PublicUserExerciseService {
 	 * @return the persisted entity.
 	 * @throws NullPointerException if {@code publicUserExerciseEntity} is {@code null}.
 	 */
-	public UserExercise save(UserExercise userExercise) {
+	public UserExercise save(UserExercise userExercise) throws KnowyDataAccessException {
 		Objects.requireNonNull(userExercise, "publicUserExerciseEntity cannot be null");
 		return userExerciseRepository.save(userExercise);
 	}
@@ -165,50 +171,72 @@ public class PublicUserExerciseService {
 	 * @param exerciseDifficult the difficulty level chosen by the user for this exercise
 	 * @throws NullPointerException if either parameter is null
 	 */
-	public void processUserAnswer(ExerciseDifficult exerciseDifficult, UserExercise userExercise) {
-		difficultSelect(exerciseDifficult, userExercise);
-		save(userExercise);
+	public void processUserAnswer(ExerciseDifficult exerciseDifficult, UserExercise userExercise) throws KnowyDataAccessException {
+		UserExercise updatedUserExercise = difficultSelect(exerciseDifficult, userExercise);
+		save(updatedUserExercise);
 	}
 
-	private void difficultSelect(ExerciseDifficult exerciseDifficult, UserExercise userExercise) {
+	private UserExercise difficultSelect(ExerciseDifficult exerciseDifficult, UserExercise userExercise) {
 		Objects.requireNonNull(exerciseDifficult, "exerciseDifficult cannot be null");
 		Objects.requireNonNull(userExercise, "publicUserExerciseEntity cannot be null");
 
-		switch (exerciseDifficult) {
+		return switch (exerciseDifficult) {
 			case EASY -> easySelect(userExercise);
 			case MEDIUM -> mediumSelect(userExercise);
 			case HARD -> hardSelect(userExercise);
 			case FAIL -> failSelect(userExercise);
-		}
+		};
 	}
 
-	private void easySelect(UserExercise userExercise) {
-		userExercise.setRate(userExercise.rate() + 45);
+	private UserExercise easySelect(UserExercise userExercise) {
+		int updatedRate = userExercise.rate() + 45;
 
-		if (userExercise.rate() >= 90) {
-			userExercise.setNextReview(LocalDateTime.now().plusDays(1));
-		} else {
-			userExercise.setNextReview(LocalDateTime.now().plusMinutes(15));
-		}
+		LocalDateTime updatedNextReview = LocalDateTime.now()
+			.plus(userExercise.rate() >= 90 ? Duration.ofDays(1) : Duration.ofMinutes(15));
+
+		return new UserExercise(
+			userExercise.userId(),
+			userExercise.exerciseId(),
+			updatedRate,
+			updatedNextReview
+		);
 	}
 
-	private void mediumSelect(UserExercise userExercise) {
-		userExercise.setRate(userExercise.rate() + 20);
+	private UserExercise mediumSelect(UserExercise userExercise) {
+		int updatedRate = userExercise.rate() + 20;
 
-		if (userExercise.rate() >= 90) {
-			userExercise.setNextReview(LocalDateTime.now().plusDays(1));
-		} else {
-			userExercise.setNextReview(LocalDateTime.now().plusMinutes(10));
-		}
+		LocalDateTime updatedNextReview = LocalDateTime.now()
+			.plus(userExercise.rate() >= 90 ? Duration.ofDays(1) : Duration.ofMinutes(7));
+
+		return new UserExercise(
+			userExercise.userId(),
+			userExercise.exerciseId(),
+			updatedRate,
+			updatedNextReview
+		);
 	}
 
-	private void hardSelect(UserExercise userExercise) {
-		userExercise.setRate(userExercise.rate() - 15);
-		userExercise.setNextReview(LocalDateTime.now().plusMinutes(5));
+	private UserExercise hardSelect(UserExercise userExercise) {
+		int updatedRate = userExercise.rate() - 15;
+		LocalDateTime updatedNextReview = LocalDateTime.now().plusMinutes(5);
+
+		return new UserExercise(
+			userExercise.userId(),
+			userExercise.exerciseId(),
+			updatedRate,
+			updatedNextReview
+		);
 	}
 
-	private void failSelect(UserExercise userExercise) {
-		userExercise.setRate(userExercise.rate() - 30);
-		userExercise.setNextReview(LocalDateTime.now().plusMinutes(1));
+	private UserExercise failSelect(UserExercise userExercise) {
+		int updatedRate = userExercise.rate() - 30;
+		LocalDateTime updatedNextReview = LocalDateTime.now().plusMinutes(1);
+
+		return new UserExercise(
+			userExercise.userId(),
+			userExercise.exerciseId(),
+			updatedRate,
+			updatedNextReview
+		);
 	}
 }

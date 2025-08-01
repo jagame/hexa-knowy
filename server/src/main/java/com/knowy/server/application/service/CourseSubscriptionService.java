@@ -146,14 +146,19 @@ public class CourseSubscriptionService {
 			.toList();
 	}
 
-	public int getCourseProgress(Integer userId, Integer courseId) throws KnowyInconsistentDataException {
+	public int getCourseProgress(Integer userId, Integer courseId) {
 		int totalLessons = lessonRepository.countByCourseId(courseId);
 		if (totalLessons == 0) return 0;
-		int completedLessons = userLessonRepository.countByUserIdAndCourseIdAndStatus(
-			userId,
-			courseId,
-			UserLesson.ProgressStatus.COMPLETED
-		);
+		int completedLessons;
+		try {
+			completedLessons = userLessonRepository.countByUserIdAndCourseIdAndStatus(
+				userId,
+				courseId,
+				UserLesson.ProgressStatus.COMPLETED
+			);
+		} catch (KnowyInconsistentDataException e) {
+			return -1;
+		}
 		return (int) Math.round((completedLessons * 100.0 / totalLessons));
 	}
 

@@ -1,10 +1,10 @@
 package com.knowy.server.infrastructure.controller;
 
+import com.knowy.server.application.service.UserExerciseService;
+import com.knowy.server.application.service.UserLessonService;
 import com.knowy.server.infrastructure.controller.dto.ExerciseDto;
 import com.knowy.server.infrastructure.controller.dto.ExerciseOptionDto;
 import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserExerciseEntity;
-import com.knowy.server.application.service.PublicUserExerciseService;
-import com.knowy.server.application.service.PublicUserLessonService;
 import com.knowy.server.application.service.exception.PublicUserLessonException;
 import com.knowy.server.application.service.exception.UserNotFoundException;
 import com.knowy.server.application.service.model.ExerciseDifficult;
@@ -26,17 +26,17 @@ public class ExerciseController {
 	private static final String EXERCISE_MODEL_ATTRIBUTE = "exercise";
 	private static final String EXERCISE_HTML_URL = "pages/exercise";
 
-	private final PublicUserExerciseService publicUserExerciseService;
-	private final PublicUserLessonService publicUserLessonService;
+	private final UserExerciseService userExerciseService;
+	private final UserLessonService userLessonService;
 
 	/**
 	 * The constructor
 	 *
-	 * @param publicUserExerciseService the publicUserExerciseService
+	 * @param userExerciseService the publicUserExerciseService
 	 */
-	public ExerciseController(PublicUserExerciseService publicUserExerciseService, PublicUserLessonService publicUserLessonService) {
-		this.publicUserExerciseService = publicUserExerciseService;
-		this.publicUserLessonService = publicUserLessonService;
+	public ExerciseController(UserExerciseService userExerciseService, UserLessonService userLessonService) {
+		this.userExerciseService = userExerciseService;
+		this.userLessonService = userLessonService;
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class ExerciseController {
 		Model model
 	) {
 		try {
-			PublicUserExerciseEntity publicUserExercise = publicUserExerciseService
+			PublicUserExerciseEntity publicUserExercise = userExerciseService
 				.getNextExerciseByLessonId(userDetails.getPublicUser().getId(), lessonId);
 
 			model.addAttribute(EXERCISE_MODEL_ATTRIBUTE, ExerciseDto.fromPublicUserExerciseEntity(publicUserExercise));
@@ -85,7 +85,7 @@ public class ExerciseController {
 		Model model
 	) throws ExerciseNotFoundException, UserNotFoundException {
 		ExerciseDto exerciseDto = ExerciseDto.fromPublicUserExerciseEntity(
-			publicUserExerciseService.getByIdOrCreate(userDetails.getPublicUser().getId(), exerciseId),
+			userExerciseService.getByIdOrCreate(userDetails.getPublicUser().getId(), exerciseId),
 			answerId
 		);
 
@@ -122,17 +122,17 @@ public class ExerciseController {
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("evaluation") ExerciseDifficult evaluation
 	) throws ExerciseNotFoundException, UserNotFoundException, PublicUserLessonException {
-		PublicUserExerciseEntity publicUserExercise = publicUserExerciseService
+		PublicUserExerciseEntity publicUserExercise = userExerciseService
 			.getByIdOrCreate(userDetails.getPublicUser().getId(), exerciseId);
 
-		publicUserExerciseService.processUserAnswer(evaluation, publicUserExercise);
+		userExerciseService.processUserAnswer(evaluation, publicUserExercise);
 
 		int lessonId = publicUserExercise.getExerciseEntity().getLesson().getId();
 		int courseId = publicUserExercise.getExerciseEntity().getLesson().getCourse().getId();
 
-		double average = publicUserExerciseService.getAverageRateByLessonId(lessonId);
+		double average = userExerciseService.getAverageRateByLessonId(lessonId);
 		if (average >= 80) {
-			publicUserLessonService.updateLessonStatusToCompleted(userDetails.getPublicUser().getId(), lessonId);
+			userLessonService.updateLessonStatusToCompleted(userDetails.getPublicUser().getId(), lessonId);
 			return "redirect:/course/%d".formatted(courseId);
 		}
 		return "redirect:/course/%d/exercise/review".formatted(lessonId);
@@ -151,7 +151,7 @@ public class ExerciseController {
 		Model model
 	) {
 		try {
-			PublicUserExerciseEntity publicUserExercise = publicUserExerciseService
+			PublicUserExerciseEntity publicUserExercise = userExerciseService
 				.getNextExerciseByUserId(userDetails.getPublicUser().getId());
 
 			model.addAttribute(EXERCISE_MODEL_ATTRIBUTE, ExerciseDto.fromPublicUserExerciseEntity(publicUserExercise));
@@ -182,7 +182,7 @@ public class ExerciseController {
 		Model model
 	) throws ExerciseNotFoundException, UserNotFoundException {
 		ExerciseDto exerciseDto = ExerciseDto.fromPublicUserExerciseEntity(
-			publicUserExerciseService.getByIdOrCreate(userDetails.getPublicUser().getId(), exerciseId),
+			userExerciseService.getByIdOrCreate(userDetails.getPublicUser().getId(), exerciseId),
 			answerId
 		);
 
@@ -213,10 +213,10 @@ public class ExerciseController {
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("evaluation") ExerciseDifficult evaluation
 	) throws ExerciseNotFoundException, UserNotFoundException {
-		PublicUserExerciseEntity publicUserExercise = publicUserExerciseService
+		PublicUserExerciseEntity publicUserExercise = userExerciseService
 			.getByIdOrCreate(userDetails.getPublicUser().getId(), exerciseId);
 
-		publicUserExerciseService.processUserAnswer(evaluation, publicUserExercise);
+		userExerciseService.processUserAnswer(evaluation, publicUserExercise);
 		return "redirect:/exercise/review";
 	}
 }

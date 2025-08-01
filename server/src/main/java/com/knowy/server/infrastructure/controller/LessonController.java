@@ -1,5 +1,6 @@
 package com.knowy.server.infrastructure.controller;
 
+import com.knowy.server.application.service.UserLessonService;
 import com.knowy.server.infrastructure.controller.dto.CourseDto;
 import com.knowy.server.infrastructure.controller.dto.LessonDto;
 import com.knowy.server.infrastructure.controller.dto.LinksLessonDto;
@@ -7,7 +8,6 @@ import com.knowy.server.infrastructure.controller.dto.SolutionDto;
 import com.knowy.server.infrastructure.controller.exception.CurrentLessonNotFoundException;
 import com.knowy.server.infrastructure.adapters.repository.entity.DocumentationEntity;
 import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserLessonEntity;
-import com.knowy.server.application.service.PublicUserLessonService;
 import com.knowy.server.application.service.model.UserSecurityDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -25,10 +25,10 @@ import java.util.Optional;
 @RequestMapping("/course")
 public class LessonController {
 
-	private final PublicUserLessonService publicUserLessonService;
+	private final UserLessonService userLessonService;
 
-	public LessonController(PublicUserLessonService publicUserLessonService) {
-		this.publicUserLessonService = publicUserLessonService;
+	public LessonController(UserLessonService userLessonService) {
+		this.userLessonService = userLessonService;
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class LessonController {
 	}
 
 	private List<PublicUserLessonEntity> getAllPublicUserLessons(int userId, int courseId) {
-		return publicUserLessonService
+		return userLessonService
 			.findAllByCourseId(userId, courseId);
 	}
 
