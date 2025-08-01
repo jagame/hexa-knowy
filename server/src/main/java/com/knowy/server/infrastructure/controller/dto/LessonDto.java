@@ -1,46 +1,46 @@
 package com.knowy.server.infrastructure.controller.dto;
 
-import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserLessonEntity;
+import com.knowy.server.application.domain.UserLesson;
 
 import java.util.List;
 
 public record LessonDto(
-        int id,
-        String title,
-        String image,
-        String duration,
-        LessonStatus status
+	int id,
+	String title,
+	String image,
+	String duration,
+	LessonStatus status
 ) {
 
-    public static List<LessonDto> fromEntities(List<PublicUserLessonEntity> userLessons) {
-        return userLessons.stream()
-                .map(LessonDto::fromEntity)
-                .toList();
-    }
+	public static List<LessonDto> fromEntities(List<UserLesson> userLessons) {
+		return userLessons.stream()
+			.map(LessonDto::fromEntity)
+			.toList();
+	}
 
-    public static LessonDto fromEntity(PublicUserLessonEntity userLesson) {
-        return new LessonDto(
-                userLesson.getLessonId(),
-                userLesson.getLessonEntity().getTitle(),
-                null,
-                null,
-                LessonDto.LessonStatus.fromString(userLesson.getStatus())
-        );
-    }
+	public static LessonDto fromEntity(UserLesson userLesson) {
+		return new LessonDto(
+			userLesson.lesson().id(),
+			userLesson.lesson().title(),
+			null,
+			null,
+			LessonStatus.fromString(userLesson.status())
+		);
+	}
 
-    public enum LessonStatus {
-        COMPLETE,
-        NEXT_LESSON,
-        BLOCKED;
+	public enum LessonStatus {
+		COMPLETE,
+		NEXT_LESSON,
+		BLOCKED;
 
-        public static LessonStatus fromString(String status) {
-            return switch (status.toLowerCase()) {
-                case "completed" -> LessonDto.LessonStatus.COMPLETE;
-                case "in_progress" -> LessonDto.LessonStatus.NEXT_LESSON;
-                default -> LessonDto.LessonStatus.BLOCKED;
-            };
-        }
-    }
+		public static LessonStatus fromString(UserLesson.ProgressStatus status) {
+			return switch (status) {
+				case UserLesson.ProgressStatus.COMPLETED -> LessonDto.LessonStatus.COMPLETE;
+				case UserLesson.ProgressStatus.IN_PROGRESS -> LessonDto.LessonStatus.NEXT_LESSON;
+				default -> LessonDto.LessonStatus.BLOCKED;
+			};
+		}
+	}
 }
 
 

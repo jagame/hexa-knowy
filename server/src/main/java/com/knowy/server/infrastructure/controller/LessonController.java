@@ -1,14 +1,15 @@
 package com.knowy.server.infrastructure.controller;
 
+import com.knowy.server.application.domain.Documentation;
+import com.knowy.server.application.domain.UserLesson;
+import com.knowy.server.application.exception.KnowyInconsistentDataException;
 import com.knowy.server.application.service.UserLessonService;
+import com.knowy.server.application.service.model.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseDto;
 import com.knowy.server.infrastructure.controller.dto.LessonDto;
 import com.knowy.server.infrastructure.controller.dto.LinksLessonDto;
 import com.knowy.server.infrastructure.controller.dto.SolutionDto;
 import com.knowy.server.infrastructure.controller.exception.CurrentLessonNotFoundException;
-import com.knowy.server.infrastructure.adapters.repository.entity.DocumentationEntity;
-import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserLessonEntity;
-import com.knowy.server.application.service.model.UserSecurityDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,13 +48,13 @@ public class LessonController {
 	public String courseIntro(
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		@PathVariable Integer courseId, Model model
-	) {
-		List<PublicUserLessonEntity> publicUserLesson = getAllPublicUserLessons(userDetails.getPublicUser().getId(), courseId);
-		List<LessonDto> lessonsDto = LessonDto.fromEntities(publicUserLesson);
-		List<LinksLessonDto> documentationDto = LinksLessonDto.fromEntities(getAllLessonDocumentations(publicUserLesson));
+	) throws KnowyInconsistentDataException {
+		List<UserLesson> userLessons = getAllPublicUserLessons(userDetails.getPublicUser().getId(), courseId);
+		List<LessonDto> lessonsDto = LessonDto.fromEntities(userLessons);
+		List<LinksLessonDto> documentationDto = LinksLessonDto.fromEntities(getAllLessonDocumentations(userLessons));
 
 		CourseDto courseDto = CourseDto.fromEntity(
-			publicUserLesson.getFirst().getLessonEntity().getCourse(),
+			userLessons.getFirst().lesson().course(),
 			lessonsDto
 		);
 
@@ -75,9 +76,9 @@ public class LessonController {
 		model.addAttribute("LinksList", documentationDto);
 	}
 
-	private List<DocumentationEntity> getAllLessonDocumentations(List<PublicUserLessonEntity> publicUserLessonEntities) {
-		return publicUserLessonEntities.stream()
-			.map(lesson -> lesson.getLessonEntity().getDocumentations())
+	private List<Documentation> getAllLessonDocumentations(List<UserLesson> userLessons) {
+		return userLessons.stream()
+			.map(userLesson -> userLesson.lesson().documentations())
 			.flatMap(Collection::stream)
 			.toList();
 	}
@@ -108,16 +109,16 @@ public class LessonController {
 		@PathVariable Integer courseId,
 		@PathVariable Integer lessonId,
 		Model model
-	) throws CurrentLessonNotFoundException {
-		List<PublicUserLessonEntity> publicUserLessons = getAllPublicUserLessons(userDetails.getPublicUser().getId(), courseId);
-		List<LessonDto> lessonsDto = LessonDto.fromEntities(publicUserLessons);
+	) throws CurrentLessonNotFoundException, KnowyInconsistentDataException {
+		List<UserLesson> userLessons = getAllPublicUserLessons(userDetails.getPublicUser().getId(), courseId);
+		List<LessonDto> lessonsDto = LessonDto.fromEntities(userLessons);
 
-		PublicUserLessonEntity currentUserLesson = getCurrentPublicUserLesson(publicUserLessons, lessonId);
-		List<LinksLessonDto> documentationDto = LinksLessonDto.fromEntities(currentUserLesson.getLessonEntity().getDocumentations());
-		List<SolutionDto> solutionsDto = SolutionDto.fromEntities(currentUserLesson.getLessonEntity().getExercises());
+		UserLesson currentUserLesson = getCurrentPublicUserLesson(userLessons, lessonId);
+		List<LinksLessonDto> documentationDto = LinksLessonDto.fromEntities(currentUserLesson.lesson().documentations());
+		List<SolutionDto> solutionsDto = SolutionDto.fromEntities(currentUserLesson.lesson().exercises());
 
 		CourseDto courseDto = CourseDto.fromEntity(
-			publicUserLessons.getFirst().getLessonEntity().getCourse(),
+			userLessons.getFirst().lesson().course(),
 			lessonsDto
 		);
 
@@ -125,21 +126,21 @@ public class LessonController {
 		return "pages/lesson-explanation";
 	}
 
-	private List<PublicUserLessonEntity> getAllPublicUserLessons(int userId, int courseId) {
+	private List<UserLesson> getAllPublicUserLessons(int userId, int courseId) throws KnowyInconsistentDataException {
 		return userLessonService
 			.findAllByCourseId(userId, courseId);
 	}
 
-	private PublicUserLessonEntity getCurrentPublicUserLesson(List<PublicUserLessonEntity> userLessons, int currentLessonId) throws CurrentLessonNotFoundException {
+	private UserLesson getCurrentPublicUserLesson(List<UserLesson> userLessons, int currentLessonId) throws CurrentLessonNotFoundException {
 		return userLessons.stream()
-			.filter(lesson -> Objects.equals(lesson.getLessonId(), currentLessonId))
+			.filter(userLesson -> Objects.equals(userLesson.lesson().id(), currentLessonId))
 			.findFirst()
 			.orElseThrow(() -> new CurrentLessonNotFoundException("Lección actual no encontrada"));
 	}
 
 	private void populateLesson(
 		Model model,
-		PublicUserLessonEntity currentUserLesson,
+		UserLesson currentUserLesson,
 		CourseDto courseDto,
 		List<LessonDto> lessonsDto,
 		List<LinksLessonDto> documentationDto,
@@ -147,7 +148,7 @@ public class LessonController {
 	) {
 		model.addAttribute("course", courseDto);
 		model.addAttribute("lesson", LessonDto.fromEntity(currentUserLesson));
-		model.addAttribute("lessonContent", currentUserLesson.getLessonEntity().getExplanation());
+		model.addAttribute("lessonContent", currentUserLesson.lesson().explanation());
 		model.addAttribute("lastLesson", getLastCompletedIndex(lessonsDto));
 		model.addAttribute("courseId", courseDto.id());
 		model.addAttribute("isIntro", false);

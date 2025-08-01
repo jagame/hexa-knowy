@@ -1,7 +1,7 @@
 package com.knowy.server.infrastructure.controller.dto;
 
-import com.knowy.server.infrastructure.adapters.repository.entity.ExerciseEntity;
-import com.knowy.server.infrastructure.adapters.repository.entity.OptionEntity;
+import com.knowy.server.application.domain.Exercise;
+import com.knowy.server.application.domain.Option;
 
 import java.util.Collection;
 import java.util.List;
@@ -12,19 +12,19 @@ public record SolutionDto(
 	List<String> answer
 ) {
 
-	public static List<SolutionDto> fromEntities(Collection<ExerciseEntity> exercises) {
+	public static List<SolutionDto> fromEntities(Collection<Exercise> exercises) {
 		return exercises.stream()
 			.map(SolutionDto::fromEntity)
 			.toList();
 	}
 
-	public static SolutionDto fromEntity(ExerciseEntity exercise) {
+	public static SolutionDto fromEntity(Exercise exercise) {
 		return new SolutionDto(
 			"Ejercicio ",
-			exercise.getQuestion(),
-			exercise.getOptions().stream()
-				.filter(OptionEntity::isCorrect)
-				.map(OptionEntity::getOptionText)
+			exercise.question(),
+			exercise.options().stream()
+				.filter(Option::isCorrect)
+				.map(Option::optionText)
 				.toList()
 		);
 	}

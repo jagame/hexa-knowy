@@ -1,7 +1,7 @@
 package com.knowy.server.infrastructure.controller.dto;
 
-import com.knowy.server.infrastructure.adapters.repository.entity.CourseEntity;
-import com.knowy.server.infrastructure.adapters.repository.entity.CategoryEntity;
+import com.knowy.server.application.domain.Category;
+import com.knowy.server.application.domain.Course;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public record CourseDto(
 	List<String> languages
 ) {
 
-	public static CourseDto fromEntity(CourseEntity course, List<LessonDto> lessons) {
+	public static CourseDto fromEntity(Course course, List<LessonDto> lessons) {
 		long completedLesson = lessons.stream()
 			.filter(lesson -> lesson.status() == LessonDto.LessonStatus.COMPLETE)
 			.count();
@@ -25,14 +25,14 @@ public record CourseDto(
 			: (int) ((completedLesson * 100.0) / lessons.size());
 
 		return new CourseDto(
-			course.getId(),
-			course.getTitle(),
+			course.id(),
+			course.title(),
 			courseProgress,
 			lessons,
-			course.getDescription(),
-			course.getImage(),
-			course.getLanguages().stream()
-				.map(CategoryEntity::getName)
+			course.description(),
+			course.image(),
+			course.categories().stream()
+				.map(Category::name)
 				.toList()
 		);
 	}
