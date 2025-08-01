@@ -1,7 +1,7 @@
 package com.knowy.server.infrastructure.controller.dto;
 
-import com.knowy.server.infrastructure.adapters.repository.entity.ExerciseEntity;
-import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserExerciseEntity;
+import com.knowy.server.application.domain.Lesson;
+import com.knowy.server.application.domain.UserExercise;
 
 import java.util.List;
 
@@ -15,39 +15,33 @@ public record ExerciseDto(
 	List<ExerciseOptionDto> options
 ) {
 
-	public static ExerciseDto fromPublicUserExerciseEntity(PublicUserExerciseEntity publicUserExercise) {
-		ExerciseEntity exerciseEntity = publicUserExercise.getExerciseEntity();
-
-		List<ExerciseOptionDto> options = exerciseEntity.getOptions()
-			.stream()
-			.map(ExerciseOptionDto::fromEntity)
-			.toList();
-
+	public static ExerciseDto fromDomain(UserExercise userExercise, Lesson lesson) {
 		return new ExerciseDto(
-			exerciseEntity.getLesson().getId(),
-			exerciseEntity.getId(),
-			exerciseEntity.getLesson().getCourse().getTitle(),
-			publicUserExercise.getRate(),
-			publicUserExercise.getExerciseEntity().getQuestion(),
+			userExercise.exercise().lessonId(),
+			userExercise.exercise().id(),
+			lesson.course().title(),
+			userExercise.rate(),
+			userExercise.exercise().question(),
 			"TODO",
-			options
+			userExercise.exercise().options()
+				.stream()
+				.map(ExerciseOptionDto::fromDomain)
+				.toList()
 		);
 	}
 
-	public static ExerciseDto fromPublicUserExerciseEntity(PublicUserExerciseEntity publicUserExercise, int answerId) {
-		ExerciseEntity exerciseEntity = publicUserExercise.getExerciseEntity();
-
-		List<ExerciseOptionDto> options = exerciseEntity.getOptions()
+	public static ExerciseDto fromDomain(UserExercise userExercise, Lesson lesson, int answerId) {
+		List<ExerciseOptionDto> options = userExercise.exercise().options()
 			.stream()
-			.map(option -> ExerciseOptionDto.fromEntity(option, answerId))
+			.map(option -> ExerciseOptionDto.fromDomain(option, answerId))
 			.toList();
 
 		return new ExerciseDto(
-			exerciseEntity.getLesson().getId(),
-			exerciseEntity.getId(),
-			exerciseEntity.getLesson().getCourse().getTitle(),
-			publicUserExercise.getRate(),
-			publicUserExercise.getExerciseEntity().getQuestion(),
+			userExercise.exercise().lessonId(),
+			userExercise.exercise().id(),
+			lesson.course().title(),
+			userExercise.rate(),
+			userExercise.exercise().question(),
 			"TODO",
 			options
 		);

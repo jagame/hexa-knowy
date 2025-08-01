@@ -7,6 +7,7 @@ import com.knowy.server.infrastructure.adapters.repository.dao.JpaLessonDao;
 import com.knowy.server.infrastructure.adapters.repository.entity.DocumentationEntity;
 import com.knowy.server.infrastructure.adapters.repository.entity.LessonEntity;
 import com.knowy.server.infrastructure.adapters.repository.mapper.EntityMapper;
+import com.knowy.server.infrastructure.adapters.repository.mapper.JpaCourseMapper;
 import com.knowy.server.infrastructure.adapters.repository.mapper.JpaExerciseMapper;
 
 import java.util.List;
@@ -19,9 +20,11 @@ public class JpaLessonRepository implements LessonRepository {
 	private final JpaExerciseMapper jpaExerciseMapper;
 	private final JpaDocumentationMapper jpaDocumentationMapper;
 	private final JpaLessonMapper jpaLessonMapper;
+	private final JpaCourseMapper jpaCourseMapper;
 
-	public JpaLessonRepository(JpaLessonDao jpaLessonDao, JpaExerciseMapper jpaExerciseMapper) {
+	public JpaLessonRepository(JpaLessonDao jpaLessonDao, JpaExerciseMapper jpaExerciseMapper, JpaCourseMapper jpaCourseMapper) {
 		this.jpaLessonDao = jpaLessonDao;
+		this.jpaCourseMapper = jpaCourseMapper;
 		this.jpaLessonMapper = new JpaLessonMapper();
 		this.jpaExerciseMapper = jpaExerciseMapper;
 		this.jpaDocumentationMapper = new JpaDocumentationMapper();
@@ -49,7 +52,7 @@ public class JpaLessonRepository implements LessonRepository {
 		public Lesson toDomain(LessonEntity entity) {
 			return new Lesson(
 				entity.getId(),
-				entity.getCourse().getId(),
+				jpaCourseMapper.toDomain(entity.getCourse()),
 				entity.getNextLesson().getId(),
 				entity.getTitle(),
 				entity.getExplanation(),

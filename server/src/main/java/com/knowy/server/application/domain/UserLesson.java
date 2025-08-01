@@ -3,8 +3,8 @@ package com.knowy.server.application.domain;
 import java.time.LocalDate;
 
 public record UserLesson(
-	Integer userId,
-	Integer lessonId,
+	User user,
+	Lesson lesson,
 	LocalDate startDate,
 	ProgressStatus status
 ) {

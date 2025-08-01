@@ -1,5 +1,6 @@
 package com.knowy.server.infrastructure.controller.dto;
 
+import com.knowy.server.application.domain.Option;
 import com.knowy.server.infrastructure.adapters.repository.entity.OptionEntity;
 
 public record ExerciseOptionDto(
@@ -8,12 +9,12 @@ public record ExerciseOptionDto(
 	AnswerStatus status
 ) {
 
-	public static ExerciseOptionDto fromEntity(OptionEntity option) {
-		return new ExerciseOptionDto(option.getId(), option.getOptionText(), AnswerStatus.NO_RESPONSE);
+	public static ExerciseOptionDto fromDomain(Option option) {
+		return new ExerciseOptionDto(option.id(), option.optionText(), AnswerStatus.NO_RESPONSE);
 	}
 
-	public static ExerciseOptionDto fromEntity(OptionEntity option, int answerId) {
-		return new ExerciseOptionDto(option.getId(), option.getOptionText(), AnswerStatus.from(option, answerId));
+	public static ExerciseOptionDto fromDomain(Option option, int answerId) {
+		return new ExerciseOptionDto(option.id(), option.optionText(), AnswerStatus.from(option, answerId));
 	}
 
 	public enum AnswerStatus {
@@ -21,8 +22,8 @@ public record ExerciseOptionDto(
 		RESPONSE_FAIL,
 		RESPONSE_SUCCESS;
 
-		public static AnswerStatus from(OptionEntity option, int answerId) {
-			if (option.getId() == answerId && !option.isCorrect()) {
+		public static AnswerStatus from(Option option, int answerId) {
+			if (option.id() == answerId && !option.isCorrect()) {
 				return RESPONSE_FAIL;
 			}
 			if (option.isCorrect()) {

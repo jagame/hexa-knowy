@@ -5,7 +5,7 @@ import java.util.Set;
 
 public record Lesson(
 	int id,
-	int courseId,
+	Course course,
 	Integer nextLessonId,
 	String title,
 	String explanation,
@@ -14,10 +14,10 @@ public record Lesson(
 ) {
 	public Lesson(
 		int id,
-		int courseId,
+		Course course,
 		String title,
 		String explanation
 	) {
-		this(id, courseId, null, title, explanation, new HashSet<>(), new HashSet<>());
+		this(id, course, null, title, explanation, new HashSet<>(), new HashSet<>());
 	}
 }

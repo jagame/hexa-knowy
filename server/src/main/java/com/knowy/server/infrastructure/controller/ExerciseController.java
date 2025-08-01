@@ -1,14 +1,16 @@
 package com.knowy.server.infrastructure.controller;
 
+import com.knowy.server.application.domain.UserExercise;
+import com.knowy.server.application.domain.UserLesson;
+import com.knowy.server.application.exception.KnowyDataAccessException;
 import com.knowy.server.application.service.UserExerciseService;
 import com.knowy.server.application.service.UserLessonService;
-import com.knowy.server.infrastructure.controller.dto.ExerciseDto;
-import com.knowy.server.infrastructure.controller.dto.ExerciseOptionDto;
-import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserExerciseEntity;
-import com.knowy.server.application.service.exception.PublicUserLessonException;
+import com.knowy.server.application.service.exception.UserLessonNotFoundException;
 import com.knowy.server.application.service.exception.UserNotFoundException;
 import com.knowy.server.application.service.model.ExerciseDifficult;
 import com.knowy.server.application.service.model.UserSecurityDetails;
+import com.knowy.server.infrastructure.controller.dto.ExerciseDto;
+import com.knowy.server.infrastructure.controller.dto.ExerciseOptionDto;
 import com.knowy.server.util.exception.ExerciseNotFoundException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -54,14 +56,19 @@ public class ExerciseController {
 		Model model
 	) {
 		try {
-			PublicUserExerciseEntity publicUserExercise = userExerciseService
+			UserExercise userExercise = userExerciseService
 				.getNextExerciseByLessonId(userDetails.getPublicUser().getId(), lessonId);
 
-			model.addAttribute(EXERCISE_MODEL_ATTRIBUTE, ExerciseDto.fromPublicUserExerciseEntity(publicUserExercise));
+			UserLesson userLesson = userLessonService.findById(userDetails.getPublicUser().getId(), lessonId)
+				.orElseThrow(() -> new UserLessonNotFoundException(
+					"UserLesson not found for user ID: " + userDetails.getPublicUser().getId() + " and lesson ID: " + lessonId
+				));
+
+			model.addAttribute(EXERCISE_MODEL_ATTRIBUTE, ExerciseDto.fromDomain(userExercise, userLesson.lesson()));
 			model.addAttribute("mode", "ANSWERING");
 			model.addAttribute("formReviewUrl", "/course/exercise/review");
 			return EXERCISE_HTML_URL;
-		} catch (ExerciseNotFoundException e) {
+		} catch (ExerciseNotFoundException | KnowyDataAccessException | UserLessonNotFoundException e) {
 			return "error/error";
 		}
 	}
@@ -83,11 +90,19 @@ public class ExerciseController {
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("answerId") int answerId,
 		Model model
-	) throws ExerciseNotFoundException, UserNotFoundException {
-		ExerciseDto exerciseDto = ExerciseDto.fromPublicUserExerciseEntity(
-			userExerciseService.getByIdOrCreate(userDetails.getPublicUser().getId(), exerciseId),
-			answerId
-		);
+	) throws ExerciseNotFoundException, UserNotFoundException, KnowyDataAccessException, UserLessonNotFoundException {
+
+		UserExercise userExercise = userExerciseService.getByIdOrCreate(userDetails.getPublicUser().getId(),
+			exerciseId);
+
+		UserLesson userLesson = userLessonService
+			.findById(userDetails.getPublicUser().getId(), userExercise.exercise().lessonId())
+			.orElseThrow(() -> new UserLessonNotFoundException(
+				"UserLesson not found for user ID: " + userDetails.getPublicUser().getId() + " and lesson ID: "
+					+ userExercise.exercise().lessonId()
+			));
+
+		ExerciseDto exerciseDto = ExerciseDto.fromDomain(userExercise, userLesson.lesson(), answerId);
 
 		if (!isCorrectAnswer(exerciseDto.options(), answerId)) {
 			model.addAttribute("mode", "FAILING");
@@ -112,23 +127,30 @@ public class ExerciseController {
 	 * @param exerciseId  the ID of the exercise being evaluated
 	 * @param evaluation  the difficulty rating provided by the user
 	 * @return a redirect to the lesson page if average rate >= 80, otherwise to the exercise review page
-	 * @throws ExerciseNotFoundException if the exercise is not found
-	 * @throws UserNotFoundException     if the user is not found
-	 * @throws PublicUserLessonException if the publicUserLesson is not found
+	 * @throws ExerciseNotFoundException   if the exercise is not found
+	 * @throws UserNotFoundException       if the user is not found
+	 * @throws UserLessonNotFoundException if the publicUserLesson is not found
 	 */
 	@PostMapping("/course/exercise/evaluate")
 	public String exerciseLessonEvaluate(
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("evaluation") ExerciseDifficult evaluation
-	) throws ExerciseNotFoundException, UserNotFoundException, PublicUserLessonException {
-		PublicUserExerciseEntity publicUserExercise = userExerciseService
+	) throws ExerciseNotFoundException, UserNotFoundException, UserLessonNotFoundException, KnowyDataAccessException {
+		UserExercise userExercise = userExerciseService
 			.getByIdOrCreate(userDetails.getPublicUser().getId(), exerciseId);
 
-		userExerciseService.processUserAnswer(evaluation, publicUserExercise);
+		UserLesson userLesson = userLessonService
+			.findById(userDetails.getPublicUser().getId(), userExercise.exercise().lessonId())
+			.orElseThrow(() -> new UserLessonNotFoundException(
+				"UserLesson not found for user ID: " + userDetails.getPublicUser().getId() + " and lesson ID: "
+					+ userExercise.exercise().lessonId()
+			));
 
-		int lessonId = publicUserExercise.getExerciseEntity().getLesson().getId();
-		int courseId = publicUserExercise.getExerciseEntity().getLesson().getCourse().getId();
+		userExerciseService.processUserAnswer(evaluation, userExercise);
+
+		int lessonId = userExercise.exercise().lessonId();
+		int courseId = userLesson.lesson().course().id();
 
 		double average = userExerciseService.getAverageRateByLessonId(lessonId);
 		if (average >= 80) {
@@ -151,14 +173,21 @@ public class ExerciseController {
 		Model model
 	) {
 		try {
-			PublicUserExerciseEntity publicUserExercise = userExerciseService
+			UserExercise userExercise = userExerciseService
 				.getNextExerciseByUserId(userDetails.getPublicUser().getId());
 
-			model.addAttribute(EXERCISE_MODEL_ATTRIBUTE, ExerciseDto.fromPublicUserExerciseEntity(publicUserExercise));
+			UserLesson userLesson = userLessonService
+				.findById(userDetails.getPublicUser().getId(), userExercise.exercise().lessonId())
+				.orElseThrow(() -> new UserLessonNotFoundException(
+					"UserLesson not found for user ID: " + userDetails.getPublicUser().getId() + " and lesson ID: "
+						+ userExercise.exercise().lessonId()
+				));
+
+			model.addAttribute(EXERCISE_MODEL_ATTRIBUTE, ExerciseDto.fromDomain(userExercise, userLesson.lesson()));
 			model.addAttribute("mode", "ANSWERING");
 			model.addAttribute("formReviewUrl", "/exercise/review");
 			return EXERCISE_HTML_URL;
-		} catch (ExerciseNotFoundException e) {
+		} catch (ExerciseNotFoundException | UserLessonNotFoundException | KnowyDataAccessException e) {
 			return "error/error";
 		}
 	}
@@ -180,9 +209,21 @@ public class ExerciseController {
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("answerId") int answerId,
 		Model model
-	) throws ExerciseNotFoundException, UserNotFoundException {
-		ExerciseDto exerciseDto = ExerciseDto.fromPublicUserExerciseEntity(
-			userExerciseService.getByIdOrCreate(userDetails.getPublicUser().getId(), exerciseId),
+	) throws ExerciseNotFoundException, UserNotFoundException, KnowyDataAccessException, UserLessonNotFoundException {
+
+		UserExercise userExercise = userExerciseService
+			.getByIdOrCreate(userDetails.getPublicUser().getId(), exerciseId);
+
+		UserLesson userLesson = userLessonService
+			.findById(userDetails.getPublicUser().getId(), userExercise.exercise().lessonId())
+			.orElseThrow(() -> new UserLessonNotFoundException(
+				"UserLesson not found for user ID: " + userDetails.getPublicUser().getId() + " and lesson ID: "
+					+ userExercise.exercise().lessonId()
+			));
+
+		ExerciseDto exerciseDto = ExerciseDto.fromDomain(
+			userExercise,
+			userLesson.lesson(),
 			answerId
 		);
 
@@ -212,11 +253,11 @@ public class ExerciseController {
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("evaluation") ExerciseDifficult evaluation
-	) throws ExerciseNotFoundException, UserNotFoundException {
-		PublicUserExerciseEntity publicUserExercise = userExerciseService
+	) throws ExerciseNotFoundException, UserNotFoundException, KnowyDataAccessException {
+		UserExercise userExercise = userExerciseService
 			.getByIdOrCreate(userDetails.getPublicUser().getId(), exerciseId);
 
-		userExerciseService.processUserAnswer(evaluation, publicUserExercise);
+		userExerciseService.processUserAnswer(evaluation, userExercise);
 		return "redirect:/exercise/review";
 	}
 }
