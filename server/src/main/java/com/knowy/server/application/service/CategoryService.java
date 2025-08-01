@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class LanguageService {
+public class CategoryService {
 
 	private final CategoryRepository languageRepository;
 
-	public LanguageService(CategoryRepository languageRepository) {
+	public CategoryService(CategoryRepository languageRepository) {
 		this.languageRepository = languageRepository;
 	}
 

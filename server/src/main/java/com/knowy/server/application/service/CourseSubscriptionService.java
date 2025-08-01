@@ -1,12 +1,14 @@
 package com.knowy.server.application.service;
 
 import com.knowy.server.application.domain.Category;
+import com.knowy.server.application.domain.Course;
+import com.knowy.server.application.domain.Lesson;
+import com.knowy.server.application.domain.UserLesson;
+import com.knowy.server.application.exception.KnowyInconsistentDataException;
 import com.knowy.server.application.ports.CategoryRepository;
 import com.knowy.server.application.ports.CourseRepository;
 import com.knowy.server.application.ports.LessonRepository;
 import com.knowy.server.application.ports.UserLessonRepository;
-import com.knowy.server.infrastructure.adapters.repository.entity.*;
-import com.knowy.server.infrastructure.controller.dto.CourseCardDTO;
 import com.knowy.server.infrastructure.controller.exception.KnowyCourseSubscriptionException;
 import org.springframework.stereotype.Service;
 
@@ -20,72 +22,71 @@ import java.util.stream.Collectors;
 public class CourseSubscriptionService {
 	private final CourseRepository courseRepository;
 	private final LessonRepository lessonRepository;
-	private final UserLessonRepository publicUserLessonRepository;
-	private final CategoryRepository languageRepository;
+	private final UserLessonRepository userLessonRepository;
+	private final CategoryRepository categoryRepository;
 
 	public CourseSubscriptionService(
 		CourseRepository courseRepository,
 		LessonRepository lessonRepository,
-		UserLessonRepository publicUserLessonRepository,
-		CategoryRepository languageRepository
+		UserLessonRepository userLessonRepository,
+		CategoryRepository categoryRepository
 	) {
 		this.courseRepository = courseRepository;
 		this.lessonRepository = lessonRepository;
-		this.publicUserLessonRepository = publicUserLessonRepository;
-		this.languageRepository = languageRepository;
+		this.userLessonRepository = userLessonRepository;
+		this.categoryRepository = categoryRepository;
 	}
 
 
-	public List<CourseCardDTO> getUserCourses(Integer userId) {
-		List<CourseEntity> userCourses = findCoursesByUserId(userId);
-		return userCourses.stream()
-			.map(course -> CourseCardDTO.fromEntity(
-				course, getCourseProgress(userId, course.getId()),
-				findLanguagesForCourse(course), findCourseImage(course), course.getCreationDate()))
-			.toList();
+	public List<Course> getUserCourses(Integer userId) throws KnowyInconsistentDataException {
+		return findCoursesByUserId(userId);
 	}
 
-	public List<CourseEntity> findCoursesByUserId(Integer userId) {
-		List<Integer> courseIds = publicUserLessonRepository.findCourseIdsByUserId(userId);
-		if (courseIds.isEmpty()) return List.of();
+	public List<Course> findCoursesByUserId(Integer userId) throws KnowyInconsistentDataException {
+		List<Integer> courseIds = userLessonRepository.findCourseIdsByUserId(userId);
+		if (courseIds.isEmpty()) {
+			return List.of();
+		}
 		return courseRepository.findByIdIn(courseIds);
 	}
 
-	public List<CourseEntity> findAllRandom() {
+	public List<Course> findAllRandom() {
 		return courseRepository.findAllRandom();
 	}
 
-	public List<CourseEntity> getRecommendedCourses(Integer userId) {
-		List<CourseEntity> userCourses = findCoursesByUserId(userId);
+	public List<Course> getRecommendedCourses(Integer userId) throws KnowyInconsistentDataException {
+		List<Course> userCourses = findCoursesByUserId(userId);
 
 		List<Integer> userCourseIds = userCourses.stream()
-			.map(CourseEntity::getId)
+			.map(Course::id)
 			.toList();
 
 		Set<String> userLanguages = userCourses.stream()
 			.flatMap(course -> findLanguagesForCourse(course).stream())
 			.collect(Collectors.toSet());
 
-		List<CourseEntity> allCourses = findAllCourses().stream()
-			.filter(course -> !userCourseIds.contains(course.getId()))
+		List<Course> allCourses = findAllCourses()
+			.stream()
+			.filter(course -> !userCourseIds.contains(course.id()))
 			.toList();
 
-		List<CourseEntity> langMatching = allCourses.stream()
+		List<Course> langMatching = allCourses.stream()
 			.filter(course -> {
-				List<String> courseLangs = findLanguagesForCourse(course);
-				return courseLangs.stream().anyMatch(userLanguages::contains);
+				List<String> courseLanguages = findLanguagesForCourse(course);
+				return courseLanguages.stream().anyMatch(userLanguages::contains);
 			}).toList();
 
-		List<CourseEntity> recommendations = langMatching.stream()
+		List<Course> recommendations = langMatching
+			.stream()
 			.limit(3)
 			.collect(Collectors.toList());
 
 		if (recommendations.size() < 3) {
-			List<CourseEntity> remaining = allCourses.stream()
+			List<Course> remaining = allCourses.stream()
 				.filter(course -> !langMatching.contains(course))
 				.toList();
 
-			for (CourseEntity course : remaining) {
+			for (Course course : remaining) {
 				if (recommendations.size() >= 3) {
 					break;
 				}
@@ -95,61 +96,69 @@ public class CourseSubscriptionService {
 		return recommendations;
 	}
 
-	public void subscribeUserToCourse(Integer userId, Integer courseId) throws KnowyCourseSubscriptionException {
-		List<LessonEntity> lessons = lessonRepository.findByCourseId(courseId);
+	public void subscribeUserToCourse(Integer userId, Integer courseId) throws KnowyCourseSubscriptionException, KnowyInconsistentDataException {
+		List<Lesson> lessons = lessonRepository.findByCourseId(courseId);
 		if (lessons.isEmpty()) {
 			throw new KnowyCourseSubscriptionException("El curso no tiene lecciones disponibles");
 		}
 
-		boolean alreadySubscribed = lessons.stream()
-			.allMatch(lesson ->
-				publicUserLessonRepository.existsByUserIdAndLessonId(userId, lesson.getId()));
-		if (alreadySubscribed) {
-			throw new KnowyCourseSubscriptionException("Ya estás suscrito a este curso");
-		}
+		ensureAlreadySubscribed(lessons, userId);
 
 		lessons = lessons.stream()
-			.sorted(Comparator.comparing(LessonEntity::getId))
+			.sorted(Comparator.comparing(Lesson::id))
 			.toList();
 
-		for (int i = 0; i < lessons.size(); i++) {
-			LessonEntity lesson = lessons.get(i);
-			PublicUserLessonIdEntity id = new PublicUserLessonIdEntity(userId, lesson.getId());
-			if (!publicUserLessonRepository.existsById(id)) {
-				PublicUserLessonEntity pul = new PublicUserLessonEntity();
-				pul.setUserId(userId);
-				pul.setLessonId(lesson.getId());
-				pul.setStartDate(LocalDate.now());
-				pul.setStatus(i == 0 ? "in_progress" : "pending");
-				publicUserLessonRepository.save(pul);
+		for (int index = 0; index < lessons.size(); index++) {
+			Lesson lesson = lessons.get(index);
+			if (!userLessonRepository.existsById(userId, lesson.id())) {
+				UserLesson userLesson = new UserLesson(
+					userId,
+					lesson.id(),
+					LocalDate.now(),
+					index == 0 ? UserLesson.ProgressStatus.IN_PROGRESS : UserLesson.ProgressStatus.PENDING
+				);
+				userLessonRepository.save(userLesson);
 			}
 		}
 	}
 
+	private void ensureAlreadySubscribed(List<Lesson> lessons, Integer userId)
+		throws KnowyInconsistentDataException, KnowyCourseSubscriptionException {
 
-	public List<CourseEntity> findAllCourses() {
+		for (Lesson lesson : lessons) {
+			if (userLessonRepository.existsByUserIdAndLessonId(userId, lesson.id())) {
+				throw new KnowyCourseSubscriptionException("Ya estás suscrito a este curso");
+			}
+		}
+	}
+
+	public List<Course> findAllCourses() {
 		return courseRepository.findAll();
 	}
 
-	public String findCourseImage(CourseEntity course) {
-		return course.getImage() != null ? course.getImage() : "https://picsum.photos/seed/picsum/200/300";
+	public String findCourseImage(Course course) {
+		return course.image() != null ? course.image() : "https://picsum.photos/seed/picsum/200/300";
 	}
 
-	public List<String> findLanguagesForCourse(CourseEntity course) {
-		return course.getLanguages().stream()
-			.map(CategoryEntity::getName)
+	public List<String> findLanguagesForCourse(Course course) {
+		return course.languages().stream()
+			.map(Category::name)
 			.toList();
 	}
 
-	public int getCourseProgress(Integer userId, Integer courseId) {
+	public int getCourseProgress(Integer userId, Integer courseId) throws KnowyInconsistentDataException {
 		int totalLessons = lessonRepository.countByCourseId(courseId);
 		if (totalLessons == 0) return 0;
-		int completedLessons = publicUserLessonRepository.countByUserIdAndCourseIdAndStatus(userId, courseId, "completed");
+		int completedLessons = userLessonRepository.countByUserIdAndCourseIdAndStatus(
+			userId,
+			courseId,
+			UserLesson.ProgressStatus.COMPLETED
+		);
 		return (int) Math.round((completedLessons * 100.0 / totalLessons));
 	}
 
 	public List<String> findAllLanguages() {
-		return languageRepository.findAll()
+		return categoryRepository.findAll()
 			.stream()
 			.map(Category::name)
 			.toList();

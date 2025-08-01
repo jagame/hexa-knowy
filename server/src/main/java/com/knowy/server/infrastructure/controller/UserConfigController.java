@@ -3,7 +3,7 @@ package com.knowy.server.infrastructure.controller;
 import com.knowy.server.application.service.exception.*;
 import com.knowy.server.infrastructure.controller.dto.UserConfigChangeEmailFormDto;
 import com.knowy.server.infrastructure.controller.dto.UserProfileDTO;
-import com.knowy.server.application.service.LanguageService;
+import com.knowy.server.application.service.CategoryService;
 import com.knowy.server.application.service.UserFacadeService;
 import com.knowy.server.application.service.model.UserSecurityDetails;
 import com.knowy.server.util.UserSecurityDetailsHelper;
@@ -34,19 +34,19 @@ public class UserConfigController {
 	private static final String USER_NOT_FOUND_ERROR_MESSAGE = "Usuario no encontrado";
 
 	private final UserFacadeService userFacadeService;
-	private final LanguageService languageService;
+	private final CategoryService categoryService;
 	private final UserSecurityDetailsHelper userSecurityDetailsHelper;
 
 	/**
 	 * The constructor
 	 *
 	 * @param userFacadeService         the userFacadeService
-	 * @param languageService           the languageService
+	 * @param categoryService           the languageService
 	 * @param userSecurityDetailsHelper the userSecurityDetailsHelper
 	 */
-	public UserConfigController(UserFacadeService userFacadeService, LanguageService languageService, UserSecurityDetailsHelper userSecurityDetailsHelper) {
+	public UserConfigController(UserFacadeService userFacadeService, CategoryService categoryService, UserSecurityDetailsHelper userSecurityDetailsHelper) {
 		this.userFacadeService = userFacadeService;
-		this.languageService = languageService;
+		this.categoryService = categoryService;
 		this.userSecurityDetailsHelper = userSecurityDetailsHelper;
 	}
 
@@ -220,7 +220,7 @@ public class UserConfigController {
 	public String viewUserProfile(Model model, UserProfileDTO userProfileDTO, @AuthenticationPrincipal UserSecurityDetails userDetails) {
 		Hibernate.initialize(userDetails.getPublicUser().getLanguages());
 		model.addAttribute("publicUser", userDetails.getPublicUser());
-		model.addAttribute("languages", languageService.findAll());
+		model.addAttribute("languages", categoryService.findAll());
 		return "pages/user-management/user-profile";
 	}
 
