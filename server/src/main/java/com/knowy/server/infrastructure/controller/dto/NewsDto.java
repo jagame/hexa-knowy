@@ -1,6 +1,6 @@
 package com.knowy.server.infrastructure.controller.dto;
 
-import com.knowy.server.infrastructure.adapters.repository.entity.CourseEntity;
+import com.knowy.server.application.domain.Course;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -11,14 +11,14 @@ public record NewsDto(
 	String text
 ) {
 
-	public static NewsDto fromEntity(CourseEntity course) {
+	public static NewsDto fromDomain(Course course) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d 'de' MMMM, yyyy", Locale.forLanguageTag("es-ES"));
-		String formattedDate = course.getCreationDate().format(formatter);
+		String formattedDate = course.creationDate().format(formatter);
 
 		return new NewsDto(
-			course.getTitle(),
+			course.title(),
 			formattedDate,
-			course.getDescription()
+			course.description()
 		);
 	}
 }

@@ -1,11 +1,11 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.server.application.service.exception.*;
-import com.knowy.server.infrastructure.controller.dto.UserConfigChangeEmailFormDto;
-import com.knowy.server.infrastructure.controller.dto.UserProfileDTO;
 import com.knowy.server.application.service.CategoryService;
 import com.knowy.server.application.service.UserFacadeService;
+import com.knowy.server.application.service.exception.*;
 import com.knowy.server.application.service.model.UserSecurityDetails;
+import com.knowy.server.infrastructure.controller.dto.UserConfigChangeEmailFormDto;
+import com.knowy.server.infrastructure.controller.dto.UserProfileDTO;
 import com.knowy.server.util.UserSecurityDetailsHelper;
 import com.knowy.server.util.exception.JwtKnowyException;
 import com.knowy.server.util.exception.MailDispatchException;

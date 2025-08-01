@@ -17,14 +17,14 @@ public class LinksLessonDto {
 	private LinkType type;
 	private String fileName;
 
-	public static List<LinksLessonDto> fromEntities(Collection<Documentation> docs) {
+	public static List<LinksLessonDto> fromDomains(Collection<Documentation> docs) {
 		return docs.stream()
-			.map(LinksLessonDto::fromEntity)
+			.map(LinksLessonDto::fromDomain)
 			.distinct()
 			.toList();
 	}
 
-	public static LinksLessonDto fromEntity(Documentation doc) {
+	public static LinksLessonDto fromDomain(Documentation doc) {
 		boolean isExternal = doc.link().startsWith("http");
 		String fileName = (!isExternal && doc.link().contains("/"))
 			? doc.link().substring(doc.link().lastIndexOf("/") + 1)

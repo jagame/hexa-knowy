@@ -1,6 +1,6 @@
 package com.knowy.server.infrastructure.controller.dto;
 
-import com.knowy.server.infrastructure.adapters.repository.entity.CourseEntity;
+import com.knowy.server.application.domain.Course;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,13 +17,13 @@ public class CourseBannerDTO {
 	private String imageUrl;
 	private String author;
 
-	public static CourseBannerDTO fromEntity(CourseEntity course) {
+	public static CourseBannerDTO fromDomain(Course course) {
 		return new CourseBannerDTO(
-			course.getId(),
-			course.getTitle(),
-			course.getDescription(),
-			course.getImage(),
-			course.getAuthor()
+			course.id(),
+			course.title(),
+			course.description(),
+			course.image(),
+			course.author()
 		);
 	}
 }

@@ -50,10 +50,10 @@ public class LessonController {
 		@PathVariable Integer courseId, Model model
 	) throws KnowyInconsistentDataException {
 		List<UserLesson> userLessons = getAllPublicUserLessons(userDetails.getPublicUser().getId(), courseId);
-		List<LessonDto> lessonsDto = LessonDto.fromEntities(userLessons);
-		List<LinksLessonDto> documentationDto = LinksLessonDto.fromEntities(getAllLessonDocumentations(userLessons));
+		List<LessonDto> lessonsDto = LessonDto.fromDomains(userLessons);
+		List<LinksLessonDto> documentationDto = LinksLessonDto.fromDomains(getAllLessonDocumentations(userLessons));
 
-		CourseDto courseDto = CourseDto.fromEntity(
+		CourseDto courseDto = CourseDto.fromDomain(
 			userLessons.getFirst().lesson().course(),
 			lessonsDto
 		);
@@ -111,13 +111,13 @@ public class LessonController {
 		Model model
 	) throws CurrentLessonNotFoundException, KnowyInconsistentDataException {
 		List<UserLesson> userLessons = getAllPublicUserLessons(userDetails.getPublicUser().getId(), courseId);
-		List<LessonDto> lessonsDto = LessonDto.fromEntities(userLessons);
+		List<LessonDto> lessonsDto = LessonDto.fromDomains(userLessons);
 
 		UserLesson currentUserLesson = getCurrentPublicUserLesson(userLessons, lessonId);
-		List<LinksLessonDto> documentationDto = LinksLessonDto.fromEntities(currentUserLesson.lesson().documentations());
-		List<SolutionDto> solutionsDto = SolutionDto.fromEntities(currentUserLesson.lesson().exercises());
+		List<LinksLessonDto> documentationDto = LinksLessonDto.fromDomains(currentUserLesson.lesson().documentations());
+		List<SolutionDto> solutionsDto = SolutionDto.fromDomains(currentUserLesson.lesson().exercises());
 
-		CourseDto courseDto = CourseDto.fromEntity(
+		CourseDto courseDto = CourseDto.fromDomain(
 			userLessons.getFirst().lesson().course(),
 			lessonsDto
 		);
@@ -147,7 +147,7 @@ public class LessonController {
 		List<SolutionDto> solutions
 	) {
 		model.addAttribute("course", courseDto);
-		model.addAttribute("lesson", LessonDto.fromEntity(currentUserLesson));
+		model.addAttribute("lesson", LessonDto.fromDomain(currentUserLesson));
 		model.addAttribute("lessonContent", currentUserLesson.lesson().explanation());
 		model.addAttribute("lastLesson", getLastCompletedIndex(lessonsDto));
 		model.addAttribute("courseId", courseDto.id());

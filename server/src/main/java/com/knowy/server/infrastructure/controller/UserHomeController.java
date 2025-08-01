@@ -1,10 +1,11 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.server.infrastructure.controller.dto.CourseBannerDTO;
-import com.knowy.server.infrastructure.controller.dto.MissionsDto;
+import com.knowy.server.application.exception.KnowyInconsistentDataException;
 import com.knowy.server.application.service.CourseSubscriptionService;
 import com.knowy.server.application.service.UserHomeService;
 import com.knowy.server.application.service.model.UserSecurityDetails;
+import com.knowy.server.infrastructure.controller.dto.CourseBannerDTO;
+import com.knowy.server.infrastructure.controller.dto.MissionsDto;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +28,7 @@ public class UserHomeController {
 	}
 
 	@GetMapping("/home")
-	public String userHome(Model model, @AuthenticationPrincipal UserSecurityDetails userDetails) {
+	public String userHome(Model model, @AuthenticationPrincipal UserSecurityDetails userDetails) throws KnowyInconsistentDataException {
 		Integer userId = userDetails.getPublicUser().getId();
 		long coursesCompleted = userHomeService.getCoursesCompleted(userId);
 		long totalCourses = userHomeService.getTotalCourses(userId);
@@ -38,7 +39,7 @@ public class UserHomeController {
 		List<CourseBannerDTO> banners = courseSubscriptionService.findAllRandom()
 			.stream()
 			.limit(4)
-			.map(CourseBannerDTO::fromEntity)
+			.map(CourseBannerDTO::fromDomain)
 			.toList();
 
 		List<MissionsDto> missionsList = getMissionsDto();

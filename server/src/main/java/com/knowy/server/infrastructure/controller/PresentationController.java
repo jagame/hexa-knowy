@@ -1,7 +1,7 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.server.infrastructure.controller.dto.NewsDto;
 import com.knowy.server.application.service.CourseSubscriptionService;
+import com.knowy.server.infrastructure.controller.dto.NewsDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +22,7 @@ public class PresentationController {
 
 		List<NewsDto> newsList = courseSubscriptionService.findAllCourses()
 			.stream()
-			.map(NewsDto::fromEntity)
+			.map(NewsDto::fromDomain)
 			.limit(3)
 			.toList();
 

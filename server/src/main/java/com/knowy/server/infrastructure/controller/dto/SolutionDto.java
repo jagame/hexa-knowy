@@ -12,13 +12,13 @@ public record SolutionDto(
 	List<String> answer
 ) {
 
-	public static List<SolutionDto> fromEntities(Collection<Exercise> exercises) {
+	public static List<SolutionDto> fromDomains(Collection<Exercise> exercises) {
 		return exercises.stream()
-			.map(SolutionDto::fromEntity)
+			.map(SolutionDto::fromDomain)
 			.toList();
 	}
 
-	public static SolutionDto fromEntity(Exercise exercise) {
+	public static SolutionDto fromDomain(Exercise exercise) {
 		return new SolutionDto(
 			"Ejercicio ",
 			exercise.question(),

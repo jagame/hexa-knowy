@@ -15,7 +15,7 @@ public record CourseDto(
 	List<String> languages
 ) {
 
-	public static CourseDto fromEntity(Course course, List<LessonDto> lessons) {
+	public static CourseDto fromDomain(Course course, List<LessonDto> lessons) {
 		long completedLesson = lessons.stream()
 			.filter(lesson -> lesson.status() == LessonDto.LessonStatus.COMPLETE)
 			.count();

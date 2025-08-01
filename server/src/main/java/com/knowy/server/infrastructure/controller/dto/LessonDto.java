@@ -12,13 +12,13 @@ public record LessonDto(
 	LessonStatus status
 ) {
 
-	public static List<LessonDto> fromEntities(List<UserLesson> userLessons) {
+	public static List<LessonDto> fromDomains(List<UserLesson> userLessons) {
 		return userLessons.stream()
-			.map(LessonDto::fromEntity)
+			.map(LessonDto::fromDomain)
 			.toList();
 	}
 
-	public static LessonDto fromEntity(UserLesson userLesson) {
+	public static LessonDto fromDomain(UserLesson userLesson) {
 		return new LessonDto(
 			userLesson.lesson().id(),
 			userLesson.lesson().title(),
