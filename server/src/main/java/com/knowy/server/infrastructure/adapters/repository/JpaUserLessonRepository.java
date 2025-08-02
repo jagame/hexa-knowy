@@ -11,22 +11,29 @@ import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserLess
 import com.knowy.server.infrastructure.adapters.repository.exception.JpaLessonNotFoundException;
 import com.knowy.server.infrastructure.adapters.repository.exception.JpaUserNotFoundException;
 import com.knowy.server.infrastructure.adapters.repository.mapper.EntityMapper;
+import com.knowy.server.infrastructure.adapters.repository.mapper.JpaUserMapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class JpaUserLessonRepository implements UserLessonRepository {
 
 	private final JpaUserLessonDao jpaUserLessonDao;
 	private final JpaUserDao jpaUserDao;
 	private final JpaLessonDao jpaLessonDao;
 	private final JpaUserLessonMapper jpaUserLessonMapper;
+	private final JpaUserMapper jpaUserMapper;
+	private final JpaLessonRepository.JpaLessonMapper jpaLessonMapper;
 
-	public JpaUserLessonRepository(JpaUserLessonDao jpaUserLessonDao, JpaUserDao jpaUserDao, JpaLessonDao jpaLessonDao, JpaUserLessonMapper jpaUserLessonMapper) {
+	public JpaUserLessonRepository(JpaUserLessonDao jpaUserLessonDao, JpaUserDao jpaUserDao, JpaLessonDao jpaLessonDao, JpaUserLessonMapper jpaUserLessonMapper, JpaUserMapper jpaUserMapper, JpaLessonRepository.JpaLessonMapper jpaLessonMapper) {
 		this.jpaUserLessonDao = jpaUserLessonDao;
 		this.jpaUserDao = jpaUserDao;
 		this.jpaLessonDao = jpaLessonDao;
 		this.jpaUserLessonMapper = jpaUserLessonMapper;
+		this.jpaUserMapper = jpaUserMapper;
+		this.jpaLessonMapper = jpaLessonMapper;
 	}
 
 	@Override
@@ -74,8 +81,8 @@ public class JpaUserLessonRepository implements UserLessonRepository {
 		@Override
 		public UserLesson toDomain(PublicUserLessonEntity entity) {
 			return new UserLesson(
-				entity.getUserId(),
-				entity.getLessonId(),
+				jpaUserMapper.toDomain(entity.getPublicUserEntity()),
+				jpaLessonMapper.toDomain(entity.getLessonEntity()),
 				entity.getStartDate(),
 				UserLesson.ProgressStatus
 					.valueOf(entity.getStatus().toUpperCase())
@@ -85,14 +92,15 @@ public class JpaUserLessonRepository implements UserLessonRepository {
 		@Override
 		public PublicUserLessonEntity toEntity(UserLesson domain) throws JpaUserNotFoundException, JpaLessonNotFoundException {
 			return new PublicUserLessonEntity(
-				domain.userId(),
-				domain.lessonId(),
+				domain.user().id(),
+				domain.lesson().id(),
 				domain.startDate(),
 				domain.status().name().toLowerCase(),
-				jpaUserDao.findById(domain.userId())
-					.orElseThrow(() -> new JpaUserNotFoundException("User with ID: " + domain.userId() + " not found")),
-				jpaLessonDao.findById(domain.lessonId())
-					.orElseThrow(() -> new JpaLessonNotFoundException("Lesson with ID: " + domain.lessonId() +
+				jpaUserDao.findById(domain.user().id())
+					.orElseThrow(() -> new JpaUserNotFoundException("User with ID: " + domain.user().id() +
+						" not found")),
+				jpaLessonDao.findById(domain.lesson().id())
+					.orElseThrow(() -> new JpaLessonNotFoundException("Lesson with ID: " + domain.lesson().id() +
 						" not found"))
 			);
 		}

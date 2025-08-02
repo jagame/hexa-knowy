@@ -1,6 +1,7 @@
 package com.knowy.server.application.service;
 
 import com.knowy.server.application.domain.Lesson;
+import com.knowy.server.application.domain.User;
 import com.knowy.server.application.domain.UserLesson;
 import com.knowy.server.application.exception.KnowyInconsistentDataException;
 import com.knowy.server.application.ports.LessonRepository;
@@ -57,18 +58,17 @@ public class UserLessonService {
 	 * Marks the current lesson as completed for the given user and, if a next lesson exists, sets its status to
 	 * "in_progress".
 	 *
-	 * @param userId   the ID of the user
-	 * @param lessonId the ID of the completed lesson
 	 * @throws UserLessonNotFoundException if the relationship for the given user and lesson is not found
 	 */
-	public void updateLessonStatusToCompleted(int userId, int lessonId) throws UserLessonNotFoundException, KnowyInconsistentDataException {
-		UserLesson userLesson = findById(userId, lessonId)
+	public void updateLessonStatusToCompleted(User user, Lesson lesson) throws UserLessonNotFoundException,
+		KnowyInconsistentDataException {
+		UserLesson userLesson = findById(user.id(), lesson.id())
 			.orElseThrow(() -> new UserLessonNotFoundException("Relation public user lesson not found"));
 
-		updateNextLessonStatusToInProgress(userId, lessonId);
+		updateNextLessonStatusToInProgress(user.id(), lesson.id());
 		userLessonRepository.save(new UserLesson(
-			userId,
-			lessonId,
+			user,
+			lesson,
 			userLesson.startDate(),
 			UserLesson.ProgressStatus.COMPLETED
 		));
@@ -81,8 +81,8 @@ public class UserLessonService {
 			.orElseThrow();
 
 		userLessonRepository.save(new UserLesson(
-			userLesson.userId(),
-			userLesson.lessonId(),
+			userLesson.user(),
+			userLesson.lesson(),
 			userLesson.startDate(),
 			UserLesson.ProgressStatus.IN_PROGRESS
 		));

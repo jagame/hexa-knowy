@@ -1,5 +1,6 @@
 package com.knowy.server.infrastructure.config;
 
+import com.knowy.server.application.domain.UserPrivate;
 import com.knowy.server.infrastructure.adapters.repository.entity.PrivateUserEntity;
 import com.knowy.server.application.ports.UserPrivateRepository;
 import com.knowy.server.application.service.model.UserSecurityDetails;
@@ -17,11 +18,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-	private final UserPrivateRepository privateUserRepository;
+	private final UserPrivateRepository userPrivateRepository;
 	private static final String LOGIN_URL = "/login";
 
-	public SecurityConfiguration(UserPrivateRepository privateUserRepository) {
-		this.privateUserRepository = privateUserRepository;
+	public SecurityConfiguration(UserPrivateRepository userPrivateRepository) {
+		this.userPrivateRepository = userPrivateRepository;
 	}
 
 	/**
@@ -39,9 +40,9 @@ public class SecurityConfiguration {
 	@Bean
 	public UserDetailsService userDetailsService() {
 		return email -> {
-			PrivateUserEntity privateUser = privateUserRepository.findByEmail(email)
+			UserPrivate userPrivate = userPrivateRepository.findByEmail(email)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
-			return new UserSecurityDetails(privateUser);
+			return new UserSecurityDetails(userPrivate);
 		};
 	}
 

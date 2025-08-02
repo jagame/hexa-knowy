@@ -1,9 +1,6 @@
 package com.knowy.server.application.service;
 
-import com.knowy.server.application.domain.Category;
-import com.knowy.server.application.domain.Course;
-import com.knowy.server.application.domain.Lesson;
-import com.knowy.server.application.domain.UserLesson;
+import com.knowy.server.application.domain.*;
 import com.knowy.server.application.exception.KnowyInconsistentDataException;
 import com.knowy.server.application.ports.CategoryRepository;
 import com.knowy.server.application.ports.CourseRepository;
@@ -96,13 +93,14 @@ public class CourseSubscriptionService {
 		return recommendations;
 	}
 
-	public void subscribeUserToCourse(Integer userId, Integer courseId) throws KnowyCourseSubscriptionException, KnowyInconsistentDataException {
+	public void subscribeUserToCourse(User user, int courseId) throws KnowyCourseSubscriptionException,
+		KnowyInconsistentDataException {
 		List<Lesson> lessons = lessonRepository.findByCourseId(courseId);
 		if (lessons.isEmpty()) {
 			throw new KnowyCourseSubscriptionException("El curso no tiene lecciones disponibles");
 		}
 
-		ensureAlreadySubscribed(lessons, userId);
+		ensureAlreadySubscribed(lessons, user.id());
 
 		lessons = lessons.stream()
 			.sorted(Comparator.comparing(Lesson::id))
@@ -110,10 +108,10 @@ public class CourseSubscriptionService {
 
 		for (int index = 0; index < lessons.size(); index++) {
 			Lesson lesson = lessons.get(index);
-			if (!userLessonRepository.existsById(userId, lesson.id())) {
+			if (!userLessonRepository.existsById(user.id(), lesson.id())) {
 				UserLesson userLesson = new UserLesson(
-					userId,
-					lesson.id(),
+					user,
+					lesson,
 					LocalDate.now(),
 					index == 0 ? UserLesson.ProgressStatus.IN_PROGRESS : UserLesson.ProgressStatus.PENDING
 				);

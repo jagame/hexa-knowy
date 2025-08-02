@@ -9,11 +9,13 @@ import com.knowy.server.infrastructure.adapters.repository.entity.LessonEntity;
 import com.knowy.server.infrastructure.adapters.repository.mapper.EntityMapper;
 import com.knowy.server.infrastructure.adapters.repository.mapper.JpaCourseMapper;
 import com.knowy.server.infrastructure.adapters.repository.mapper.JpaExerciseMapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Repository
 public class JpaLessonRepository implements LessonRepository {
 
 	private final JpaLessonDao jpaLessonDao;

@@ -1,7 +1,7 @@
 package com.knowy.server.application.service.model;
 
-import com.knowy.server.infrastructure.adapters.repository.entity.PrivateUserEntity;
-import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserEntity;
+import com.knowy.server.application.domain.User;
+import com.knowy.server.application.domain.UserPrivate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -10,14 +10,14 @@ import java.util.List;
 
 public class UserSecurityDetails implements UserDetails {
 
-	private final PrivateUserEntity privateUser;
+	private final UserPrivate userPrivate;
 
-	public UserSecurityDetails(PrivateUserEntity privateUser) {
-		this.privateUser = privateUser;
+	public UserSecurityDetails(UserPrivate userPrivate) {
+		this.userPrivate = userPrivate;
 	}
 
-	public PublicUserEntity getPublicUser() {
-		return privateUser.getPublicUserEntity();
+	public User getUser() {
+		return userPrivate.cropToUser();
 	}
 
 	@Override
@@ -27,12 +27,12 @@ public class UserSecurityDetails implements UserDetails {
 
 	@Override
 	public String getPassword() {
-		return privateUser.getPassword();
+		return userPrivate.password();
 	}
 
 	@Override
 	public String getUsername() {
-		return privateUser.getEmail();
+		return userPrivate.email();
 	}
 
 	@Override
@@ -52,6 +52,6 @@ public class UserSecurityDetails implements UserDetails {
 
 	@Override
 	public boolean isEnabled() {
-		return privateUser.isActive();
+		return userPrivate.active();
 	}
 }

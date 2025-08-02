@@ -1,5 +1,6 @@
 package com.knowy.server.infrastructure.controller;
 
+import com.knowy.server.application.domain.Course;
 import com.knowy.server.application.exception.KnowyInconsistentDataException;
 import com.knowy.server.application.service.CourseSubscriptionService;
 import com.knowy.server.application.service.model.UserSecurityDetails;
@@ -33,11 +34,12 @@ public class CourseController {
 	static void handleCourseSubscription(
 		@RequestParam Integer courseId,
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
-		RedirectAttributes attrs, CourseSubscriptionService courseSubscriptionService,
+		RedirectAttributes attrs,
+		CourseSubscriptionService courseSubscriptionService,
 		String toastModelAttribute
 	) {
 		try {
-			courseSubscriptionService.subscribeUserToCourse(userDetails.getPublicUser().getId(), courseId);
+			courseSubscriptionService.subscribeUserToCourse(userDetails.getUser(), courseId);
 			attrs.addFlashAttribute(toastModelAttribute, List.of(new ToastDto("Éxito",
 				"¡Te has suscrito correctamente!", ToastDto.ToastType.SUCCESS)));
 		} catch (KnowyCourseSubscriptionException e) {
@@ -56,11 +58,11 @@ public class CourseController {
 		@RequestParam(defaultValue = "1") int page,
 		@AuthenticationPrincipal UserSecurityDetails userDetails
 	) throws KnowyInconsistentDataException {
-		List<CourseCardDTO> courses = courseSubscriptionService.getUserCourses(userDetails.getPublicUser().getId())
+		List<CourseCardDTO> courses = courseSubscriptionService.getUserCourses(userDetails.getUser().id())
 			.stream()
 			.map(course -> CourseCardDTO.fromDomain(
 				course,
-				courseSubscriptionService.getCourseProgress(userDetails.getPublicUser().getId(), course.id()),
+				courseSubscriptionService.getCourseProgress(userDetails.getUser().id(), course.id()),
 				CourseCardDTO.ActionType.START
 			))
 			.toList();
@@ -102,11 +104,11 @@ public class CourseController {
 		}
 
 		List<CourseCardDTO> recommendations = courseSubscriptionService
-			.getRecommendedCourses(userDetails.getPublicUser().getId())
+			.getRecommendedCourses(userDetails.getUser().id())
 			.stream()
 			.map(course -> CourseCardDTO.fromDomain(
 				course,
-				courseSubscriptionService.getCourseProgress(userDetails.getPublicUser().getId(), course.id()),
+				courseSubscriptionService.getCourseProgress(userDetails.getUser().id(), course.id()),
 				CourseCardDTO.ActionType.START
 			)).toList();
 

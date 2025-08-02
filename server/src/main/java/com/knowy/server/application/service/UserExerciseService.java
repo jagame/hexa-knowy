@@ -116,11 +116,9 @@ public class UserExerciseService {
 
 		return new UserExercise(
 			userRepository.findById(userId)
-				.orElseThrow(() -> new UserNotFoundException("User " + userId + " not found"))
-				.id(),
+				.orElseThrow(() -> new UserNotFoundException("User " + userId + " not found")),
 			exerciseRepository.findById(exerciseId)
-				.orElseThrow(() -> new ExerciseNotFoundException("Exercise " + exerciseId + " not found"))
-				.id(),
+				.orElseThrow(() -> new ExerciseNotFoundException("Exercise " + exerciseId + " not found")),
 			0,
 			LocalDateTime.now()
 		);
@@ -195,8 +193,8 @@ public class UserExerciseService {
 			.plus(userExercise.rate() >= 90 ? Duration.ofDays(1) : Duration.ofMinutes(15));
 
 		return new UserExercise(
-			userExercise.userId(),
-			userExercise.exerciseId(),
+			userExercise.user(),
+			userExercise.exercise(),
 			updatedRate,
 			updatedNextReview
 		);
@@ -209,8 +207,8 @@ public class UserExerciseService {
 			.plus(userExercise.rate() >= 90 ? Duration.ofDays(1) : Duration.ofMinutes(7));
 
 		return new UserExercise(
-			userExercise.userId(),
-			userExercise.exerciseId(),
+			userExercise.user(),
+			userExercise.exercise(),
 			updatedRate,
 			updatedNextReview
 		);
@@ -221,8 +219,8 @@ public class UserExerciseService {
 		LocalDateTime updatedNextReview = LocalDateTime.now().plusMinutes(5);
 
 		return new UserExercise(
-			userExercise.userId(),
-			userExercise.exerciseId(),
+			userExercise.user(),
+			userExercise.exercise(),
 			updatedRate,
 			updatedNextReview
 		);
@@ -233,8 +231,8 @@ public class UserExerciseService {
 		LocalDateTime updatedNextReview = LocalDateTime.now().plusMinutes(1);
 
 		return new UserExercise(
-			userExercise.userId(),
-			userExercise.exerciseId(),
+			userExercise.user(),
+			userExercise.exercise(),
 			updatedRate,
 			updatedNextReview
 		);

@@ -29,7 +29,7 @@ public class UserHomeController {
 
 	@GetMapping("/home")
 	public String userHome(Model model, @AuthenticationPrincipal UserSecurityDetails userDetails) throws KnowyInconsistentDataException {
-		Integer userId = userDetails.getPublicUser().getId();
+		Integer userId = userDetails.getUser().id();
 		long coursesCompleted = userHomeService.getCoursesCompleted(userId);
 		long totalCourses = userHomeService.getTotalCourses(userId);
 		long percent = userHomeService.getCoursesPercentage(userId);
@@ -49,7 +49,7 @@ public class UserHomeController {
 		model.addAttribute("totalCourses", totalCourses);
 		model.addAttribute("fractionProgress", percent);
 		model.addAttribute("newsHome", banners);
-		model.addAttribute("username", userDetails.getPublicUser().getNickname());
+		model.addAttribute("username", userDetails.getUser().nickname());
 
 		model.addAttribute("missionsList", missionsList);
 		return "pages/user-home";

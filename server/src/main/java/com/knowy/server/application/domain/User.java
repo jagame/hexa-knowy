@@ -1,9 +1,10 @@
 package com.knowy.server.application.domain;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
-public class User {
+public class User implements Serializable {
 	private final Integer id;
 	private final String nickname;
 	private final ProfileImage profileImage;

@@ -57,11 +57,11 @@ public class ExerciseController {
 	) {
 		try {
 			UserExercise userExercise = userExerciseService
-				.getNextExerciseByLessonId(userDetails.getPublicUser().getId(), lessonId);
+				.getNextExerciseByLessonId(userDetails.getUser().id(), lessonId);
 
-			UserLesson userLesson = userLessonService.findById(userDetails.getPublicUser().getId(), lessonId)
+			UserLesson userLesson = userLessonService.findById(userDetails.getUser().id(), lessonId)
 				.orElseThrow(() -> new UserLessonNotFoundException(
-					"UserLesson not found for user ID: " + userDetails.getPublicUser().getId() + " and lesson ID: " + lessonId
+					"UserLesson not found for user ID: " + userDetails.getUser().id() + " and lesson ID: " + lessonId
 				));
 
 			model.addAttribute(EXERCISE_MODEL_ATTRIBUTE, ExerciseDto.fromDomain(userExercise, userLesson.lesson()));
@@ -92,13 +92,13 @@ public class ExerciseController {
 		Model model
 	) throws ExerciseNotFoundException, UserNotFoundException, KnowyDataAccessException, UserLessonNotFoundException {
 
-		UserExercise userExercise = userExerciseService.getByIdOrCreate(userDetails.getPublicUser().getId(),
+		UserExercise userExercise = userExerciseService.getByIdOrCreate(userDetails.getUser().id(),
 			exerciseId);
 
 		UserLesson userLesson = userLessonService
-			.findById(userDetails.getPublicUser().getId(), userExercise.exercise().lessonId())
+			.findById(userDetails.getUser().id(), userExercise.exercise().lessonId())
 			.orElseThrow(() -> new UserLessonNotFoundException(
-				"UserLesson not found for user ID: " + userDetails.getPublicUser().getId() + " and lesson ID: "
+				"UserLesson not found for user ID: " + userDetails.getUser().id() + " and lesson ID: "
 					+ userExercise.exercise().lessonId()
 			));
 
@@ -138,12 +138,12 @@ public class ExerciseController {
 		@RequestParam("evaluation") ExerciseDifficult evaluation
 	) throws ExerciseNotFoundException, UserNotFoundException, UserLessonNotFoundException, KnowyDataAccessException {
 		UserExercise userExercise = userExerciseService
-			.getByIdOrCreate(userDetails.getPublicUser().getId(), exerciseId);
+			.getByIdOrCreate(userDetails.getUser().id(), exerciseId);
 
 		UserLesson userLesson = userLessonService
-			.findById(userDetails.getPublicUser().getId(), userExercise.exercise().lessonId())
+			.findById(userDetails.getUser().id(), userExercise.exercise().lessonId())
 			.orElseThrow(() -> new UserLessonNotFoundException(
-				"UserLesson not found for user ID: " + userDetails.getPublicUser().getId() + " and lesson ID: "
+				"UserLesson not found for user ID: " + userDetails.getUser().id() + " and lesson ID: "
 					+ userExercise.exercise().lessonId()
 			));
 
@@ -154,7 +154,7 @@ public class ExerciseController {
 
 		double average = userExerciseService.getAverageRateByLessonId(lessonId);
 		if (average >= 80) {
-			userLessonService.updateLessonStatusToCompleted(userDetails.getPublicUser().getId(), lessonId);
+			userLessonService.updateLessonStatusToCompleted(userDetails.getUser(), userLesson.lesson());
 			return "redirect:/course/%d".formatted(courseId);
 		}
 		return "redirect:/course/%d/exercise/review".formatted(lessonId);
@@ -174,12 +174,12 @@ public class ExerciseController {
 	) {
 		try {
 			UserExercise userExercise = userExerciseService
-				.getNextExerciseByUserId(userDetails.getPublicUser().getId());
+				.getNextExerciseByUserId(userDetails.getUser().id());
 
 			UserLesson userLesson = userLessonService
-				.findById(userDetails.getPublicUser().getId(), userExercise.exercise().lessonId())
+				.findById(userDetails.getUser().id(), userExercise.exercise().lessonId())
 				.orElseThrow(() -> new UserLessonNotFoundException(
-					"UserLesson not found for user ID: " + userDetails.getPublicUser().getId() + " and lesson ID: "
+					"UserLesson not found for user ID: " + userDetails.getUser().id() + " and lesson ID: "
 						+ userExercise.exercise().lessonId()
 				));
 
@@ -212,12 +212,12 @@ public class ExerciseController {
 	) throws ExerciseNotFoundException, UserNotFoundException, KnowyDataAccessException, UserLessonNotFoundException {
 
 		UserExercise userExercise = userExerciseService
-			.getByIdOrCreate(userDetails.getPublicUser().getId(), exerciseId);
+			.getByIdOrCreate(userDetails.getUser().id(), exerciseId);
 
 		UserLesson userLesson = userLessonService
-			.findById(userDetails.getPublicUser().getId(), userExercise.exercise().lessonId())
+			.findById(userDetails.getUser().id(), userExercise.exercise().lessonId())
 			.orElseThrow(() -> new UserLessonNotFoundException(
-				"UserLesson not found for user ID: " + userDetails.getPublicUser().getId() + " and lesson ID: "
+				"UserLesson not found for user ID: " + userDetails.getUser().id() + " and lesson ID: "
 					+ userExercise.exercise().lessonId()
 			));
 
@@ -255,7 +255,7 @@ public class ExerciseController {
 		@RequestParam("evaluation") ExerciseDifficult evaluation
 	) throws ExerciseNotFoundException, UserNotFoundException, KnowyDataAccessException {
 		UserExercise userExercise = userExerciseService
-			.getByIdOrCreate(userDetails.getPublicUser().getId(), exerciseId);
+			.getByIdOrCreate(userDetails.getUser().id(), exerciseId);
 
 		userExerciseService.processUserAnswer(evaluation, userExercise);
 		return "redirect:/exercise/review";

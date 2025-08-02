@@ -40,7 +40,7 @@ public class CoursesStoreController {
 
 		List<Course> allCourses = courseSubscriptionService.findAllCourses();
 
-		List<Integer> myCourseIds = courseSubscriptionService.findCoursesByUserId(userDetails.getPublicUser().getId())
+		List<Integer> myCourseIds = courseSubscriptionService.findCoursesByUserId(userDetails.getUser().id())
 			.stream()
 			.map(Course::id)
 			.toList();
@@ -52,7 +52,7 @@ public class CoursesStoreController {
 		List<CourseCardDTO> storeCourses = availableCourses.stream()
 			.map(course -> CourseCardDTO.fromDomain(
 				course,
-				courseSubscriptionService.getCourseProgress(userDetails.getPublicUser().getId(), course.id()),
+				courseSubscriptionService.getCourseProgress(userDetails.getUser().id(), course.id()),
 				CourseCardDTO.ActionType.ACQUIRE)
 			).toList();
 

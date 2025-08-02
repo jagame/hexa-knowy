@@ -1,5 +1,6 @@
 package com.knowy.server.util;
 
+import com.knowy.server.application.domain.UserPrivate;
 import com.knowy.server.infrastructure.adapters.repository.entity.PrivateUserEntity;
 import com.knowy.server.application.ports.UserPrivateRepository;
 import com.knowy.server.application.service.model.UserSecurityDetails;
@@ -61,7 +62,7 @@ public class UserSecurityDetailsHelper {
 	 * @throws UsernameNotFoundException if the user cannot be found using their internal ID
 	 */
 	public void refreshUserAuthenticationById() throws UsernameNotFoundException {
-		refreshAuthentication(user -> (UserSecurityDetails) loadUserById(user.getPublicUser().getId()));
+		refreshAuthentication(user -> (UserSecurityDetails) loadUserById(user.getUser().id()));
 	}
 
 	private void refreshAuthentication(UnaryOperator<UserSecurityDetails> reloadFunction) {
@@ -80,9 +81,9 @@ public class UserSecurityDetailsHelper {
 	}
 
 	private UserDetails loadUserById(int id) throws UsernameNotFoundException {
-		PrivateUserEntity privateUser = privateUserRepository.findById(id)
+		UserPrivate userPrivate = privateUserRepository.findById(id)
 			.orElseThrow(() -> new UsernameNotFoundException("User not found"));
-		return new UserSecurityDetails(privateUser);
+		return new UserSecurityDetails(userPrivate);
 	}
 
 	/**

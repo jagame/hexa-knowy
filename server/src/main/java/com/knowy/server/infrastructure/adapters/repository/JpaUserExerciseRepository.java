@@ -11,21 +11,29 @@ import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserExer
 import com.knowy.server.infrastructure.adapters.repository.exception.JpaExerciseNotFoundException;
 import com.knowy.server.infrastructure.adapters.repository.exception.JpaUserNotFoundException;
 import com.knowy.server.infrastructure.adapters.repository.mapper.EntityMapper;
+import com.knowy.server.infrastructure.adapters.repository.mapper.JpaExerciseMapper;
+import com.knowy.server.infrastructure.adapters.repository.mapper.JpaUserMapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class JpaUserExerciseRepository implements UserExerciseRepository {
 
 	private final JpaUserDao jpaUserDao;
 	private final JpaExerciseDao jpaExerciseDao;
 	private final JpaUserExerciseDao jpaUserExerciseDao;
 	private final JpaUserExerciseMapper jpaUserExerciseMapper;
+	private final JpaUserMapper jpaUserMapper;
+	private final JpaExerciseMapper jpaExerciseMapper;
 
-	public JpaUserExerciseRepository(JpaUserDao jpaUserDao, JpaExerciseDao jpaExerciseDao, JpaUserExerciseDao jpaUserExerciseDao) {
+	public JpaUserExerciseRepository(JpaUserDao jpaUserDao, JpaExerciseDao jpaExerciseDao, JpaUserExerciseDao jpaUserExerciseDao, JpaUserMapper jpaUserMapper, JpaExerciseMapper jpaExerciseMapper) {
 		this.jpaUserDao = jpaUserDao;
 		this.jpaExerciseDao = jpaExerciseDao;
 		this.jpaUserExerciseDao = jpaUserExerciseDao;
+		this.jpaUserMapper = jpaUserMapper;
+		this.jpaExerciseMapper = jpaExerciseMapper;
 		this.jpaUserExerciseMapper = new JpaUserExerciseMapper();
 	}
 
@@ -70,8 +78,8 @@ public class JpaUserExerciseRepository implements UserExerciseRepository {
 		@Override
 		public UserExercise toDomain(PublicUserExerciseEntity entity) {
 			return new UserExercise(
-				entity.getId().getIdPublicUser(),
-				entity.getId().getIdExercise(),
+				jpaUserMapper.toDomain(entity.getPublicUserEntity()),
+				jpaExerciseMapper.toDomain(entity.getExerciseEntity()),
 				entity.getRate(),
 				entity.getNextReview()
 			);
@@ -80,13 +88,13 @@ public class JpaUserExerciseRepository implements UserExerciseRepository {
 		@Override
 		public PublicUserExerciseEntity toEntity(UserExercise domain) throws JpaUserNotFoundException, JpaExerciseNotFoundException {
 			return new PublicUserExerciseEntity(
-				new PublicUserExerciseId(domain.userId(), domain.exerciseId()),
+				new PublicUserExerciseId(domain.user().id(), domain.exercise().id()),
 				domain.rate(),
 				domain.nextReview(),
-				jpaUserDao.findById(domain.userId())
-					.orElseThrow(() -> new JpaUserNotFoundException("User with ID " + domain.userId() + " not found")),
-				jpaExerciseDao.findById(domain.exerciseId())
-					.orElseThrow(() -> new JpaExerciseNotFoundException("Exercise with ID: " + domain.exerciseId() +
+				jpaUserDao.findById(domain.user().id())
+					.orElseThrow(() -> new JpaUserNotFoundException("User with ID " + domain.user().id() + " not found")),
+				jpaExerciseDao.findById(domain.exercise().id())
+					.orElseThrow(() -> new JpaExerciseNotFoundException("Exercise with ID: " + domain.exercise().id() +
 						" not found"))
 			);
 		}

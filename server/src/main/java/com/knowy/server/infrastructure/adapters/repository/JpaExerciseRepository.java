@@ -4,9 +4,11 @@ import com.knowy.server.application.domain.Exercise;
 import com.knowy.server.application.ports.ExerciseRepository;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaExerciseDao;
 import com.knowy.server.infrastructure.adapters.repository.mapper.JpaExerciseMapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public class JpaExerciseRepository implements ExerciseRepository {
 
 	private final JpaExerciseDao jpaExerciseDao;

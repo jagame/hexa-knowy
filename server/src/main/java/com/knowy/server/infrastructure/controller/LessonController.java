@@ -49,7 +49,7 @@ public class LessonController {
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		@PathVariable Integer courseId, Model model
 	) throws KnowyInconsistentDataException {
-		List<UserLesson> userLessons = getAllPublicUserLessons(userDetails.getPublicUser().getId(), courseId);
+		List<UserLesson> userLessons = getAllPublicUserLessons(userDetails.getUser().id(), courseId);
 		List<LessonDto> lessonsDto = LessonDto.fromDomains(userLessons);
 		List<LinksLessonDto> documentationDto = LinksLessonDto.fromDomains(getAllLessonDocumentations(userLessons));
 
@@ -110,7 +110,7 @@ public class LessonController {
 		@PathVariable Integer lessonId,
 		Model model
 	) throws CurrentLessonNotFoundException, KnowyInconsistentDataException {
-		List<UserLesson> userLessons = getAllPublicUserLessons(userDetails.getPublicUser().getId(), courseId);
+		List<UserLesson> userLessons = getAllPublicUserLessons(userDetails.getUser().id(), courseId);
 		List<LessonDto> lessonsDto = LessonDto.fromDomains(userLessons);
 
 		UserLesson currentUserLesson = getCurrentPublicUserLesson(userLessons, lessonId);

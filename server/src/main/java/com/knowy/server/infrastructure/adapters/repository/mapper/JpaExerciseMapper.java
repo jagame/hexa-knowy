@@ -2,7 +2,9 @@ package com.knowy.server.infrastructure.adapters.repository.mapper;
 
 import com.knowy.server.application.domain.Exercise;
 import com.knowy.server.infrastructure.adapters.repository.entity.ExerciseEntity;
+import org.springframework.stereotype.Component;
 
+@Component
 public class JpaExerciseMapper implements EntityMapper<Exercise, ExerciseEntity> {
 
 	private final JpaOptionMapper jpaOptionMapper;

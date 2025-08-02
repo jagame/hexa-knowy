@@ -2,7 +2,9 @@ package com.knowy.server.infrastructure.adapters.repository.mapper;
 
 import com.knowy.server.application.domain.ProfileImage;
 import com.knowy.server.infrastructure.adapters.repository.entity.ProfileImageEntity;
+import org.springframework.stereotype.Component;
 
+@Component
 public class JpaProfileImageMapper implements EntityMapper<ProfileImage, ProfileImageEntity> {
 	@Override
 	public ProfileImage toDomain(ProfileImageEntity entity) {

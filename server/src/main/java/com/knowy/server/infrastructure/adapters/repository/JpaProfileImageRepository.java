@@ -4,9 +4,11 @@ import com.knowy.server.application.domain.ProfileImage;
 import com.knowy.server.application.ports.ProfileImageRepository;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaProfileImageDao;
 import com.knowy.server.infrastructure.adapters.repository.mapper.JpaProfileImageMapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public class JpaProfileImageRepository implements ProfileImageRepository {
 
 	private final JpaProfileImageDao jpaProfileImageDao;

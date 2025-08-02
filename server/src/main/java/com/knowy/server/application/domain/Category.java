@@ -1,4 +1,6 @@
 package com.knowy.server.application.domain;
 
-public record Category(Integer id, String name) {
+import java.io.Serializable;
+
+public record Category(Integer id, String name) implements Serializable {
 }

@@ -62,7 +62,7 @@ public class UserConfigController {
 	 */
 	@GetMapping("/user-account")
 	public String viewUserAccount(Model model, @AuthenticationPrincipal UserSecurityDetails userDetails) {
-		model.addAttribute("publicUser", userDetails.getPublicUser());
+		model.addAttribute("publicUser", userDetails.getUser());
 		return "pages/user-management/user-account";
 	}
 
@@ -80,9 +80,15 @@ public class UserConfigController {
 	 * @return a redirect to the user account page
 	 */
 	@PostMapping("/update-email")
-	public String updateEmail(@ModelAttribute UserConfigChangeEmailFormDto userConfigChangeEmailFormDto, @AuthenticationPrincipal UserSecurityDetails userDetails, RedirectAttributes redirectAttributes) {
+	public String updateEmail(
+		@ModelAttribute UserConfigChangeEmailFormDto userConfigChangeEmailFormDto,
+		@AuthenticationPrincipal UserSecurityDetails userDetails,
+		RedirectAttributes redirectAttributes
+	) {
 		try {
-			userFacadeService.updateEmail(userConfigChangeEmailFormDto.getEmail(), userDetails.getPublicUser().getId(), userConfigChangeEmailFormDto.getPassword());
+			userFacadeService.updateEmail(
+				userConfigChangeEmailFormDto.getEmail(), userDetails.getUser().id(),
+				userConfigChangeEmailFormDto.getPassword());
 
 			userSecurityDetailsHelper.refreshUserAuthenticationById();
 			redirectAttributes.addFlashAttribute(SUCCESS_MODEL_ATTRIBUTE, "Email actualizado con éxito.");
@@ -107,7 +113,7 @@ public class UserConfigController {
 	 */
 	@GetMapping("/delete-account-advise")
 	public String deleteAccountForm(ModelMap interfaceScreen, @AuthenticationPrincipal UserSecurityDetails userDetails) {
-		interfaceScreen.addAttribute(USERNAME_MODEL_ATTRIBUTE, userDetails.getPublicUser().getNickname());
+		interfaceScreen.addAttribute(USERNAME_MODEL_ATTRIBUTE, userDetails.getUser().nickname());
 		return "pages/user-management/delete-account";
 	}
 
@@ -120,7 +126,7 @@ public class UserConfigController {
 	 */
 	@GetMapping("/delete-account-confirm")
 	public String deleteAccountEnd(ModelMap interfaceScreen, @AuthenticationPrincipal UserSecurityDetails userDetails) {
-		interfaceScreen.addAttribute(USERNAME_MODEL_ATTRIBUTE, userDetails.getPublicUser().getNickname());
+		interfaceScreen.addAttribute(USERNAME_MODEL_ATTRIBUTE, userDetails.getUser().nickname());
 		return "pages/user-management/delete-account-confirm";
 	}
 
@@ -138,7 +144,13 @@ public class UserConfigController {
 	 * @return redirect URL to either the deletion advice page on success or back to the confirmation page on failure
 	 */
 	@PostMapping("/delete-account-confirm")
-	public String deleteAccount(@AuthenticationPrincipal UserSecurityDetails userDetails, @RequestParam String password, @RequestParam String confirmPassword, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+	public String deleteAccount(
+		@AuthenticationPrincipal UserSecurityDetails userDetails,
+		@RequestParam String password,
+		@RequestParam String confirmPassword,
+		RedirectAttributes redirectAttributes,
+		HttpServletRequest request
+	) {
 		String email = userDetails.getUsername();
 		String domainUrl = getDomainUrl(request);
 		String recoveryBaseUrl = domainUrl + "/reactivate-account";
@@ -218,8 +230,8 @@ public class UserConfigController {
 	 */
 	@GetMapping("/user-profile")
 	public String viewUserProfile(Model model, UserProfileDTO userProfileDTO, @AuthenticationPrincipal UserSecurityDetails userDetails) {
-		Hibernate.initialize(userDetails.getPublicUser().getLanguages());
-		model.addAttribute("publicUser", userDetails.getPublicUser());
+		Hibernate.initialize(userDetails.getUser().categories());
+		model.addAttribute("publicUser", userDetails.getUser());
 		model.addAttribute("categories", categoryService.findAll());
 		return "pages/user-management/user-profile";
 	}
@@ -241,7 +253,7 @@ public class UserConfigController {
 		RedirectAttributes redirectAttributes,
 		@AuthenticationPrincipal UserSecurityDetails userDetails) {
 
-		Integer userId = userDetails.getPublicUser().getId();
+		Integer userId = userDetails.getUser().id();
 
 		updateNickname(userProfileDTO.getNickname(), userId, redirectAttributes);
 		updateProfileImage(userProfileDTO.getProfilePictureId(), userDetails, userId, redirectAttributes);
@@ -285,7 +297,7 @@ public class UserConfigController {
 			try {
 				userFacadeService.updateProfileImage(profilePictureId, userId);
 				redirectAttributes.addFlashAttribute("profilePicture", profilePictureId);
-				redirectAttributes.addFlashAttribute("profilePictureUrl", userDetails.getPublicUser().getProfileImage().getUrl());
+				redirectAttributes.addFlashAttribute("profilePictureUrl", userDetails.getUser().profileImage().url());
 			} catch (ImageNotFoundException e) {
 				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Aún no existe una imagen de perfil");
 			} catch (UnchangedImageException e) {

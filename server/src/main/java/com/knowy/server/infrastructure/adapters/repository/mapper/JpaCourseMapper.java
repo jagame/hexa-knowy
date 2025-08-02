@@ -2,9 +2,11 @@ package com.knowy.server.infrastructure.adapters.repository.mapper;
 
 import com.knowy.server.application.domain.Course;
 import com.knowy.server.infrastructure.adapters.repository.entity.CourseEntity;
+import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
+@Component
 public class JpaCourseMapper implements EntityMapper<Course, CourseEntity> {
 
 	private final JpaCategoryMapper jpaCategoryMapper;

@@ -4,10 +4,12 @@ import com.knowy.server.application.domain.Course;
 import com.knowy.server.application.ports.CourseRepository;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaCourseDao;
 import com.knowy.server.infrastructure.adapters.repository.mapper.JpaCourseMapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class JpaCourseRepository implements CourseRepository {
 
 	private final JpaCourseDao jpaCourseDao;

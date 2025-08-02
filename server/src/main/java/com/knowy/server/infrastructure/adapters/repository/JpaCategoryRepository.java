@@ -4,11 +4,13 @@ import com.knowy.server.application.domain.Category;
 import com.knowy.server.application.ports.CategoryRepository;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaCategoryDao;
 import com.knowy.server.infrastructure.adapters.repository.mapper.JpaCategoryMapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Repository
 public class JpaCategoryRepository implements CategoryRepository {
 
 	private final JpaCategoryDao jpaCategoryDao;
