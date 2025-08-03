@@ -27,7 +27,7 @@
 	</scm>
 
 	<properties>
-		<java.version>21</java.version>
+		<maven.compiler.release>21</maven.compiler.release>
 		<sass.source.in>src/main/resources/static/styles</sass.source.in>
 		<sass.source.out>generated-resources/main/static/styles</sass.source.out>
 	</properties>
