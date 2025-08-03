@@ -7,9 +7,9 @@ import com.knowy.server.application.service.model.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.UserConfigChangeEmailFormDto;
 import com.knowy.server.infrastructure.controller.dto.UserProfileDTO;
 import com.knowy.server.util.UserSecurityDetailsHelper;
-import com.knowy.server.util.exception.JwtKnowyException;
-import com.knowy.server.util.exception.MailDispatchException;
-import com.knowy.server.util.exception.WrongPasswordException;
+import com.knowy.server.application.exception.KnowyTokenException;
+import com.knowy.server.application.exception.KnowyMailDispatchException;
+import com.knowy.server.application.exception.KnowyWrongPasswordException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
@@ -92,13 +92,13 @@ public class UserConfigController {
 
 			userSecurityDetailsHelper.refreshUserAuthenticationById();
 			redirectAttributes.addFlashAttribute(SUCCESS_MODEL_ATTRIBUTE, "Email actualizado con éxito.");
-		} catch (UserNotFoundException e) {
+		} catch (KnowyUserNotFoundException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado.");
-		} catch (UnchangedEmailException e) {
+		} catch (KnowyUnchangedEmailException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "El nuevo correo debe ser diferente al actual.");
-		} catch (WrongPasswordException e) {
+		} catch (KnowyWrongPasswordException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "La contraseña es incorrecta.");
-		} catch (InvalidUserEmailException e) {
+		} catch (KnowyInvalidUserEmailException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "El correo ingresado ya está asociado a una cuenta existente.");
 		}
 		return "redirect:/user-account";
@@ -160,16 +160,16 @@ public class UserConfigController {
 			redirectAttributes.addFlashAttribute(SUCCESS_MODEL_ATTRIBUTE, "Tu cuenta ha sido desactivada correctamente. Dispones de 30 días para recuperarla.");
 			return "redirect:delete-advise";
 
-		} catch (WrongPasswordException e) {
+		} catch (KnowyWrongPasswordException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "La contraseña es incorrecta o no coincide");
 			return DELETE_ACCOUNT_CONFIRM_REDIRECT_URL;
-		} catch (MailDispatchException e) {
+		} catch (KnowyMailDispatchException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Error al enviar el email");
 			return DELETE_ACCOUNT_CONFIRM_REDIRECT_URL;
-		} catch (JwtKnowyException e) {
+		} catch (KnowyTokenException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Error al recuperar el token");
 			return DELETE_ACCOUNT_CONFIRM_REDIRECT_URL;
-		} catch (UserNotFoundException e) {
+		} catch (KnowyUserNotFoundException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, USER_NOT_FOUND_ERROR_MESSAGE);
 			return DELETE_ACCOUNT_CONFIRM_REDIRECT_URL;
 		}
@@ -200,10 +200,10 @@ public class UserConfigController {
 			model.addAttribute(SUCCESS_MODEL_ATTRIBUTE, "Tu cuenta ha sido reactivada correctamente.");
 			return "pages/user-management/account-reactivation";
 
-		} catch (JwtKnowyException e) {
+		} catch (KnowyTokenException e) {
 			model.addAttribute(ERROR_MODEL_ATTRIBUTE, "El token ha expirado o no es válido");
 			return "error/error";
-		} catch (UserNotFoundException e) {
+		} catch (KnowyUserNotFoundException e) {
 			model.addAttribute(ERROR_MODEL_ATTRIBUTE, USER_NOT_FOUND_ERROR_MESSAGE);
 			return "error/error";
 		}
@@ -276,13 +276,13 @@ public class UserConfigController {
 			try {
 				userFacadeService.updateNickname(newNickname, userId);
 				redirectAttributes.addFlashAttribute(USERNAME_MODEL_ATTRIBUTE, newNickname);
-			} catch (UserNotFoundException e) {
+			} catch (KnowyUserNotFoundException e) {
 				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Usuario no encontrado.");
-			} catch (UnchangedNicknameException e) {
+			} catch (KnowyUnchangedNicknameException e) {
 				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "El nuevo nombre debe ser diferente al actual.");
-			} catch (NicknameAlreadyTakenException e) {
+			} catch (KnowyNicknameAlreadyTakenException e) {
 				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "El nombre ya está en uso.");
-			} catch (InvalidUserNicknameException e) {
+			} catch (KnowyInvalidUserNicknameException e) {
 				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "No se permiten apodos en blanco o vacíos.");
 			}
 		}
@@ -298,11 +298,11 @@ public class UserConfigController {
 				userFacadeService.updateProfileImage(profilePictureId, userId);
 				redirectAttributes.addFlashAttribute("profilePicture", profilePictureId);
 				redirectAttributes.addFlashAttribute("profilePictureUrl", userDetails.getUser().profileImage().url());
-			} catch (ImageNotFoundException e) {
+			} catch (KnowyImageNotFoundException e) {
 				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Aún no existe una imagen de perfil");
-			} catch (UnchangedImageException e) {
+			} catch (KnowyUnchangedImageException e) {
 				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "La imagen debe ser diferente a la actual.");
-			} catch (UserNotFoundException e) {
+			} catch (KnowyUserNotFoundException e) {
 				redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, USER_NOT_FOUND_ERROR_MESSAGE);
 			}
 		}
@@ -312,7 +312,7 @@ public class UserConfigController {
 		String[] newLanguages = languages != null ? languages : new String[0];
 		try {
 			userFacadeService.updateLanguages(userId, newLanguages);
-		} catch (UserNotFoundException e) {
+		} catch (KnowyUserNotFoundException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, USER_NOT_FOUND_ERROR_MESSAGE);
 		}
 	}

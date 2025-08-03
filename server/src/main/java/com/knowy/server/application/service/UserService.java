@@ -8,7 +8,7 @@ import com.knowy.server.application.ports.ProfileImageRepository;
 import com.knowy.server.application.ports.UserRepository;
 import com.knowy.server.application.service.exception.*;
 import com.knowy.server.application.service.model.NewUserCommand;
-import com.knowy.server.util.StringUtils;
+import com.knowy.server.application.util.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -48,20 +48,20 @@ public class UserService {
 	 *
 	 * @param nickname the desired nickname for the new user
 	 * @return a new {@code PublicUserEntity} instance with the default profile image set
-	 * @throws InvalidUserException   if the nickname is already in use
-	 * @throws ImageNotFoundException if the default profile image (ID 1) does not exist
+	 * @throws KnowyInvalidUserException   if the nickname is already in use
+	 * @throws KnowyImageNotFoundException if the default profile image (ID 1) does not exist
 	 */
-	public NewUserCommand create(String nickname) throws InvalidUserException, ImageNotFoundException {
+	public NewUserCommand create(String nickname) throws KnowyInvalidUserException, KnowyImageNotFoundException {
 		assertNotBlankNickname(nickname);
 
 		if (findPublicUserByNickname(nickname).isPresent()) {
-			throw new InvalidUserNicknameException("Nickname already exists");
+			throw new KnowyInvalidUserNicknameException("Nickname already exists");
 		}
 
 		return new NewUserCommand(
 			nickname,
 			profileImageRepository.findById(1)
-				.orElseThrow(() -> new ImageNotFoundException("Not found profile image")),
+				.orElseThrow(() -> new KnowyImageNotFoundException("Not found profile image")),
 			new HashSet<>()
 		);
 	}
@@ -86,29 +86,29 @@ public class UserService {
 	 *
 	 * @param newNickname the new nickname to assign
 	 * @param id          the ID of the user whose nickname should be updated
-	 * @throws UserNotFoundException         if the user with the given ID does not exist
-	 * @throws UnchangedNicknameException    if the new nickname is the same as the current one
-	 * @throws NicknameAlreadyTakenException if the new nickname is already in use by another user
+	 * @throws KnowyUserNotFoundException         if the user with the given ID does not exist
+	 * @throws KnowyUnchangedNicknameException    if the new nickname is the same as the current one
+	 * @throws KnowyNicknameAlreadyTakenException if the new nickname is already in use by another user
 	 */
-	public void updateNickname(String newNickname, Integer id) throws UserNotFoundException,
-		UnchangedNicknameException, NicknameAlreadyTakenException, InvalidUserNicknameException {
+	public void updateNickname(String newNickname, Integer id) throws KnowyUserNotFoundException,
+		KnowyUnchangedNicknameException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserNicknameException {
 		assertNotBlankNickname(newNickname);
 
 		User user = userRepository.findById(id)
-			.orElseThrow(() -> new UserNotFoundException("User not found"));
+			.orElseThrow(() -> new KnowyUserNotFoundException("User not found"));
 		if (user.nickname().equals(newNickname)) {
-			throw new UnchangedNicknameException("Nickname must be different from the current one.");
+			throw new KnowyUnchangedNicknameException("Nickname must be different from the current one.");
 		}
 		if (userRepository.existsByNickname(newNickname)) {
-			throw new NicknameAlreadyTakenException("Nickname is already in use.");
+			throw new KnowyNicknameAlreadyTakenException("Nickname is already in use.");
 		}
 
 		userRepository.updateNickname(newNickname, id);
 	}
 
-	private void assertNotBlankNickname(String nickname) throws InvalidUserNicknameException {
+	private void assertNotBlankNickname(String nickname) throws KnowyInvalidUserNicknameException {
 		if (StringUtils.isBlank(nickname)) {
-			throw new InvalidUserNicknameException("Blank nicknames are not allowed");
+			throw new KnowyInvalidUserNicknameException("Blank nicknames are not allowed");
 		}
 	}
 
@@ -120,20 +120,20 @@ public class UserService {
 	 *
 	 * @param newProfileImageId the ID of the new profile image to assign
 	 * @param userId            the ID of the user whose profile image should be updated
-	 * @throws UserNotFoundException   if no user exists with the given ID
-	 * @throws ImageNotFoundException  if no profile image exists with the given ID
-	 * @throws UnchangedImageException if the new image is the same as the current one
+	 * @throws KnowyUserNotFoundException   if no user exists with the given ID
+	 * @throws KnowyImageNotFoundException  if no profile image exists with the given ID
+	 * @throws KnowyUnchangedImageException if the new image is the same as the current one
 	 */
-	public void updateProfileImage(Integer newProfileImageId, Integer userId) throws UnchangedImageException,
-		ImageNotFoundException, UserNotFoundException {
+	public void updateProfileImage(Integer newProfileImageId, Integer userId) throws KnowyUnchangedImageException,
+		KnowyImageNotFoundException, KnowyUserNotFoundException {
 		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+			.orElseThrow(() -> new KnowyUserNotFoundException("User not found with id: " + userId));
 
 		ProfileImage img = profileImageRepository.findById(newProfileImageId)
-			.orElseThrow(() -> new ImageNotFoundException("Profile image with this id not found"));
+			.orElseThrow(() -> new KnowyImageNotFoundException("Profile image with this id not found"));
 
 		if (user.profileImage().id().equals(img.id())) {
-			throw new UnchangedImageException("Image must be different from the current one.");
+			throw new KnowyUnchangedImageException("Image must be different from the current one.");
 		}
 
 		User newUser = new User(user.id(), user.nickname(), img, user.categories());
@@ -148,13 +148,13 @@ public class UserService {
 	 *
 	 * @param userId    the ID of the user whose categories should be updated
 	 * @param languages an array of language names to assign to the user
-	 * @throws UserNotFoundException if no user exists with the given ID
+	 * @throws KnowyUserNotFoundException if no user exists with the given ID
 	 */
-	public void updateLanguages(Integer userId, String[] languages) throws UserNotFoundException {
+	public void updateLanguages(Integer userId, String[] languages) throws KnowyUserNotFoundException {
 		Objects.requireNonNull(languages, "A not null categories array is required, if no categories are selected use an empty array instead of null");
 
 		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+			.orElseThrow(() -> new KnowyUserNotFoundException("User not found with id: " + userId));
 		Set<Category> newCategories = languageRepository.findByNameInIgnoreCase(languages);
 
 		User newUser = new User(user.id(), user.nickname(), user.profileImage(), newCategories);

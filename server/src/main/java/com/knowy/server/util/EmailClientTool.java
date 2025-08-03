@@ -1,6 +1,6 @@
 package com.knowy.server.util;
 
-import com.knowy.server.util.exception.MailDispatchException;
+import com.knowy.server.application.exception.KnowyMailDispatchException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -17,7 +17,7 @@ public class EmailClientTool {
 		this.mailSender = mailSender;
 	}
 
-	public void sendEmail(String to, String subject, String body) throws MailDispatchException {
+	public void sendEmail(String to, String subject, String body) throws KnowyMailDispatchException {
 		try {
 			SimpleMailMessage message = new SimpleMailMessage();
 			message.setFrom("knowy-learn@knowy.com");
@@ -27,7 +27,7 @@ public class EmailClientTool {
 
 			mailSender.send(message);
 		} catch (MailException e) {
-			throw new MailDispatchException("Fail to send email to " + to, e);
+			throw new KnowyMailDispatchException("Fail to send email to " + to, e);
 		}
 	}
 }

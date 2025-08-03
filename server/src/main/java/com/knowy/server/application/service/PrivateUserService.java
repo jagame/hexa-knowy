@@ -1,49 +1,48 @@
 package com.knowy.server.application.service;
 
 import com.knowy.server.application.domain.UserPrivate;
+import com.knowy.server.application.exception.KnowyPasswordFormatException;
+import com.knowy.server.application.exception.KnowyTokenException;
+import com.knowy.server.application.exception.KnowyWrongPasswordException;
+import com.knowy.server.application.ports.KnowyPasswordChecker;
+import com.knowy.server.application.ports.KnowyPasswordEncoder;
+import com.knowy.server.application.ports.KnowyTokenTools;
 import com.knowy.server.application.ports.UserPrivateRepository;
-import com.knowy.server.application.service.exception.InvalidUserEmailException;
-import com.knowy.server.application.service.exception.InvalidUserPasswordFormatException;
-import com.knowy.server.application.service.exception.UnchangedEmailException;
-import com.knowy.server.application.service.exception.UserNotFoundException;
+import com.knowy.server.application.service.exception.KnowyInvalidUserEmailException;
+import com.knowy.server.application.service.exception.KnowyInvalidUserPasswordFormatException;
+import com.knowy.server.application.service.exception.KnowyUnchangedEmailException;
+import com.knowy.server.application.service.exception.KnowyUserNotFoundException;
 import com.knowy.server.application.service.model.MailMessage;
 import com.knowy.server.application.service.model.NewUserCommand;
 import com.knowy.server.application.service.model.PasswordResetInfo;
-import com.knowy.server.util.JwtTools;
-import com.knowy.server.util.PasswordChecker;
-import com.knowy.server.util.exception.JwtKnowyException;
-import com.knowy.server.util.exception.PasswordFormatException;
-import com.knowy.server.util.exception.WrongPasswordException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 import java.util.Optional;
 
-@Service
 public class PrivateUserService {
 
 	private final UserPrivateRepository privateUserRepository;
-	private final PasswordEncoder passwordEncoder;
-	private final PasswordChecker passwordChecker;
-	private final JwtTools jwtTools;
+	private final KnowyPasswordEncoder passwordEncoder;
+	private final KnowyPasswordChecker passwordChecker;
+	private final KnowyTokenTools tokenTools;
 
 	/**
 	 * The constructor
 	 *
 	 * @param privateUserRepository the privateUserRepository
 	 * @param passwordEncoder       the passwordEncoder
-	 * @param jwtTools              the jwtTools
+	 * @param tokenTools            the tokenTools
 	 */
 	public PrivateUserService(
 		UserPrivateRepository privateUserRepository,
-		PasswordEncoder passwordEncoder,
-		JwtTools jwtTools
+		KnowyPasswordChecker passwordChecker,
+		KnowyPasswordEncoder passwordEncoder,
+		KnowyTokenTools tokenTools
 	) {
 		this.privateUserRepository = privateUserRepository;
-		this.passwordChecker = new PasswordChecker(passwordEncoder);
+		this.passwordChecker = passwordChecker;
 		this.passwordEncoder = passwordEncoder;
-		this.jwtTools = jwtTools;
+		this.tokenTools = tokenTools;
 	}
 
 	/**
@@ -56,18 +55,18 @@ public class PrivateUserService {
 	 * @param password the raw password to be encoded and stored
 	 * @param user     the associated public user entity
 	 * @return the created {@code PrivateUserEntity}
-	 * @throws InvalidUserEmailException          if the email is already associated with another user
-	 * @throws InvalidUserPasswordFormatException if the password does not meet formatting requirements
+	 * @throws KnowyInvalidUserEmailException          if the email is already associated with another user
+	 * @throws KnowyInvalidUserPasswordFormatException if the password does not meet formatting requirements
 	 */
 	public UserPrivate create(String email, String password, NewUserCommand user)
-		throws InvalidUserPasswordFormatException, InvalidUserEmailException {
+		throws KnowyInvalidUserPasswordFormatException, KnowyInvalidUserEmailException {
 
 		if (findPrivateUserByEmail(email).isPresent()) {
-			throw new InvalidUserEmailException("Email already exists");
+			throw new KnowyInvalidUserEmailException("Email already exists");
 		}
 
 		if (!passwordChecker.isRightPasswordFormat(password)) {
-			throw new InvalidUserPasswordFormatException("Invalid password format");
+			throw new KnowyInvalidUserPasswordFormatException("Invalid password format");
 		}
 
 		UserPrivate userPrivate = new UserPrivate(
@@ -91,20 +90,20 @@ public class PrivateUserService {
 	 * @param email    the new email address to assign
 	 * @param userId   the ID of the user whose email is being updated
 	 * @param password the current password used for verification
-	 * @throws UserNotFoundException   if no user exists with the given ID
-	 * @throws UnchangedEmailException if the new email is identical to the current one
-	 * @throws WrongPasswordException  if the provided password is incorrect
+	 * @throws KnowyUserNotFoundException   if no user exists with the given ID
+	 * @throws KnowyUnchangedEmailException if the new email is identical to the current one
+	 * @throws KnowyWrongPasswordException  if the provided password is incorrect
 	 */
 	public void updateEmail(String email, int userId, String password)
-		throws UserNotFoundException, UnchangedEmailException, WrongPasswordException, InvalidUserEmailException {
+		throws KnowyUserNotFoundException, KnowyUnchangedEmailException, KnowyWrongPasswordException, KnowyInvalidUserEmailException {
 
 		UserPrivate userPrivate = getPrivateUserById(userId);
 		if (Objects.equals(email, userPrivate.email())) {
-			throw new UnchangedEmailException("Email must be different from the current one.");
+			throw new KnowyUnchangedEmailException("Email must be different from the current one.");
 		}
 
 		if (findPrivateUserByEmail(email).isPresent()) {
-			throw new InvalidUserEmailException("The provided email is already associated with an existing account.");
+			throw new KnowyInvalidUserEmailException("The provided email is already associated with an existing account.");
 		}
 
 		passwordChecker.assertHasPassword(userPrivate, password);
@@ -122,18 +121,18 @@ public class PrivateUserService {
 	 * @param token           the JWT token used for password reset
 	 * @param password        the new password to set
 	 * @param confirmPassword confirmation of the new password
-	 * @throws PasswordFormatException if the password does not meet the required format
-	 * @throws JwtKnowyException       if the token is invalid or the passwords do not match
-	 * @throws UserNotFoundException   if the user associated with the token does not exist
+	 * @throws KnowyPasswordFormatException if the password does not meet the required format
+	 * @throws KnowyTokenException       if the token is invalid or the passwords do not match
+	 * @throws KnowyUserNotFoundException   if the user associated with the token does not exist
 	 */
 	public void resetPassword(String token, String password, String confirmPassword)
-		throws PasswordFormatException, JwtKnowyException, UserNotFoundException {
+		throws KnowyPasswordFormatException, KnowyTokenException, KnowyUserNotFoundException {
 
 		Objects.requireNonNull(password, "A password should be specified");
 
 		passwordChecker.assertPasswordFormatIsRight(password);
 		if (!password.equals(confirmPassword)) {
-			throw new JwtKnowyException("Passwords do not match");
+			throw new KnowyTokenException("Passwords do not match");
 		}
 
 		UserPrivate userPrivate = verifyPasswordToken(token);
@@ -160,12 +159,12 @@ public class PrivateUserService {
 	 * @return {@code true} if the token is well-formed, matches a known user, and its signature is valid; {@code false}
 	 * otherwise
 	 */
-	public boolean isValidToken(String token) throws UserNotFoundException {
+	public boolean isValidToken(String token) throws KnowyUserNotFoundException {
 		try {
 			Objects.requireNonNull(token, "A not null token is required");
 			verifyPasswordToken(token);
 			return true;
-		} catch (JwtKnowyException e) {
+		} catch (KnowyTokenException e) {
 			return false;
 		}
 	}
@@ -200,11 +199,11 @@ public class PrivateUserService {
 	 *
 	 * @param id the unique identifier of the private user
 	 * @return the {@code PrivateUserEntity} if found
-	 * @throws UserNotFoundException if no user exists with the given ID
+	 * @throws KnowyUserNotFoundException if no user exists with the given ID
 	 */
-	public UserPrivate getPrivateUserById(Integer id) throws UserNotFoundException {
+	public UserPrivate getPrivateUserById(Integer id) throws KnowyUserNotFoundException {
 		return findPrivateUserById(id)
-			.orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+			.orElseThrow(() -> new KnowyUserNotFoundException("User not found with id: " + id));
 	}
 
 	/**
@@ -225,11 +224,11 @@ public class PrivateUserService {
 	 *
 	 * @param email the email address of the private user
 	 * @return the {@code PrivateUserEntity} associated with the given email
-	 * @throws UserNotFoundException if no user exists with the specified email
+	 * @throws KnowyUserNotFoundException if no user exists with the specified email
 	 */
-	public UserPrivate getPrivateUserByEmail(String email) throws UserNotFoundException {
+	public UserPrivate getPrivateUserByEmail(String email) throws KnowyUserNotFoundException {
 		return findPrivateUserByEmail(email)
-			.orElseThrow(() -> new UserNotFoundException("User not found"));
+			.orElseThrow(() -> new KnowyUserNotFoundException("User not found"));
 	}
 
 	/**
@@ -241,11 +240,11 @@ public class PrivateUserService {
 	 * @param email           the email address of the user requesting password recovery
 	 * @param recoveryBaseUrl the base URL to be used for building the recovery link
 	 * @return a {@code MailMessage} ready to be sent
-	 * @throws UserNotFoundException if no user exists with the given email
-	 * @throws JwtKnowyException     if token generation fails
+	 * @throws KnowyUserNotFoundException if no user exists with the given email
+	 * @throws KnowyTokenException     if token generation fails
 	 */
 	public MailMessage createRecoveryPasswordEmail(String email, String recoveryBaseUrl)
-		throws UserNotFoundException, JwtKnowyException {
+		throws KnowyUserNotFoundException, KnowyTokenException {
 
 		String subject = "Tu enlace para recuperar la cuenta de Knowy está aquí";
 		String token = createUserTokenByEmail(email);
@@ -280,11 +279,11 @@ public class PrivateUserService {
 	 * @param email           the email address of the user whose account was deleted
 	 * @param recoveryBaseUrl the base URL used to generate the account recovery link
 	 * @return a {@link MailMessage} containing the recovery email details (receiver, subject, and body)
-	 * @throws JwtKnowyException     if an error occurs while encoding the JWT token
-	 * @throws UserNotFoundException if no user is found for the given email
+	 * @throws KnowyTokenException     if an error occurs while encoding the JWT token
+	 * @throws KnowyUserNotFoundException if no user is found for the given email
 	 */
 	public MailMessage createDeletedAccountEmail(String email, String recoveryBaseUrl)
-		throws JwtKnowyException, UserNotFoundException {
+		throws KnowyTokenException, KnowyUserNotFoundException {
 
 		final long THIRTY_DAYS_IN_MILLIS = 30L * 24 * 60 * 60 * 1000;
 
@@ -295,15 +294,15 @@ public class PrivateUserService {
 	}
 
 	private String createUserTokenByEmail(String email, long tokenExpirationTime)
-		throws UserNotFoundException, JwtKnowyException {
+		throws KnowyUserNotFoundException, KnowyTokenException {
 		UserPrivate userPrivate = findPrivateUserByEmail(email)
-			.orElseThrow(() -> new UserNotFoundException(String.format("The user with email %s was not found", email)));
+			.orElseThrow(() -> new KnowyUserNotFoundException(String.format("The user with email %s was not found", email)));
 
 		PasswordResetInfo passwordResetInfo = new PasswordResetInfo(userPrivate.id(), userPrivate.email());
-		return jwtTools.encode(passwordResetInfo, userPrivate.password(), tokenExpirationTime);
+		return tokenTools.encode(passwordResetInfo, userPrivate.password(), tokenExpirationTime);
 	}
 
-	private String createUserTokenByEmail(String email) throws UserNotFoundException, JwtKnowyException {
+	private String createUserTokenByEmail(String email) throws KnowyUserNotFoundException, KnowyTokenException {
 		return createUserTokenByEmail(email, 600_000);
 	}
 
@@ -332,20 +331,20 @@ public class PrivateUserService {
 	 * @param email           the email address of the user whose account will be deactivated
 	 * @param password        the password entered by the user for verification
 	 * @param confirmPassword the confirmation password to ensure correctness
-	 * @throws WrongPasswordException if the passwords do not match or the password is incorrect
-	 * @throws UserNotFoundException  if no user is found for the given email
+	 * @throws KnowyWrongPasswordException if the passwords do not match or the password is incorrect
+	 * @throws KnowyUserNotFoundException  if no user is found for the given email
 	 */
 	public void desactivateUserAccount(
 		String email,
 		String password,
 		String confirmPassword
-	) throws WrongPasswordException, UserNotFoundException {
+	) throws KnowyWrongPasswordException, KnowyUserNotFoundException {
 		if (!password.equals(confirmPassword)) {
-			throw new WrongPasswordException("Passwords do not match");
+			throw new KnowyWrongPasswordException("Passwords do not match");
 		}
 
 		UserPrivate userPrivate = findPrivateUserByEmail(email)
-			.orElseThrow(() -> new UserNotFoundException("User not found"));
+			.orElseThrow(() -> new KnowyUserNotFoundException("User not found"));
 
 		passwordChecker.assertHasPassword(userPrivate, password);
 
@@ -361,12 +360,12 @@ public class PrivateUserService {
 	 * Reactivates a user account based on a valid token.
 	 *
 	 * @param token the JWT token used to verify the reactivation request
-	 * @throws JwtKnowyException     if the token is invalid or cannot be processed
-	 * @throws UserNotFoundException if no user is associated with the token
+	 * @throws KnowyTokenException     if the token is invalid or cannot be processed
+	 * @throws KnowyUserNotFoundException if no user is associated with the token
 	 */
-	public void reactivateUserAccount(String token) throws JwtKnowyException, UserNotFoundException {
+	public void reactivateUserAccount(String token) throws KnowyTokenException, KnowyUserNotFoundException {
 		if (!isValidToken(token)) {
-			throw new JwtKnowyException("Invalid token");
+			throw new KnowyTokenException("Invalid token");
 		}
 
 		UserPrivate userPrivate = verifyPasswordToken(token);
@@ -393,13 +392,13 @@ public class PrivateUserService {
 	 *
 	 * @param token the JWT token to verify
 	 * @return the {@code PrivateUserEntity} linked to the token
-	 * @throws JwtKnowyException     if the token is invalid, expired, or has been tampered with
-	 * @throws UserNotFoundException if no user exists for the extracted user ID
+	 * @throws KnowyTokenException     if the token is invalid, expired, or has been tampered with
+	 * @throws KnowyUserNotFoundException if no user exists for the extracted user ID
 	 */
-	public UserPrivate verifyPasswordToken(String token) throws JwtKnowyException, UserNotFoundException {
-		PasswordResetInfo passwordResetInfo = jwtTools.decodeUnverified(token, PasswordResetInfo.class);
+	public UserPrivate verifyPasswordToken(String token) throws KnowyTokenException, KnowyUserNotFoundException {
+		PasswordResetInfo passwordResetInfo = tokenTools.decodeUnverified(token, PasswordResetInfo.class);
 		UserPrivate userPrivate = getPrivateUserById(passwordResetInfo.userId());
-		jwtTools.decode(userPrivate.password(), token, PasswordResetInfo.class);
+		tokenTools.decode(userPrivate.password(), token, PasswordResetInfo.class);
 		return userPrivate;
 	}
 }

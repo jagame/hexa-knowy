@@ -28,7 +28,7 @@ class PublicUserServiceTest {
 
 		Mockito.when(publicUserRepo.findByNickname("ExistNickname")).thenReturn(Optional.of(new PublicUserEntity()));
 
-		InvalidUserNicknameException ex = Assertions.assertThrows(InvalidUserNicknameException.class, () ->
+		KnowyInvalidUserNicknameException ex = Assertions.assertThrows(KnowyInvalidUserNicknameException.class, () ->
 			service.create("ExistNickname")
 		);
 		Assertions.assertEquals("Nickname already exists", ex.getMessage());
@@ -45,7 +45,7 @@ class PublicUserServiceTest {
 
 		Mockito.when(imageRepo.findById(1)).thenReturn(Optional.empty());
 
-		ImageNotFoundException ex = Assertions.assertThrows(ImageNotFoundException.class, () ->
+		KnowyImageNotFoundException ex = Assertions.assertThrows(KnowyImageNotFoundException.class, () ->
 			service.create("ValidNickname")
 		);
 		Assertions.assertEquals("Not found profile image", ex.getMessage());
@@ -62,7 +62,7 @@ class PublicUserServiceTest {
 		user.setNickname("SameNickname");
 		Mockito.when(publicUserRepo.findUserById(1)).thenReturn(Optional.of(user));
 
-		Exception ex = Assertions.assertThrows(UnchangedNicknameException.class, () ->
+		Exception ex = Assertions.assertThrows(KnowyUnchangedNicknameException.class, () ->
 			service.updateNickname("SameNickname", 1)
 		);
 		Assertions.assertEquals("Nickname must be different from the current one.", ex.getMessage());
@@ -81,7 +81,7 @@ class PublicUserServiceTest {
 		Mockito.when(publicUserRepo.existsByNickname("nuevo")).thenReturn(true);
 
 		Exception ex = Assertions.assertThrows(
-			NicknameAlreadyTakenException.class,
+			KnowyNicknameAlreadyTakenException.class,
 			() -> service.updateNickname("nuevo", 1)
 		);
 		Assertions.assertEquals("Nickname is already in use.", ex.getMessage());
@@ -95,8 +95,8 @@ class PublicUserServiceTest {
 
 		UserService service = new UserService(publicUserRepo, languageRepo, imageRepo);
 
-		InvalidUserNicknameException ex = Assertions.assertThrows(
-			InvalidUserNicknameException.class, () ->
+		KnowyInvalidUserNicknameException ex = Assertions.assertThrows(
+			KnowyInvalidUserNicknameException.class, () ->
 				service.create(" ")
 		);
 		Assertions.assertEquals("Blank nicknames are not allowed", ex.getMessage());
@@ -193,7 +193,7 @@ class PublicUserServiceTest {
 
 		Mockito.when(publicUserRepo.findUserById(16)).thenReturn(Optional.empty());
 
-		UserNotFoundException ex = Assertions.assertThrows(UserNotFoundException.class, () ->
+		KnowyUserNotFoundException ex = Assertions.assertThrows(KnowyUserNotFoundException.class, () ->
 			service.updateProfileImage(2, 16)
 		);
 		Assertions.assertEquals("User not found with id: 16", ex.getMessage());
@@ -214,7 +214,7 @@ class PublicUserServiceTest {
 		Mockito.when(publicUserRepo.findUserById(1)).thenReturn(Optional.of(user));
 		Mockito.when(imageRepo.findById(16)).thenReturn(Optional.empty());
 
-		ImageNotFoundException ex = Assertions.assertThrows(ImageNotFoundException.class, () ->
+		KnowyImageNotFoundException ex = Assertions.assertThrows(KnowyImageNotFoundException.class, () ->
 			service.updateProfileImage(16, 1)
 		);
 		Assertions.assertEquals("Profile image with this id not found", ex.getMessage());
@@ -235,7 +235,7 @@ class PublicUserServiceTest {
 		Mockito.when(publicUserRepo.findUserById(1)).thenReturn(Optional.of(user));
 		Mockito.when(imageRepo.findById(5)).thenReturn(Optional.of(img));
 
-		UnchangedImageException ex = Assertions.assertThrows(UnchangedImageException.class, () ->
+		KnowyUnchangedImageException ex = Assertions.assertThrows(KnowyUnchangedImageException.class, () ->
 			service.updateProfileImage(5, 1)
 		);
 		Assertions.assertEquals("Image must be different from the current one.", ex.getMessage());
@@ -277,7 +277,7 @@ class PublicUserServiceTest {
 
 		Mockito.when(publicUserRepo.findUserById(232)).thenReturn(Optional.empty());
 
-		UserNotFoundException ex = Assertions.assertThrows(UserNotFoundException.class, () ->
+		KnowyUserNotFoundException ex = Assertions.assertThrows(KnowyUserNotFoundException.class, () ->
 			service.updateLanguages(232, new String[]{"English", "Spanish"})
 		);
 		Assertions.assertEquals("User not found with id: 232", ex.getMessage());

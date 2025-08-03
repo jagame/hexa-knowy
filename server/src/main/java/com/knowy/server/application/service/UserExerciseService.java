@@ -2,12 +2,12 @@ package com.knowy.server.application.service;
 
 import com.knowy.server.application.domain.UserExercise;
 import com.knowy.server.application.exception.KnowyDataAccessException;
+import com.knowy.server.application.exception.KnowyExerciseNotFoundException;
 import com.knowy.server.application.ports.ExerciseRepository;
 import com.knowy.server.application.ports.UserExerciseRepository;
 import com.knowy.server.application.ports.UserRepository;
-import com.knowy.server.application.service.exception.UserNotFoundException;
+import com.knowy.server.application.service.exception.KnowyUserNotFoundException;
 import com.knowy.server.application.service.model.ExerciseDifficult;
-import com.knowy.server.util.exception.ExerciseNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -52,11 +52,11 @@ public class UserExerciseService {
 	 * @param userId   the ID of the user
 	 * @param lessonId the ID of the lesson
 	 * @return the next PublicUserExerciseEntity for the user in the lesson
-	 * @throws ExerciseNotFoundException if no next exercise is found for the user in the specified lesson
+	 * @throws KnowyExerciseNotFoundException if no next exercise is found for the user in the specified lesson
 	 */
-	public UserExercise getNextExerciseByLessonId(int userId, int lessonId) throws ExerciseNotFoundException, KnowyDataAccessException {
+	public UserExercise getNextExerciseByLessonId(int userId, int lessonId) throws KnowyExerciseNotFoundException, KnowyDataAccessException {
 		return findNextExerciseByLessonId(userId, lessonId)
-			.orElseThrow(() -> new ExerciseNotFoundException("No next exercise found for user ID " + userId + " in lesson ID " + lessonId));
+			.orElseThrow(() -> new KnowyExerciseNotFoundException("No next exercise found for user ID " + userId + " in lesson ID " + lessonId));
 	}
 
 	/**
@@ -74,11 +74,11 @@ public class UserExerciseService {
 	 *
 	 * @param userId the ID of the user
 	 * @return the next PublicUserExerciseEntity for the user
-	 * @throws ExerciseNotFoundException if no next exercise is found for the user
+	 * @throws KnowyExerciseNotFoundException if no next exercise is found for the user
 	 */
-	public UserExercise getNextExerciseByUserId(int userId) throws ExerciseNotFoundException, KnowyDataAccessException {
+	public UserExercise getNextExerciseByUserId(int userId) throws KnowyExerciseNotFoundException, KnowyDataAccessException {
 		return findNextExerciseByUserId(userId)
-			.orElseThrow(() -> new ExerciseNotFoundException("No next exercise found for user ID " + userId));
+			.orElseThrow(() -> new KnowyExerciseNotFoundException("No next exercise found for user ID " + userId));
 	}
 
 	/**
@@ -98,11 +98,11 @@ public class UserExerciseService {
 	 * @param userId     the ID of the user
 	 * @param exerciseId the ID of the exercise
 	 * @return the existing or newly created PublicUserExerciseEntity
-	 * @throws UserNotFoundException     if the user is not found
-	 * @throws ExerciseNotFoundException if the exercise is not found
+	 * @throws KnowyUserNotFoundException     if the user is not found
+	 * @throws KnowyExerciseNotFoundException if the exercise is not found
 	 */
 	public UserExercise getByIdOrCreate(int userId, int exerciseId)
-		throws UserNotFoundException, ExerciseNotFoundException, KnowyDataAccessException {
+		throws KnowyUserNotFoundException, KnowyExerciseNotFoundException, KnowyDataAccessException {
 
 		Optional<UserExercise> publicUserExercise = findById(userId, exerciseId);
 		if (publicUserExercise.isEmpty()) {
@@ -112,13 +112,13 @@ public class UserExerciseService {
 	}
 
 	private UserExercise createUserExerciseEntity(int userId, int exerciseId)
-		throws UserNotFoundException, ExerciseNotFoundException {
+		throws KnowyUserNotFoundException, KnowyExerciseNotFoundException {
 
 		return new UserExercise(
 			userRepository.findById(userId)
-				.orElseThrow(() -> new UserNotFoundException("User " + userId + " not found")),
+				.orElseThrow(() -> new KnowyUserNotFoundException("User " + userId + " not found")),
 			exerciseRepository.findById(exerciseId)
-				.orElseThrow(() -> new ExerciseNotFoundException("Exercise " + exerciseId + " not found")),
+				.orElseThrow(() -> new KnowyExerciseNotFoundException("Exercise " + exerciseId + " not found")),
 			0,
 			LocalDateTime.now()
 		);
@@ -140,11 +140,11 @@ public class UserExerciseService {
 	 *
 	 * @param lessonId the ID of the lesson
 	 * @return the average rate for the lesson
-	 * @throws ExerciseNotFoundException if no average rate is found for the lesson
+	 * @throws KnowyExerciseNotFoundException if no average rate is found for the lesson
 	 */
-	public double getAverageRateByLessonId(int lessonId) throws ExerciseNotFoundException, KnowyDataAccessException {
+	public double getAverageRateByLessonId(int lessonId) throws KnowyExerciseNotFoundException, KnowyDataAccessException {
 		return findAverageRateByLessonId(lessonId)
-			.orElseThrow(() -> new ExerciseNotFoundException(
+			.orElseThrow(() -> new KnowyExerciseNotFoundException(
 				"No average rate found for lesson ID " + lessonId));
 	}
 

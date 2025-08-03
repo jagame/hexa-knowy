@@ -3,13 +3,14 @@ package com.knowy.server.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.knowy.server.util.exception.JwtKnowyException;
+import com.knowy.server.application.exception.KnowyTokenException;
+import com.knowy.server.application.ports.KnowyTokenTools;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
@@ -20,8 +21,8 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.Objects;
 
-@Service
-public class JwtTools {
+@Component
+public class JwtTools implements KnowyTokenTools {
 
 	private final SecretKey key;
 	private final ObjectMapper objectMapper;
@@ -53,9 +54,10 @@ public class JwtTools {
 	 *                            hour)
 	 * @param <T>                 the type of the object being encoded
 	 * @return a compact JWT string containing the signed and encoded data
-	 * @throws JwtKnowyException if token generation fails due to signing or serialization issues
+	 * @throws KnowyTokenException if token generation fails due to signing or serialization issues
 	 */
-	public <T> String encode(T obj, String secondaryKey, long tokenExpirationTime) throws JwtKnowyException {
+	@Override
+	public <T> String encode(T obj, String secondaryKey, long tokenExpirationTime) throws KnowyTokenException {
 		try {
 			SecretKey superSecretKey = keyCalculator(secondaryKey);
 			return Jwts.builder()
@@ -63,8 +65,8 @@ public class JwtTools {
 				.signWith(superSecretKey)
 				.expiration(new Date(System.currentTimeMillis() + tokenExpirationTime))
 				.compact();
-		} catch (JwtException | JwtKnowyException e) {
-			throw new JwtKnowyException("Failed to encode claims", e);
+		} catch (JwtException | KnowyTokenException e) {
+			throw new KnowyTokenException("Failed to encode claims", e);
 		}
 	}
 
@@ -83,9 +85,10 @@ public class JwtTools {
 	 * @param secondaryKey a user-specific component (typically an encrypted password) used to derive the signing key
 	 * @param <T>          the type of the object being encoded
 	 * @return a compact, signed JWT string containing the encoded data
-	 * @throws JwtKnowyException if token generation fails due to signing or serialization issues
+	 * @throws KnowyTokenException if token generation fails due to signing or serialization issues
 	 */
-	public <T> String encode(T obj, String secondaryKey) throws JwtKnowyException {
+	@Override
+	public <T> String encode(T obj, String secondaryKey) throws KnowyTokenException {
 		return encode(obj, secondaryKey, 600_000);
 	}
 
@@ -109,21 +112,22 @@ public class JwtTools {
 	 * @param clazz        the class to deserialize the {@code "data"} claim into
 	 * @param <T>          the type of the deserialized object
 	 * @return the deserialized object from the {@code "data"} claim
-	 * @throws JwtKnowyException if the token is invalid, the signature cannot be verified, or deserialization fails
+	 * @throws KnowyTokenException if the token is invalid, the signature cannot be verified, or deserialization fails
 	 */
-	public <T> T decode(String secondaryKey, String token, Class<T> clazz) throws JwtKnowyException {
+	@Override
+	public <T> T decode(String secondaryKey, String token, Class<T> clazz) throws KnowyTokenException {
 		try {
 			SecretKey superSecretKey = keyCalculator(secondaryKey);
 
 			var jwtDecoder = new JwtDecoder<>(superSecretKey, clazz);
 			Claims claims = jwtDecoder.parseToken(token);
 			return jwtDecoder.extractDataClaim(claims);
-		} catch (JwtException | JwtKnowyException e) {
-			throw new JwtKnowyException("Failed to decode claims", e);
+		} catch (JwtException | KnowyTokenException e) {
+			throw new KnowyTokenException("Failed to decode claims", e);
 		}
 	}
 
-	private SecretKey keyCalculator(String secondaryKey) throws JwtKnowyException {
+	private SecretKey keyCalculator(String secondaryKey) throws KnowyTokenException {
 		try {
 			Mac mac = Mac.getInstance("HmacSHA256");
 			mac.init(key);
@@ -132,7 +136,7 @@ public class JwtTools {
 			);
 			return Keys.hmacShaKeyFor(secondaryKeySign);
 		} catch (NoSuchAlgorithmException | InvalidKeyException e) {
-			throw new JwtKnowyException("Failed to encrypt token", e);
+			throw new KnowyTokenException("Failed to encrypt token", e);
 		}
 	}
 
@@ -150,10 +154,11 @@ public class JwtTools {
 	 * @param clazz the target class to map the "data" field to
 	 * @param <T>   the type to deserialize the "data" object into
 	 * @return an instance of the specified class representing the "data" claim
-	 * @throws JwtKnowyException if the token is invalid, improperly formatted, or if deserialization of the "data"
+	 * @throws KnowyTokenException if the token is invalid, improperly formatted, or if deserialization of the "data"
 	 *                           field fails
 	 */
-	public <T> T decodeUnverified(String token, Class<T> clazz) throws JwtKnowyException {
+	@Override
+	public <T> T decodeUnverified(String token, Class<T> clazz) throws KnowyTokenException {
 		Objects.requireNonNull(token, "A not null token is required");
 
 		try {
@@ -161,19 +166,19 @@ public class JwtTools {
 			JsonNode jsonData = extractDataNode(payloadJson);
 			return jsonDataToClass(jsonData, clazz);
 		} catch (JwtException | JsonProcessingException e) {
-			throw new JwtKnowyException("Failed to decode claims", e);
+			throw new KnowyTokenException("Failed to decode claims", e);
 		}
 	}
 
-	private String extractPayloadJson(String token) throws JwtKnowyException {
+	private String extractPayloadJson(String token) throws KnowyTokenException {
 		String[] parts = getTokenParts(token);
 		return new String(Base64.getDecoder().decode(parts[1]), StandardCharsets.UTF_8);
 	}
 
-	private String[] getTokenParts(String token) throws JwtKnowyException {
+	private String[] getTokenParts(String token) throws KnowyTokenException {
 		String[] parts = token.split("\\.");
 		if (parts.length != 3) {
-			throw new JwtKnowyException("Invalid JWT token format");
+			throw new KnowyTokenException("Invalid JWT token format");
 		}
 		return parts;
 	}

@@ -1,20 +1,20 @@
 package com.knowy.server.service;
 
 
+import com.knowy.server.application.exception.KnowyPasswordFormatException;
+import com.knowy.server.application.exception.KnowyWrongPasswordException;
 import com.knowy.server.application.service.PrivateUserService;
 import com.knowy.server.infrastructure.adapters.repository.entity.PrivateUserEntity;
 import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserEntity;
 import com.knowy.server.application.ports.UserPrivateRepository;
-import com.knowy.server.application.service.exception.InvalidUserEmailException;
-import com.knowy.server.application.service.exception.InvalidUserPasswordFormatException;
-import com.knowy.server.application.service.exception.UnchangedEmailException;
-import com.knowy.server.application.service.exception.UserNotFoundException;
+import com.knowy.server.application.service.exception.KnowyInvalidUserEmailException;
+import com.knowy.server.application.service.exception.KnowyInvalidUserPasswordFormatException;
+import com.knowy.server.application.service.exception.KnowyUnchangedEmailException;
+import com.knowy.server.application.service.exception.KnowyUserNotFoundException;
 import com.knowy.server.application.service.model.MailMessage;
 import com.knowy.server.application.service.model.PasswordResetInfo;
 import com.knowy.server.util.JwtTools;
-import com.knowy.server.util.exception.JwtKnowyException;
-import com.knowy.server.util.exception.PasswordFormatException;
-import com.knowy.server.util.exception.WrongPasswordException;
+import com.knowy.server.application.exception.KnowyTokenException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -43,7 +43,7 @@ class UserPrivateServiceTest {
 
 		when(repo.findByEmail(email)).thenReturn(Optional.of(new PrivateUserEntity()));
 
-		InvalidUserEmailException ex = assertThrows(InvalidUserEmailException.class,
+		KnowyInvalidUserEmailException ex = assertThrows(KnowyInvalidUserEmailException.class,
 			() -> service.create(email, password, publicUser));
 
 		assertEquals("Email already exists", ex.getMessage());
@@ -63,7 +63,7 @@ class UserPrivateServiceTest {
 
 		when(repo.findByEmail(email)).thenReturn(Optional.empty());
 
-		InvalidUserPasswordFormatException ex = assertThrows(InvalidUserPasswordFormatException.class, () ->
+		KnowyInvalidUserPasswordFormatException ex = assertThrows(KnowyInvalidUserPasswordFormatException.class, () ->
 			service.create(email, badPassword, publicUser));
 
 		assertEquals("Invalid password format", ex.getMessage());
@@ -112,7 +112,7 @@ class UserPrivateServiceTest {
 
 		Mockito.when(repo.findById(userId)).thenReturn(Optional.of(user));
 
-		UnchangedEmailException ex = Assertions.assertThrows(UnchangedEmailException.class, () -> {
+		KnowyUnchangedEmailException ex = Assertions.assertThrows(KnowyUnchangedEmailException.class, () -> {
 			service.updateEmail(email, userId, password);
 		});
 		Assertions.assertEquals("Email must be different from the current one.", ex.getMessage());
@@ -140,7 +140,7 @@ class UserPrivateServiceTest {
 		Mockito.when(repo.findById(userId)).thenReturn(Optional.of(user));
 		Mockito.when(repo.findByEmail(newEmail)).thenReturn(Optional.of(otherUser));
 
-		InvalidUserEmailException ex = Assertions.assertThrows(InvalidUserEmailException.class, () -> {
+		KnowyInvalidUserEmailException ex = Assertions.assertThrows(KnowyInvalidUserEmailException.class, () -> {
 			service.updateEmail(newEmail, userId, password);
 		});
 		Assertions.assertEquals("The provided email is already associated with an existing account.", ex.getMessage());
@@ -169,7 +169,7 @@ class UserPrivateServiceTest {
 		Mockito.when(repo.findByEmail(newEmail)).thenReturn(Optional.empty());
 		Mockito.when(encoder.matches(password, encodedPassword)).thenReturn(false);
 
-		WrongPasswordException ex = Assertions.assertThrows(WrongPasswordException.class, () -> {
+		KnowyWrongPasswordException ex = Assertions.assertThrows(KnowyWrongPasswordException.class, () -> {
 			service.updateEmail(newEmail, userId, password);
 		});
 		Assertions.assertEquals("Wrong password for user with id: 16", ex.getMessage());
@@ -245,7 +245,7 @@ class UserPrivateServiceTest {
 
 		String invalidToken = "invalid-token";
 
-		Mockito.when(jwt.decodeUnverified(invalidToken, PasswordResetInfo.class)).thenThrow(new JwtKnowyException("Invalid token"));
+		Mockito.when(jwt.decodeUnverified(invalidToken, PasswordResetInfo.class)).thenThrow(new KnowyTokenException("Invalid token"));
 
 		boolean result = service.isValidToken(invalidToken);
 
@@ -261,7 +261,7 @@ class UserPrivateServiceTest {
 		JwtTools jwt = mock(JwtTools.class);
 		PrivateUserService service = new PrivateUserService(repo, encoder, jwt);
 
-		JwtKnowyException ex = assertThrows(JwtKnowyException.class, () -> {
+		KnowyTokenException ex = assertThrows(KnowyTokenException.class, () -> {
 			service.resetPassword("some-token", "VALID.pass1234", "VALID.diffPass1234");
 		});
 		assertEquals("Passwords do not match", ex.getMessage());
@@ -276,7 +276,7 @@ class UserPrivateServiceTest {
 
 		String invalidPassword = "invalidpassword";
 
-		PasswordFormatException ex = assertThrows(PasswordFormatException.class, () -> {
+		KnowyPasswordFormatException ex = assertThrows(KnowyPasswordFormatException.class, () -> {
 			service.resetPassword("token", invalidPassword, invalidPassword);
 		});
 		assertEquals("Invalid password format", ex.getMessage());
@@ -299,9 +299,9 @@ class UserPrivateServiceTest {
 
 		when(jwt.decodeUnverified(token, PasswordResetInfo.class)).thenReturn(info);
 		when(repo.findById(16)).thenReturn(Optional.of(user));
-		when(jwt.decode("SECRET", token, PasswordResetInfo.class)).thenThrow(new JwtKnowyException("Invalid or expired token"));
+		when(jwt.decode("SECRET", token, PasswordResetInfo.class)).thenThrow(new KnowyTokenException("Invalid or expired token"));
 
-		JwtKnowyException ex = assertThrows(JwtKnowyException.class, () -> {
+		KnowyTokenException ex = assertThrows(KnowyTokenException.class, () -> {
 			service.resetPassword(token, password, password);
 		});
 		assertEquals("Invalid or expired token", ex.getMessage());
@@ -319,7 +319,7 @@ class UserPrivateServiceTest {
 		when(jwt.decodeUnverified("token", PasswordResetInfo.class)).thenReturn(info);
 		when(repo.findById(404)).thenReturn(Optional.empty());
 
-		UserNotFoundException ex = assertThrows(UserNotFoundException.class, () -> {
+		KnowyUserNotFoundException ex = assertThrows(KnowyUserNotFoundException.class, () -> {
 			service.resetPassword("token", "VALIDpass123.", "VALIDpass123.");
 		});
 		assertEquals("User not found with id: 404", ex.getMessage());
@@ -380,7 +380,7 @@ class UserPrivateServiceTest {
 		String email = "missing@mail.com";
 		Mockito.when(repo.findByEmail(email)).thenReturn(Optional.empty());
 
-		UserNotFoundException ex = Assertions.assertThrows(UserNotFoundException.class, () -> {
+		KnowyUserNotFoundException ex = Assertions.assertThrows(KnowyUserNotFoundException.class, () -> {
 			service.getPrivateUserByEmail(email);
 		});
 		Assertions.assertEquals("User not found", ex.getMessage());
@@ -401,7 +401,7 @@ class UserPrivateServiceTest {
 
 		Mockito.when(repo.findByEmail(email)).thenReturn(Optional.empty());
 
-		UserNotFoundException ex = Assertions.assertThrows(UserNotFoundException.class, () -> {
+		KnowyUserNotFoundException ex = Assertions.assertThrows(KnowyUserNotFoundException.class, () -> {
 			service.createRecoveryPasswordEmail(email, recoveryBaseUrl);
 		});
 		Assertions.assertEquals("The user with email missing@mail.com was not found", ex.getMessage());
@@ -424,9 +424,9 @@ class UserPrivateServiceTest {
 		user.setPassword("encoded-password");
 
 		Mockito.when(repo.findByEmail(email)).thenReturn(Optional.of(user));
-		Mockito.when(jwtTools.encode(Mockito.any(), Mockito.eq(user.getPassword()), Mockito.anyLong())).thenThrow(new JwtKnowyException("Token encoding failed"));
+		Mockito.when(jwtTools.encode(Mockito.any(), Mockito.eq(user.getPassword()), Mockito.anyLong())).thenThrow(new KnowyTokenException("Token encoding failed"));
 
-		JwtKnowyException ex = Assertions.assertThrows(JwtKnowyException.class, () -> {
+		KnowyTokenException ex = Assertions.assertThrows(KnowyTokenException.class, () -> {
 			service.createRecoveryPasswordEmail(email, recoveryBaseUrl);
 		});
 		Assertions.assertEquals("Token encoding failed", ex.getMessage());
@@ -475,7 +475,7 @@ class UserPrivateServiceTest {
 
 		Mockito.when(repo.findByEmail(unknownEmail)).thenReturn(Optional.empty());
 
-		UserNotFoundException ex = Assertions.assertThrows(UserNotFoundException.class, () -> {
+		KnowyUserNotFoundException ex = Assertions.assertThrows(KnowyUserNotFoundException.class, () -> {
 			service.createRecoveryPasswordEmail(unknownEmail, "https://knowy.app/recovery");
 		});
 
@@ -499,9 +499,9 @@ class UserPrivateServiceTest {
 
 		Mockito.when(repo.findByEmail(email)).thenReturn(Optional.of(user));
 		Mockito.when(jwtTools.encode(Mockito.any(), Mockito.eq(user.getPassword()), Mockito.anyLong()))
-			.thenThrow(new JwtKnowyException("Token encode failed"));
+			.thenThrow(new KnowyTokenException("Token encode failed"));
 
-		JwtKnowyException ex = Assertions.assertThrows(JwtKnowyException.class, () -> {
+		KnowyTokenException ex = Assertions.assertThrows(KnowyTokenException.class, () -> {
 			service.createRecoveryPasswordEmail(email, "https://knowy.app/recovery");
 		});
 
@@ -545,7 +545,7 @@ class UserPrivateServiceTest {
 
 		Mockito.when(repo.findByEmail("notfound@example.com")).thenReturn(Optional.empty());
 
-		UserNotFoundException ex = Assertions.assertThrows(UserNotFoundException.class, () -> {
+		KnowyUserNotFoundException ex = Assertions.assertThrows(KnowyUserNotFoundException.class, () -> {
 			service.createDeletedAccountEmail("notfound@example.com", "http://app.url");
 		});
 		Assertions.assertEquals("The user with email notfound@example.com was not found", ex.getMessage());
@@ -596,7 +596,7 @@ class UserPrivateServiceTest {
 
 		Mockito.when(repo.findByEmail(email)).thenReturn(Optional.empty());
 
-		UserNotFoundException ex = Assertions.assertThrows(UserNotFoundException.class, () -> {
+		KnowyUserNotFoundException ex = Assertions.assertThrows(KnowyUserNotFoundException.class, () -> {
 			service.desactivateUserAccount(email, password, confirmPassword);
 		});
 		Assertions.assertEquals("User not found", ex.getMessage());
@@ -615,7 +615,7 @@ class UserPrivateServiceTest {
 		String password = "pass1";
 		String confirmPassword = "pass2";
 
-		WrongPasswordException ex = Assertions.assertThrows(WrongPasswordException.class, () -> {
+		KnowyWrongPasswordException ex = Assertions.assertThrows(KnowyWrongPasswordException.class, () -> {
 			service.desactivateUserAccount(email, password, confirmPassword);
 		});
 		Assertions.assertEquals("Passwords do not match", ex.getMessage());
@@ -642,7 +642,7 @@ class UserPrivateServiceTest {
 		Mockito.when(repo.findByEmail(email)).thenReturn(Optional.of(user));
 		Mockito.when(encoder.matches(password, user.getPassword())).thenReturn(false);
 
-		WrongPasswordException ex = Assertions.assertThrows(WrongPasswordException.class, () -> {
+		KnowyWrongPasswordException ex = Assertions.assertThrows(KnowyWrongPasswordException.class, () -> {
 			service.desactivateUserAccount(email, password, confirmPassword);
 		});
 		Assertions.assertEquals("Wrong password for user with id: null", ex.getMessage());
@@ -687,9 +687,9 @@ class UserPrivateServiceTest {
 		String token = "invalid-token";
 
 		Mockito.when(jwt.decodeUnverified(Mockito.eq(token), Mockito.any()))
-			.thenThrow(new JwtKnowyException("Invalid token"));
+			.thenThrow(new KnowyTokenException("Invalid token"));
 
-		JwtKnowyException ex = Assertions.assertThrows(JwtKnowyException.class, () -> {
+		KnowyTokenException ex = Assertions.assertThrows(KnowyTokenException.class, () -> {
 			service.reactivateUserAccount(token);
 		});
 
@@ -710,7 +710,7 @@ class UserPrivateServiceTest {
 
 		Mockito.when(repo.findById(99)).thenReturn(Optional.empty());
 
-		UserNotFoundException ex = Assertions.assertThrows(UserNotFoundException.class, () -> {
+		KnowyUserNotFoundException ex = Assertions.assertThrows(KnowyUserNotFoundException.class, () -> {
 			service.reactivateUserAccount(token);
 		});
 		Assertions.assertEquals("User not found with id: 99", ex.getMessage());

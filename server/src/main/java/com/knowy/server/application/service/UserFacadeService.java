@@ -1,14 +1,14 @@
 package com.knowy.server.application.service;
 
 import com.knowy.server.application.domain.UserPrivate;
+import com.knowy.server.application.exception.KnowyMailDispatchException;
 import com.knowy.server.application.service.exception.*;
 import com.knowy.server.application.service.model.MailMessage;
 import com.knowy.server.application.service.model.NewUserCommand;
 import com.knowy.server.util.EmailClientTool;
-import com.knowy.server.util.exception.JwtKnowyException;
-import com.knowy.server.util.exception.MailDispatchException;
-import com.knowy.server.util.exception.PasswordFormatException;
-import com.knowy.server.util.exception.WrongPasswordException;
+import com.knowy.server.application.exception.KnowyTokenException;
+import com.knowy.server.application.exception.KnowyPasswordFormatException;
+import com.knowy.server.application.exception.KnowyWrongPasswordException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -45,11 +45,11 @@ public class UserFacadeService {
 	 * @param email    the user's email address used for private identification
 	 * @param password the user's password
 	 * @return the created private user entity
-	 * @throws InvalidUserException   if the user data is invalid or violates business rules
-	 * @throws ImageNotFoundException if a default profile image could not be found
+	 * @throws KnowyInvalidUserException   if the user data is invalid or violates business rules
+	 * @throws KnowyImageNotFoundException if a default profile image could not be found
 	 */
 	public UserPrivate registerNewUser(String nickname, String email, String password)
-		throws InvalidUserException, ImageNotFoundException {
+		throws KnowyInvalidUserException, KnowyImageNotFoundException {
 		NewUserCommand newPublicUser = userService.create(nickname);
 		return privateUserService.create(email, password, newPublicUser);
 	}
@@ -62,12 +62,12 @@ public class UserFacadeService {
 	 *
 	 * @param nickname the new nickname to assign
 	 * @param userId   the ID of the user whose nickname is to be updated
-	 * @throws UserNotFoundException         if the user does not exist
-	 * @throws NicknameAlreadyTakenException if the desired nickname is already in use
-	 * @throws UnchangedNicknameException    if the new nickname is the same as the current one
+	 * @throws KnowyUserNotFoundException         if the user does not exist
+	 * @throws KnowyNicknameAlreadyTakenException if the desired nickname is already in use
+	 * @throws KnowyUnchangedNicknameException    if the new nickname is the same as the current one
 	 */
 	public void updateNickname(String nickname, int userId)
-		throws UserNotFoundException, NicknameAlreadyTakenException, UnchangedNicknameException, InvalidUserNicknameException {
+		throws KnowyUserNotFoundException, KnowyNicknameAlreadyTakenException, KnowyUnchangedNicknameException, KnowyInvalidUserNicknameException {
 		userService.updateNickname(nickname, userId);
 	}
 
@@ -79,12 +79,12 @@ public class UserFacadeService {
 	 *
 	 * @param profilePictureId the ID of the new profile image
 	 * @param userId           the ID of the user whose profile image is to be updated
-	 * @throws UserNotFoundException   if the user does not exist
-	 * @throws UnchangedImageException if the new image is the same as the current image
-	 * @throws ImageNotFoundException  if the image with the given ID cannot be found
+	 * @throws KnowyUserNotFoundException   if the user does not exist
+	 * @throws KnowyUnchangedImageException if the new image is the same as the current image
+	 * @throws KnowyImageNotFoundException  if the image with the given ID cannot be found
 	 */
 	public void updateProfileImage(int profilePictureId, int userId)
-		throws UserNotFoundException, UnchangedImageException, ImageNotFoundException {
+		throws KnowyUserNotFoundException, KnowyUnchangedImageException, KnowyImageNotFoundException {
 		userService.updateProfileImage(profilePictureId, userId);
 	}
 
@@ -96,9 +96,9 @@ public class UserFacadeService {
 	 *
 	 * @param userId    the ID of the user whose categories are to be updated
 	 * @param languages an array of language representing the user's spoken categories
-	 * @throws UserNotFoundException if the user does not exist
+	 * @throws KnowyUserNotFoundException if the user does not exist
 	 */
-	public void updateLanguages(int userId, String[] languages) throws UserNotFoundException {
+	public void updateLanguages(int userId, String[] languages) throws KnowyUserNotFoundException {
 		userService.updateLanguages(userId, languages);
 	}
 
@@ -111,12 +111,12 @@ public class UserFacadeService {
 	 * @param token           the JWT token used to identify and authorize the password reset
 	 * @param password        the new password
 	 * @param confirmPassword confirmation of the new password
-	 * @throws UserNotFoundException   if no user is associated with the token
-	 * @throws JwtKnowyException       if the token is invalid or expired
-	 * @throws PasswordFormatException if the password format is invalid or passwords do not match
+	 * @throws KnowyUserNotFoundException   if no user is associated with the token
+	 * @throws KnowyTokenException       if the token is invalid or expired
+	 * @throws KnowyPasswordFormatException if the password format is invalid or passwords do not match
 	 */
 	public void updatePassword(String token, String password, String confirmPassword)
-		throws UserNotFoundException, JwtKnowyException, PasswordFormatException {
+		throws KnowyUserNotFoundException, KnowyTokenException, KnowyPasswordFormatException {
 		privateUserService.resetPassword(token, password, confirmPassword);
 	}
 
@@ -129,12 +129,12 @@ public class UserFacadeService {
 	 * @param email    the new email address to set
 	 * @param userId   the ID of the user whose email is being updated
 	 * @param password the user's current password, used for authentication
-	 * @throws UserNotFoundException   if the user does not exist
-	 * @throws UnchangedEmailException if the new email is the same as the current one
-	 * @throws WrongPasswordException  if the provided password is incorrect
+	 * @throws KnowyUserNotFoundException   if the user does not exist
+	 * @throws KnowyUnchangedEmailException if the new email is the same as the current one
+	 * @throws KnowyWrongPasswordException  if the provided password is incorrect
 	 */
 	public void updateEmail(String email, int userId, String password)
-		throws UserNotFoundException, UnchangedEmailException, WrongPasswordException, InvalidUserEmailException {
+		throws KnowyUserNotFoundException, KnowyUnchangedEmailException, KnowyWrongPasswordException, KnowyInvalidUserEmailException {
 		privateUserService.updateEmail(email, userId, password);
 	}
 
@@ -146,9 +146,9 @@ public class UserFacadeService {
 	 *
 	 * @param token the JWT token to validate
 	 * @return {@code true} if the token is valid; {@code false} otherwise
-	 * @throws UserNotFoundException if the token refers to a non-existent user
+	 * @throws KnowyUserNotFoundException if the token refers to a non-existent user
 	 */
-	public boolean isValidToken(String token) throws UserNotFoundException {
+	public boolean isValidToken(String token) throws KnowyUserNotFoundException {
 		return privateUserService.isValidToken(token);
 	}
 
@@ -160,12 +160,12 @@ public class UserFacadeService {
 	 *
 	 * @param email           the email address of the user requesting password recovery
 	 * @param recoveryBaseUrl the base URL to be used in the recovery link (e.g., frontend reset page)
-	 * @throws JwtKnowyException     if there is a problem generating the recovery token
-	 * @throws UserNotFoundException if no user is associated with the given email
-	 * @throws MailDispatchException if the email could not be sent
+	 * @throws KnowyTokenException     if there is a problem generating the recovery token
+	 * @throws KnowyUserNotFoundException if no user is associated with the given email
+	 * @throws KnowyMailDispatchException if the email could not be sent
 	 */
 	public void sendRecoveryPasswordEmail(String email, String recoveryBaseUrl)
-		throws JwtKnowyException, UserNotFoundException, MailDispatchException {
+		throws KnowyTokenException, KnowyUserNotFoundException, KnowyMailDispatchException {
 		MailMessage mailMessage = privateUserService.createRecoveryPasswordEmail(email, recoveryBaseUrl);
 		emailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
 	}
@@ -178,17 +178,17 @@ public class UserFacadeService {
 	 * @param confirmPassword the confirmation of the password
 	 * @param email           the email of the user whose account will be deactivated
 	 * @param recoveryBaseUrl the base URL to be used for account reactivation link
-	 * @throws UserNotFoundException  if the user with the given email does not exist
-	 * @throws JwtKnowyException      if there is an error generating the JWT token
-	 * @throws MailDispatchException  if sending the recovery email fails
-	 * @throws WrongPasswordException if the password and confirmation do not match or are incorrect
+	 * @throws KnowyUserNotFoundException  if the user with the given email does not exist
+	 * @throws KnowyTokenException      if there is an error generating the JWT token
+	 * @throws KnowyMailDispatchException  if sending the recovery email fails
+	 * @throws KnowyWrongPasswordException if the password and confirmation do not match or are incorrect
 	 */
 	public void desactivateUserAccount(
 		String password,
 		String confirmPassword,
 		String email,
 		String recoveryBaseUrl
-	) throws UserNotFoundException, JwtKnowyException, MailDispatchException, WrongPasswordException {
+	) throws KnowyUserNotFoundException, KnowyTokenException, KnowyMailDispatchException, KnowyWrongPasswordException {
 		privateUserService.desactivateUserAccount(email, password, confirmPassword);
 		MailMessage mailMessage = privateUserService.createDeletedAccountEmail(email, recoveryBaseUrl);
 		emailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
@@ -198,10 +198,10 @@ public class UserFacadeService {
 	 * Reactivates a previously deactivated user account using a valid reactivation token.
 	 *
 	 * @param token the JWT token used to verify and reactivate the user account
-	 * @throws UserNotFoundException if the user associated with the token does not exist
-	 * @throws JwtKnowyException     if the token is invalid or expired
+	 * @throws KnowyUserNotFoundException if the user associated with the token does not exist
+	 * @throws KnowyTokenException     if the token is invalid or expired
 	 */
-	public void reactivateUserAccount(String token) throws UserNotFoundException, JwtKnowyException {
+	public void reactivateUserAccount(String token) throws KnowyUserNotFoundException, KnowyTokenException {
 		privateUserService.reactivateUserAccount(token);
 	}
 }

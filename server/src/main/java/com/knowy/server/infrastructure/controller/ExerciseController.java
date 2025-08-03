@@ -3,15 +3,15 @@ package com.knowy.server.infrastructure.controller;
 import com.knowy.server.application.domain.UserExercise;
 import com.knowy.server.application.domain.UserLesson;
 import com.knowy.server.application.exception.KnowyDataAccessException;
+import com.knowy.server.application.exception.KnowyExerciseNotFoundException;
 import com.knowy.server.application.service.UserExerciseService;
 import com.knowy.server.application.service.UserLessonService;
-import com.knowy.server.application.service.exception.UserLessonNotFoundException;
-import com.knowy.server.application.service.exception.UserNotFoundException;
+import com.knowy.server.application.service.exception.KnowyUserLessonNotFoundException;
+import com.knowy.server.application.service.exception.KnowyUserNotFoundException;
 import com.knowy.server.application.service.model.ExerciseDifficult;
 import com.knowy.server.application.service.model.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.ExerciseDto;
 import com.knowy.server.infrastructure.controller.dto.ExerciseOptionDto;
-import com.knowy.server.util.exception.ExerciseNotFoundException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,7 +60,7 @@ public class ExerciseController {
 				.getNextExerciseByLessonId(userDetails.getUser().id(), lessonId);
 
 			UserLesson userLesson = userLessonService.findById(userDetails.getUser().id(), lessonId)
-				.orElseThrow(() -> new UserLessonNotFoundException(
+				.orElseThrow(() -> new KnowyUserLessonNotFoundException(
 					"UserLesson not found for user ID: " + userDetails.getUser().id() + " and lesson ID: " + lessonId
 				));
 
@@ -68,7 +68,7 @@ public class ExerciseController {
 			model.addAttribute("mode", "ANSWERING");
 			model.addAttribute("formReviewUrl", "/course/exercise/review");
 			return EXERCISE_HTML_URL;
-		} catch (ExerciseNotFoundException | KnowyDataAccessException | UserLessonNotFoundException e) {
+		} catch (KnowyExerciseNotFoundException | KnowyDataAccessException | KnowyUserLessonNotFoundException e) {
 			return "error/error";
 		}
 	}
@@ -81,8 +81,8 @@ public class ExerciseController {
 	 * @param answerId    the ID of the selected answer option
 	 * @param model       the model to pass data to the view
 	 * @return the name of the exercise view page showing if the answer was correct or not
-	 * @throws ExerciseNotFoundException if the exercise is not found
-	 * @throws UserNotFoundException     if the user is not found
+	 * @throws KnowyExerciseNotFoundException if the exercise is not found
+	 * @throws KnowyUserNotFoundException     if the user is not found
 	 */
 	@PostMapping("/course/exercise/review")
 	public String exerciseLessonReview(
@@ -90,14 +90,14 @@ public class ExerciseController {
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("answerId") int answerId,
 		Model model
-	) throws ExerciseNotFoundException, UserNotFoundException, KnowyDataAccessException, UserLessonNotFoundException {
+	) throws KnowyExerciseNotFoundException, KnowyUserNotFoundException, KnowyDataAccessException, KnowyUserLessonNotFoundException {
 
 		UserExercise userExercise = userExerciseService.getByIdOrCreate(userDetails.getUser().id(),
 			exerciseId);
 
 		UserLesson userLesson = userLessonService
 			.findById(userDetails.getUser().id(), userExercise.exercise().lessonId())
-			.orElseThrow(() -> new UserLessonNotFoundException(
+			.orElseThrow(() -> new KnowyUserLessonNotFoundException(
 				"UserLesson not found for user ID: " + userDetails.getUser().id() + " and lesson ID: "
 					+ userExercise.exercise().lessonId()
 			));
@@ -127,22 +127,22 @@ public class ExerciseController {
 	 * @param exerciseId  the ID of the exercise being evaluated
 	 * @param evaluation  the difficulty rating provided by the user
 	 * @return a redirect to the lesson page if average rate >= 80, otherwise to the exercise review page
-	 * @throws ExerciseNotFoundException   if the exercise is not found
-	 * @throws UserNotFoundException       if the user is not found
-	 * @throws UserLessonNotFoundException if the publicUserLesson is not found
+	 * @throws KnowyExerciseNotFoundException   if the exercise is not found
+	 * @throws KnowyUserNotFoundException       if the user is not found
+	 * @throws KnowyUserLessonNotFoundException if the publicUserLesson is not found
 	 */
 	@PostMapping("/course/exercise/evaluate")
 	public String exerciseLessonEvaluate(
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("evaluation") ExerciseDifficult evaluation
-	) throws ExerciseNotFoundException, UserNotFoundException, UserLessonNotFoundException, KnowyDataAccessException {
+	) throws KnowyExerciseNotFoundException, KnowyUserNotFoundException, KnowyUserLessonNotFoundException, KnowyDataAccessException {
 		UserExercise userExercise = userExerciseService
 			.getByIdOrCreate(userDetails.getUser().id(), exerciseId);
 
 		UserLesson userLesson = userLessonService
 			.findById(userDetails.getUser().id(), userExercise.exercise().lessonId())
-			.orElseThrow(() -> new UserLessonNotFoundException(
+			.orElseThrow(() -> new KnowyUserLessonNotFoundException(
 				"UserLesson not found for user ID: " + userDetails.getUser().id() + " and lesson ID: "
 					+ userExercise.exercise().lessonId()
 			));
@@ -178,7 +178,7 @@ public class ExerciseController {
 
 			UserLesson userLesson = userLessonService
 				.findById(userDetails.getUser().id(), userExercise.exercise().lessonId())
-				.orElseThrow(() -> new UserLessonNotFoundException(
+				.orElseThrow(() -> new KnowyUserLessonNotFoundException(
 					"UserLesson not found for user ID: " + userDetails.getUser().id() + " and lesson ID: "
 						+ userExercise.exercise().lessonId()
 				));
@@ -187,7 +187,7 @@ public class ExerciseController {
 			model.addAttribute("mode", "ANSWERING");
 			model.addAttribute("formReviewUrl", "/exercise/review");
 			return EXERCISE_HTML_URL;
-		} catch (ExerciseNotFoundException | UserLessonNotFoundException | KnowyDataAccessException e) {
+		} catch (KnowyExerciseNotFoundException | KnowyUserLessonNotFoundException | KnowyDataAccessException e) {
 			return "error/error";
 		}
 	}
@@ -200,8 +200,8 @@ public class ExerciseController {
 	 * @param answerId    the ID of the selected answer option
 	 * @param model       the model to add attributes for the view
 	 * @return the exercise page view with feedback on the answer
-	 * @throws ExerciseNotFoundException if the exercise cannot be found
-	 * @throws UserNotFoundException     if the user cannot be found
+	 * @throws KnowyExerciseNotFoundException if the exercise cannot be found
+	 * @throws KnowyUserNotFoundException     if the user cannot be found
 	 */
 	@PostMapping("/exercise/review")
 	public String exerciseReview(
@@ -209,14 +209,14 @@ public class ExerciseController {
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("answerId") int answerId,
 		Model model
-	) throws ExerciseNotFoundException, UserNotFoundException, KnowyDataAccessException, UserLessonNotFoundException {
+	) throws KnowyExerciseNotFoundException, KnowyUserNotFoundException, KnowyDataAccessException, KnowyUserLessonNotFoundException {
 
 		UserExercise userExercise = userExerciseService
 			.getByIdOrCreate(userDetails.getUser().id(), exerciseId);
 
 		UserLesson userLesson = userLessonService
 			.findById(userDetails.getUser().id(), userExercise.exercise().lessonId())
-			.orElseThrow(() -> new UserLessonNotFoundException(
+			.orElseThrow(() -> new KnowyUserLessonNotFoundException(
 				"UserLesson not found for user ID: " + userDetails.getUser().id() + " and lesson ID: "
 					+ userExercise.exercise().lessonId()
 			));
@@ -245,15 +245,15 @@ public class ExerciseController {
 	 * @param exerciseId  the ID of the exercise being evaluated
 	 * @param evaluation  the difficulty rating provided by the user
 	 * @return a redirect to the exercise review page
-	 * @throws ExerciseNotFoundException if the exercise cannot be found
-	 * @throws UserNotFoundException     if the user cannot be found
+	 * @throws KnowyExerciseNotFoundException if the exercise cannot be found
+	 * @throws KnowyUserNotFoundException     if the user cannot be found
 	 */
 	@PostMapping("/exercise/evaluate")
 	public String exerciseEvaluate(
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("evaluation") ExerciseDifficult evaluation
-	) throws ExerciseNotFoundException, UserNotFoundException, KnowyDataAccessException {
+	) throws KnowyExerciseNotFoundException, KnowyUserNotFoundException, KnowyDataAccessException {
 		UserExercise userExercise = userExerciseService
 			.getByIdOrCreate(userDetails.getUser().id(), exerciseId);
 

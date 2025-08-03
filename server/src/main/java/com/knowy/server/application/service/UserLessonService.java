@@ -6,7 +6,7 @@ import com.knowy.server.application.domain.UserLesson;
 import com.knowy.server.application.exception.KnowyInconsistentDataException;
 import com.knowy.server.application.ports.LessonRepository;
 import com.knowy.server.application.ports.UserLessonRepository;
-import com.knowy.server.application.service.exception.UserLessonNotFoundException;
+import com.knowy.server.application.service.exception.KnowyUserLessonNotFoundException;
 import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserLessonEntity;
 import org.springframework.stereotype.Service;
 
@@ -58,12 +58,12 @@ public class UserLessonService {
 	 * Marks the current lesson as completed for the given user and, if a next lesson exists, sets its status to
 	 * "in_progress".
 	 *
-	 * @throws UserLessonNotFoundException if the relationship for the given user and lesson is not found
+	 * @throws KnowyUserLessonNotFoundException if the relationship for the given user and lesson is not found
 	 */
-	public void updateLessonStatusToCompleted(User user, Lesson lesson) throws UserLessonNotFoundException,
+	public void updateLessonStatusToCompleted(User user, Lesson lesson) throws KnowyUserLessonNotFoundException,
 		KnowyInconsistentDataException {
 		UserLesson userLesson = findById(user.id(), lesson.id())
-			.orElseThrow(() -> new UserLessonNotFoundException("Relation public user lesson not found"));
+			.orElseThrow(() -> new KnowyUserLessonNotFoundException("Relation public user lesson not found"));
 
 		updateNextLessonStatusToInProgress(user.id(), lesson.id());
 		userLessonRepository.save(new UserLesson(

@@ -1,11 +1,9 @@
 package com.knowy.server.util;
 
 import com.knowy.server.application.domain.UserPrivate;
-import com.knowy.server.infrastructure.adapters.repository.entity.PrivateUserEntity;
 import com.knowy.server.application.ports.UserPrivateRepository;
 import com.knowy.server.application.service.model.UserSecurityDetails;
 import jakarta.servlet.http.HttpSession;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -13,12 +11,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.function.UnaryOperator;
 
-@Slf4j
-@Service
+@Component
 public class UserSecurityDetailsHelper {
 
 	private final UserDetailsService userDetailsService;

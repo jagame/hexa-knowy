@@ -1,18 +1,18 @@
 package com.knowy.server.infrastructure.controller;
 
 import com.knowy.server.application.domain.UserPrivate;
+import com.knowy.server.application.exception.KnowyMailDispatchException;
 import com.knowy.server.application.service.UserFacadeService;
-import com.knowy.server.application.service.exception.ImageNotFoundException;
-import com.knowy.server.application.service.exception.InvalidUserException;
-import com.knowy.server.application.service.exception.UserNotFoundException;
+import com.knowy.server.application.service.exception.KnowyImageNotFoundException;
+import com.knowy.server.application.service.exception.KnowyInvalidUserException;
+import com.knowy.server.application.service.exception.KnowyUserNotFoundException;
 import com.knowy.server.infrastructure.controller.dto.LoginFormDto;
 import com.knowy.server.infrastructure.controller.dto.UserEmailFormDto;
 import com.knowy.server.infrastructure.controller.dto.UserPasswordFormDto;
 import com.knowy.server.infrastructure.controller.dto.UserRegisterFormDto;
 import com.knowy.server.util.UserSecurityDetailsHelper;
-import com.knowy.server.util.exception.JwtKnowyException;
-import com.knowy.server.util.exception.MailDispatchException;
-import com.knowy.server.util.exception.PasswordFormatException;
+import com.knowy.server.application.exception.KnowyTokenException;
+import com.knowy.server.application.exception.KnowyPasswordFormatException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -97,7 +97,7 @@ public class AccessController {
 		@Valid @ModelAttribute UserRegisterFormDto user,
 		RedirectAttributes redirectAttributes,
 		Errors errors
-	) throws ImageNotFoundException {
+	) throws KnowyImageNotFoundException {
 		try {
 			validateFieldErrors(errors);
 
@@ -109,14 +109,14 @@ public class AccessController {
 
 			userSecurityDetailsHelper.autoLoginUserByEmail(userPrivate.email());
 			return "redirect:/home";
-		} catch (InvalidUserException e) {
+		} catch (KnowyInvalidUserException e) {
 			redirectAttributes.addFlashAttribute("user", user);
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, e.getMessage());
 			return "redirect:/register";
 		}
 	}
 
-	private void validateFieldErrors(Errors errors) throws InvalidUserException {
+	private void validateFieldErrors(Errors errors) throws KnowyInvalidUserException {
 		FieldError firstError = errors.getFieldError();
 		if (firstError == null) {
 			return;
@@ -124,9 +124,9 @@ public class AccessController {
 
 		String message = firstError.getDefaultMessage();
 		if (message == null || message.isEmpty()) {
-			throw new InvalidUserException("Hubo un problema con la información proporcionada. Por favor, revise los " + "campos y vuelva a intentarlo.");
+			throw new KnowyInvalidUserException("Hubo un problema con la información proporcionada. Por favor, revise los " + "campos y vuelva a intentarlo.");
 		}
-		throw new InvalidUserException(message);
+		throw new KnowyInvalidUserException(message);
 	}
 
 
@@ -157,7 +157,7 @@ public class AccessController {
 		try {
 			userFacadeService.sendRecoveryPasswordEmail(email.getEmail(), getPasswordChangeUrl(httpServletRequest));
 			return LOGIN_REDIRECT_URL;
-		} catch (UserNotFoundException | JwtKnowyException | MailDispatchException e) {
+		} catch (KnowyUserNotFoundException | KnowyTokenException | KnowyMailDispatchException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, "Se ha producido un error al enviar el email. Intente lo más tarde");
 			return "redirect:/password-change/email";
 		}
@@ -183,7 +183,7 @@ public class AccessController {
 	 * @return the name of the password change view if the token is registered, otherwise redirects to the home page
 	 */
 	@GetMapping("/password-change")
-	public String passwordChange(@RequestParam String token, Model model) throws UserNotFoundException {
+	public String passwordChange(@RequestParam String token, Model model) throws KnowyUserNotFoundException {
 		if (!userFacadeService.isValidToken(token)) {
 			return "redirect:/";
 		}
@@ -216,10 +216,10 @@ public class AccessController {
 		try {
 			userFacadeService.updatePassword(token, userPasswordFormDto.getPassword(), userPasswordFormDto.getConfirmPassword());
 			return LOGIN_REDIRECT_URL;
-		} catch (UserNotFoundException | JwtKnowyException e) {
+		} catch (KnowyUserNotFoundException | KnowyTokenException e) {
 			redirectAttributes.addAttribute(ERROR_MODEL_ATTRIBUTE, "Se ha producido un error al actualizar la contraseña");
 			return LOGIN_REDIRECT_URL;
-		} catch (PasswordFormatException e) {
+		} catch (KnowyPasswordFormatException e) {
 			redirectAttributes.addAttribute(ERROR_MODEL_ATTRIBUTE, """
 				Formato de contraseña inválido. Debe tener al menos:
 				- 8 caracteres
