@@ -15,10 +15,12 @@ import com.knowy.server.util.exception.JwtKnowyException;
 import com.knowy.server.util.exception.PasswordFormatException;
 import com.knowy.server.util.exception.WrongPasswordException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 import java.util.Optional;
 
+@Service
 public class PrivateUserService {
 
 	private final UserPrivateRepository privateUserRepository;

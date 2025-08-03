@@ -9,7 +9,9 @@ import com.knowy.server.util.exception.JwtKnowyException;
 import com.knowy.server.util.exception.MailDispatchException;
 import com.knowy.server.util.exception.PasswordFormatException;
 import com.knowy.server.util.exception.WrongPasswordException;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserFacadeService {
 
 	private final EmailClientTool emailClientTool;

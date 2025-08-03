@@ -9,12 +9,14 @@ import com.knowy.server.application.ports.UserRepository;
 import com.knowy.server.application.service.exception.*;
 import com.knowy.server.application.service.model.NewUserCommand;
 import com.knowy.server.util.StringUtils;
+import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+@Service
 public class UserService {
 
 	private final UserRepository userRepository;

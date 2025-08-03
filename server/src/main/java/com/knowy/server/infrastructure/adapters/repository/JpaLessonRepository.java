@@ -9,6 +9,7 @@ import com.knowy.server.infrastructure.adapters.repository.entity.LessonEntity;
 import com.knowy.server.infrastructure.adapters.repository.mapper.EntityMapper;
 import com.knowy.server.infrastructure.adapters.repository.mapper.JpaCourseMapper;
 import com.knowy.server.infrastructure.adapters.repository.mapper.JpaExerciseMapper;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -49,6 +50,7 @@ public class JpaLessonRepository implements LessonRepository {
 		return jpaLessonDao.countByCourseId(courseId);
 	}
 
+	@Component
 	public class JpaLessonMapper implements EntityMapper<Lesson, LessonEntity> {
 		@Override
 		public Lesson toDomain(LessonEntity entity) {
@@ -73,6 +75,7 @@ public class JpaLessonRepository implements LessonRepository {
 		}
 	}
 
+	@Component
 	public class JpaDocumentationMapper implements EntityMapper<Documentation, DocumentationEntity> {
 		@Override
 		public Documentation toDomain(DocumentationEntity entity) {
@@ -85,7 +88,7 @@ public class JpaLessonRepository implements LessonRepository {
 				domain.id(),
 				domain.title(),
 				domain.link(),
-				jpaLessonDao.findByDocumentationId(domain.id())
+				jpaLessonDao.findAllByDocumentationId(domain.id())
 			);
 		}
 	}
