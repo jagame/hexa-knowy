@@ -2,7 +2,6 @@ package com.knowy.server.infrastructure.adapter.repository;
 
 import com.knowy.server.application.domain.Email;
 import com.knowy.server.application.domain.PrivateUser;
-import com.knowy.server.application.port.persistence.KnowyUserNotFoundException;
 import com.knowy.server.application.port.persistence.PrivateUserRepository;
 import com.knowy.server.infrastructure.adapter.repository.dao.JpaPrivateUserEntityDao;
 import com.knowy.server.infrastructure.adapter.repository.entity.JpaPrivateUserEntity;
