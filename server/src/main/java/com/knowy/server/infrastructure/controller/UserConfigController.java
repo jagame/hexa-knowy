@@ -1,5 +1,6 @@
 package com.knowy.server.infrastructure.controller;
 
+import com.knowy.server.application.exception.KnowyException;
 import com.knowy.server.application.service.CategoryService;
 import com.knowy.server.application.service.UserFacadeService;
 import com.knowy.server.application.service.exception.*;
@@ -312,7 +313,7 @@ public class UserConfigController {
 		String[] newLanguages = languages != null ? languages : new String[0];
 		try {
 			userFacadeService.updateLanguages(userId, newLanguages);
-		} catch (KnowyUserNotFoundException e) {
+		} catch (KnowyException e) {
 			redirectAttributes.addFlashAttribute(ERROR_MODEL_ATTRIBUTE, USER_NOT_FOUND_ERROR_MESSAGE);
 		}
 	}

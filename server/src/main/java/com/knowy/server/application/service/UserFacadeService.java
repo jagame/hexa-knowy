@@ -1,10 +1,7 @@
 package com.knowy.server.application.service;
 
 import com.knowy.server.application.domain.UserPrivate;
-import com.knowy.server.application.exception.KnowyMailDispatchException;
-import com.knowy.server.application.exception.KnowyPasswordFormatException;
-import com.knowy.server.application.exception.KnowyTokenException;
-import com.knowy.server.application.exception.KnowyWrongPasswordException;
+import com.knowy.server.application.exception.*;
 import com.knowy.server.application.ports.KnowyEmailClientTool;
 import com.knowy.server.application.service.exception.*;
 import com.knowy.server.application.service.model.MailMessage;
@@ -96,8 +93,8 @@ public class UserFacadeService {
 	 * @param languages an array of language representing the user's spoken categories
 	 * @throws KnowyUserNotFoundException if the user does not exist
 	 */
-	public void updateLanguages(int userId, String[] languages) throws KnowyUserNotFoundException {
-		userService.updateLanguages(userId, languages);
+	public void updateLanguages(int userId, String[] languages) throws KnowyUserNotFoundException, KnowyInconsistentDataException {
+		userService.updateCategories(userId, languages);
 	}
 
 	/**

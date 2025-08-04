@@ -3,6 +3,7 @@ package com.knowy.server.application.service;
 import com.knowy.server.application.domain.Category;
 import com.knowy.server.application.domain.ProfileImage;
 import com.knowy.server.application.domain.User;
+import com.knowy.server.application.exception.KnowyInconsistentDataException;
 import com.knowy.server.application.ports.CategoryRepository;
 import com.knowy.server.application.ports.ProfileImageRepository;
 import com.knowy.server.application.ports.UserRepository;
@@ -11,10 +12,8 @@ import com.knowy.server.application.service.model.NewUserCommand;
 import com.knowy.server.application.util.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -54,7 +53,7 @@ public class UserService {
 	public NewUserCommand create(String nickname) throws KnowyInvalidUserException, KnowyImageNotFoundException {
 		assertNotBlankNickname(nickname);
 
-		if (findPublicUserByNickname(nickname).isPresent()) {
+		if (userRepository.findByNickname(nickname).isPresent()) {
 			throw new KnowyInvalidUserNicknameException("Nickname already exists");
 		}
 
@@ -92,6 +91,7 @@ public class UserService {
 	 */
 	public void updateNickname(String newNickname, Integer id) throws KnowyUserNotFoundException,
 		KnowyUnchangedNicknameException, KnowyNicknameAlreadyTakenException, KnowyInvalidUserNicknameException {
+
 		assertNotBlankNickname(newNickname);
 
 		User user = userRepository.findById(id)
@@ -146,32 +146,41 @@ public class UserService {
 	 * <p>Fetches language entities by their names (case-insensitive) and updates the user's categories.
 	 * Throws an exception if the user is not found.</p>
 	 *
-	 * @param userId    the ID of the user whose categories should be updated
-	 * @param languages an array of language names to assign to the user
+	 * @param userId     the ID of the user whose categories should be updated
+	 * @param categories an array of language names to assign to the user
 	 * @throws KnowyUserNotFoundException if no user exists with the given ID
 	 */
-	public void updateLanguages(Integer userId, String[] languages) throws KnowyUserNotFoundException {
-		Objects.requireNonNull(languages, "A not null categories array is required, if no categories are selected use an empty array instead of null");
+	public void updateCategories(Integer userId, String[] categories) throws KnowyUserNotFoundException, KnowyInconsistentDataException {
+		Objects.requireNonNull(
+			categories,
+			"A not null categories array is required, if no categories are selected use an empty array instead of null"
+		);
 
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new KnowyUserNotFoundException("User not found with id: " + userId));
-		Set<Category> newCategories = categoryRepository.findByNameInIgnoreCase(languages);
 
-		User newUser = new User(user.id(), user.nickname(), user.profileImage(), newCategories);
+		Set<Category> persistedCategories = categoryRepository.findByNameInIgnoreCase(categories);
+		ensureCategoriesArePersisted(categories, persistedCategories);
+
+		User newUser = new User(user.id(), user.nickname(), user.profileImage(), persistedCategories);
 		userRepository.save(newUser);
 	}
 
-	/**
-	 * Finds a public user by their nickname.
-	 *
-	 * @param nickname the nickname of the public user
-	 * @return an {@code Optional} containing the {@code PublicUserEntity} if found, or empty if not found
-	 */
-	public Optional<User> findPublicUserByNickname(String nickname) {
-		return userRepository.findByNickname(nickname);
-	}
+	private void ensureCategoriesArePersisted(String[] categories, Set<Category> persistedCategories)
+		throws KnowyInconsistentDataException {
 
-	public Optional<User> findPublicUserById(int id) {
-		return userRepository.findById(id);
+		Set<String> categoryNames = persistedCategories.stream()
+			.map(Category::name)
+			.collect(Collectors.toSet());
+
+		List<String> notFound = Arrays.stream(categories)
+			.filter(cat -> !categoryNames.contains(cat))
+			.toList();
+
+		if (!notFound.isEmpty()) {
+			throw new KnowyInconsistentDataException(
+				"The following categories do not exist: " + String.join(", ", notFound)
+			);
+		}
 	}
 }
