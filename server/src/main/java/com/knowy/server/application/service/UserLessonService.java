@@ -8,12 +8,10 @@ import com.knowy.server.application.ports.LessonRepository;
 import com.knowy.server.application.ports.UserLessonRepository;
 import com.knowy.server.application.service.exception.KnowyUserLessonNotFoundException;
 import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserLessonEntity;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
 public class UserLessonService {
 
 	private final UserLessonRepository userLessonRepository;

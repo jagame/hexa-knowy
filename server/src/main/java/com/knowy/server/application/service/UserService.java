@@ -21,22 +21,22 @@ public class UserService {
 
 	private final UserRepository userRepository;
 	private final ProfileImageRepository profileImageRepository;
-	private final CategoryRepository languageRepository;
+	private final CategoryRepository categoryRepository;
 
 	/**
 	 * The constructor
 	 *
-	 * @param publicUserRepository   the publicUserRepository
-	 * @param languageRepository     the languageRepository
+	 * @param userRepository         the publicUserRepository
+	 * @param categoryRepository     the languageRepository
 	 * @param profileImageRepository the profileImageRepository
 	 */
 	public UserService(
-		UserRepository publicUserRepository,
-		CategoryRepository languageRepository,
+		UserRepository userRepository,
+		CategoryRepository categoryRepository,
 		ProfileImageRepository profileImageRepository
 	) {
-		this.userRepository = publicUserRepository;
-		this.languageRepository = languageRepository;
+		this.userRepository = userRepository;
+		this.categoryRepository = categoryRepository;
 		this.profileImageRepository = profileImageRepository;
 	}
 
@@ -155,7 +155,7 @@ public class UserService {
 
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new KnowyUserNotFoundException("User not found with id: " + userId));
-		Set<Category> newCategories = languageRepository.findByNameInIgnoreCase(languages);
+		Set<Category> newCategories = categoryRepository.findByNameInIgnoreCase(languages);
 
 		User newUser = new User(user.id(), user.nickname(), user.profileImage(), newCategories);
 		userRepository.save(newUser);

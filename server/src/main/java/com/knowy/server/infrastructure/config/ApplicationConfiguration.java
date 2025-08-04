@@ -1,10 +1,7 @@
 package com.knowy.server.infrastructure.config;
 
-import com.knowy.server.application.ports.KnowyPasswordChecker;
-import com.knowy.server.application.ports.KnowyPasswordEncoder;
-import com.knowy.server.application.ports.KnowyTokenTools;
-import com.knowy.server.application.ports.UserPrivateRepository;
-import com.knowy.server.application.service.PrivateUserService;
+import com.knowy.server.application.ports.*;
+import com.knowy.server.application.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,5 +25,65 @@ public class ApplicationConfiguration {
 			privateUserRepository, knowyPasswordChecker, knowyPasswordEncoder, knowyTokenTools
 		);
 	}
+
+	@Bean
+	public UserFacadeService userFacadeService(
+		KnowyEmailClientTool knowyEmailClientTool,
+		PrivateUserService privateUserService,
+		UserService userService
+	) {
+		return new UserFacadeService(
+			knowyEmailClientTool,
+			privateUserService,
+			userService
+		);
+	}
+
+	@Bean
+	public UserHomeService userHomeService(CourseService courseService) {
+		return new UserHomeService(courseService);
+	}
+
+	@Bean
+	public UserExerciseService exerciseService(
+		UserExerciseRepository userExerciseRepository,
+		UserRepository userRepository,
+		ExerciseRepository exerciseRepository
+	) {
+		return new UserExerciseService(userExerciseRepository, userRepository, exerciseRepository);
+	}
+
+	@Bean
+	public UserLessonService userLessonService(
+		UserLessonRepository userLessonRepository,
+		LessonRepository lessonRepository
+	) {
+		return new UserLessonService(userLessonRepository, lessonRepository);
+	}
+
+	@Bean
+	public UserService userService(
+		UserRepository userRepository,
+		CategoryRepository categoryRepository,
+		ProfileImageRepository profileImageRepository
+	) {
+		return new UserService(userRepository, categoryRepository, profileImageRepository);
+	}
+
+	@Bean
+	public CategoryService categoryService(CategoryRepository categoryRepository) {
+		return new CategoryService(categoryRepository);
+	}
+
+	@Bean
+	public CourseService courseService(
+		CourseRepository courseRepository,
+		LessonRepository lessonRepository,
+		UserLessonRepository userLessonRepository,
+		CategoryRepository categoryRepository
+	) {
+		return new CourseService(courseRepository, lessonRepository, userLessonRepository, categoryRepository);
+	}
+
 
 }

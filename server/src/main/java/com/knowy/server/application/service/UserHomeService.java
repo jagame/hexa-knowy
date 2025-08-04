@@ -2,28 +2,26 @@ package com.knowy.server.application.service;
 
 import com.knowy.server.application.domain.Course;
 import com.knowy.server.application.exception.KnowyInconsistentDataException;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public class UserHomeService {
-	private final CourseSubscriptionService courseSubscriptionService;
+	private final CourseService courseService;
 
-	public UserHomeService(CourseSubscriptionService courseSubscriptionService) {
-		this.courseSubscriptionService = courseSubscriptionService;
+	public UserHomeService(CourseService courseService) {
+		this.courseService = courseService;
 	}
 
 	public long getCoursesCompleted(int userId) throws KnowyInconsistentDataException {
-		List<Course> userCourses = courseSubscriptionService.findCoursesByUserId(userId);
+		List<Course> userCourses = courseService.findCoursesByUserId(userId);
 		return userCourses
 			.stream()
-			.filter(course -> courseSubscriptionService.getCourseProgress(userId, course.id()) == 100)
+			.filter(course -> courseService.getCourseProgress(userId, course.id()) == 100)
 			.count();
 	}
 
 	public long getTotalCourses(int userId) throws KnowyInconsistentDataException {
-		return courseSubscriptionService
+		return courseService
 			.findCoursesByUserId(userId)
 			.size();
 	}

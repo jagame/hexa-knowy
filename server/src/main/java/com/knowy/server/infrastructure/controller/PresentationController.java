@@ -1,6 +1,6 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.server.application.service.CourseSubscriptionService;
+import com.knowy.server.application.service.CourseService;
 import com.knowy.server.infrastructure.controller.dto.NewsDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -11,16 +11,16 @@ import java.util.List;
 @Controller
 public class PresentationController {
 
-	private final CourseSubscriptionService courseSubscriptionService;
+	private final CourseService courseService;
 
-	public PresentationController(CourseSubscriptionService courseSubscriptionService) {
-		this.courseSubscriptionService = courseSubscriptionService;
+	public PresentationController(CourseService courseService) {
+		this.courseService = courseService;
 	}
 
 	@GetMapping("/")
 	public String viewLandingPage(ModelMap interfaceScreen) {
 
-		List<NewsDto> newsList = courseSubscriptionService.findAllCourses()
+		List<NewsDto> newsList = courseService.findAllCourses()
 			.stream()
 			.map(NewsDto::fromDomain)
 			.limit(3)

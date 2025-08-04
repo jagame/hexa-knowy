@@ -1,7 +1,7 @@
 package com.knowy.server.infrastructure.controller;
 
 import com.knowy.server.application.exception.KnowyInconsistentDataException;
-import com.knowy.server.application.service.CourseSubscriptionService;
+import com.knowy.server.application.service.CourseService;
 import com.knowy.server.application.service.UserHomeService;
 import com.knowy.server.application.service.model.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseBannerDTO;
@@ -18,13 +18,13 @@ import java.util.List;
 public class UserHomeController {
 
 	private final UserHomeService userHomeService;
-	private final CourseSubscriptionService courseSubscriptionService;
+	private final CourseService courseService;
 
 	public UserHomeController(
 		UserHomeService userHomeService,
-		CourseSubscriptionService courseSubscriptionService) {
+		CourseService courseService) {
 		this.userHomeService = userHomeService;
-		this.courseSubscriptionService = courseSubscriptionService;
+		this.courseService = courseService;
 	}
 
 	@GetMapping("/home")
@@ -36,7 +36,7 @@ public class UserHomeController {
 		boolean hasCourses = totalCourses > 0;
 
 
-		List<CourseBannerDTO> banners = courseSubscriptionService.findAllRandom()
+		List<CourseBannerDTO> banners = courseService.findAllRandom()
 			.stream()
 			.limit(4)
 			.map(CourseBannerDTO::fromDomain)

@@ -2,7 +2,7 @@ package com.knowy.server.infrastructure.controller;
 
 import com.knowy.server.application.domain.Course;
 import com.knowy.server.application.exception.KnowyInconsistentDataException;
-import com.knowy.server.application.service.CourseSubscriptionService;
+import com.knowy.server.application.service.CourseService;
 import com.knowy.server.application.service.model.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseCardDTO;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,10 +23,10 @@ public class CoursesStoreController {
 
 	private static final String TOAST_MODEL_ATTRIBUTE = "toast";
 
-	private final CourseSubscriptionService courseSubscriptionService;
+	private final CourseService courseService;
 
-	public CoursesStoreController(CourseSubscriptionService courseSubscriptionService) {
-		this.courseSubscriptionService = courseSubscriptionService;
+	public CoursesStoreController(CourseService courseService) {
+		this.courseService = courseService;
 	}
 
 	@GetMapping("")
@@ -38,9 +38,9 @@ public class CoursesStoreController {
 		@AuthenticationPrincipal UserSecurityDetails userDetails
 	) throws KnowyInconsistentDataException {
 
-		List<Course> allCourses = courseSubscriptionService.findAllCourses();
+		List<Course> allCourses = courseService.findAllCourses();
 
-		List<Integer> myCourseIds = courseSubscriptionService.findCoursesByUserId(userDetails.getUser().id())
+		List<Integer> myCourseIds = courseService.findCoursesByUserId(userDetails.getUser().id())
 			.stream()
 			.map(Course::id)
 			.toList();
@@ -52,7 +52,7 @@ public class CoursesStoreController {
 		List<CourseCardDTO> storeCourses = availableCourses.stream()
 			.map(course -> CourseCardDTO.fromDomain(
 				course,
-				courseSubscriptionService.getCourseProgress(userDetails.getUser().id(), course.id()),
+				courseService.getCourseProgress(userDetails.getUser().id(), course.id()),
 				CourseCardDTO.ActionType.ACQUIRE)
 			).toList();
 
@@ -94,7 +94,7 @@ public class CoursesStoreController {
 
 
 		model.addAttribute("courses", paginatedStoreCourses);
-		model.addAttribute("allLanguages", courseSubscriptionService.findAllLanguages());
+		model.addAttribute("allLanguages", courseService.findAllLanguages());
 		model.addAttribute("order", order);
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", totalPages);
@@ -109,7 +109,7 @@ public class CoursesStoreController {
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		RedirectAttributes attrs
 	) {
-		CourseController.handleCourseSubscription(courseId, userDetails, attrs, courseSubscriptionService, TOAST_MODEL_ATTRIBUTE);
+		CourseController.handleCourseSubscription(courseId, userDetails, attrs, courseService, TOAST_MODEL_ATTRIBUTE);
 		return "redirect:/store";
 	}
 }

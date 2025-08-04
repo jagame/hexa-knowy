@@ -7,7 +7,6 @@ import com.knowy.server.application.ports.CourseRepository;
 import com.knowy.server.application.ports.LessonRepository;
 import com.knowy.server.application.ports.UserLessonRepository;
 import com.knowy.server.infrastructure.controller.exception.KnowyCourseSubscriptionException;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -15,14 +14,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Service
-public class CourseSubscriptionService {
+public class CourseService {
+
 	private final CourseRepository courseRepository;
 	private final LessonRepository lessonRepository;
 	private final UserLessonRepository userLessonRepository;
 	private final CategoryRepository categoryRepository;
 
-	public CourseSubscriptionService(
+	public CourseService(
 		CourseRepository courseRepository,
 		LessonRepository lessonRepository,
 		UserLessonRepository userLessonRepository,

@@ -2,35 +2,33 @@ package com.knowy.server.application.service;
 
 import com.knowy.server.application.domain.UserPrivate;
 import com.knowy.server.application.exception.KnowyMailDispatchException;
+import com.knowy.server.application.exception.KnowyPasswordFormatException;
+import com.knowy.server.application.exception.KnowyTokenException;
+import com.knowy.server.application.exception.KnowyWrongPasswordException;
+import com.knowy.server.application.ports.KnowyEmailClientTool;
 import com.knowy.server.application.service.exception.*;
 import com.knowy.server.application.service.model.MailMessage;
 import com.knowy.server.application.service.model.NewUserCommand;
-import com.knowy.server.util.EmailClientTool;
-import com.knowy.server.application.exception.KnowyTokenException;
-import com.knowy.server.application.exception.KnowyPasswordFormatException;
-import com.knowy.server.application.exception.KnowyWrongPasswordException;
-import org.springframework.stereotype.Service;
 
-@Service
 public class UserFacadeService {
 
-	private final EmailClientTool emailClientTool;
+	private final KnowyEmailClientTool knowyEmailClientTool;
 	private final PrivateUserService privateUserService;
 	private final UserService userService;
 
 	/**
 	 * The constructor
 	 *
-	 * @param emailClientTool    the emailClientService
-	 * @param privateUserService the privateUserService
-	 * @param publicUserService  the publicUserService
+	 * @param knowyEmailClientTool the emailClientService
+	 * @param privateUserService   the privateUserService
+	 * @param publicUserService    the publicUserService
 	 */
 	public UserFacadeService(
-		EmailClientTool emailClientTool,
+		KnowyEmailClientTool knowyEmailClientTool,
 		PrivateUserService privateUserService,
 		UserService publicUserService
 	) {
-		this.emailClientTool = emailClientTool;
+		this.knowyEmailClientTool = knowyEmailClientTool;
 		this.privateUserService = privateUserService;
 		this.userService = publicUserService;
 	}
@@ -112,7 +110,7 @@ public class UserFacadeService {
 	 * @param password        the new password
 	 * @param confirmPassword confirmation of the new password
 	 * @throws KnowyUserNotFoundException   if no user is associated with the token
-	 * @throws KnowyTokenException       if the token is invalid or expired
+	 * @throws KnowyTokenException          if the token is invalid or expired
 	 * @throws KnowyPasswordFormatException if the password format is invalid or passwords do not match
 	 */
 	public void updatePassword(String token, String password, String confirmPassword)
@@ -160,14 +158,14 @@ public class UserFacadeService {
 	 *
 	 * @param email           the email address of the user requesting password recovery
 	 * @param recoveryBaseUrl the base URL to be used in the recovery link (e.g., frontend reset page)
-	 * @throws KnowyTokenException     if there is a problem generating the recovery token
+	 * @throws KnowyTokenException        if there is a problem generating the recovery token
 	 * @throws KnowyUserNotFoundException if no user is associated with the given email
 	 * @throws KnowyMailDispatchException if the email could not be sent
 	 */
 	public void sendRecoveryPasswordEmail(String email, String recoveryBaseUrl)
 		throws KnowyTokenException, KnowyUserNotFoundException, KnowyMailDispatchException {
 		MailMessage mailMessage = privateUserService.createRecoveryPasswordEmail(email, recoveryBaseUrl);
-		emailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
+		knowyEmailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
 	}
 
 	/**
@@ -179,7 +177,7 @@ public class UserFacadeService {
 	 * @param email           the email of the user whose account will be deactivated
 	 * @param recoveryBaseUrl the base URL to be used for account reactivation link
 	 * @throws KnowyUserNotFoundException  if the user with the given email does not exist
-	 * @throws KnowyTokenException      if there is an error generating the JWT token
+	 * @throws KnowyTokenException         if there is an error generating the JWT token
 	 * @throws KnowyMailDispatchException  if sending the recovery email fails
 	 * @throws KnowyWrongPasswordException if the password and confirmation do not match or are incorrect
 	 */
@@ -191,7 +189,7 @@ public class UserFacadeService {
 	) throws KnowyUserNotFoundException, KnowyTokenException, KnowyMailDispatchException, KnowyWrongPasswordException {
 		privateUserService.desactivateUserAccount(email, password, confirmPassword);
 		MailMessage mailMessage = privateUserService.createDeletedAccountEmail(email, recoveryBaseUrl);
-		emailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
+		knowyEmailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
 	}
 
 	/**
@@ -199,7 +197,7 @@ public class UserFacadeService {
 	 *
 	 * @param token the JWT token used to verify and reactivate the user account
 	 * @throws KnowyUserNotFoundException if the user associated with the token does not exist
-	 * @throws KnowyTokenException     if the token is invalid or expired
+	 * @throws KnowyTokenException        if the token is invalid or expired
 	 */
 	public void reactivateUserAccount(String token) throws KnowyUserNotFoundException, KnowyTokenException {
 		privateUserService.reactivateUserAccount(token);

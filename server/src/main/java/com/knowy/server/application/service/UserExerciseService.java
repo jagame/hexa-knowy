@@ -8,14 +8,12 @@ import com.knowy.server.application.ports.UserExerciseRepository;
 import com.knowy.server.application.ports.UserRepository;
 import com.knowy.server.application.service.exception.KnowyUserNotFoundException;
 import com.knowy.server.application.service.model.ExerciseDifficult;
-import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
-@Service
 public class UserExerciseService {
 
 	private final UserExerciseRepository userExerciseRepository;

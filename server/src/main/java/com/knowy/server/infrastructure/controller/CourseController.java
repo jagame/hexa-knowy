@@ -1,8 +1,7 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.server.application.domain.Course;
 import com.knowy.server.application.exception.KnowyInconsistentDataException;
-import com.knowy.server.application.service.CourseSubscriptionService;
+import com.knowy.server.application.service.CourseService;
 import com.knowy.server.application.service.model.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseCardDTO;
 import com.knowy.server.infrastructure.controller.dto.ToastDto;
@@ -25,21 +24,21 @@ public class CourseController {
 
 	private static final String TOAST_MODEL_ATTRIBUTE = "toast";
 
-	private final CourseSubscriptionService courseSubscriptionService;
+	private final CourseService courseService;
 
-	public CourseController(CourseSubscriptionService courseSubscriptionService) {
-		this.courseSubscriptionService = courseSubscriptionService;
+	public CourseController(CourseService courseService) {
+		this.courseService = courseService;
 	}
 
 	static void handleCourseSubscription(
 		@RequestParam Integer courseId,
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		RedirectAttributes attrs,
-		CourseSubscriptionService courseSubscriptionService,
+		CourseService courseService,
 		String toastModelAttribute
 	) {
 		try {
-			courseSubscriptionService.subscribeUserToCourse(userDetails.getUser(), courseId);
+			courseService.subscribeUserToCourse(userDetails.getUser(), courseId);
 			attrs.addFlashAttribute(toastModelAttribute, List.of(new ToastDto("Éxito",
 				"¡Te has suscrito correctamente!", ToastDto.ToastType.SUCCESS)));
 		} catch (KnowyCourseSubscriptionException e) {
@@ -58,11 +57,11 @@ public class CourseController {
 		@RequestParam(defaultValue = "1") int page,
 		@AuthenticationPrincipal UserSecurityDetails userDetails
 	) throws KnowyInconsistentDataException {
-		List<CourseCardDTO> courses = courseSubscriptionService.getUserCourses(userDetails.getUser().id())
+		List<CourseCardDTO> courses = courseService.getUserCourses(userDetails.getUser().id())
 			.stream()
 			.map(course -> CourseCardDTO.fromDomain(
 				course,
-				courseSubscriptionService.getCourseProgress(userDetails.getUser().id(), course.id()),
+				courseService.getCourseProgress(userDetails.getUser().id(), course.id()),
 				CourseCardDTO.ActionType.START
 			))
 			.toList();
@@ -103,12 +102,12 @@ public class CourseController {
 			}
 		}
 
-		List<CourseCardDTO> recommendations = courseSubscriptionService
+		List<CourseCardDTO> recommendations = courseService
 			.getRecommendedCourses(userDetails.getUser().id())
 			.stream()
 			.map(course -> CourseCardDTO.fromDomain(
 				course,
-				courseSubscriptionService.getCourseProgress(userDetails.getUser().id(), course.id()),
+				courseService.getCourseProgress(userDetails.getUser().id(), course.id()),
 				CourseCardDTO.ActionType.START
 			)).toList();
 
@@ -128,7 +127,7 @@ public class CourseController {
 		// 5 PAGINACIÓN
 		List<CourseCardDTO> paginatedCourses = fromIndex >= courses.size() ? List.of() : courses.subList(fromIndex, toIndex);
 
-		model.addAttribute("allLanguages", courseSubscriptionService.findAllLanguages());
+		model.addAttribute("allLanguages", courseService.findAllLanguages());
 		model.addAttribute("courses", paginatedCourses);
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", totalPages);
@@ -145,7 +144,7 @@ public class CourseController {
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		RedirectAttributes attrs
 	) {
-		handleCourseSubscription(courseId, userDetails, attrs, courseSubscriptionService, TOAST_MODEL_ATTRIBUTE);
+		handleCourseSubscription(courseId, userDetails, attrs, courseService, TOAST_MODEL_ATTRIBUTE);
 		return "redirect:/my-courses";
 	}
 

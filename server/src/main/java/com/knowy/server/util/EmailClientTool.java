@@ -1,6 +1,7 @@
 package com.knowy.server.util;
 
 import com.knowy.server.application.exception.KnowyMailDispatchException;
+import com.knowy.server.application.ports.KnowyEmailClientTool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class EmailClientTool {
+public class EmailClientTool implements KnowyEmailClientTool {
 
 	private final JavaMailSender mailSender;
 
@@ -17,6 +18,7 @@ public class EmailClientTool {
 		this.mailSender = mailSender;
 	}
 
+	@Override
 	public void sendEmail(String to, String subject, String body) throws KnowyMailDispatchException {
 		try {
 			SimpleMailMessage message = new SimpleMailMessage();
