@@ -8,7 +8,7 @@ import com.knowy.server.application.ports.CategoryRepository;
 import com.knowy.server.application.ports.ProfileImageRepository;
 import com.knowy.server.application.ports.UserRepository;
 import com.knowy.server.application.service.exception.*;
-import com.knowy.server.application.service.model.NewUserCommand;
+import com.knowy.server.application.service.model.NewUserResult;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -44,9 +44,9 @@ class UserServiceTest {
 		Mockito.when(profileImageRepository.findById(1))
 			.thenReturn(Optional.of(expectedProfileImage));
 
-		NewUserCommand result = assertDoesNotThrow(() -> userService.create("ValidNickname"));
+		NewUserResult result = assertDoesNotThrow(() -> userService.create("ValidNickname"));
 		assertEquals(
-			new NewUserCommand("ValidNickname", expectedProfileImage, new HashSet<>()),
+			new NewUserResult("ValidNickname", expectedProfileImage, new HashSet<>()),
 			result
 		);
 	}

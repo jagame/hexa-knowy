@@ -5,5 +5,5 @@ import com.knowy.server.application.domain.ProfileImage;
 
 import java.util.Set;
 
-public record NewUserCommand(String nickname, ProfileImage profileImage, Set<Category> categories) {
+public record NewUserResult(String nickname, ProfileImage profileImage, Set<Category> categories) {
 }

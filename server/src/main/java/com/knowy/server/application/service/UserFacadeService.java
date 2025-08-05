@@ -5,28 +5,28 @@ import com.knowy.server.application.exception.*;
 import com.knowy.server.application.ports.KnowyEmailClientTool;
 import com.knowy.server.application.service.exception.*;
 import com.knowy.server.application.service.model.MailMessage;
-import com.knowy.server.application.service.model.NewUserCommand;
+import com.knowy.server.application.service.model.NewUserResult;
 
 public class UserFacadeService {
 
 	private final KnowyEmailClientTool knowyEmailClientTool;
-	private final PrivateUserService privateUserService;
+	private final UserPrivateService userPrivateService;
 	private final UserService userService;
 
 	/**
 	 * The constructor
 	 *
 	 * @param knowyEmailClientTool the emailClientService
-	 * @param privateUserService   the privateUserService
+	 * @param userPrivateService   the privateUserService
 	 * @param publicUserService    the publicUserService
 	 */
 	public UserFacadeService(
 		KnowyEmailClientTool knowyEmailClientTool,
-		PrivateUserService privateUserService,
+		UserPrivateService userPrivateService,
 		UserService publicUserService
 	) {
 		this.knowyEmailClientTool = knowyEmailClientTool;
-		this.privateUserService = privateUserService;
+		this.userPrivateService = userPrivateService;
 		this.userService = publicUserService;
 	}
 
@@ -45,8 +45,8 @@ public class UserFacadeService {
 	 */
 	public UserPrivate registerNewUser(String nickname, String email, String password)
 		throws KnowyInvalidUserException, KnowyImageNotFoundException {
-		NewUserCommand newPublicUser = userService.create(nickname);
-		return privateUserService.create(email, password, newPublicUser);
+		NewUserResult newPublicUser = userService.create(nickname);
+		return userPrivateService.create(email, password, newPublicUser);
 	}
 
 	/**
@@ -111,8 +111,8 @@ public class UserFacadeService {
 	 * @throws KnowyPasswordFormatException if the password format is invalid or passwords do not match
 	 */
 	public void updatePassword(String token, String password, String confirmPassword)
-		throws KnowyUserNotFoundException, KnowyTokenException, KnowyPasswordFormatException {
-		privateUserService.resetPassword(token, password, confirmPassword);
+		throws KnowyUserNotFoundException, KnowyTokenException, KnowyPasswordFormatException, KnowyWrongPasswordException {
+		userPrivateService.resetPassword(token, password, confirmPassword);
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class UserFacadeService {
 	 */
 	public void updateEmail(String email, int userId, String password)
 		throws KnowyUserNotFoundException, KnowyUnchangedEmailException, KnowyWrongPasswordException, KnowyInvalidUserEmailException {
-		privateUserService.updateEmail(email, userId, password);
+		userPrivateService.updateEmail(email, userId, password);
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class UserFacadeService {
 	 * @throws KnowyUserNotFoundException if the token refers to a non-existent user
 	 */
 	public boolean isValidToken(String token) throws KnowyUserNotFoundException {
-		return privateUserService.isValidToken(token);
+		return userPrivateService.isValidToken(token);
 	}
 
 	/**
@@ -161,7 +161,7 @@ public class UserFacadeService {
 	 */
 	public void sendRecoveryPasswordEmail(String email, String recoveryBaseUrl)
 		throws KnowyTokenException, KnowyUserNotFoundException, KnowyMailDispatchException {
-		MailMessage mailMessage = privateUserService.createRecoveryPasswordEmail(email, recoveryBaseUrl);
+		MailMessage mailMessage = userPrivateService.createRecoveryPasswordEmail(email, recoveryBaseUrl);
 		knowyEmailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
 	}
 
@@ -184,8 +184,8 @@ public class UserFacadeService {
 		String email,
 		String recoveryBaseUrl
 	) throws KnowyUserNotFoundException, KnowyTokenException, KnowyMailDispatchException, KnowyWrongPasswordException {
-		privateUserService.desactivateUserAccount(email, password, confirmPassword);
-		MailMessage mailMessage = privateUserService.createDeletedAccountEmail(email, recoveryBaseUrl);
+		userPrivateService.desactivateUserAccount(email, password, confirmPassword);
+		MailMessage mailMessage = userPrivateService.createDeletedAccountEmail(email, recoveryBaseUrl);
 		knowyEmailClientTool.sendEmail(mailMessage.to(), mailMessage.subject(), mailMessage.body());
 	}
 
@@ -197,6 +197,6 @@ public class UserFacadeService {
 	 * @throws KnowyTokenException        if the token is invalid or expired
 	 */
 	public void reactivateUserAccount(String token) throws KnowyUserNotFoundException, KnowyTokenException {
-		privateUserService.reactivateUserAccount(token);
+		userPrivateService.reactivateUserAccount(token);
 	}
 }

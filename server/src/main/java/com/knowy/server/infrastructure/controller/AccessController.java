@@ -2,6 +2,7 @@ package com.knowy.server.infrastructure.controller;
 
 import com.knowy.server.application.domain.UserPrivate;
 import com.knowy.server.application.exception.KnowyMailDispatchException;
+import com.knowy.server.application.exception.KnowyWrongPasswordException;
 import com.knowy.server.application.service.UserFacadeService;
 import com.knowy.server.application.service.exception.KnowyImageNotFoundException;
 import com.knowy.server.application.service.exception.KnowyInvalidUserException;
@@ -227,6 +228,9 @@ public class AccessController {
 				- 1 número y 1 símbolo
 				- Sin espacios
 				""");
+			return "redirect:/password-change?token=" + token;
+		} catch (KnowyWrongPasswordException e) {
+			redirectAttributes.addAttribute(ERROR_MODEL_ATTRIBUTE, "Las contraseñas no coinciden");
 			return "redirect:/password-change?token=" + token;
 		}
 	}

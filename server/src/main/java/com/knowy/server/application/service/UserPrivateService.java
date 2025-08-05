@@ -13,13 +13,13 @@ import com.knowy.server.application.service.exception.KnowyInvalidUserPasswordFo
 import com.knowy.server.application.service.exception.KnowyUnchangedEmailException;
 import com.knowy.server.application.service.exception.KnowyUserNotFoundException;
 import com.knowy.server.application.service.model.MailMessage;
-import com.knowy.server.application.service.model.NewUserCommand;
+import com.knowy.server.application.service.model.NewUserResult;
 import com.knowy.server.application.service.model.PasswordResetInfo;
 
 import java.util.Objects;
 import java.util.Optional;
 
-public class PrivateUserService {
+public class UserPrivateService {
 
 	private final UserPrivateRepository privateUserRepository;
 	private final KnowyPasswordEncoder passwordEncoder;
@@ -33,7 +33,7 @@ public class PrivateUserService {
 	 * @param passwordEncoder       the passwordEncoder
 	 * @param tokenTools            the tokenTools
 	 */
-	public PrivateUserService(
+	public UserPrivateService(
 		UserPrivateRepository privateUserRepository,
 		KnowyPasswordChecker passwordChecker,
 		KnowyPasswordEncoder passwordEncoder,
@@ -58,7 +58,7 @@ public class PrivateUserService {
 	 * @throws KnowyInvalidUserEmailException          if the email is already associated with another user
 	 * @throws KnowyInvalidUserPasswordFormatException if the password does not meet formatting requirements
 	 */
-	public UserPrivate create(String email, String password, NewUserCommand user)
+	public UserPrivate create(String email, String password, NewUserResult user)
 		throws KnowyInvalidUserPasswordFormatException, KnowyInvalidUserEmailException {
 
 		if (findPrivateUserByEmail(email).isPresent()) {
@@ -126,13 +126,13 @@ public class PrivateUserService {
 	 * @throws KnowyUserNotFoundException   if the user associated with the token does not exist
 	 */
 	public void resetPassword(String token, String password, String confirmPassword)
-		throws KnowyPasswordFormatException, KnowyTokenException, KnowyUserNotFoundException {
+		throws KnowyPasswordFormatException, KnowyTokenException, KnowyUserNotFoundException, KnowyWrongPasswordException {
 
 		Objects.requireNonNull(password, "A password should be specified");
 
 		passwordChecker.assertPasswordFormatIsRight(password);
 		if (!password.equals(confirmPassword)) {
-			throw new KnowyTokenException("Passwords do not match");
+			throw new KnowyWrongPasswordException("Passwords do not match");
 		}
 
 		UserPrivate userPrivate = verifyPasswordToken(token);
@@ -159,12 +159,12 @@ public class PrivateUserService {
 	 * @return {@code true} if the token is well-formed, matches a known user, and its signature is valid; {@code false}
 	 * otherwise
 	 */
-	public boolean isValidToken(String token) throws KnowyUserNotFoundException {
+	public boolean isValidToken(String token) {
 		try {
 			Objects.requireNonNull(token, "A not null token is required");
 			verifyPasswordToken(token);
 			return true;
-		} catch (KnowyTokenException e) {
+		} catch (KnowyTokenException | KnowyUserNotFoundException e) {
 			return false;
 		}
 	}

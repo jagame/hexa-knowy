@@ -15,13 +15,13 @@ public class ApplicationConfiguration {
 	}
 
 	@Bean
-	public PrivateUserService privateUserService(
+	public UserPrivateService privateUserService(
 		UserPrivateRepository privateUserRepository,
 		KnowyPasswordChecker knowyPasswordChecker,
 		KnowyPasswordEncoder knowyPasswordEncoder,
 		KnowyTokenTools knowyTokenTools
 	) {
-		return new PrivateUserService(
+		return new UserPrivateService(
 			privateUserRepository, knowyPasswordChecker, knowyPasswordEncoder, knowyTokenTools
 		);
 	}
@@ -29,12 +29,12 @@ public class ApplicationConfiguration {
 	@Bean
 	public UserFacadeService userFacadeService(
 		KnowyEmailClientTool knowyEmailClientTool,
-		PrivateUserService privateUserService,
+		UserPrivateService userPrivateService,
 		UserService userService
 	) {
 		return new UserFacadeService(
 			knowyEmailClientTool,
-			privateUserService,
+			userPrivateService,
 			userService
 		);
 	}

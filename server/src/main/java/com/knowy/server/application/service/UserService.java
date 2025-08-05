@@ -8,7 +8,7 @@ import com.knowy.server.application.ports.CategoryRepository;
 import com.knowy.server.application.ports.ProfileImageRepository;
 import com.knowy.server.application.ports.UserRepository;
 import com.knowy.server.application.service.exception.*;
-import com.knowy.server.application.service.model.NewUserCommand;
+import com.knowy.server.application.service.model.NewUserResult;
 import com.knowy.server.application.util.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -50,14 +50,14 @@ public class UserService {
 	 * @throws KnowyInvalidUserException   if the nickname is already in use
 	 * @throws KnowyImageNotFoundException if the default profile image (ID 1) does not exist
 	 */
-	public NewUserCommand create(String nickname) throws KnowyInvalidUserException, KnowyImageNotFoundException {
+	public NewUserResult create(String nickname) throws KnowyInvalidUserException, KnowyImageNotFoundException {
 		assertNotBlankNickname(nickname);
 
 		if (userRepository.findByNickname(nickname).isPresent()) {
 			throw new KnowyInvalidUserNicknameException("Nickname already exists");
 		}
 
-		return new NewUserCommand(
+		return new NewUserResult(
 			nickname,
 			profileImageRepository.findById(1)
 				.orElseThrow(() -> new KnowyImageNotFoundException("Not found profile image")),
