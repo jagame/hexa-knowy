@@ -1,7 +1,6 @@
 package com.knowy.server.infrastructure.adapters.repository.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,12 +20,10 @@ public class PublicUserExerciseEntity {
 	@EmbeddedId
 	private PublicUserExerciseId id;
 
-	@NotNull
 	@ColumnDefault("0")
 	@Column(name = "rate", nullable = false)
 	private Integer rate;
 
-	@NotNull
 	@ColumnDefault("CURRENT_TIMESTAMP")
 	@Column(name = "next_review", nullable = false)
 	private LocalDateTime nextReview;

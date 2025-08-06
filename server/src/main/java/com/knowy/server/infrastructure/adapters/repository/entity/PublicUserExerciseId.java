@@ -2,7 +2,6 @@ package com.knowy.server.infrastructure.adapters.repository.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,11 +18,9 @@ import java.util.Objects;
 @Embeddable
 public class PublicUserExerciseId implements Serializable {
 
-	@NotNull
 	@Column(name = "id_public_user", nullable = false)
 	private Integer idPublicUser;
 
-	@NotNull
 	@Column(name = "id_exercise", nullable = false)
 	private Integer idExercise;
 

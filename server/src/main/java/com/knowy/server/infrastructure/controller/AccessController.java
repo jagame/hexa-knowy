@@ -2,6 +2,8 @@ package com.knowy.server.infrastructure.controller;
 
 import com.knowy.server.application.domain.UserPrivate;
 import com.knowy.server.application.exception.KnowyMailDispatchException;
+import com.knowy.server.application.exception.KnowyPasswordFormatException;
+import com.knowy.server.application.exception.KnowyTokenException;
 import com.knowy.server.application.exception.KnowyWrongPasswordException;
 import com.knowy.server.application.service.UserFacadeService;
 import com.knowy.server.application.service.exception.KnowyImageNotFoundException;
@@ -12,15 +14,10 @@ import com.knowy.server.infrastructure.controller.dto.UserEmailFormDto;
 import com.knowy.server.infrastructure.controller.dto.UserPasswordFormDto;
 import com.knowy.server.infrastructure.controller.dto.UserRegisterFormDto;
 import com.knowy.server.util.UserSecurityDetailsHelper;
-import com.knowy.server.application.exception.KnowyTokenException;
-import com.knowy.server.application.exception.KnowyPasswordFormatException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -90,18 +87,14 @@ public class AccessController {
 	 * @param user               the registration form data bound to {@link UserRegisterFormDto}, validated
 	 *                           automatically
 	 * @param redirectAttributes used to add flash attributes (such as error messages) during redirect
-	 * @param errors             holds validation and binding errors for the submitted form
 	 * @return a redirect URL string: either back to "/register" on error or to "/home" on successful registration
 	 */
 	@PostMapping("/register")
 	public String processRegisterForm(
-		@Valid @ModelAttribute UserRegisterFormDto user,
-		RedirectAttributes redirectAttributes,
-		Errors errors
+		@ModelAttribute UserRegisterFormDto user,
+		RedirectAttributes redirectAttributes
 	) throws KnowyImageNotFoundException {
 		try {
-			validateFieldErrors(errors);
-
 			UserPrivate userPrivate = userFacadeService.registerNewUser(
 				user.getNickname(),
 				user.getEmail(),
@@ -116,20 +109,6 @@ public class AccessController {
 			return "redirect:/register";
 		}
 	}
-
-	private void validateFieldErrors(Errors errors) throws KnowyInvalidUserException {
-		FieldError firstError = errors.getFieldError();
-		if (firstError == null) {
-			return;
-		}
-
-		String message = firstError.getDefaultMessage();
-		if (message == null || message.isEmpty()) {
-			throw new KnowyInvalidUserException("Hubo un problema con la información proporcionada. Por favor, revise los " + "campos y vuelva a intentarlo.");
-		}
-		throw new KnowyInvalidUserException(message);
-	}
-
 
 	/**
 	 * Handles GET requests to display the password change email form.
