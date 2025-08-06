@@ -226,7 +226,7 @@ public class UserPrivateService {
 	 * @return the {@code PrivateUserEntity} associated with the given email
 	 * @throws KnowyUserNotFoundException if no user exists with the specified email
 	 */
-	public UserPrivate getPrivateUserByEmail(String email) throws KnowyUserNotFoundException {
+	public UserPrivate getUserPrivateByEmail(String email) throws KnowyUserNotFoundException {
 		return findPrivateUserByEmail(email)
 			.orElseThrow(() -> new KnowyUserNotFoundException("User not found"));
 	}
@@ -364,10 +364,6 @@ public class UserPrivateService {
 	 * @throws KnowyUserNotFoundException if no user is associated with the token
 	 */
 	public void reactivateUserAccount(String token) throws KnowyTokenException, KnowyUserNotFoundException {
-		if (!isValidToken(token)) {
-			throw new KnowyTokenException("Invalid token");
-		}
-
 		UserPrivate userPrivate = verifyPasswordToken(token);
 
 		if (!userPrivate.active()) {

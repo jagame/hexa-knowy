@@ -1,7 +1,6 @@
 package com.knowy.server.application.service;
 
 
-import com.knowy.server.application.domain.Category;
 import com.knowy.server.application.domain.ProfileImage;
 import com.knowy.server.application.domain.User;
 import com.knowy.server.application.domain.UserPrivate;
@@ -16,6 +15,7 @@ import com.knowy.server.application.service.exception.KnowyInvalidUserEmailExcep
 import com.knowy.server.application.service.exception.KnowyInvalidUserPasswordFormatException;
 import com.knowy.server.application.service.exception.KnowyUnchangedEmailException;
 import com.knowy.server.application.service.exception.KnowyUserNotFoundException;
+import com.knowy.server.application.service.model.MailMessage;
 import com.knowy.server.application.service.model.NewUserResult;
 import com.knowy.server.application.service.model.PasswordResetInfo;
 import org.junit.jupiter.api.Test;
@@ -61,7 +61,7 @@ class UserPrivateServiceTest {
 			1,
 			"TestNickname",
 			new ProfileImage(1, "https://knowy/image.png"),
-			new HashSet<Category>(),
+			new HashSet<>(),
 			"test@email.com",
 			"ValidPass123@",
 			true
@@ -124,7 +124,7 @@ class UserPrivateServiceTest {
 			16,
 			"TestNickname",
 			new ProfileImage(1, "https://knowy/image.png"),
-			new HashSet<Category>(),
+			new HashSet<>(),
 			"old@email.com",
 			"ENCODED_PASS",
 			true
@@ -161,9 +161,10 @@ class UserPrivateServiceTest {
 		Mockito.when(userPrivateRepository.findById(16))
 			.thenReturn(Optional.of(userPrivateResult));
 
-		assertThrows(KnowyUnchangedEmailException.class, () -> {
-			userPrivateService.updateEmail("same@email.com", 16, "RAW_PASS");
-		});
+		assertThrows(
+			KnowyUnchangedEmailException.class,
+			() -> userPrivateService.updateEmail("same@email.com", 16, "RAW_PASS")
+		);
 	}
 
 	@Test
@@ -384,451 +385,309 @@ class UserPrivateServiceTest {
 		assertFalse(result);
 	}
 
-	/*
-	//GER PRIVATE USER BY EMAIL
+	// mehotd getUserPrivateByEmail
 	@Test
-	void givenExistingEmailExpectReturnUser() throws Exception {
-		UserPrivateRepository repo = Mockito.mock(UserPrivateRepository.class);
-		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
-		JwtTools jwt = Mockito.mock(JwtTools.class);
-		PrivateUserService service = new PrivateUserService(repo, encoder, jwt);
-
-		String email = "user@mail.com";
-		PrivateUserEntity user = new PrivateUserEntity();
-		user.setEmail(email);
-
-		Mockito.when(repo.findByEmail(email)).thenReturn(Optional.of(user));
-
-		PrivateUserEntity result = service.getPrivateUserByEmail(email);
-
-		Assertions.assertEquals(email, result.getEmail());
-	}
-
-	@Test
-	void givenNonExistingEmailExpectUserNotFoundException() {
-		UserPrivateRepository repo = Mockito.mock(UserPrivateRepository.class);
-		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
-		JwtTools jwt = Mockito.mock(JwtTools.class);
-		PrivateUserService service = new PrivateUserService(repo, encoder, jwt);
-
-		String email = "missing@mail.com";
-		Mockito.when(repo.findByEmail(email)).thenReturn(Optional.empty());
-
-		KnowyUserNotFoundException ex = Assertions.assertThrows(KnowyUserNotFoundException.class, () -> {
-			service.getPrivateUserByEmail(email);
-		});
-		Assertions.assertEquals("User not found", ex.getMessage());
-	}
-	// method getPrivateUserById - getByEmail
-		@Test
-	void given_validUserId_when_getPrivateUser_then_returnPrivateUser() {
+	void given_existingEmail_when_getUserPrivateByEmail_then_returnUserPrivate() {
 		UserPrivate userPrivate = new UserPrivate(
-			16,
+			11,
 			"TestNickname",
 			new ProfileImage(1, "https://knowy/image.png"),
 			new HashSet<>(),
-			"old@email.com",
-			"ValidPass123@",
+			"test@email.com",
+			"ValidOldPass123@",
 			true
 		);
 
-		Mockito.when(userPrivateRepository.findById(userPrivate.id()))
+		Mockito.when(userPrivateRepository.findByEmail("exist@gmail.com"))
 			.thenReturn(Optional.of(userPrivate));
 
-		UserPrivate gotUserPrivate = assertDoesNotThrow(() -> userPrivateService.getPrivateUserById(16));
-		assertEquals(userPrivate, gotUserPrivate);
+		UserPrivate result = assertDoesNotThrow(() -> userPrivateService.getUserPrivateByEmail("exist@gmail.com"));
+		assertEquals(userPrivate, result);
 	}
 
 	@Test
-	void given_invalidUserId_when_getPrivateUser_then_returnPrivateUser() {
-		Mockito.when(userPrivateRepository.findById(Mockito.anyInt()))
+	void given_nonExistingEmail_when_getUserPrivateByEmail_then_throwKnowyUserNotFoundException() {
+		Mockito.when(userPrivateRepository.findByEmail("nonExistg@mail.com"))
 			.thenReturn(Optional.empty());
 
 		assertThrows(
 			KnowyUserNotFoundException.class,
-			() -> userPrivateService.getPrivateUserById(Mockito.anyInt())
+			() -> userPrivateService.getUserPrivateByEmail("nonExistg@mail.com")
 		);
 	}
 
-
-
-
-	// CREATE RECOVERY PASSWORD EMAIL
+	// method createRecoveryPasswordEmail
 	@Test
 	void givenNonExistentEmailExpectUserNotFoundException() {
-		UserPrivateRepository repo = Mockito.mock(UserPrivateRepository.class);
-		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
-		JwtTools jwtTools = Mockito.mock(JwtTools.class);
-
-		PrivateUserService service = new PrivateUserService(repo, encoder, jwtTools);
-
 		String email = "missing@mail.com";
 		String recoveryBaseUrl = "https://app.url/recover";
 
-		Mockito.when(repo.findByEmail(email)).thenReturn(Optional.empty());
+		Mockito.when(userPrivateRepository.findByEmail(email))
+			.thenReturn(Optional.empty());
 
-		KnowyUserNotFoundException ex = Assertions.assertThrows(KnowyUserNotFoundException.class, () -> {
-			service.createRecoveryPasswordEmail(email, recoveryBaseUrl);
-		});
-		Assertions.assertEquals("The user with email missing@mail.com was not found", ex.getMessage());
+		assertThrows(
+			KnowyUserNotFoundException.class,
+			() -> userPrivateService.createRecoveryPasswordEmail(email, recoveryBaseUrl)
+		);
 	}
 
 	@Test
-	void givenJwtToolsEncodeThrowsExceptionExpectJwtKnowyException() throws Exception {
-		UserPrivateRepository repo = Mockito.mock(UserPrivateRepository.class);
-		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
-		JwtTools jwtTools = Mockito.mock(JwtTools.class);
+	void given_token_when_createRecoveryPasswordEmailencodeFail_then_throwKnowyTokenException() throws Exception {
+		UserPrivate userPrivate = new UserPrivate(
+			11,
+			"TestNickname",
+			new ProfileImage(1, "https://knowy/image.png"),
+			new HashSet<>(),
+			"user@mail.com",
+			"ENCODED_PASSWORD",
+			true
+		);
+		Mockito.when(userPrivateRepository.findByEmail("user@mail.com"))
+			.thenReturn(Optional.of(userPrivate));
+		Mockito.when(tokenTools.encode(Mockito.any(), Mockito.eq(userPrivate.password()), Mockito.anyLong()))
+			.thenThrow(new KnowyTokenException("Token encoding failed"));
 
-		PrivateUserService service = new PrivateUserService(repo, encoder, jwtTools);
-
-		String email = "user@mail.com";
-		String recoveryBaseUrl = "https://app.url/recover";
-
-		PrivateUserEntity user = new PrivateUserEntity();
-		user.setId(124);
-		user.setEmail(email);
-		user.setPassword("encoded-password");
-
-		Mockito.when(repo.findByEmail(email)).thenReturn(Optional.of(user));
-		Mockito.when(jwtTools.encode(Mockito.any(), Mockito.eq(user.getPassword()), Mockito.anyLong())).thenThrow(new KnowyTokenException("Token encoding failed"));
-
-		KnowyTokenException ex = Assertions.assertThrows(KnowyTokenException.class, () -> {
-			service.createRecoveryPasswordEmail(email, recoveryBaseUrl);
-		});
-		Assertions.assertEquals("Token encoding failed", ex.getMessage());
+		assertThrows(
+			KnowyTokenException.class,
+			() -> userPrivateService.createRecoveryPasswordEmail("user@mail.com", "https://app.url/recover")
+		);
 	}
 
 	@Test
-	void givenValidEmailExpectReturnsMailMessage() throws Exception {
-		UserPrivateRepository repo = Mockito.mock(UserPrivateRepository.class);
-		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
-		JwtTools jwtTools = Mockito.mock(JwtTools.class);
-
-		PrivateUserService service = new PrivateUserService(repo, encoder, jwtTools);
-
+	void given_validEmail_when_createRecoveryPasswordEmail_then_returnMailMessage() throws Exception {
 		String email = "user@mail.com";
 		String recoveryBaseUrl = "https://app.url/recover";
 		String expectedToken = "mocked-token";
 
-		PrivateUserEntity user = new PrivateUserEntity();
-		user.setId(123);
-		user.setEmail(email);
-		user.setPassword("encoded-password");
+		UserPrivate userPrivate = new UserPrivate(
+			11,
+			"TestNickname",
+			new ProfileImage(1, "https://knowy/image.png"),
+			new HashSet<>(),
+			"user@mail.com",
+			"ENCODED_PASSWORD",
+			true
+		);
 
-		Mockito.when(repo.findByEmail(email)).thenReturn(Optional.of(user));
-		Mockito.when(jwtTools.encode(Mockito.any(), Mockito.eq(user.getPassword()), Mockito.anyLong()))
+		Mockito.when(userPrivateRepository.findByEmail(email))
+			.thenReturn(Optional.of(userPrivate));
+		Mockito.when(tokenTools.encode(Mockito.any(), Mockito.eq(userPrivate.password()), Mockito.anyLong()))
 			.thenReturn(expectedToken);
 
-		MailMessage mailMessage = service.createRecoveryPasswordEmail(email, recoveryBaseUrl);
-
-		Assertions.assertEquals(email, mailMessage.to());
-		Assertions.assertEquals("Tu enlace para recuperar la cuenta de Knowy está aquí", mailMessage.subject());
-		Assertions.assertTrue(mailMessage.body().contains(expectedToken));
-		Assertions.assertTrue(mailMessage.body().contains(recoveryBaseUrl));
+		MailMessage mailMessage = userPrivateService.createRecoveryPasswordEmail(email, recoveryBaseUrl);
+		assertEquals(email, mailMessage.to());
+		assertNotNull(mailMessage.subject());
+		assertFalse(mailMessage.subject().isEmpty());
+		assertTrue(mailMessage.body().contains(expectedToken));
+		assertTrue(mailMessage.body().contains(recoveryBaseUrl));
 	}
 
-
-	// TOKEN BODY
+	// method createDeletedAccountEmail
 	@Test
-	void givenUnknownEmailExpectUserNotFoundException() {
-		UserPrivateRepository repo = Mockito.mock(UserPrivateRepository.class);
-		JwtTools jwtTools = Mockito.mock(JwtTools.class);
-		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
+	void given_nonExistingEmail_when_createDeletedAccountEmail_then_throwsKnowyUserNotFoundException() {
+		Mockito.when(userPrivateRepository.findByEmail("notfound@example.com"))
+			.thenReturn(Optional.empty());
 
-		PrivateUserService service = new PrivateUserService(repo, encoder, jwtTools);
-
-		String unknownEmail = "unknown@example.com";
-
-		Mockito.when(repo.findByEmail(unknownEmail)).thenReturn(Optional.empty());
-
-		KnowyUserNotFoundException ex = Assertions.assertThrows(KnowyUserNotFoundException.class, () -> {
-			service.createRecoveryPasswordEmail(unknownEmail, "https://knowy.app/recovery");
-		});
-
-		Assertions.assertEquals(
-			"The user with email unknown@example.com was not found", ex.getMessage());
+		assertThrows(
+			KnowyUserNotFoundException.class,
+			() -> userPrivateService.createDeletedAccountEmail("notfound@example.com", "http://app.url")
+		);
 	}
 
 	@Test
-	void givenValidEmailExpectJwtKnowyException() throws Exception {
-		UserPrivateRepository repo = Mockito.mock(UserPrivateRepository.class);
-		JwtTools jwtTools = Mockito.mock(JwtTools.class);
-		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
+	void given_validEmail_when_createDeletedAccountEmail_thenReturnMailMessage() throws Exception {
+		UserPrivate userPrivate = new UserPrivate(
+			11,
+			"TestNickname",
+			new ProfileImage(1, "https://knowy/image.png"),
+			new HashSet<>(),
+			"user@mail.com",
+			"ENCODED_PASSWORD",
+			true
+		);
 
-		PrivateUserService service = new PrivateUserService(repo, encoder, jwtTools);
-
-		String email = "user@example.com";
-		PrivateUserEntity user = new PrivateUserEntity();
-		user.setId(10);
-		user.setEmail(email);
-		user.setPassword("encoded-pass");
-
-		Mockito.when(repo.findByEmail(email)).thenReturn(Optional.of(user));
-		Mockito.when(jwtTools.encode(Mockito.any(), Mockito.eq(user.getPassword()), Mockito.anyLong()))
-			.thenThrow(new KnowyTokenException("Token encode failed"));
-
-		KnowyTokenException ex = Assertions.assertThrows(KnowyTokenException.class, () -> {
-			service.createRecoveryPasswordEmail(email, "https://knowy.app/recovery");
-		});
-
-		Assertions.assertEquals("Token encode failed", ex.getMessage());
-	}
-
-	@Test
-	void givenValidEmailAndUrlExpectCallsJwtEncode() throws Exception {
-		UserPrivateRepository repo = Mockito.mock(UserPrivateRepository.class);
-		JwtTools jwtTools = Mockito.mock(JwtTools.class);
-		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
-		PrivateUserService service = new PrivateUserService(repo, encoder, jwtTools);
-
-		String email = "user@example.com";
-		String recoveryUrl = "https://knowy.app/recovery";
-
-		PrivateUserEntity user = new PrivateUserEntity();
-		user.setId(10);
-		user.setEmail(email);
-		user.setPassword("encoded-pass");
-
-		Mockito.when(repo.findByEmail(email)).thenReturn(Optional.of(user));
-		Mockito.when(jwtTools.encode(Mockito.any(), Mockito.eq(user.getPassword()), Mockito.anyLong()))
+		Mockito.when(userPrivateRepository.findByEmail("email@example.com"))
+			.thenReturn(Optional.of(userPrivate));
+		Mockito.when(tokenTools.encode(
+				Mockito.any(PasswordResetInfo.class),
+				Mockito.eq("ENCODED_PASSWORD"),
+				Mockito.anyLong())
+			)
 			.thenReturn("mocked-token");
 
-		service.createRecoveryPasswordEmail(email, recoveryUrl);
+		MailMessage mailMessage = userPrivateService.createDeletedAccountEmail("email@example.com", "http://app.url");
 
-		Mockito.verify(jwtTools, Mockito.times(1))
-			.encode(Mockito.any(), Mockito.eq(user.getPassword()), Mockito.anyLong());
+		assertEquals("email@example.com", mailMessage.to());
+		assertNotNull(mailMessage.subject());
+		assertFalse(mailMessage.subject().isEmpty());
+		assertTrue(mailMessage.body().contains("mocked-token"));
+		assertTrue(mailMessage.body().contains("http://app.url"));
+		Mockito.verify(tokenTools, Mockito.times(1))
+			.encode(Mockito.any(PasswordResetInfo.class), Mockito.eq("ENCODED_PASSWORD"), Mockito.anyLong());
 	}
 
-
-	//CREATE DELETED ACCOUNT EMAIL
+	// method desactivateUserAccount
 	@Test
-	void givenNonExistingEmailWhenCreateDeletedAccountEmailThenThrowsUserNotFoundException() {
-		UserPrivateRepository repo = Mockito.mock(UserPrivateRepository.class);
-		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
-		JwtTools jwtTools = Mockito.mock(JwtTools.class);
-
-		PrivateUserService service = new PrivateUserService(repo, encoder, jwtTools);
-
-		Mockito.when(repo.findByEmail("notfound@example.com")).thenReturn(Optional.empty());
-
-		KnowyUserNotFoundException ex = Assertions.assertThrows(KnowyUserNotFoundException.class, () -> {
-			service.createDeletedAccountEmail("notfound@example.com", "http://app.url");
-		});
-		Assertions.assertEquals("The user with email notfound@example.com was not found", ex.getMessage());
-	}
-
-	@Test
-	void givenValidEmailWhenCreateDeletedAccountEmailThenReturnsMailMessage() throws Exception {
-		// Arrange
-		UserPrivateRepository repo = Mockito.mock(UserPrivateRepository.class);
-		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
-		JwtTools jwtTools = Mockito.mock(JwtTools.class);
-
-		PrivateUserService service = new PrivateUserService(repo, encoder, jwtTools);
-
-		PrivateUserEntity user = new PrivateUserEntity();
-		user.setId(1);
-		user.setEmail("email@example.com");
-		user.setPassword("encoded-password");
-
-		Mockito.when(repo.findByEmail("email@example.com")).thenReturn(Optional.of(user));
-
-		String expectedToken = "mocked-token";
-
-		Mockito.when(jwtTools.encode(Mockito.any(PasswordResetInfo.class), Mockito.eq("encoded-password"), Mockito.anyLong())).thenReturn(expectedToken);
-
-		MailMessage mailMessage = service.createDeletedAccountEmail("email@example.com", "http://app.url");
-
-		Assertions.assertEquals("email@example.com", mailMessage.to());
-		Assertions.assertEquals("Tu enlace para recuperar la cuenta de Knowy está aquí", mailMessage.subject());
-		Assertions.assertTrue(mailMessage.body().contains(expectedToken));
-
-		Mockito.verify(jwtTools, Mockito.times(1))
-			.encode(Mockito.any(PasswordResetInfo.class), Mockito.eq("encoded-password"), Mockito.anyLong());
-	}
-
-
-	// DESACTIVATE USER ACCOUNT
-	@Test
-	void givenNonexistentUserExpectUserNotFoundException() {
-		UserPrivateRepository repo = Mockito.mock(UserPrivateRepository.class);
-		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
-		JwtTools jwt = Mockito.mock(JwtTools.class);
-		PrivateUserService service = new PrivateUserService(repo, encoder, jwt);
-
-		String email = "nonexistent@mail.com";
-		String password = "pass";
-		String confirmPassword = "pass";
-
-		Mockito.when(repo.findByEmail(email)).thenReturn(Optional.empty());
-
-		KnowyUserNotFoundException ex = Assertions.assertThrows(KnowyUserNotFoundException.class, () -> {
-			service.desactivateUserAccount(email, password, confirmPassword);
-		});
-		Assertions.assertEquals("User not found", ex.getMessage());
-		Mockito.verify(repo, Mockito.never()).save(Mockito.any());
-	}
-
-	@Test
-	void givenValidEmailButPasswordsDoNotMatchExpectWrongPasswordException() {
-		// Arrange
-		UserPrivateRepository repo = Mockito.mock(UserPrivateRepository.class);
-		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
-		JwtTools jwt = Mockito.mock(JwtTools.class);
-		PrivateUserService service = new PrivateUserService(repo, encoder, jwt);
-
-		String email = "user@mail.com";
-		String password = "pass1";
-		String confirmPassword = "pass2";
-
-		KnowyWrongPasswordException ex = Assertions.assertThrows(KnowyWrongPasswordException.class, () -> {
-			service.desactivateUserAccount(email, password, confirmPassword);
-		});
-		Assertions.assertEquals("Passwords do not match", ex.getMessage());
-
-		Mockito.verify(repo, Mockito.never()).save(Mockito.any());
-	}
-
-	@Test
-	void givenValidEmailAndWrongPasswordExpectWrongPasswordException() {
-		UserPrivateRepository repo = Mockito.mock(UserPrivateRepository.class);
-		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
-		JwtTools jwt = Mockito.mock(JwtTools.class);
-		PrivateUserService service = new PrivateUserService(repo, encoder, jwt);
-
-		String email = "user@mail.com";
-		String password = "wrongPass";
-		String confirmPassword = "wrongPass";
-
-		PrivateUserEntity user = new PrivateUserEntity();
-		user.setEmail(email);
-		user.setActive(true);
-		user.setPassword("encodedPassword");
-
-		Mockito.when(repo.findByEmail(email)).thenReturn(Optional.of(user));
-		Mockito.when(encoder.matches(password, user.getPassword())).thenReturn(false);
-
-		KnowyWrongPasswordException ex = Assertions.assertThrows(KnowyWrongPasswordException.class, () -> {
-			service.desactivateUserAccount(email, password, confirmPassword);
-		});
-		Assertions.assertEquals("Wrong password for user with id: null", ex.getMessage());
-
-		Mockito.verify(repo, Mockito.never()).save(Mockito.any());
-	}
-
-	@Test
-	void givenValidEmailAndCorrectPasswordExpectDeactivateAndSave() throws Exception {
-		UserPrivateRepository repo = Mockito.mock(UserPrivateRepository.class);
-		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
-		JwtTools jwt = Mockito.mock(JwtTools.class);
-		PrivateUserService service = new PrivateUserService(repo, encoder, jwt);
+	void given_validEmailAndCorrectPassword_when_desactivateUserAccount_then_deactivateAccountAndSave()
+		throws KnowyWrongPasswordException, KnowyUserNotFoundException {
 
 		String email = "user@mail.com";
 		String password = "correctPass";
 		String confirmPassword = "correctPass";
 
-		PrivateUserEntity user = new PrivateUserEntity();
-		user.setEmail(email);
-		user.setActive(true);
-		user.setPassword("encodedPassword");
+		UserPrivate userPrivate = new UserPrivate(
+			11,
+			"TestNickname",
+			new ProfileImage(1, "https://knowy/image.png"),
+			new HashSet<>(),
+			"user@mail.com",
+			"ENCODED_PASSWORD",
+			true
+		);
+		UserPrivate newUserPrivate = new UserPrivate(
+			userPrivate.cropToUser(),
+			userPrivate.email(),
+			userPrivate.password(),
+			false);
+		Mockito.when(userPrivateRepository.findByEmail(email))
+			.thenReturn(Optional.of(userPrivate));
 
-		Mockito.when(repo.findByEmail(email)).thenReturn(Optional.of(user));
-		Mockito.when(encoder.matches(password, user.getPassword())).thenReturn(true);
+		userPrivateService.desactivateUserAccount(email, password, confirmPassword);
 
-		service.desactivateUserAccount(email, password, confirmPassword);
-
-		Assertions.assertFalse(user.isActive());
-		Mockito.verify(repo, Mockito.times(1)).save(user);
-	}
-
-
-	// REACTIVATE USER ACCOUNT
-	@Test
-	void givenInvalidTokenExpectThrowsJwtKnowyException() throws Exception {
-		UserPrivateRepository repo = Mockito.mock(UserPrivateRepository.class);
-		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
-		JwtTools jwt = Mockito.mock(JwtTools.class);
-		PrivateUserService service = new PrivateUserService(repo, encoder, jwt);
-
-		String token = "invalid-token";
-
-		Mockito.when(jwt.decodeUnverified(Mockito.eq(token), Mockito.any()))
-			.thenThrow(new KnowyTokenException("Invalid token"));
-
-		KnowyTokenException ex = Assertions.assertThrows(KnowyTokenException.class, () -> {
-			service.reactivateUserAccount(token);
-		});
-
-		Assertions.assertEquals("Invalid token", ex.getMessage());
+		Mockito.verify(userPrivateRepository, Mockito.times(1))
+			.save(newUserPrivate);
+		assertFalse(newUserPrivate.active());
 	}
 
 	@Test
-	void givenValidTokenButUserNotFoundExpectUserNotFoundException() throws Exception {
-		UserPrivateRepository repo = Mockito.mock(UserPrivateRepository.class);
-		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
-		JwtTools jwt = Mockito.mock(JwtTools.class);
-		PrivateUserService service = new PrivateUserService(repo, encoder, jwt);
+	void given_nonexistentUser_when_desactivateUserAccount_then_throwKnowyUserNotFoundException() {
+		String email = "nonexistent@mail.com";
+		String password = "pass";
+		String confirmPassword = "pass";
 
-		String token = "valid-token";
+		Mockito.when(userPrivateRepository.findByEmail(email))
+			.thenReturn(Optional.empty());
 
-		PasswordResetInfo info = new PasswordResetInfo(99, "email@example.com");
-		Mockito.when(jwt.decodeUnverified(token, PasswordResetInfo.class)).thenReturn(info);
-
-		Mockito.when(repo.findById(99)).thenReturn(Optional.empty());
-
-		KnowyUserNotFoundException ex = Assertions.assertThrows(KnowyUserNotFoundException.class, () -> {
-			service.reactivateUserAccount(token);
-		});
-		Assertions.assertEquals("User not found with id: 99", ex.getMessage());
+		assertThrows(
+			KnowyUserNotFoundException.class,
+			() -> userPrivateService.desactivateUserAccount(email, password, confirmPassword)
+		);
+		Mockito.verify(userPrivateRepository, Mockito.never()).save(Mockito.any());
 	}
 
 	@Test
-	void givenValidTokenAndUserAlreadyActiveExpectNotSave() throws Exception {
-		UserPrivateRepository repo = Mockito.mock(UserPrivateRepository.class);
-		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
-		JwtTools jwt = Mockito.mock(JwtTools.class);
-		PrivateUserService service = new PrivateUserService(repo, encoder, jwt);
-
-		String token = "valid-token";
-
-		PasswordResetInfo info = new PasswordResetInfo(42, "email@example.com");
-		PrivateUserEntity user = new PrivateUserEntity();
-		user.setActive(true);
-
-		Mockito.when(jwt.decodeUnverified(token, PasswordResetInfo.class)).thenReturn(info);
-		Mockito.when(repo.findById(42)).thenReturn(Optional.of(user));
-		// Para que jwtTools.decode no lance excepción (es llamada dentro de verifyPasswordToken)
-		Mockito.when(jwt.decode(Mockito.anyString(), Mockito.eq(token), Mockito.eq(PasswordResetInfo.class)))
-			.thenReturn(info);
-
-		service.reactivateUserAccount(token);
-
-		Mockito.verify(repo, Mockito.never()).save(Mockito.any());
+	void given_validEmailButPasswordsDoNotMatch_when_desactivateUserAccount_then_throwKnowyWrongPasswordException() {
+		assertThrows(
+			KnowyWrongPasswordException.class,
+			() -> userPrivateService.desactivateUserAccount("test@mail.com", "VALID.pass1", "VALID.pass2")
+		);
+		Mockito.verify(userPrivateRepository, Mockito.never()).save(Mockito.any());
 	}
 
+	@Test
+	void given_validEmailAndWrongPassword_when_desactivateUserAccount_then_throwKnowyWrongPasswordException()
+		throws KnowyWrongPasswordException {
+
+		UserPrivate userPrivate = new UserPrivate(
+			11,
+			"TestNickname",
+			new ProfileImage(1, "https://knowy/image.png"),
+			new HashSet<>(),
+			"user@mail.com",
+			"ENCODED_PASSWORD",
+			true
+		);
+		Mockito.when(userPrivateRepository.findByEmail("user@mail.com"))
+			.thenReturn(Optional.of(userPrivate));
+		Mockito.doThrow(KnowyWrongPasswordException.class)
+			.when(passwordChecker)
+			.assertHasPassword(userPrivate, "wrongPass");
+
+		assertThrows(
+			KnowyWrongPasswordException.class,
+			() -> userPrivateService.desactivateUserAccount("user@mail.com", "wrongPass", "wrongPass")
+		);
+	}
+
+	// method reactivateUserAccount
 	@Test
 	void givenValidTokenAndUserInactiveExpectActivateAndSave() throws Exception {
-		UserPrivateRepository repo = Mockito.mock(UserPrivateRepository.class);
-		PasswordEncoder encoder = Mockito.mock(PasswordEncoder.class);
-		JwtTools jwt = Mockito.mock(JwtTools.class);
-		PrivateUserService service = new PrivateUserService(repo, encoder, jwt);
-
 		String token = "valid-token";
 
-		PasswordResetInfo info = new PasswordResetInfo(7, "email@example.com");
-		PrivateUserEntity user = new PrivateUserEntity();
-		user.setActive(false);
+		PasswordResetInfo passwordResetInfo = new PasswordResetInfo(11, "user@mail.com");
+		UserPrivate userPrivate = new UserPrivate(
+			11,
+			"TestNickname",
+			new ProfileImage(1, "https://knowy/image.png"),
+			new HashSet<>(),
+			"user@mail.com",
+			"ENCODED_PASSWORD",
+			false
+		);
+		UserPrivate newUserPrivate = new UserPrivate(
+			userPrivate.cropToUser(), "user@mail.com", "ENCODED_PASSWORD", true
+		);
+		Mockito.when(tokenTools.decodeUnverified(token, PasswordResetInfo.class))
+			.thenReturn(passwordResetInfo);
+		Mockito.when(userPrivateRepository.findById(11))
+			.thenReturn(Optional.of(userPrivate));
+		Mockito.when(tokenTools.decode(Mockito.anyString(), Mockito.eq(token), Mockito.eq(PasswordResetInfo.class)))
+			.thenReturn(passwordResetInfo);
 
-		Mockito.when(jwt.decodeUnverified(token, PasswordResetInfo.class)).thenReturn(info);
-		Mockito.when(repo.findById(7)).thenReturn(Optional.of(user));
-		Mockito.when(jwt.decode(Mockito.anyString(), Mockito.eq(token), Mockito.eq(PasswordResetInfo.class)))
-			.thenReturn(info);
-
-		service.reactivateUserAccount(token);
-
-		Assertions.assertTrue(user.isActive());
-		Mockito.verify(repo).save(user);
+		userPrivateService.reactivateUserAccount(token);
+		Mockito.verify(userPrivateRepository).save(newUserPrivate);
 	}
-	*/
 
+	@Test
+	void given_invalidToken_when_reactivateUserAccount_then_throwKnowyTokenException() throws KnowyTokenException {
+		String token = "invalid-token";
+
+		Mockito.doThrow(new KnowyTokenException("Invalid token"))
+			.when(tokenTools)
+			.decodeUnverified(Mockito.eq(token), Mockito.any());
+
+		assertThrows(
+			KnowyTokenException.class,
+			() -> userPrivateService.reactivateUserAccount(token)
+		);
+	}
+
+	@Test
+	void given_validTokenButUserNotFound_when_reactivateUserAccount_then_throwKnowyUserNotFoundException() throws KnowyTokenException {
+		PasswordResetInfo passwordResetInfo = new PasswordResetInfo(99, "email@example.com");
+		Mockito.when(tokenTools.decodeUnverified("valid-token", PasswordResetInfo.class))
+			.thenReturn(passwordResetInfo);
+		Mockito.when(userPrivateRepository.findById(99))
+				.thenReturn(Optional.empty());
+
+		assertThrows(
+			KnowyUserNotFoundException.class,
+			() -> userPrivateService.reactivateUserAccount("valid-token")
+		);
+	}
+
+	@Test
+	void given_validTokenAndUserAlreadyActive_when_reactivateUserAccount_then_doNothing() throws Exception {
+		String token = "valid-token";
+
+		PasswordResetInfo passwordResetInfo = new PasswordResetInfo(11, "email@example.com");
+		UserPrivate userPrivate = new UserPrivate(
+			11,
+			"TestNickname",
+			new ProfileImage(1, "https://knowy/image.png"),
+			new HashSet<>(),
+			"user@mail.com",
+			"ENCODED_PASSWORD",
+			true
+		);
+		Mockito.when(tokenTools.decodeUnverified(token, PasswordResetInfo.class))
+			.thenReturn(passwordResetInfo);
+		Mockito.when(userPrivateRepository.findById(11))
+			.thenReturn(Optional.of(userPrivate));
+		Mockito.when(tokenTools.decode(Mockito.anyString(), Mockito.eq(token), Mockito.eq(PasswordResetInfo.class)))
+			.thenReturn(passwordResetInfo);
+
+		userPrivateService.reactivateUserAccount(token);
+		Mockito.verify(userPrivateRepository, Mockito.never()).save(Mockito.any());
+	}
 }
