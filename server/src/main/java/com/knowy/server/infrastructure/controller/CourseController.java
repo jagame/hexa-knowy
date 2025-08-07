@@ -31,30 +31,27 @@ public class CourseController {
 	}
 
 	static void handleCourseSubscription(
-		@RequestParam Integer courseId,
+		@RequestParam("courseId") Integer courseId,
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		RedirectAttributes attrs,
 		CourseService courseService,
 		String toastModelAttribute
-	) {
+	) throws KnowyInconsistentDataException {
 		try {
 			courseService.subscribeUserToCourse(userDetails.getUser(), courseId);
 			attrs.addFlashAttribute(toastModelAttribute, List.of(new ToastDto("Éxito",
 				"¡Te has suscrito correctamente!", ToastDto.ToastType.SUCCESS)));
 		} catch (KnowyCourseSubscriptionException e) {
 			attrs.addFlashAttribute(toastModelAttribute, List.of(new ToastDto("Error", e.getMessage(), ToastDto.ToastType.ERROR)));
-		} catch (Exception e) {
-			attrs.addFlashAttribute(toastModelAttribute, List.of(new ToastDto("Error",
-				"Ocurrió un error inesperado al suscribirte al curso.", ToastDto.ToastType.ERROR)));
 		}
 	}
 
 	@GetMapping("")
 	public String myCourses(
 		Model model,
-		@RequestParam(required = false) String category,
-		@RequestParam(required = false) String order,
-		@RequestParam(defaultValue = "1") int page,
+		@RequestParam(name = "category", required = false) String category,
+		@RequestParam(name = "order", required = false) String order,
+		@RequestParam(name = "page", defaultValue = "1") int page,
 		@AuthenticationPrincipal UserSecurityDetails userDetails
 	) throws KnowyInconsistentDataException {
 		List<CourseCardDTO> courses = courseService.getUserCourses(userDetails.getUser().id())
@@ -143,7 +140,7 @@ public class CourseController {
 		@RequestParam Integer courseId,
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		RedirectAttributes attrs
-	) {
+	) throws KnowyInconsistentDataException {
 		handleCourseSubscription(courseId, userDetails, attrs, courseService, TOAST_MODEL_ATTRIBUTE);
 		return "redirect:/my-courses";
 	}

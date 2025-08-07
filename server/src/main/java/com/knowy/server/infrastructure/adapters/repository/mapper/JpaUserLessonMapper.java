@@ -1,7 +1,6 @@
 package com.knowy.server.infrastructure.adapters.repository.mapper;
 
 import com.knowy.server.application.domain.UserLesson;
-import com.knowy.server.infrastructure.adapters.repository.JpaLessonRepository;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaLessonDao;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaUserDao;
 import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserLessonEntity;
@@ -13,11 +12,11 @@ import org.springframework.stereotype.Component;
 public class JpaUserLessonMapper implements EntityMapper<UserLesson, PublicUserLessonEntity> {
 
 	private final JpaUserMapper jpaUserMapper;
-	private final JpaLessonRepository.JpaLessonMapper jpaLessonMapper;
+	private final JpaLessonMapper jpaLessonMapper;
 	private final JpaUserDao jpaUserDao;
 	private final JpaLessonDao jpaLessonDao;
 
-	public JpaUserLessonMapper(JpaUserMapper jpaUserMapper, JpaLessonRepository.JpaLessonMapper jpaLessonMapper, JpaUserDao jpaUserDao, JpaLessonDao jpaLessonDao) {
+	public JpaUserLessonMapper(JpaUserMapper jpaUserMapper, JpaLessonMapper jpaLessonMapper, JpaUserDao jpaUserDao, JpaLessonDao jpaLessonDao) {
 		this.jpaUserMapper = jpaUserMapper;
 		this.jpaLessonMapper = jpaLessonMapper;
 		this.jpaUserDao = jpaUserDao;

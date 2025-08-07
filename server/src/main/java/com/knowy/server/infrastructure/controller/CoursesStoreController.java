@@ -32,9 +32,9 @@ public class CoursesStoreController {
 	@GetMapping("")
 	public String storeCourses(
 		Model model,
-		@RequestParam(required = false) String category,
-		@RequestParam(required = false) String order,
-		@RequestParam(defaultValue = "1") int page,
+		@RequestParam(name = "category", required = false) String category,
+		@RequestParam(name = "order", required = false) String order,
+		@RequestParam(name = "page", defaultValue = "1") int page,
 		@AuthenticationPrincipal UserSecurityDetails userDetails
 	) throws KnowyInconsistentDataException {
 
@@ -105,10 +105,10 @@ public class CoursesStoreController {
 
 	@PostMapping("/subscribe")
 	public String subscribeToCourse(
-		@RequestParam Integer courseId,
+		@RequestParam("courseId") Integer courseId,
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		RedirectAttributes attrs
-	) {
+	) throws KnowyInconsistentDataException {
 		CourseController.handleCourseSubscription(courseId, userDetails, attrs, courseService, TOAST_MODEL_ATTRIBUTE);
 		return "redirect:/store";
 	}

@@ -1,36 +1,23 @@
 package com.knowy.server.infrastructure.adapters.repository;
 
-import com.knowy.server.application.domain.Documentation;
 import com.knowy.server.application.domain.Lesson;
 import com.knowy.server.application.ports.LessonRepository;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaLessonDao;
-import com.knowy.server.infrastructure.adapters.repository.entity.DocumentationEntity;
-import com.knowy.server.infrastructure.adapters.repository.entity.LessonEntity;
-import com.knowy.server.infrastructure.adapters.repository.mapper.EntityMapper;
-import com.knowy.server.infrastructure.adapters.repository.mapper.JpaCourseMapper;
-import com.knowy.server.infrastructure.adapters.repository.mapper.JpaExerciseMapper;
-import org.springframework.stereotype.Component;
+import com.knowy.server.infrastructure.adapters.repository.mapper.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class JpaLessonRepository implements LessonRepository {
 
 	private final JpaLessonDao jpaLessonDao;
-	private final JpaExerciseMapper jpaExerciseMapper;
-	private final JpaDocumentationMapper jpaDocumentationMapper;
 	private final JpaLessonMapper jpaLessonMapper;
-	private final JpaCourseMapper jpaCourseMapper;
 
-	public JpaLessonRepository(JpaLessonDao jpaLessonDao, JpaExerciseMapper jpaExerciseMapper, JpaCourseMapper jpaCourseMapper) {
+	public JpaLessonRepository(JpaLessonDao jpaLessonDao, JpaLessonMapper jpaLessonMapper) {
 		this.jpaLessonDao = jpaLessonDao;
-		this.jpaCourseMapper = jpaCourseMapper;
-		this.jpaLessonMapper = new JpaLessonMapper();
-		this.jpaExerciseMapper = jpaExerciseMapper;
-		this.jpaDocumentationMapper = new JpaDocumentationMapper();
+		this.jpaLessonMapper = jpaLessonMapper;
 	}
 
 	@Override
@@ -48,48 +35,5 @@ public class JpaLessonRepository implements LessonRepository {
 	@Override
 	public int countByCourseId(Integer courseId) {
 		return jpaLessonDao.countByCourseId(courseId);
-	}
-
-	@Component
-	public class JpaLessonMapper implements EntityMapper<Lesson, LessonEntity> {
-		@Override
-		public Lesson toDomain(LessonEntity entity) {
-			return new Lesson(
-				entity.getId(),
-				jpaCourseMapper.toDomain(entity.getCourse()),
-				entity.getNextLesson().getId(),
-				entity.getTitle(),
-				entity.getExplanation(),
-				entity.getDocumentations().stream()
-					.map(jpaDocumentationMapper::toDomain)
-					.collect(Collectors.toSet()),
-				entity.getExercises().stream()
-					.map(jpaExerciseMapper::toDomain)
-					.collect(Collectors.toSet())
-			);
-		}
-
-		@Override
-		public LessonEntity toEntity(Lesson domain) {
-			return null;
-		}
-	}
-
-	@Component
-	public class JpaDocumentationMapper implements EntityMapper<Documentation, DocumentationEntity> {
-		@Override
-		public Documentation toDomain(DocumentationEntity entity) {
-			return new Documentation(entity.getId(), entity.getTitle(), entity.getLink());
-		}
-
-		@Override
-		public DocumentationEntity toEntity(Documentation domain) {
-			return new DocumentationEntity(
-				domain.id(),
-				domain.title(),
-				domain.link(),
-				jpaLessonDao.findAllByDocumentationId(domain.id())
-			);
-		}
 	}
 }
