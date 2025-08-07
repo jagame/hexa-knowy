@@ -1,6 +1,5 @@
 package com.knowy.server.infrastructure.adapters.repository.dao;
 
-import com.knowy.server.application.ports.BannedWordsRepository;
 import com.knowy.server.infrastructure.adapters.repository.entity.BannedWordsEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -3,17 +3,10 @@ package com.knowy.server.infrastructure.adapters.repository;
 import com.knowy.server.application.domain.UserLesson;
 import com.knowy.server.application.exception.KnowyInconsistentDataException;
 import com.knowy.server.application.ports.UserLessonRepository;
-import com.knowy.server.infrastructure.adapters.repository.dao.JpaLessonDao;
-import com.knowy.server.infrastructure.adapters.repository.dao.JpaUserDao;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaUserLessonDao;
 import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserLessonEntity;
 import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserLessonIdEntity;
-import com.knowy.server.infrastructure.adapters.repository.exception.JpaLessonNotFoundException;
-import com.knowy.server.infrastructure.adapters.repository.exception.JpaUserNotFoundException;
-import com.knowy.server.infrastructure.adapters.repository.mapper.EntityMapper;
 import com.knowy.server.infrastructure.adapters.repository.mapper.JpaUserLessonMapper;
-import com.knowy.server.infrastructure.adapters.repository.mapper.JpaUserMapper;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
