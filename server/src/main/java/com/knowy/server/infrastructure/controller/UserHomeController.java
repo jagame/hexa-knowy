@@ -3,7 +3,7 @@ package com.knowy.server.infrastructure.controller;
 import com.knowy.server.application.exception.KnowyInconsistentDataException;
 import com.knowy.server.application.service.CourseService;
 import com.knowy.server.application.service.UserHomeService;
-import com.knowy.server.application.service.model.UserSecurityDetails;
+import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseBannerDTO;
 import com.knowy.server.infrastructure.controller.dto.MissionsDto;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

@@ -3,7 +3,7 @@ package com.knowy.server.infrastructure.controller;
 import com.knowy.server.application.domain.Course;
 import com.knowy.server.application.exception.KnowyInconsistentDataException;
 import com.knowy.server.application.service.CourseService;
-import com.knowy.server.application.service.model.UserSecurityDetails;
+import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseCardDTO;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;

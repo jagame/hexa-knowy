@@ -10,7 +10,7 @@ import com.knowy.server.application.service.exception.KnowyLessonNotFoundExcepti
 import com.knowy.server.application.service.exception.KnowyUserLessonNotFoundException;
 import com.knowy.server.application.service.exception.KnowyUserNotFoundException;
 import com.knowy.server.application.service.model.ExerciseDifficult;
-import com.knowy.server.application.service.model.UserSecurityDetails;
+import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.ExerciseDto;
 import com.knowy.server.infrastructure.controller.dto.ExerciseOptionDto;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

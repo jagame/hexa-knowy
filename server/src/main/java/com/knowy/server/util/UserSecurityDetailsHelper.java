@@ -2,7 +2,7 @@ package com.knowy.server.util;
 
 import com.knowy.server.application.domain.UserPrivate;
 import com.knowy.server.application.ports.UserPrivateRepository;
-import com.knowy.server.application.service.model.UserSecurityDetails;
+import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

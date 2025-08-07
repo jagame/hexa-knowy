@@ -4,7 +4,7 @@ import com.knowy.server.application.domain.Documentation;
 import com.knowy.server.application.domain.UserLesson;
 import com.knowy.server.application.exception.KnowyInconsistentDataException;
 import com.knowy.server.application.service.UserLessonService;
-import com.knowy.server.application.service.model.UserSecurityDetails;
+import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseDto;
 import com.knowy.server.infrastructure.controller.dto.LessonDto;
 import com.knowy.server.infrastructure.controller.dto.LinksLessonDto;

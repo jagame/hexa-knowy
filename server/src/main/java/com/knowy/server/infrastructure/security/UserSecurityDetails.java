@@ -1,4 +1,4 @@
-package com.knowy.server.application.service.model;
+package com.knowy.server.infrastructure.security;
 
 import com.knowy.server.application.domain.User;
 import com.knowy.server.application.domain.UserPrivate;
