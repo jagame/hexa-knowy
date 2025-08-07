@@ -6,6 +6,7 @@ import com.knowy.server.application.domain.UserLesson;
 import com.knowy.server.application.exception.KnowyInconsistentDataException;
 import com.knowy.server.application.ports.LessonRepository;
 import com.knowy.server.application.ports.UserLessonRepository;
+import com.knowy.server.application.service.exception.KnowyLessonNotFoundException;
 import com.knowy.server.application.service.exception.KnowyUserLessonNotFoundException;
 import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserLessonEntity;
 
@@ -58,8 +59,8 @@ public class UserLessonService {
 	 *
 	 * @throws KnowyUserLessonNotFoundException if the relationship for the given user and lesson is not found
 	 */
-	public void updateLessonStatusToCompleted(User user, Lesson lesson) throws KnowyUserLessonNotFoundException,
-		KnowyInconsistentDataException {
+	public void updateLessonStatusToCompleted(User user, Lesson lesson)
+		throws KnowyUserLessonNotFoundException, KnowyInconsistentDataException, KnowyLessonNotFoundException {
 		UserLesson userLesson = findById(user.id(), lesson.id())
 			.orElseThrow(() -> new KnowyUserLessonNotFoundException("Relation public user lesson not found"));
 
@@ -72,12 +73,16 @@ public class UserLessonService {
 		));
 	}
 
-	private void updateNextLessonStatusToInProgress(int userId, int lessonId) throws KnowyInconsistentDataException {
+	private void updateNextLessonStatusToInProgress(int userId, int lessonId) throws KnowyInconsistentDataException, KnowyLessonNotFoundException {
 		Lesson lesson = lessonRepository.findById(lessonId)
-			.orElseThrow();
-		UserLesson userLesson = userLessonRepository.findById(userId, lesson.nextLessonId())
-			.orElseThrow();
+			.orElseThrow(() -> new KnowyLessonNotFoundException("Not found lesson with Id: " + lessonId));
+		Optional<UserLesson> userLessonOpt = userLessonRepository.findById(userId, lesson.nextLessonId());
 
+		if (userLessonOpt.isEmpty()) {
+			return;
+		}
+
+		UserLesson userLesson = userLessonOpt.get();
 		userLessonRepository.save(new UserLesson(
 			userLesson.user(),
 			userLesson.lesson(),
@@ -85,5 +90,4 @@ public class UserLessonService {
 			UserLesson.ProgressStatus.IN_PROGRESS
 		));
 	}
-
 }

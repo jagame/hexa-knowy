@@ -137,7 +137,7 @@ public class CourseController {
 
 	@PostMapping("/subscribe")
 	public String subscribeToCourse(
-		@RequestParam Integer courseId,
+		@RequestParam("courseId") Integer courseId,
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		RedirectAttributes attrs
 	) throws KnowyInconsistentDataException {

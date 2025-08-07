@@ -4,6 +4,7 @@ import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserExer
 import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserExerciseId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
@@ -47,7 +48,10 @@ public interface JpaUserExerciseDao extends JpaRepository<PublicUserExerciseEnti
 		    RANDOM()
 		LIMIT(1)
 		""", nativeQuery = true)
-	Optional<PublicUserExerciseEntity> findNextExerciseByLessonId(int userId, int lessonId);
+	Optional<PublicUserExerciseEntity> findNextExerciseByLessonId(
+		@Param("userId") int userId,
+		@Param("lessonId") int lessonId
+	);
 
 	@Query(value = """
 		SELECT
@@ -73,7 +77,7 @@ public interface JpaUserExerciseDao extends JpaRepository<PublicUserExerciseEnti
 		    RANDOM()
 		LIMIT(1)
 		""", nativeQuery = true)
-	Optional<PublicUserExerciseEntity> findNextExerciseByUserId(int userId);
+	Optional<PublicUserExerciseEntity> findNextExerciseByUserId(@Param("userId") int userId);
 
 	@Query(value = """
 		SELECT
@@ -88,5 +92,5 @@ public interface JpaUserExerciseDao extends JpaRepository<PublicUserExerciseEnti
 		GROUP BY
 		    l.id
 		""", nativeQuery = true)
-	Optional<Double> findAverageRateByLessonId(int lessonId);
+	Optional<Double> findAverageRateByLessonId(@Param("lessonId") int lessonId);
 }

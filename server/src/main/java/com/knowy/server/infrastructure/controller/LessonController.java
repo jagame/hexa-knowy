@@ -47,7 +47,8 @@ public class LessonController {
 	@GetMapping("/{courseId}")
 	public String courseIntro(
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
-		@PathVariable Integer courseId, Model model
+		@PathVariable("courseId") Integer courseId,
+		Model model
 	) throws KnowyInconsistentDataException {
 		List<UserLesson> userLessons = getAllPublicUserLessons(userDetails.getUser().id(), courseId);
 		List<LessonDto> lessonsDto = LessonDto.fromDomains(userLessons);
@@ -106,8 +107,8 @@ public class LessonController {
 	@GetMapping("/{courseId}/lesson/{lessonId}")
 	public String lesson(
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
-		@PathVariable Integer courseId,
-		@PathVariable Integer lessonId,
+		@PathVariable("courseId") Integer courseId,
+		@PathVariable("lessonId") Integer lessonId,
 		Model model
 	) throws CurrentLessonNotFoundException, KnowyInconsistentDataException {
 		List<UserLesson> userLessons = getAllPublicUserLessons(userDetails.getUser().id(), courseId);

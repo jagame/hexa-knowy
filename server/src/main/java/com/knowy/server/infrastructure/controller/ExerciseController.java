@@ -6,6 +6,7 @@ import com.knowy.server.application.exception.KnowyDataAccessException;
 import com.knowy.server.application.exception.KnowyExerciseNotFoundException;
 import com.knowy.server.application.service.UserExerciseService;
 import com.knowy.server.application.service.UserLessonService;
+import com.knowy.server.application.service.exception.KnowyLessonNotFoundException;
 import com.knowy.server.application.service.exception.KnowyUserLessonNotFoundException;
 import com.knowy.server.application.service.exception.KnowyUserNotFoundException;
 import com.knowy.server.application.service.model.ExerciseDifficult;
@@ -136,7 +137,7 @@ public class ExerciseController {
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("evaluation") ExerciseDifficult evaluation
-	) throws KnowyExerciseNotFoundException, KnowyUserNotFoundException, KnowyUserLessonNotFoundException, KnowyDataAccessException {
+	) throws KnowyExerciseNotFoundException, KnowyUserNotFoundException, KnowyUserLessonNotFoundException, KnowyDataAccessException, KnowyLessonNotFoundException {
 		UserExercise userExercise = userExerciseService
 			.getByIdOrCreate(userDetails.getUser().id(), exerciseId);
 
