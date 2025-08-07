@@ -105,7 +105,7 @@ public class CourseController {
 			.map(course -> CourseCardDTO.fromDomain(
 				course,
 				courseService.getCourseProgress(userDetails.getUser().id(), course.id()),
-				CourseCardDTO.ActionType.START
+				CourseCardDTO.ActionType.ACQUIRE
 			)).toList();
 
 		int pageSize = 9;

@@ -73,16 +73,17 @@ public class UserLessonService {
 		));
 	}
 
-	private void updateNextLessonStatusToInProgress(int userId, int lessonId) throws KnowyInconsistentDataException, KnowyLessonNotFoundException {
+	private void updateNextLessonStatusToInProgress(int userId, int lessonId) throws KnowyInconsistentDataException, KnowyLessonNotFoundException, KnowyUserLessonNotFoundException {
 		Lesson lesson = lessonRepository.findById(lessonId)
 			.orElseThrow(() -> new KnowyLessonNotFoundException("Not found lesson with Id: " + lessonId));
-		Optional<UserLesson> userLessonOpt = userLessonRepository.findById(userId, lesson.nextLessonId());
-
-		if (userLessonOpt.isEmpty()) {
+		if (lesson.nextLessonId() == null) {
 			return;
 		}
 
-		UserLesson userLesson = userLessonOpt.get();
+		UserLesson userLesson = userLessonRepository.findById(userId, lesson.nextLessonId())
+			.orElseThrow(() -> new KnowyUserLessonNotFoundException(
+				"Not found lesson with id: " + lesson.nextLessonId() + "by user with id: " + userId
+			));
 		userLessonRepository.save(new UserLesson(
 			userLesson.user(),
 			userLesson.lesson(),
