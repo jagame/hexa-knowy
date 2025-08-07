@@ -5,7 +5,7 @@ import com.knowy.server.application.service.CourseService;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseCardDTO;
 import com.knowy.server.infrastructure.controller.dto.ToastDto;
-import com.knowy.server.infrastructure.controller.exception.KnowyCourseSubscriptionException;
+import com.knowy.server.application.service.exception.KnowyCourseSubscriptionException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

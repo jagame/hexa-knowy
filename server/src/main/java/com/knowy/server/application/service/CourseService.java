@@ -6,7 +6,7 @@ import com.knowy.server.application.ports.CategoryRepository;
 import com.knowy.server.application.ports.CourseRepository;
 import com.knowy.server.application.ports.LessonRepository;
 import com.knowy.server.application.ports.UserLessonRepository;
-import com.knowy.server.infrastructure.controller.exception.KnowyCourseSubscriptionException;
+import com.knowy.server.application.service.exception.KnowyCourseSubscriptionException;
 
 import java.time.LocalDate;
 import java.util.Comparator;

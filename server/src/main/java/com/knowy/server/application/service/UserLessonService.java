@@ -8,7 +8,6 @@ import com.knowy.server.application.ports.LessonRepository;
 import com.knowy.server.application.ports.UserLessonRepository;
 import com.knowy.server.application.service.exception.KnowyLessonNotFoundException;
 import com.knowy.server.application.service.exception.KnowyUserLessonNotFoundException;
-import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserLessonEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +32,7 @@ public class UserLessonService {
 	 *
 	 * @param userId   the ID of the user
 	 * @param lessonId the ID of the lesson
-	 * @return an {@link Optional} containing the found {@link PublicUserLessonEntity}, or an empty Optional if no
+	 * @return an {@link Optional} containing the found, or an empty Optional if no
 	 * relation exists
 	 */
 	public Optional<UserLesson> findById(int userId, int lessonId) throws KnowyInconsistentDataException {
@@ -41,13 +40,13 @@ public class UserLessonService {
 	}
 
 	/**
-	 * Retrieves all {@link PublicUserLessonEntity} records for a given user and course.
+	 * Retrieves all records for a given user and course.
 	 *
 	 * <p>This method returns the user's progress across all lessons within the specified course.</p>
 	 *
 	 * @param userId   The ID of the user.
 	 * @param courseId The ID, of course.
-	 * @return A list of {@link PublicUserLessonEntity} representing the user's lesson data for the course.
+	 * @return A list of representing the user's lesson data for the course.
 	 */
 	public List<UserLesson> findAllByCourseId(int userId, int courseId) throws KnowyInconsistentDataException {
 		return userLessonRepository.findAllByCourseId(userId, courseId);
