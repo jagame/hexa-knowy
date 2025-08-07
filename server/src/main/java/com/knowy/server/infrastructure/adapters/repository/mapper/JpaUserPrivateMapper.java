@@ -18,7 +18,8 @@ public class JpaUserPrivateMapper implements EntityMapper<UserPrivate, PrivateUs
 		return new UserPrivate(
 			jpaUserMapper.toDomain(entity.getPublicUserEntity()),
 			entity.getEmail(),
-			entity.getPassword()
+			entity.getPassword(),
+			entity.isActive()
 		);
 	}
 

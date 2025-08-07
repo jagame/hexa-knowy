@@ -370,7 +370,8 @@ public class UserPrivateService {
 			UserPrivate newUserPrivate = new UserPrivate(
 				userPrivate.cropToUser(),
 				userPrivate.email(),
-				userPrivate.password()
+				userPrivate.password(),
+				true
 			);
 			privateUserRepository.save(newUserPrivate);
 		}

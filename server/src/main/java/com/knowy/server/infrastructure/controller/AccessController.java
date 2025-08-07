@@ -163,7 +163,7 @@ public class AccessController {
 	 * @return the name of the password change view if the token is registered, otherwise redirects to the home page
 	 */
 	@GetMapping("/password-change")
-	public String passwordChange(@RequestParam String token, Model model) throws KnowyUserNotFoundException {
+	public String passwordChange(@RequestParam("token") String token, Model model) throws KnowyUserNotFoundException {
 		if (!userFacadeService.isValidToken(token)) {
 			return "redirect:/";
 		}

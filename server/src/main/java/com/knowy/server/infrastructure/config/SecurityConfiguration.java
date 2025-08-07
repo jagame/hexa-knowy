@@ -75,7 +75,7 @@ public class SecurityConfiguration {
 		http.authorizeHttpRequests(request -> request
 			.requestMatchers("/fonts/**", "/scripts/**", "/styles/**", "/images/**", "/error/**", "/favicon.ico").permitAll()
 			.requestMatchers("/", LOGIN_URL, "/register", "/password-change/email", "/password-change",
-				"/actuator/health", "/actuator/info").permitAll()
+				"/actuator/health", "/actuator/info", "/reactivate-account").permitAll()
 			.anyRequest().authenticated()
 		);
 

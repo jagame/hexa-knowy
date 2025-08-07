@@ -147,8 +147,8 @@ public class UserConfigController {
 	@PostMapping("/delete-account-confirm")
 	public String deleteAccount(
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
-		@RequestParam String password,
-		@RequestParam String confirmPassword,
+		@RequestParam("password") String password,
+		@RequestParam("confirmPassword") String confirmPassword,
 		RedirectAttributes redirectAttributes,
 		HttpServletRequest request
 	) {
@@ -232,7 +232,7 @@ public class UserConfigController {
 	@GetMapping("/user-profile")
 	public String viewUserProfile(Model model, UserProfileDTO userProfileDTO, @AuthenticationPrincipal UserSecurityDetails userDetails) {
 		Hibernate.initialize(userDetails.getUser().categories());
-		model.addAttribute("publicUser", userDetails.getUser());
+		model.addAttribute("user", userDetails.getUser());
 		model.addAttribute("categories", categoryService.findAll());
 		return "pages/user-management/user-profile";
 	}
