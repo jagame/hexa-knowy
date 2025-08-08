@@ -2,11 +2,12 @@ package com.knowy.server.application.service;
 
 import com.knowy.server.application.domain.*;
 import com.knowy.server.application.exception.KnowyInconsistentDataException;
+import com.knowy.server.application.exception.KnowyUserNotFoundException;
 import com.knowy.server.application.ports.CategoryRepository;
 import com.knowy.server.application.ports.CourseRepository;
 import com.knowy.server.application.ports.LessonRepository;
 import com.knowy.server.application.ports.UserLessonRepository;
-import com.knowy.server.application.service.exception.KnowyCourseSubscriptionException;
+import com.knowy.server.application.exception.KnowyCourseSubscriptionException;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -93,7 +94,7 @@ public class CourseService {
 	}
 
 	public void subscribeUserToCourse(User user, int courseId) throws KnowyCourseSubscriptionException,
-		KnowyInconsistentDataException {
+		KnowyInconsistentDataException, KnowyUserNotFoundException {
 		List<Lesson> lessons = lessonRepository.findByCourseId(courseId);
 		if (lessons.isEmpty()) {
 			throw new KnowyCourseSubscriptionException("El curso no tiene lecciones disponibles");

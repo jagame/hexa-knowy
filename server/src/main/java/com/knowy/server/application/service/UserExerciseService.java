@@ -6,7 +6,7 @@ import com.knowy.server.application.exception.KnowyExerciseNotFoundException;
 import com.knowy.server.application.ports.ExerciseRepository;
 import com.knowy.server.application.ports.UserExerciseRepository;
 import com.knowy.server.application.ports.UserRepository;
-import com.knowy.server.application.service.exception.KnowyUserNotFoundException;
+import com.knowy.server.application.exception.KnowyUserNotFoundException;
 import com.knowy.server.application.service.model.ExerciseDifficult;
 
 import java.time.Duration;
@@ -152,7 +152,7 @@ public class UserExerciseService {
 	 * @return the persisted entity.
 	 * @throws NullPointerException if {@code publicUserExerciseEntity} is {@code null}.
 	 */
-	public UserExercise save(UserExercise userExercise) throws KnowyDataAccessException {
+	public UserExercise save(UserExercise userExercise) throws KnowyDataAccessException, KnowyUserNotFoundException, KnowyExerciseNotFoundException {
 		Objects.requireNonNull(userExercise, "publicUserExerciseEntity cannot be null");
 		return userExerciseRepository.save(userExercise);
 	}
@@ -167,7 +167,7 @@ public class UserExerciseService {
 	 * @param exerciseDifficult the difficulty level chosen by the user for this exercise
 	 * @throws NullPointerException if either parameter is null
 	 */
-	public void processUserAnswer(ExerciseDifficult exerciseDifficult, UserExercise userExercise) throws KnowyDataAccessException {
+	public void processUserAnswer(ExerciseDifficult exerciseDifficult, UserExercise userExercise) throws KnowyDataAccessException, KnowyExerciseNotFoundException, KnowyUserNotFoundException {
 		UserExercise updatedUserExercise = difficultSelect(exerciseDifficult, userExercise);
 		save(updatedUserExercise);
 	}

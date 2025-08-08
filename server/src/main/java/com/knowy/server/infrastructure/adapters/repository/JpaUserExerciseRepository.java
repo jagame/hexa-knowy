@@ -1,15 +1,15 @@
 package com.knowy.server.infrastructure.adapters.repository;
 
 import com.knowy.server.application.domain.UserExercise;
+import com.knowy.server.application.exception.KnowyExerciseNotFoundException;
 import com.knowy.server.application.exception.KnowyInconsistentDataException;
+import com.knowy.server.application.exception.KnowyUserNotFoundException;
 import com.knowy.server.application.ports.UserExerciseRepository;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaExerciseDao;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaUserDao;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaUserExerciseDao;
 import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserExerciseEntity;
 import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserExerciseId;
-import com.knowy.server.infrastructure.adapters.repository.exception.JpaExerciseNotFoundException;
-import com.knowy.server.infrastructure.adapters.repository.exception.JpaUserNotFoundException;
 import com.knowy.server.infrastructure.adapters.repository.mapper.EntityMapper;
 import com.knowy.server.infrastructure.adapters.repository.mapper.JpaExerciseMapper;
 import com.knowy.server.infrastructure.adapters.repository.mapper.JpaUserMapper;
@@ -38,7 +38,9 @@ public class JpaUserExerciseRepository implements UserExerciseRepository {
 	}
 
 	@Override
-	public UserExercise save(UserExercise userExercise) throws KnowyInconsistentDataException {
+	public UserExercise save(UserExercise userExercise)
+		throws KnowyInconsistentDataException, KnowyExerciseNotFoundException, KnowyUserNotFoundException {
+
 		PublicUserExerciseEntity userSaved = jpaUserExerciseDao.save(jpaUserExerciseMapper.toEntity(userExercise));
 		return jpaUserExerciseMapper.toDomain(userSaved);
 	}
@@ -86,15 +88,15 @@ public class JpaUserExerciseRepository implements UserExerciseRepository {
 		}
 
 		@Override
-		public PublicUserExerciseEntity toEntity(UserExercise domain) throws JpaUserNotFoundException, JpaExerciseNotFoundException {
+		public PublicUserExerciseEntity toEntity(UserExercise domain) throws KnowyUserNotFoundException, KnowyExerciseNotFoundException {
 			return new PublicUserExerciseEntity(
 				new PublicUserExerciseId(domain.user().id(), domain.exercise().id()),
 				domain.rate(),
 				domain.nextReview(),
 				jpaUserDao.findById(domain.user().id())
-					.orElseThrow(() -> new JpaUserNotFoundException("User with ID " + domain.user().id() + " not found")),
+					.orElseThrow(() -> new KnowyUserNotFoundException("User with ID " + domain.user().id() + " not found")),
 				jpaExerciseDao.findById(domain.exercise().id())
-					.orElseThrow(() -> new JpaExerciseNotFoundException("Exercise with ID: " + domain.exercise().id() +
+					.orElseThrow(() -> new KnowyExerciseNotFoundException("Exercise with ID: " + domain.exercise().id() +
 						" not found"))
 			);
 		}

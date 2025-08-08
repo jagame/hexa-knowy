@@ -1,11 +1,12 @@
 package com.knowy.server.infrastructure.controller;
 
 import com.knowy.server.application.exception.KnowyInconsistentDataException;
+import com.knowy.server.application.exception.KnowyUserNotFoundException;
 import com.knowy.server.application.service.CourseService;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseCardDTO;
 import com.knowy.server.infrastructure.controller.dto.ToastDto;
-import com.knowy.server.application.service.exception.KnowyCourseSubscriptionException;
+import com.knowy.server.application.exception.KnowyCourseSubscriptionException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,7 +37,7 @@ public class CourseController {
 		RedirectAttributes attrs,
 		CourseService courseService,
 		String toastModelAttribute
-	) throws KnowyInconsistentDataException {
+	) throws KnowyInconsistentDataException, KnowyUserNotFoundException {
 		try {
 			courseService.subscribeUserToCourse(userDetails.getUser(), courseId);
 			attrs.addFlashAttribute(toastModelAttribute, List.of(new ToastDto("Éxito",
@@ -140,7 +141,7 @@ public class CourseController {
 		@RequestParam("courseId") Integer courseId,
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		RedirectAttributes attrs
-	) throws KnowyInconsistentDataException {
+	) throws KnowyInconsistentDataException, KnowyUserNotFoundException {
 		handleCourseSubscription(courseId, userDetails, attrs, courseService, TOAST_MODEL_ATTRIBUTE);
 		return "redirect:/my-courses";
 	}

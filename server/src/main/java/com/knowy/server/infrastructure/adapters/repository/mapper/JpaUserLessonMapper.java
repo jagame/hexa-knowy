@@ -4,8 +4,8 @@ import com.knowy.server.application.domain.UserLesson;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaLessonDao;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaUserDao;
 import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserLessonEntity;
-import com.knowy.server.infrastructure.adapters.repository.exception.JpaLessonNotFoundException;
-import com.knowy.server.infrastructure.adapters.repository.exception.JpaUserNotFoundException;
+import com.knowy.server.application.exception.KnowyLessonNotFoundException;
+import com.knowy.server.application.exception.KnowyUserNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -35,17 +35,17 @@ public class JpaUserLessonMapper implements EntityMapper<UserLesson, PublicUserL
 	}
 
 	@Override
-	public PublicUserLessonEntity toEntity(UserLesson domain) throws JpaUserNotFoundException, JpaLessonNotFoundException {
+	public PublicUserLessonEntity toEntity(UserLesson domain) throws KnowyUserNotFoundException, KnowyLessonNotFoundException {
 		return new PublicUserLessonEntity(
 			domain.user().id(),
 			domain.lesson().id(),
 			domain.startDate(),
 			domain.status().name().toLowerCase(),
 			jpaUserDao.findById(domain.user().id())
-				.orElseThrow(() -> new JpaUserNotFoundException("User with ID: " + domain.user().id() +
+				.orElseThrow(() -> new KnowyUserNotFoundException("User with ID: " + domain.user().id() +
 					" not found")),
 			jpaLessonDao.findById(domain.lesson().id())
-				.orElseThrow(() -> new JpaLessonNotFoundException("Lesson with ID: " + domain.lesson().id() +
+				.orElseThrow(() -> new KnowyLessonNotFoundException("Lesson with ID: " + domain.lesson().id() +
 					" not found"))
 		);
 	}

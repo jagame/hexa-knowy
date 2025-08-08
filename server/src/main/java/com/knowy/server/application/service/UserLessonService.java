@@ -4,10 +4,11 @@ import com.knowy.server.application.domain.Lesson;
 import com.knowy.server.application.domain.User;
 import com.knowy.server.application.domain.UserLesson;
 import com.knowy.server.application.exception.KnowyInconsistentDataException;
+import com.knowy.server.application.exception.KnowyUserNotFoundException;
 import com.knowy.server.application.ports.LessonRepository;
 import com.knowy.server.application.ports.UserLessonRepository;
-import com.knowy.server.application.service.exception.KnowyLessonNotFoundException;
-import com.knowy.server.application.service.exception.KnowyUserLessonNotFoundException;
+import com.knowy.server.application.exception.KnowyLessonNotFoundException;
+import com.knowy.server.application.exception.KnowyUserLessonNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -59,7 +60,7 @@ public class UserLessonService {
 	 * @throws KnowyUserLessonNotFoundException if the relationship for the given user and lesson is not found
 	 */
 	public void updateLessonStatusToCompleted(User user, Lesson lesson)
-		throws KnowyUserLessonNotFoundException, KnowyInconsistentDataException, KnowyLessonNotFoundException {
+		throws KnowyUserLessonNotFoundException, KnowyInconsistentDataException, KnowyUserNotFoundException {
 		UserLesson userLesson = findById(user.id(), lesson.id())
 			.orElseThrow(() -> new KnowyUserLessonNotFoundException("Relation public user lesson not found"));
 
@@ -72,7 +73,7 @@ public class UserLessonService {
 		));
 	}
 
-	private void updateNextLessonStatusToInProgress(int userId, int lessonId) throws KnowyInconsistentDataException, KnowyLessonNotFoundException, KnowyUserLessonNotFoundException {
+	private void updateNextLessonStatusToInProgress(int userId, int lessonId) throws KnowyInconsistentDataException, KnowyUserLessonNotFoundException, KnowyUserNotFoundException {
 		Lesson lesson = lessonRepository.findById(lessonId)
 			.orElseThrow(() -> new KnowyLessonNotFoundException("Not found lesson with Id: " + lessonId));
 		if (lesson.nextLessonId() == null) {

@@ -3,6 +3,7 @@ package com.knowy.server.application.ports;
 
 import com.knowy.server.application.domain.UserLesson;
 import com.knowy.server.application.exception.KnowyInconsistentDataException;
+import com.knowy.server.application.exception.KnowyUserNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,7 @@ public interface UserLessonRepository {
 
 	boolean existsById(int userId, int lessonId) throws KnowyInconsistentDataException;
 
-	UserLesson save(UserLesson userLesson) throws KnowyInconsistentDataException;
+	UserLesson save(UserLesson userLesson) throws KnowyInconsistentDataException, KnowyUserNotFoundException;
 
 	int countByUserIdAndCourseIdAndStatus(Integer userId, Integer courseId, UserLesson.ProgressStatus status) throws KnowyInconsistentDataException;
 

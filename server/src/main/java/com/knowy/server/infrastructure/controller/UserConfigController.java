@@ -1,16 +1,13 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.server.application.exception.KnowyException;
+import com.knowy.server.application.exception.*;
 import com.knowy.server.application.service.CategoryService;
 import com.knowy.server.application.service.UserFacadeService;
-import com.knowy.server.application.service.exception.*;
+import com.knowy.server.application.exception.KnowyUserNotFoundException;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.UserConfigChangeEmailFormDto;
 import com.knowy.server.infrastructure.controller.dto.UserProfileDTO;
 import com.knowy.server.util.UserSecurityDetailsHelper;
-import com.knowy.server.application.exception.KnowyTokenException;
-import com.knowy.server.application.exception.KnowyMailDispatchException;
-import com.knowy.server.application.exception.KnowyWrongPasswordException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;

@@ -2,6 +2,7 @@ package com.knowy.server.infrastructure.adapters.repository;
 
 import com.knowy.server.application.domain.UserLesson;
 import com.knowy.server.application.exception.KnowyInconsistentDataException;
+import com.knowy.server.application.exception.KnowyUserNotFoundException;
 import com.knowy.server.application.ports.UserLessonRepository;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaUserLessonDao;
 import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserLessonEntity;
@@ -39,7 +40,7 @@ public class JpaUserLessonRepository implements UserLessonRepository {
 	}
 
 	@Override
-	public UserLesson save(UserLesson userLesson) throws KnowyInconsistentDataException {
+	public UserLesson save(UserLesson userLesson) throws KnowyInconsistentDataException, KnowyUserNotFoundException {
 		PublicUserLessonEntity publicUserLessonEntity = jpaUserLessonDao.save(jpaUserLessonMapper.toEntity(userLesson));
 		return jpaUserLessonMapper.toDomain(publicUserLessonEntity);
 	}

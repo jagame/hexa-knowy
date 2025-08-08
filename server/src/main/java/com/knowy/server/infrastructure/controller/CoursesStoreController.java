@@ -2,6 +2,7 @@ package com.knowy.server.infrastructure.controller;
 
 import com.knowy.server.application.domain.Course;
 import com.knowy.server.application.exception.KnowyInconsistentDataException;
+import com.knowy.server.application.exception.KnowyUserNotFoundException;
 import com.knowy.server.application.service.CourseService;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseCardDTO;
@@ -108,7 +109,7 @@ public class CoursesStoreController {
 		@RequestParam("courseId") Integer courseId,
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		RedirectAttributes attrs
-	) throws KnowyInconsistentDataException {
+	) throws KnowyInconsistentDataException, KnowyUserNotFoundException {
 		CourseController.handleCourseSubscription(courseId, userDetails, attrs, courseService, TOAST_MODEL_ATTRIBUTE);
 		return "redirect:/store";
 	}

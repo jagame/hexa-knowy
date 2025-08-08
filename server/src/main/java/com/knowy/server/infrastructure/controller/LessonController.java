@@ -9,7 +9,7 @@ import com.knowy.server.infrastructure.controller.dto.CourseDto;
 import com.knowy.server.infrastructure.controller.dto.LessonDto;
 import com.knowy.server.infrastructure.controller.dto.LinksLessonDto;
 import com.knowy.server.infrastructure.controller.dto.SolutionDto;
-import com.knowy.server.infrastructure.controller.exception.CurrentLessonNotFoundException;
+import com.knowy.server.application.exception.KnowyCurrentLessonNotFoundException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -110,7 +110,7 @@ public class LessonController {
 		@PathVariable("courseId") Integer courseId,
 		@PathVariable("lessonId") Integer lessonId,
 		Model model
-	) throws CurrentLessonNotFoundException, KnowyInconsistentDataException {
+	) throws KnowyCurrentLessonNotFoundException, KnowyInconsistentDataException {
 		List<UserLesson> userLessons = getAllPublicUserLessons(userDetails.getUser().id(), courseId);
 		List<LessonDto> lessonsDto = LessonDto.fromDomains(userLessons);
 
@@ -132,11 +132,11 @@ public class LessonController {
 			.findAllByCourseId(userId, courseId);
 	}
 
-	private UserLesson getCurrentPublicUserLesson(List<UserLesson> userLessons, int currentLessonId) throws CurrentLessonNotFoundException {
+	private UserLesson getCurrentPublicUserLesson(List<UserLesson> userLessons, int currentLessonId) throws KnowyCurrentLessonNotFoundException {
 		return userLessons.stream()
 			.filter(userLesson -> Objects.equals(userLesson.lesson().id(), currentLessonId))
 			.findFirst()
-			.orElseThrow(() -> new CurrentLessonNotFoundException("Lección actual no encontrada"));
+			.orElseThrow(() -> new KnowyCurrentLessonNotFoundException("Lección actual no encontrada"));
 	}
 
 	private void populateLesson(

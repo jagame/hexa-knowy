@@ -1,6 +1,4 @@
-package com.knowy.server.application.service.exception;
-
-import com.knowy.server.application.exception.KnowyException;
+package com.knowy.server.application.exception;
 
 public class KnowyUserLessonNotFoundException extends KnowyException {
 	public KnowyUserLessonNotFoundException(String message) {
