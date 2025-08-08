@@ -6,7 +6,7 @@
 	</appender>
 	<appender name="GENERAL_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>%d{yyyy-MM-dd}-output.log</fileNamePattern>
+			<fileNamePattern>logs/%d{yyyy-MM-dd}-output.log</fileNamePattern>
 		</rollingPolicy>
 		<encoder>
 			<pattern>%d{HH:mm:ss.SSS}: %-5level | %logger> %msg%n</pattern>
@@ -14,16 +14,16 @@
 	</appender>
 
 	<!--
-	El additivity=false es para que lo que se imprima por este logger, no se imprima por ninguno superior.
-	Por ejemplo: com.knowy.server sería 'superior' a com.knowy.server.application
+	Setting additivity="false" ensures that logs from this logger (e.g., com.knowy.server.application) are not
+	propagated to parent loggers such as com.knowy.server or the root logger. This prevents duplicate log entries.
 	-->
 	<logger name="com.knowy.server.application" level="DEBUG" additivity="false">
 		<appender-ref ref="CONSOLE"/>
-		<appender-ref ref="GENERAL_LOG" />
+		<appender-ref ref="GENERAL_LOG"/>
 	</logger>
 
 	<root level="INFO">
-		<appender-ref ref="CONSOLE" />
-		<appender-ref ref="GENERAL_LOG" />
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="GENERAL_LOG"/>
 	</root>
 </configuration>
