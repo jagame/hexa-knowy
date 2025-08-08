@@ -2,17 +2,16 @@ package com.knowy.server.infrastructure.controller;
 
 import com.knowy.server.application.domain.UserExercise;
 import com.knowy.server.application.domain.UserLesson;
-import com.knowy.server.application.exception.KnowyDataAccessException;
-import com.knowy.server.application.exception.KnowyExerciseNotFoundException;
+import com.knowy.server.application.exception.data.KnowyDataAccessException;
+import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyExerciseNotFoundException;
+import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserLessonNotFoundException;
+import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
 import com.knowy.server.application.service.UserExerciseService;
 import com.knowy.server.application.service.UserLessonService;
-import com.knowy.server.application.exception.KnowyLessonNotFoundException;
-import com.knowy.server.application.exception.KnowyUserLessonNotFoundException;
-import com.knowy.server.application.exception.KnowyUserNotFoundException;
 import com.knowy.server.application.service.model.ExerciseDifficult;
-import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.ExerciseDto;
 import com.knowy.server.infrastructure.controller.dto.ExerciseOptionDto;
+import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +25,7 @@ import java.util.List;
 @Controller
 public class ExerciseController {
 
+	private static final String USER_LESSON_NOT_FOUND_TEMPLATE = "UserLesson not found for user ID: %s and lesson ID: %s";
 	private static final String EXERCISE_MODEL_ATTRIBUTE = "exercise";
 	private static final String EXERCISE_HTML_URL = "pages/exercise";
 
@@ -62,14 +62,15 @@ public class ExerciseController {
 
 			UserLesson userLesson = userLessonService.findById(userDetails.getUser().id(), lessonId)
 				.orElseThrow(() -> new KnowyUserLessonNotFoundException(
-					"UserLesson not found for user ID: " + userDetails.getUser().id() + " and lesson ID: " + lessonId
+					USER_LESSON_NOT_FOUND_TEMPLATE.formatted(userDetails.getUser().id(), lessonId)
 				));
+
 
 			model.addAttribute(EXERCISE_MODEL_ATTRIBUTE, ExerciseDto.fromDomain(userExercise, userLesson.lesson()));
 			model.addAttribute("mode", "ANSWERING");
 			model.addAttribute("formReviewUrl", "/course/exercise/review");
 			return EXERCISE_HTML_URL;
-		} catch (KnowyExerciseNotFoundException | KnowyDataAccessException | KnowyUserLessonNotFoundException e) {
+		} catch (KnowyDataAccessException e) {
 			return "error/error";
 		}
 	}
@@ -91,7 +92,7 @@ public class ExerciseController {
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("answerId") int answerId,
 		Model model
-	) throws KnowyExerciseNotFoundException, KnowyUserNotFoundException, KnowyDataAccessException, KnowyUserLessonNotFoundException {
+	) throws KnowyDataAccessException {
 
 		UserExercise userExercise = userExerciseService.getByIdOrCreate(userDetails.getUser().id(),
 			exerciseId);
@@ -99,8 +100,7 @@ public class ExerciseController {
 		UserLesson userLesson = userLessonService
 			.findById(userDetails.getUser().id(), userExercise.exercise().lessonId())
 			.orElseThrow(() -> new KnowyUserLessonNotFoundException(
-				"UserLesson not found for user ID: " + userDetails.getUser().id() + " and lesson ID: "
-					+ userExercise.exercise().lessonId()
+				USER_LESSON_NOT_FOUND_TEMPLATE.formatted(userDetails.getUser().id(), userExercise.exercise().lessonId())
 			));
 
 		ExerciseDto exerciseDto = ExerciseDto.fromDomain(userExercise, userLesson.lesson(), answerId);
@@ -137,15 +137,14 @@ public class ExerciseController {
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("evaluation") ExerciseDifficult evaluation
-	) throws KnowyExerciseNotFoundException, KnowyUserNotFoundException, KnowyUserLessonNotFoundException, KnowyDataAccessException, KnowyLessonNotFoundException {
+	) throws KnowyDataAccessException {
 		UserExercise userExercise = userExerciseService
 			.getByIdOrCreate(userDetails.getUser().id(), exerciseId);
 
 		UserLesson userLesson = userLessonService
 			.findById(userDetails.getUser().id(), userExercise.exercise().lessonId())
 			.orElseThrow(() -> new KnowyUserLessonNotFoundException(
-				"UserLesson not found for user ID: " + userDetails.getUser().id() + " and lesson ID: "
-					+ userExercise.exercise().lessonId()
+				USER_LESSON_NOT_FOUND_TEMPLATE.formatted(userDetails.getUser().id(), userExercise.exercise().lessonId())
 			));
 
 		userExerciseService.processUserAnswer(evaluation, userExercise);
@@ -188,7 +187,7 @@ public class ExerciseController {
 			model.addAttribute("mode", "ANSWERING");
 			model.addAttribute("formReviewUrl", "/exercise/review");
 			return EXERCISE_HTML_URL;
-		} catch (KnowyExerciseNotFoundException | KnowyUserLessonNotFoundException | KnowyDataAccessException e) {
+		} catch (KnowyDataAccessException e) {
 			return "error/error";
 		}
 	}
@@ -210,7 +209,7 @@ public class ExerciseController {
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("answerId") int answerId,
 		Model model
-	) throws KnowyExerciseNotFoundException, KnowyUserNotFoundException, KnowyDataAccessException, KnowyUserLessonNotFoundException {
+	) throws KnowyDataAccessException {
 
 		UserExercise userExercise = userExerciseService
 			.getByIdOrCreate(userDetails.getUser().id(), exerciseId);
@@ -254,7 +253,7 @@ public class ExerciseController {
 		@AuthenticationPrincipal UserSecurityDetails userDetails,
 		@RequestParam("exerciseId") int exerciseId,
 		@RequestParam("evaluation") ExerciseDifficult evaluation
-	) throws KnowyExerciseNotFoundException, KnowyUserNotFoundException, KnowyDataAccessException {
+	) throws KnowyDataAccessException {
 		UserExercise userExercise = userExerciseService
 			.getByIdOrCreate(userDetails.getUser().id(), exerciseId);
 

@@ -1,6 +1,6 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.server.application.exception.KnowyInconsistentDataException;
+import com.knowy.server.application.exception.data.inconsistent.KnowyInconsistentDataException;
 import com.knowy.server.application.service.CourseService;
 import com.knowy.server.application.service.UserHomeService;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;

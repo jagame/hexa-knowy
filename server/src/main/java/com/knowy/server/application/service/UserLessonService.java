@@ -3,12 +3,12 @@ package com.knowy.server.application.service;
 import com.knowy.server.application.domain.Lesson;
 import com.knowy.server.application.domain.User;
 import com.knowy.server.application.domain.UserLesson;
-import com.knowy.server.application.exception.KnowyInconsistentDataException;
-import com.knowy.server.application.exception.KnowyUserNotFoundException;
+import com.knowy.server.application.exception.data.inconsistent.KnowyInconsistentDataException;
+import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
 import com.knowy.server.application.ports.LessonRepository;
 import com.knowy.server.application.ports.UserLessonRepository;
-import com.knowy.server.application.exception.KnowyLessonNotFoundException;
-import com.knowy.server.application.exception.KnowyUserLessonNotFoundException;
+import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyLessonNotFoundException;
+import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserLessonNotFoundException;
 
 import java.util.List;
 import java.util.Optional;

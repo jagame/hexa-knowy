@@ -1,9 +1,11 @@
 package com.knowy.server.infrastructure.controller;
 
 import com.knowy.server.application.exception.*;
+import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyImageNotFoundException;
+import com.knowy.server.application.exception.validation.user.*;
 import com.knowy.server.application.service.CategoryService;
 import com.knowy.server.application.service.UserFacadeService;
-import com.knowy.server.application.exception.KnowyUserNotFoundException;
+import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.UserConfigChangeEmailFormDto;
 import com.knowy.server.infrastructure.controller.dto.UserProfileDTO;

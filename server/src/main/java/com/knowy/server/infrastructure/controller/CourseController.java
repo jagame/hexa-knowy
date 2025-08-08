@@ -1,7 +1,7 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.server.application.exception.KnowyInconsistentDataException;
-import com.knowy.server.application.exception.KnowyUserNotFoundException;
+import com.knowy.server.application.exception.data.inconsistent.KnowyInconsistentDataException;
+import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
 import com.knowy.server.application.service.CourseService;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseCardDTO;

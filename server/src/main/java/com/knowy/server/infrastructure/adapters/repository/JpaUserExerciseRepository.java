@@ -1,9 +1,9 @@
 package com.knowy.server.infrastructure.adapters.repository;
 
 import com.knowy.server.application.domain.UserExercise;
-import com.knowy.server.application.exception.KnowyExerciseNotFoundException;
-import com.knowy.server.application.exception.KnowyInconsistentDataException;
-import com.knowy.server.application.exception.KnowyUserNotFoundException;
+import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyExerciseNotFoundException;
+import com.knowy.server.application.exception.data.inconsistent.KnowyInconsistentDataException;
+import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
 import com.knowy.server.application.ports.UserExerciseRepository;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaExerciseDao;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaUserDao;

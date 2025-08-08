@@ -1,4 +1,6 @@
-package com.knowy.server.application.exception;
+package com.knowy.server.application.exception.data;
+
+import com.knowy.server.application.exception.KnowyException;
 
 public class KnowyDataAccessException extends KnowyException {
 	public KnowyDataAccessException(String message) {

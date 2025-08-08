@@ -2,6 +2,10 @@ package com.knowy.server.application.service;
 
 import com.knowy.server.application.domain.UserPrivate;
 import com.knowy.server.application.exception.*;
+import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyImageNotFoundException;
+import com.knowy.server.application.exception.data.inconsistent.KnowyInconsistentDataException;
+import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
+import com.knowy.server.application.exception.validation.user.*;
 import com.knowy.server.application.ports.KnowyEmailClientTool;
 import com.knowy.server.application.service.model.MailMessage;
 import com.knowy.server.application.service.model.NewUserResult;

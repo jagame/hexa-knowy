@@ -1,8 +1,8 @@
 package com.knowy.server.util;
 
 import com.knowy.server.application.domain.UserPrivate;
-import com.knowy.server.application.exception.KnowyPasswordFormatException;
-import com.knowy.server.application.exception.KnowyWrongPasswordException;
+import com.knowy.server.application.exception.validation.user.KnowyPasswordFormatException;
+import com.knowy.server.application.exception.validation.user.KnowyWrongPasswordException;
 import com.knowy.server.application.ports.KnowyPasswordChecker;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;

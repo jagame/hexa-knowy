@@ -3,11 +3,14 @@ package com.knowy.server.application.service;
 import com.knowy.server.application.domain.Category;
 import com.knowy.server.application.domain.ProfileImage;
 import com.knowy.server.application.domain.User;
-import com.knowy.server.application.exception.*;
+import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyImageNotFoundException;
+import com.knowy.server.application.exception.data.inconsistent.KnowyInconsistentDataException;
+import com.knowy.server.application.exception.validation.user.KnowyInvalidUserException;
+import com.knowy.server.application.exception.validation.user.*;
 import com.knowy.server.application.ports.CategoryRepository;
 import com.knowy.server.application.ports.ProfileImageRepository;
 import com.knowy.server.application.ports.UserRepository;
-import com.knowy.server.application.exception.KnowyUserNotFoundException;
+import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
 import com.knowy.server.application.service.model.NewUserResult;
 import com.knowy.server.application.util.StringUtils;
 

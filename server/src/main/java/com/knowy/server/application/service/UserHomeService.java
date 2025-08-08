@@ -1,7 +1,7 @@
 package com.knowy.server.application.service;
 
 import com.knowy.server.application.domain.Course;
-import com.knowy.server.application.exception.KnowyInconsistentDataException;
+import com.knowy.server.application.exception.data.inconsistent.KnowyInconsistentDataException;
 
 import java.util.List;
 

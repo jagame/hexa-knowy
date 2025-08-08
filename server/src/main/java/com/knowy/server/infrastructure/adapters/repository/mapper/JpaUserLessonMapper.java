@@ -4,8 +4,8 @@ import com.knowy.server.application.domain.UserLesson;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaLessonDao;
 import com.knowy.server.infrastructure.adapters.repository.dao.JpaUserDao;
 import com.knowy.server.infrastructure.adapters.repository.entity.PublicUserLessonEntity;
-import com.knowy.server.application.exception.KnowyLessonNotFoundException;
-import com.knowy.server.application.exception.KnowyUserNotFoundException;
+import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyLessonNotFoundException;
+import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component

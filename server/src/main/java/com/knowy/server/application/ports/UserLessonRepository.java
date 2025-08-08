@@ -2,8 +2,8 @@ package com.knowy.server.application.ports;
 
 
 import com.knowy.server.application.domain.UserLesson;
-import com.knowy.server.application.exception.KnowyInconsistentDataException;
-import com.knowy.server.application.exception.KnowyUserNotFoundException;
+import com.knowy.server.application.exception.data.inconsistent.KnowyInconsistentDataException;
+import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
