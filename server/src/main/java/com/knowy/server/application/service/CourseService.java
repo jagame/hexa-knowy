@@ -1,13 +1,14 @@
 package com.knowy.server.application.service;
 
 import com.knowy.server.application.domain.*;
+import com.knowy.server.application.exception.KnowyCourseSubscriptionException;
 import com.knowy.server.application.exception.data.inconsistent.KnowyInconsistentDataException;
+import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyCourseNotFound;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
 import com.knowy.server.application.ports.CategoryRepository;
 import com.knowy.server.application.ports.CourseRepository;
 import com.knowy.server.application.ports.LessonRepository;
 import com.knowy.server.application.ports.UserLessonRepository;
-import com.knowy.server.application.exception.KnowyCourseSubscriptionException;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -165,5 +166,30 @@ public class CourseService {
 			.stream()
 			.map(Category::name)
 			.toList();
+	}
+
+	public Course findById(int id) throws KnowyCourseNotFound {
+		return courseRepository.findById(id)
+			.orElseThrow(() -> new KnowyCourseNotFound("Not found course with  id: " + id));
+	}
+
+	public long getCoursesCompleted(int userId) throws KnowyInconsistentDataException {
+		List<Course> userCourses = findCoursesByUserId(userId);
+		return userCourses
+			.stream()
+			.filter(course -> getCourseProgress(userId, course.id()) == 100)
+			.count();
+	}
+
+	public long getTotalCourses(int userId) throws KnowyInconsistentDataException {
+		return findCoursesByUserId(userId).size();
+	}
+
+	public long getCoursesPercentage(int userId) throws KnowyInconsistentDataException {
+		long totalCourses = getTotalCourses(userId);
+		long coursesCompleted = getCoursesCompleted(userId);
+		return (totalCourses == 0)
+			? 0
+			: (int) Math.round((coursesCompleted * 100.0) / totalCourses);
 	}
 }

@@ -40,11 +40,6 @@ public class ApplicationConfiguration {
 	}
 
 	@Bean
-	public UserHomeService userHomeService(CourseService courseService) {
-		return new UserHomeService(courseService);
-	}
-
-	@Bean
 	public UserExerciseService exerciseService(
 		UserExerciseRepository userExerciseRepository,
 		UserRepository userRepository,

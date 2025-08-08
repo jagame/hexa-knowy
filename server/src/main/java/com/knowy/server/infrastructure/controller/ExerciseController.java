@@ -1,11 +1,13 @@
 package com.knowy.server.infrastructure.controller;
 
+import com.knowy.server.application.domain.Course;
 import com.knowy.server.application.domain.UserExercise;
 import com.knowy.server.application.domain.UserLesson;
 import com.knowy.server.application.exception.data.KnowyDataAccessException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyExerciseNotFoundException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserLessonNotFoundException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
+import com.knowy.server.application.service.CourseService;
 import com.knowy.server.application.service.UserExerciseService;
 import com.knowy.server.application.service.UserLessonService;
 import com.knowy.server.application.service.model.ExerciseDifficult;
@@ -31,15 +33,17 @@ public class ExerciseController {
 
 	private final UserExerciseService userExerciseService;
 	private final UserLessonService userLessonService;
+	private final CourseService courseService;
 
 	/**
 	 * The constructor
 	 *
 	 * @param userExerciseService the publicUserExerciseService
 	 */
-	public ExerciseController(UserExerciseService userExerciseService, UserLessonService userLessonService) {
+	public ExerciseController(UserExerciseService userExerciseService, UserLessonService userLessonService, CourseService courseService) {
 		this.userExerciseService = userExerciseService;
 		this.userLessonService = userLessonService;
+		this.courseService = courseService;
 	}
 
 	/**
@@ -65,8 +69,9 @@ public class ExerciseController {
 					USER_LESSON_NOT_FOUND_TEMPLATE.formatted(userDetails.getUser().id(), lessonId)
 				));
 
+			Course course = courseService.findById(userLesson.lesson().courseId());
 
-			model.addAttribute(EXERCISE_MODEL_ATTRIBUTE, ExerciseDto.fromDomain(userExercise, userLesson.lesson()));
+			model.addAttribute(EXERCISE_MODEL_ATTRIBUTE, ExerciseDto.fromDomain(userExercise, course));
 			model.addAttribute("mode", "ANSWERING");
 			model.addAttribute("formReviewUrl", "/course/exercise/review");
 			return EXERCISE_HTML_URL;
@@ -103,7 +108,8 @@ public class ExerciseController {
 				USER_LESSON_NOT_FOUND_TEMPLATE.formatted(userDetails.getUser().id(), userExercise.exercise().lessonId())
 			));
 
-		ExerciseDto exerciseDto = ExerciseDto.fromDomain(userExercise, userLesson.lesson(), answerId);
+		Course course = courseService.findById(userLesson.lesson().courseId());
+		ExerciseDto exerciseDto = ExerciseDto.fromDomain(userExercise, course, answerId);
 
 		if (!isCorrectAnswer(exerciseDto.options(), answerId)) {
 			model.addAttribute("mode", "FAILING");
@@ -150,7 +156,7 @@ public class ExerciseController {
 		userExerciseService.processUserAnswer(evaluation, userExercise);
 
 		int lessonId = userExercise.exercise().lessonId();
-		int courseId = userLesson.lesson().course().id();
+		int courseId = userLesson.lesson().courseId();
 
 		double average = userExerciseService.getAverageRateByLessonId(lessonId);
 		if (average >= 80) {
@@ -183,7 +189,9 @@ public class ExerciseController {
 						+ userExercise.exercise().lessonId()
 				));
 
-			model.addAttribute(EXERCISE_MODEL_ATTRIBUTE, ExerciseDto.fromDomain(userExercise, userLesson.lesson()));
+			Course course = courseService.findById(userLesson.lesson().courseId());
+
+			model.addAttribute(EXERCISE_MODEL_ATTRIBUTE, ExerciseDto.fromDomain(userExercise, course));
 			model.addAttribute("mode", "ANSWERING");
 			model.addAttribute("formReviewUrl", "/exercise/review");
 			return EXERCISE_HTML_URL;
@@ -221,9 +229,11 @@ public class ExerciseController {
 					+ userExercise.exercise().lessonId()
 			));
 
+		Course course = courseService.findById(userLesson.lesson().courseId());
+
 		ExerciseDto exerciseDto = ExerciseDto.fromDomain(
 			userExercise,
-			userLesson.lesson(),
+			course,
 			answerId
 		);
 

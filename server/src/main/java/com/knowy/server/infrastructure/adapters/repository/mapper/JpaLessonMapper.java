@@ -10,16 +10,13 @@ import java.util.stream.Collectors;
 @Component
 public class JpaLessonMapper implements EntityMapper<Lesson, LessonEntity> {
 
-	private final JpaCourseMapper jpaCourseMapper;
 	private final JpaDocumentationMapper jpaDocumentationMapper;
 	private final JpaExerciseMapper jpaExerciseMapper;
 
 	public JpaLessonMapper(
-		JpaCourseMapper jpaCourseMapper,
 		JpaDocumentationMapper jpaDocumentationMapper,
 		JpaExerciseMapper jpaExerciseMapper
 	) {
-		this.jpaCourseMapper = jpaCourseMapper;
 		this.jpaDocumentationMapper = jpaDocumentationMapper;
 		this.jpaExerciseMapper = jpaExerciseMapper;
 	}
@@ -28,7 +25,7 @@ public class JpaLessonMapper implements EntityMapper<Lesson, LessonEntity> {
 	public Lesson toDomain(LessonEntity entity) {
 		return new Lesson(
 			entity.getId(),
-			jpaCourseMapper.toDomain(entity.getCourse()),
+			entity.getCourse().getId(),
 			Optional.ofNullable(entity.getNextLesson())
 				.map(LessonEntity::getId)
 				.orElse(null),

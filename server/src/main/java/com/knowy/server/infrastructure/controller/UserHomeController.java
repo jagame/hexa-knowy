@@ -2,7 +2,6 @@ package com.knowy.server.infrastructure.controller;
 
 import com.knowy.server.application.exception.data.inconsistent.KnowyInconsistentDataException;
 import com.knowy.server.application.service.CourseService;
-import com.knowy.server.application.service.UserHomeService;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseBannerDTO;
 import com.knowy.server.infrastructure.controller.dto.MissionsDto;
@@ -17,22 +16,19 @@ import java.util.List;
 @Controller
 public class UserHomeController {
 
-	private final UserHomeService userHomeService;
 	private final CourseService courseService;
 
 	public UserHomeController(
-		UserHomeService userHomeService,
 		CourseService courseService) {
-		this.userHomeService = userHomeService;
 		this.courseService = courseService;
 	}
 
 	@GetMapping("/home")
 	public String userHome(Model model, @AuthenticationPrincipal UserSecurityDetails userDetails) throws KnowyInconsistentDataException {
 		Integer userId = userDetails.getUser().id();
-		long coursesCompleted = userHomeService.getCoursesCompleted(userId);
-		long totalCourses = userHomeService.getTotalCourses(userId);
-		long percent = userHomeService.getCoursesPercentage(userId);
+		long coursesCompleted = courseService.getCoursesCompleted(userId);
+		long totalCourses = courseService.getTotalCourses(userId);
+		long percent = courseService.getCoursesPercentage(userId);
 		boolean hasCourses = totalCourses > 0;
 
 

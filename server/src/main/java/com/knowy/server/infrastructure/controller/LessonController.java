@@ -3,6 +3,7 @@ package com.knowy.server.infrastructure.controller;
 import com.knowy.server.application.domain.Documentation;
 import com.knowy.server.application.domain.UserLesson;
 import com.knowy.server.application.exception.data.inconsistent.KnowyInconsistentDataException;
+import com.knowy.server.application.service.CourseService;
 import com.knowy.server.application.service.UserLessonService;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseDto;
@@ -27,9 +28,11 @@ import java.util.Optional;
 public class LessonController {
 
 	private final UserLessonService userLessonService;
+	private final CourseService courseService;
 
-	public LessonController(UserLessonService userLessonService) {
+	public LessonController(UserLessonService userLessonService, CourseService courseService) {
 		this.userLessonService = userLessonService;
+		this.courseService = courseService;
 	}
 
 	/**
@@ -55,7 +58,7 @@ public class LessonController {
 		List<LinksLessonDto> documentationDto = LinksLessonDto.fromDomains(getAllLessonDocumentations(userLessons));
 
 		CourseDto courseDto = CourseDto.fromDomain(
-			userLessons.getFirst().lesson().course(),
+			courseService.findById(userLessons.getFirst().lesson().courseId()),
 			lessonsDto
 		);
 
@@ -110,7 +113,7 @@ public class LessonController {
 		@PathVariable("courseId") Integer courseId,
 		@PathVariable("lessonId") Integer lessonId,
 		Model model
-	) throws KnowyCurrentLessonNotFoundException, KnowyInconsistentDataException {
+	) throws KnowyInconsistentDataException {
 		List<UserLesson> userLessons = getAllPublicUserLessons(userDetails.getUser().id(), courseId);
 		List<LessonDto> lessonsDto = LessonDto.fromDomains(userLessons);
 
@@ -119,7 +122,7 @@ public class LessonController {
 		List<SolutionDto> solutionsDto = SolutionDto.fromDomains(currentUserLesson.lesson().exercises());
 
 		CourseDto courseDto = CourseDto.fromDomain(
-			userLessons.getFirst().lesson().course(),
+			courseService.findById(userLessons.getFirst().lesson().courseId()),
 			lessonsDto
 		);
 

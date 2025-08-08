@@ -2,6 +2,7 @@ package com.knowy.server.infrastructure.adapters.repository.mapper;
 
 import com.knowy.server.application.domain.Course;
 import com.knowy.server.infrastructure.adapters.repository.entity.CourseEntity;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -10,9 +11,11 @@ import java.util.stream.Collectors;
 public class JpaCourseMapper implements EntityMapper<Course, CourseEntity> {
 
 	private final JpaCategoryMapper jpaCategoryMapper;
+	private final JpaLessonMapper jpaLessonMapper;
 
-	public JpaCourseMapper(JpaCategoryMapper jpaCategoryMapper) {
+	public JpaCourseMapper(JpaCategoryMapper jpaCategoryMapper,@Lazy JpaLessonMapper jpaLessonMapper) {
 		this.jpaCategoryMapper = jpaCategoryMapper;
+		this.jpaLessonMapper = jpaLessonMapper;
 	}
 
 	@Override
@@ -25,7 +28,7 @@ public class JpaCourseMapper implements EntityMapper<Course, CourseEntity> {
 			entity.getAuthor(),
 			entity.getCreationDate(),
 			entity.getLanguages().stream().map(jpaCategoryMapper::toDomain).collect(Collectors.toSet()),
-			entity.getLessons()
+			entity.getLessons().stream().map(jpaLessonMapper::toDomain).collect(Collectors.toSet())
 		);
 	}
 

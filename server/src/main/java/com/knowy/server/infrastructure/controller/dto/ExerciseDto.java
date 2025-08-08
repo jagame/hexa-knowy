@@ -1,6 +1,6 @@
 package com.knowy.server.infrastructure.controller.dto;
 
-import com.knowy.server.application.domain.Lesson;
+import com.knowy.server.application.domain.Course;
 import com.knowy.server.application.domain.UserExercise;
 
 import java.util.List;
@@ -15,11 +15,11 @@ public record ExerciseDto(
 	List<ExerciseOptionDto> options
 ) {
 
-	public static ExerciseDto fromDomain(UserExercise userExercise, Lesson lesson) {
+	public static ExerciseDto fromDomain(UserExercise userExercise, Course course) {
 		return new ExerciseDto(
 			userExercise.exercise().lessonId(),
 			userExercise.exercise().id(),
-			lesson.course().title(),
+			course.title(),
 			userExercise.rate(),
 			userExercise.exercise().question(),
 			"TODO",
@@ -30,7 +30,7 @@ public record ExerciseDto(
 		);
 	}
 
-	public static ExerciseDto fromDomain(UserExercise userExercise, Lesson lesson, int answerId) {
+	public static ExerciseDto fromDomain(UserExercise userExercise, Course course, int answerId) {
 		List<ExerciseOptionDto> options = userExercise.exercise().options()
 			.stream()
 			.map(option -> ExerciseOptionDto.fromDomain(option, answerId))
@@ -39,7 +39,7 @@ public record ExerciseDto(
 		return new ExerciseDto(
 			userExercise.exercise().lessonId(),
 			userExercise.exercise().id(),
-			lesson.course().title(),
+			course.title(),
 			userExercise.rate(),
 			userExercise.exercise().question(),
 			"TODO",
