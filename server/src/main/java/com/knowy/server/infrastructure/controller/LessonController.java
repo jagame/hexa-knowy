@@ -1,10 +1,10 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.server.application.domain.Documentation;
-import com.knowy.server.application.domain.UserLesson;
+import com.knowy.server.domain.Documentation;
+import com.knowy.server.domain.UserLesson;
 import com.knowy.server.application.exception.data.inconsistent.KnowyInconsistentDataException;
-import com.knowy.server.application.service.CourseService;
-import com.knowy.server.application.service.UserLessonService;
+import com.knowy.server.application.CourseService;
+import com.knowy.server.application.UserLessonService;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import com.knowy.server.infrastructure.controller.dto.CourseDto;
 import com.knowy.server.infrastructure.controller.dto.LessonDto;

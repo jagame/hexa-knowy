@@ -1,6 +1,6 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.server.application.service.CourseService;
+import com.knowy.server.application.CourseService;
 import com.knowy.server.infrastructure.controller.dto.NewsDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

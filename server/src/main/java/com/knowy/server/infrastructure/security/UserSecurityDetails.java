@@ -1,7 +1,7 @@
 package com.knowy.server.infrastructure.security;
 
-import com.knowy.server.application.domain.User;
-import com.knowy.server.application.domain.UserPrivate;
+import com.knowy.server.domain.User;
+import com.knowy.server.domain.UserPrivate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

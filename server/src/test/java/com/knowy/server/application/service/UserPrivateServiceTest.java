@@ -1,9 +1,10 @@
 package com.knowy.server.application.service;
 
 
-import com.knowy.server.application.domain.ProfileImage;
-import com.knowy.server.application.domain.User;
-import com.knowy.server.application.domain.UserPrivate;
+import com.knowy.server.application.UserPrivateService;
+import com.knowy.server.domain.ProfileImage;
+import com.knowy.server.domain.User;
+import com.knowy.server.domain.UserPrivate;
 import com.knowy.server.application.exception.validation.user.KnowyPasswordFormatException;
 import com.knowy.server.application.exception.KnowyTokenException;
 import com.knowy.server.application.exception.validation.user.KnowyWrongPasswordException;
@@ -15,9 +16,9 @@ import com.knowy.server.application.exception.validation.user.KnowyInvalidUserEm
 import com.knowy.server.application.exception.validation.user.KnowyInvalidUserPasswordFormatException;
 import com.knowy.server.application.exception.validation.user.KnowyUnchangedEmailException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
-import com.knowy.server.application.service.model.MailMessage;
-import com.knowy.server.application.service.model.NewUserResult;
-import com.knowy.server.application.service.model.PasswordResetInfo;
+import com.knowy.server.application.model.MailMessage;
+import com.knowy.server.application.model.NewUserResult;
+import com.knowy.server.application.model.PasswordResetInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

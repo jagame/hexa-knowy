@@ -1,6 +1,6 @@
 package com.knowy.server.infrastructure.controller.dto;
 
-import com.knowy.server.application.domain.Option;
+import com.knowy.server.domain.Option;
 
 public record ExerciseOptionDto(
 	int id,

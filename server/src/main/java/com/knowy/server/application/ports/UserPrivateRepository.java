@@ -1,6 +1,6 @@
 package com.knowy.server.application.ports;
 
-import com.knowy.server.application.domain.UserPrivate;
+import com.knowy.server.domain.UserPrivate;
 
 import java.util.Optional;
 

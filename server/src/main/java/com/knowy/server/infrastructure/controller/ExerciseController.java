@@ -1,16 +1,16 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.server.application.domain.Course;
-import com.knowy.server.application.domain.UserExercise;
-import com.knowy.server.application.domain.UserLesson;
+import com.knowy.server.domain.Course;
+import com.knowy.server.domain.UserExercise;
+import com.knowy.server.domain.UserLesson;
 import com.knowy.server.application.exception.data.KnowyDataAccessException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyExerciseNotFoundException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserLessonNotFoundException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
-import com.knowy.server.application.service.CourseService;
-import com.knowy.server.application.service.UserExerciseService;
-import com.knowy.server.application.service.UserLessonService;
-import com.knowy.server.application.service.model.ExerciseDifficult;
+import com.knowy.server.application.CourseService;
+import com.knowy.server.application.UserExerciseService;
+import com.knowy.server.application.UserLessonService;
+import com.knowy.server.domain.ExerciseDifficult;
 import com.knowy.server.infrastructure.controller.dto.ExerciseDto;
 import com.knowy.server.infrastructure.controller.dto.ExerciseOptionDto;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;

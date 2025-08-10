@@ -1,6 +1,6 @@
 package com.knowy.server.infrastructure.config;
 
-import com.knowy.server.application.domain.UserPrivate;
+import com.knowy.server.domain.UserPrivate;
 import com.knowy.server.application.ports.UserPrivateRepository;
 import com.knowy.server.infrastructure.security.UserSecurityDetails;
 import org.springframework.context.annotation.Bean;

@@ -1,11 +1,11 @@
 package com.knowy.server.infrastructure.controller;
 
-import com.knowy.server.application.domain.UserPrivate;
+import com.knowy.server.domain.UserPrivate;
 import com.knowy.server.application.exception.KnowyMailDispatchException;
 import com.knowy.server.application.exception.validation.user.KnowyPasswordFormatException;
 import com.knowy.server.application.exception.KnowyTokenException;
 import com.knowy.server.application.exception.validation.user.KnowyWrongPasswordException;
-import com.knowy.server.application.service.UserFacadeService;
+import com.knowy.server.application.UserFacadeService;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyImageNotFoundException;
 import com.knowy.server.application.exception.validation.user.KnowyInvalidUserException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
@@ -13,7 +13,7 @@ import com.knowy.server.infrastructure.controller.dto.LoginFormDto;
 import com.knowy.server.infrastructure.controller.dto.UserEmailFormDto;
 import com.knowy.server.infrastructure.controller.dto.UserPasswordFormDto;
 import com.knowy.server.infrastructure.controller.dto.UserRegisterFormDto;
-import com.knowy.server.util.UserSecurityDetailsHelper;
+import com.knowy.server.infrastructure.security.UserSecurityDetailsHelper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

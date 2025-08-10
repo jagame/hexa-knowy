@@ -1,6 +1,6 @@
 package com.knowy.server.application.ports;
 
-import com.knowy.server.application.domain.Course;
+import com.knowy.server.domain.Course;
 
 import java.util.List;
 import java.util.Optional;

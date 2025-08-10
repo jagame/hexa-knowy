@@ -1,8 +1,9 @@
 package com.knowy.server.application.service;
 
-import com.knowy.server.application.domain.Category;
-import com.knowy.server.application.domain.ProfileImage;
-import com.knowy.server.application.domain.User;
+import com.knowy.server.application.UserService;
+import com.knowy.server.domain.Category;
+import com.knowy.server.domain.ProfileImage;
+import com.knowy.server.domain.User;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyImageNotFoundException;
 import com.knowy.server.application.exception.data.inconsistent.KnowyInconsistentDataException;
 import com.knowy.server.application.exception.validation.user.KnowyInvalidUserNicknameException;
@@ -13,7 +14,7 @@ import com.knowy.server.application.ports.CategoryRepository;
 import com.knowy.server.application.ports.ProfileImageRepository;
 import com.knowy.server.application.ports.UserRepository;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
-import com.knowy.server.application.service.model.NewUserResult;
+import com.knowy.server.application.model.NewUserResult;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

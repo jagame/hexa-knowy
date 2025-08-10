@@ -1,7 +1,7 @@
 package com.knowy.server.application.ports;
 
 
-import com.knowy.server.application.domain.UserLesson;
+import com.knowy.server.domain.UserLesson;
 import com.knowy.server.application.exception.data.inconsistent.KnowyInconsistentDataException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;
 

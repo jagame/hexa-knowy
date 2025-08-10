@@ -1,6 +1,6 @@
 package com.knowy.server.infrastructure.controller.dto;
 
-import com.knowy.server.application.domain.UserLesson;
+import com.knowy.server.domain.UserLesson;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.knowy.server.application.ports;
 
-import com.knowy.server.application.domain.UserExercise;
+import com.knowy.server.domain.UserExercise;
 import com.knowy.server.application.exception.data.KnowyDataAccessException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyExerciseNotFoundException;
 import com.knowy.server.application.exception.data.inconsistent.notfound.KnowyUserNotFoundException;

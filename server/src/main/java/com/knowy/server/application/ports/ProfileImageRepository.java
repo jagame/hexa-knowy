@@ -1,6 +1,6 @@
 package com.knowy.server.application.ports;
 
-import com.knowy.server.application.domain.ProfileImage;
+import com.knowy.server.domain.ProfileImage;
 
 import java.util.Optional;
 

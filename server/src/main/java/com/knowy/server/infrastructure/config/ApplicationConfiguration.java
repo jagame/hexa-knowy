@@ -1,7 +1,7 @@
 package com.knowy.server.infrastructure.config;
 
+import com.knowy.server.application.*;
 import com.knowy.server.application.ports.*;
-import com.knowy.server.application.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;

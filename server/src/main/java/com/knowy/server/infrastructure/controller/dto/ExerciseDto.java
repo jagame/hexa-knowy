@@ -1,7 +1,7 @@
 package com.knowy.server.infrastructure.controller.dto;
 
-import com.knowy.server.application.domain.Course;
-import com.knowy.server.application.domain.UserExercise;
+import com.knowy.server.domain.Course;
+import com.knowy.server.domain.UserExercise;
 
 import java.util.List;
 
