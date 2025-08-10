@@ -1,44 +1,55 @@
+<!DOCTYPE html>
+<html lang="es"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<meta charset="UTF-8">
+</head>
+<body>
 <div class="course-card" th:fragment="course-card(courseItem, acquireAction)">
 	<div class="course-card__picture-container">
 		<div class="course-card__tags">
-			<span class="course-card-tags__tag" th:each="language: ${courseItem.languages}" th:text="${language}"></span>
+			<span class="course-card-tags__tag" th:each="category: ${courseItem.categories}"
+				  th:text="${category}"></span>
 		</div>
 		<img th:src="${courseItem.image}" class="card-img-top" alt="">
 	</div>
 
 	<div class="course-card__content">
 		<div class="course-card__course-creator">
-			<h6 th:text="${courseItem.getAuthor()}">Author course name</h6>
+			<h6 th:text="${courseItem.author()}">Author course name</h6>
 			<p class="course-card__course-date"
 			   th:text="${#temporals.format(courseItem.creationDate, 'dd/MM/yyyy')}">01/07/2025</p>
 		</div>
 
 		<div th:if="${courseItem.action.name() == 'START'}" class="course-card__bar-progress">
-			<div class="course-card-bar-progress__progress" th:text="${courseItem.getProgress()} +'% completado'"
-				 th:data-progress="${courseItem.getProgress()}"></div>
+			<div class="course-card-bar-progress__progress" th:text="${courseItem.progress()} +'% completado'"
+				 th:data-progress="${courseItem.progress()}"></div>
 			<div class="course-card-bar-progress__bar">
 				<div class="home-resume__bar-container">
-					<div class="course-card-bar-progress_bar" th:data-progress="${courseItem.getProgress()}"
-						 th:style="'width:' + ${courseItem.getProgress()} + '%'"></div>
+					<div class="course-card-bar-progress_bar" th:data-progress="${courseItem.progress()}"
+						 th:style="'width:' + ${courseItem.progress()} + '%'"></div>
 				</div>
 			</div>
 		</div>
 		<div class="course-card_course-description">
 			<div class="course-card__course-name">
-				<h5 th:text="${courseItem.getName()}">Course Name</h5>
+				<h5 th:text="${courseItem.name()}">Course Name</h5>
 			</div>
 		</div>
 		<div class="course-card__actions">
 			<form th:if="${courseItem.action.name() == 'ACQUIRE'}"
 				  th:action="${acquireAction}" method="post">
-				<input type="hidden" name="courseId" th:value="${courseItem.getId()}"/>
+				<input type="hidden" name="courseId" th:value="${courseItem.id()}"/>
 				<button type="submit" class="course-card__button-action">+ Adquirir curso</button>
 			</form>
 			<a th:if="${courseItem.action.name() == 'START'}"
-			   th:href="@{/course/{courseId}(courseId=${courseItem.getId()})}"
+			   th:href="@{/course/{courseId}(courseId=${courseItem.id()})}"
 			   class="course-card__button-action">
 				▷ Empezar curso
 			</a>
 		</div>
 	</div>
 </div>
+</body>
+</html>
