@@ -14,7 +14,7 @@
 
 <aside class="kn-aside-setting user-sidebar" layout:fragment="sidebar">
 	<div class="user-info text-center mb-4">
-		<h3 class="mt-3 username-title" th:text="${publicUser.nickname}">Usuario</h3>
+		<h3 class="mt-3 username-title" th:text="${user.nickname}">Usuario</h3>
 	</div>
 	<div class="sidebar-menu">
 		<button class="sidebar-link" data-sidebar-toggler="" th:classappend="active">Editar Perfil</button>
@@ -46,7 +46,9 @@
 			<div class="row user-information">
 				<!--PHOTO-->
 				<div class="picture-edit-container col-lg-3" data-bs-target="#exampleModal" data-bs-toggle="modal">
-					<img th:src="${#authentication?.principal?.publicUser?.profileImage?.url}" class="edit-avatar" id="profilePicture">
+					<img th:src="${#authentication?.principal?.user?.profileImage?.url}"
+						 class="edit-avatar"
+						 id="profilePicture">
 
 					<label class="edit-pic-btn" for="profile-pic-id">
 						<i class="bi bi-person-bounding-box"></i>
@@ -66,7 +68,7 @@
 						</svg>
 						Nombre de Usuario:
 					</h4>
-					<input class="user-name form-control my-3" name="nickname" th:placeholder="${publicUser.nickname}"
+					<input class="user-name form-control my-3" name="nickname" th:placeholder="${user.nickname}"
 						   type="text">
 					<br>
 					<h4 class="section-title">
@@ -78,25 +80,25 @@
 						Lenguajes de Programación favoritos:
 					</h4>
 					<select class="form-control my-3" id="languages" multiple>
-						<option class="language" th:each="language : ${languages}"
-								th:text="${language.name}"
-								th:value="${language.name}">
+						<option class="language" th:each="category : ${categories}"
+								th:text="${category.name}"
+								th:value="${category.name}">
 						</option>
 					</select>
 					<button class="btn btn-save" id="chooseLanguage" type="button">Elegir lenguaje</button>
 					<button class="btn btn-delete" id="removeLanguage" type="button">Eliminar lenguajes</button>
 					<div class="mt-4" id="selectedLanguages">
 						<p class="py-2 px-3" style="background-color: #7E57C2; color: white;">¡Borra un lenguaje pulsando encima de él!</p>
-						<th:block th:each="userLanguage : ${publicUser.languages}">
+						<th:block th:each="userCategory : ${user.categories}">
   							<span class="badge badge-info my-3 mx-2 selected-language"
 								  style="cursor: pointer; font-weight: normal; font-size: 16px;"
-								  th:data-language="${userLanguage.name}"
-								  th:text="${userLanguage.name}">
+								  th:data-language="${userCategory.name}"
+								  th:text="${userCategory.name}">
   							</span>
 							<input class="selected-language"
 								   name="languages"
-								   th:data-language="${userLanguage.name}"
-								   th:value="${userLanguage.name}"
+								   th:data-language="${userCategory.name}"
+								   th:value="${userCategory.name}"
 								   type="hidden"/>
 						</th:block>
 					</div>

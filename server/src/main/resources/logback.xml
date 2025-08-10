@@ -1,0 +1,35 @@
+<configuration>
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS}: %-5level | %logger> %msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="GENERAL_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>logs/%d{yyyy-MM-dd}-output.log</fileNamePattern>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS}: %-5level | %logger> %msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="ERRORS_ALERT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>logs/%d{yyyy-MM-dd}-errors.log</fileNamePattern>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS}: %-5level | %logger> %msg%n%replace(%ex{0}){'^(.+)$', '	Exception was -> $1
+				(To see the full stack trace find in the task-specific error log)'}</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="com.knowy.server.application" level="DEBUG"/>
+
+	<root level="INFO">
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="GENERAL_LOG"/>
+		<appender-ref ref="ERRORS_ALERT"/>
+	</root>
+</configuration>
